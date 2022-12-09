@@ -10,3 +10,7 @@ export const spacing = {
   large: 16,
   largest: 32,
 };
+
+export const iconSizes = {
+  standard: 16,
+};

@@ -1,3 +1,5 @@
 export const colors = {
-  text: "#2C2C54",
+  default: "#2C2C54",
 };
+
+export const cardColors = ["#DDFFD9"];
