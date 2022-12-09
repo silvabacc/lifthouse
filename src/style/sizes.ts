@@ -1,6 +1,7 @@
 export const textSizes = {
   h1: 30,
   h2: 20,
+  button: 10,
 };
 
 export const spacing = {
