@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { colors } from "../../style/colors";
 import { textStyle } from "../../style/House.style";
+import GridCard from "./components/GridCard";
 import TodayCard from "./components/TodayCard";
 import style from "./Home.style";
 
@@ -23,6 +24,7 @@ const Home: React.FC = () => {
           Add Exercise
         </Button>
       </View>
+      <GridCard />
     </>
   );
 };

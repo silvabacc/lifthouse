@@ -3,4 +3,10 @@ export const colors = {
   accent: "#0097A7",
 };
 
-export const cardColors = ["#DDFFD9"];
+export const cardColors = [
+  "#DDFFD9",
+  "#ECC8AE",
+  "#F2F79E",
+  "#C8D5B9",
+  "#E1E5EE",
+];
