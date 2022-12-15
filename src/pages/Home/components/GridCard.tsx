@@ -1,29 +1,34 @@
 import React from "react";
-import { View } from "react-native";
+import { ImageSourcePropType, View } from "react-native";
 import { Card } from "react-native-paper";
 import style, { cardStyle } from "./GridCard.style";
-import UpperIntensityImage from "../../../assets/cardImages/upper_intensity.png";
-import UpperVolumeImage from "../../../assets/cardImages/upper_volume.png";
-import LowerIntensityImage from "../../../assets/cardImages/lower_intensity.png";
-import LowerVolumeImage from "../../../assets/cardImages/lower_volume.png";
 import { cardColors } from "../../../style/colors";
 
-const GridCard: React.FC = () => {
-  const workoutCardColors = cardColors.slice(1, 5);
+interface CardInfo {
+  title: string;
+  image: ImageSourcePropType;
+}
+
+/**
+ * @param cards Title and an image for the card to be displayed
+ * @param colorsSlice Takes two index indices and uses colors inbetween these numbers
+ *                    from the @cardColors array. First number should be smaller than second
+ */
+interface GridCardProps {
+  cards: CardInfo[];
+  colorsSlice?: [number, number];
+}
+
+const GridCard: React.FC<GridCardProps> = ({ cards, colorsSlice }) => {
+  const colors = colorsSlice
+    ? cardColors.slice(colorsSlice[0], colorsSlice[1])
+    : cardColors.slice(1, 5);
 
   return (
     <>
       <View style={style.container}>
-        {[
-          { title: "Upper Intensity", image: UpperIntensityImage },
-          { title: "Upper Volume", image: UpperVolumeImage },
-          { title: "Lower Intensity", image: LowerIntensityImage },
-          { title: "Lower Volume", image: LowerVolumeImage },
-        ].map((card, index) => (
-          <Card
-            key={`card-${index}`}
-            style={[cardStyle(workoutCardColors[index]).card]}
-          >
+        {cards.map((card, index) => (
+          <Card key={`card-${index}`} style={[cardStyle(colors[index]).card]}>
             <Card.Title
               title={card.title}
               titleStyle={cardStyle().card_title}
