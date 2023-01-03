@@ -1,6 +1,7 @@
 export const textSizes = {
   h1: 30,
   h2: 20,
+  h3: 15,
   button: 10,
 };
 

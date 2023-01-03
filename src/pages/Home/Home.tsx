@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { colors } from "../../style/colors";
@@ -12,8 +12,11 @@ import LowerIntensityImage from "../../assets/cardImages/lower_intensity.png";
 import LowerVolumeImage from "../../assets/cardImages/lower_volume.png";
 import DailyWeighInImage from "../../assets/cardImages/daily_weigh_in.png";
 import MealTrackerImage from "../../assets/cardImages/meal_tracker.png";
+import AddExerciseModal from "./components/AddExerciseModal";
 
 const Home: React.FC = () => {
+  const [modalToggle, setModalToggle] = useState(false);
+
   const workoutCards = [
     { title: "Upper Intensity", image: UpperIntensityImage },
     { title: "Upper Volume", image: UpperVolumeImage },
@@ -28,6 +31,7 @@ const Home: React.FC = () => {
 
   return (
     <>
+      <AddExerciseModal visible={modalToggle} setVisible={setModalToggle} />
       <Text style={textStyle.h1}>Time to Grind 💪</Text>
       <TodayCard />
       <View style={style.subTitle}>
@@ -38,6 +42,7 @@ const Home: React.FC = () => {
           uppercase={true}
           labelStyle={style.add_exercise_button}
           mode="text"
+          onPress={() => setModalToggle(true)}
         >
           Add Exercise
         </Button>

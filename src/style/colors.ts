@@ -1,6 +1,7 @@
 export const colors = {
   default: "#2C2C54",
   accent: "#0097A7",
+  page: "#FFF",
 };
 
 export const cardColors = [
