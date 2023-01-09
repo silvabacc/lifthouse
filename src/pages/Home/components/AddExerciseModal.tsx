@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Portal, Modal, TextInput, Button } from "react-native-paper";
 import style from "./AddExerciseModal.style";
 import DropDown from "react-native-paper-dropdown";
-import { View, Keyboard } from "react-native";
+import { Keyboard, Animated, View } from "react-native";
 import { colors } from "../../../style/colors";
 
 interface AddExerciseModalProps {
@@ -33,6 +33,8 @@ const AddExerciseModal: React.FC<AddExerciseModalProps> = ({
     { label: "Lower Volume", value: ExerciseType.LOWER_VOLUME },
   ];
 
+  const heightAnimatedValue = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
       setKeyboard(true);
@@ -47,36 +49,57 @@ const AddExerciseModal: React.FC<AddExerciseModalProps> = ({
     };
   }, []);
 
-  const { modal_container, inputs_container, input, add_button } =
-    style(keyboard);
+  useEffect(() => {
+    Animated.timing(heightAnimatedValue, {
+      toValue: !keyboard ? 0 : 1,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  }, [heightAnimatedValue, keyboard]);
+
+  const heightPercentage = heightAnimatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["40%", "55%"],
+  });
 
   return (
     <Portal>
       <Modal
         visible={visible}
         onDismiss={() => setVisible(false)}
-        contentContainerStyle={modal_container}
+        contentContainerStyle={style.modal_container}
       >
-        <View style={[inputs_container]}>
-          <DropDown
-            activeColor={colors.accent}
-            label="Exercise Type"
-            mode="outlined"
-            visible={showDropdown}
-            showDropDown={() => setShowDropdown(!showDropdown)}
-            onDismiss={() => setShowDropdown(!showDropdown)}
-            value={exerciseType}
-            setValue={(value) => setExerciseType(value)}
-            list={exerciseList}
-          />
+        <Animated.View
+          style={[style.inputs_container, { height: heightPercentage }]}
+        >
+          <View style={style.input}>
+            <DropDown
+              activeColor={colors.accent}
+              label="Exercise Type"
+              mode="outlined"
+              visible={showDropdown}
+              showDropDown={() => setShowDropdown(!showDropdown)}
+              onDismiss={() => setShowDropdown(!showDropdown)}
+              value={exerciseType}
+              setValue={(value) => setExerciseType(value)}
+              list={exerciseList}
+            />
+          </View>
           <TextInput
             activeOutlineColor={colors.accent}
-            style={input}
+            style={[style.input, style.input_text]}
             label="Exercise Name"
             mode="outlined"
           />
-          <Button style={add_button}>ADD</Button>
-        </View>
+          <Button
+            style={style.add_button}
+            textColor={colors.accent}
+            uppercase={true}
+            mode="text"
+          >
+            Add Exercise
+          </Button>
+        </Animated.View>
       </Modal>
     </Portal>
   );
