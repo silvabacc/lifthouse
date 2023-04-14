@@ -1,0 +1,11 @@
+.Home {
+  display: flex;
+  flex-direction: column;
+
+  &__Card_Container {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
