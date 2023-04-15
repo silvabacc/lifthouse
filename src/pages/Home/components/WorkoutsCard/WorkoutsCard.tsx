@@ -13,9 +13,9 @@ interface WorkoutsCardProps {
 const WorkoutsCard: React.FC<WorkoutsCardProps> = ({ image, title }) => {
   return (
     <Card
+      className={styles.WorkoutCard}
       bordered={false}
       hoverable
-      className={styles.WorkoutCard}
       cover={<img alt="example" src={image} />}
     >
       <Meta description={<Text strong>{title}</Text>} />
