@@ -1,4 +1,11 @@
-enum ExerciseType {
+export enum Workout {
+  UPPER_INTENSITY = "UPPER_INTENSITY",
+  UPPER_VOLUME = "UPPER_INTENSITY",
+  LOWER_INTENSITY = "LOWER_INTENSITY",
+  LOWER_VOLUME = "LOWER_VOLUME",
+}
+
+export enum ExerciseType {
   VERTICAL_PRESS = "VERTICAL_PRESS",
   HORIZONTAL_PRESS = "HORIZONTAL_PRESS",
   ACCESSORY_CHEST = "ACCESSORY_CHEST",
@@ -15,7 +22,12 @@ enum ExerciseType {
   ABS = "ABS",
 }
 
-const exercises = [
+export interface Exercise {
+  name: string;
+  type: ExerciseType;
+}
+
+export const exercises: Exercise[] = [
   {
     name: "Overhead Press with Barbell whilst standing",
     type: ExerciseType.VERTICAL_PRESS,
@@ -79,13 +91,13 @@ const exercises = [
   { name: "Bench Press with Dumbbells", type: ExerciseType.HORIZONTAL_PRESS },
   {
     name: "Bench Press with Dumbbells with a neutral grip",
-    type: "ExerciseType.HORIZONTAL_PRESS",
+    type: ExerciseType.HORIZONTAL_PRESS,
   },
   { name: "Dead Bench Press", type: ExerciseType.HORIZONTAL_PRESS },
   { name: "Larson Press with Barbell", type: ExerciseType.HORIZONTAL_PRESS },
   {
     name: "Larson Press with Dumbbells",
-    type: "ExerciseType.HORIZONTAL_PRESS",
+    type: ExerciseType.HORIZONTAL_PRESS,
   },
   { name: "Floor Press with Dumbbells", type: ExerciseType.HORIZONTAL_PRESS },
   { name: "Barrell Press", type: ExerciseType.HORIZONTAL_PRESS },

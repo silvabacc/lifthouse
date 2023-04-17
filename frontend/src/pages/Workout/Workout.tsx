@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { WorkoutTypes } from "./types";
 import { Typography } from "antd";
 
+import "../../../../backend/db";
+
 const { Title } = Typography;
 
 const pageTitleMapping = {
