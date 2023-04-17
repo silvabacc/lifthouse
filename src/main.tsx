@@ -3,7 +3,7 @@ import "antd/dist/reset.css";
 import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./pages/Home/Home";
-import Workout from "./pages/Home/components/Workout";
+import Workout from "./pages/Workout/Workout";
 
 const router = createBrowserRouter([
   {
@@ -11,7 +11,7 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/workout",
+    path: "/workout/:workoutType",
     element: <Workout />,
   },
 ]);
