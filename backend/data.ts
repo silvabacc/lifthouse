@@ -22,6 +22,33 @@ export enum ExerciseType {
   ABS = "ABS",
 }
 
+const IntensityRepRange = {
+  THREE_BY_THREE: { set: 3, reps: "3" },
+  THREE_BY_FIVE: { set: 3, reps: "5" },
+  FOUR_BY_FOUR_TO_SIX: { set: 4, reps: "4-6" },
+  FIVE_BY_FIVE: { set: 5, reps: "5" },
+  FIVE_BY_THREE: { set: 5, reps: "3" },
+  FIVE_BY_TWO: { set: 5, reps: "2" },
+  FIVE_BY_ONE: { set: 5, reps: "1" },
+  THREE_BY_SIX_TO_8: { set: 3, reps: "6-8" },
+  THREE_BY_SIX_TO_10: { set: 3, reps: "6-10" },
+};
+
+const VolumeRepRange = {
+  THREE_BY_EIGHT_TO_TWELVE: { set: 3, reps: "8-12" },
+  FIVE_BY_TEN: { set: 5, reps: "10" },
+  FIVE_BY_EIGHT: { set: 5, reps: "8" },
+  THREE_BY_TWELVE_TO_FIFTEN: { set: 3, reps: "12-15" },
+  THREE_BY_TWENTY: { set: 3, reps: "20" },
+  FIVE_BY_TWENTY: { set: 5, reps: "20" },
+  THREE_BY_THIRTYTHREE: { set: 3, reps: "33" },
+  FOUR_BY_TWENTYFIVE: { set: 4, reps: "25" },
+  THREE_BY_AMRAP: { set: 3, reps: "AMRAP" },
+  SIX_BY_SIX: { set: 6, reps: "6" },
+  EIGHT_BY_EIGHT: { set: 6, reps: "8" },
+  TEN_BY_TEN: { set: 10, reps: "10" },
+};
+
 export interface Exercise {
   name: string;
   type: ExerciseType;

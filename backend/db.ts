@@ -5,6 +5,8 @@ export interface Workouts {
   id?: number;
   workout: Workouts;
   exercises: Exercise[];
+  sets: number;
+  reps: string;
 }
 
 export interface Exercises {
@@ -13,15 +15,25 @@ export interface Exercises {
   type: ExerciseType;
 }
 
+export interface LogEntry {
+  id?: number;
+  exercise: Exercise;
+  set: number;
+  reps: number;
+  weight: number;
+}
+
 export class LifthouseDatabase extends Dexie {
   workouts!: Table<Workouts>;
   exercises!: Table<Exercises>;
+  logEntry!: Table<LogEntry>;
 
   constructor() {
     super("lifthousedatabase");
     this.version(1).stores({
-      workouts: "++id, workout, exercises",
+      workouts: "++id, workout, exercises, sets, reps",
       exercises: "++id, name, type",
+      logEntry: "++id, exercise, set, reps, weight",
     });
 
     this.exercises.count().then((value) => {
