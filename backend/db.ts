@@ -1,9 +1,14 @@
 import Dexie, { Table } from "dexie";
-import { Exercise, ExerciseType, exercises as exercisesData } from "./data";
+import {
+  Exercise,
+  ExerciseType,
+  Routine,
+  exercises as exercisesData,
+} from "./data";
 
-export interface Workouts {
+export interface Routines {
   id?: number;
-  workout: Workouts;
+  routine: Routine;
   exercises: Exercise[];
   sets: number;
   reps: string;
@@ -19,19 +24,19 @@ export interface LogEntry {
   id?: number;
   exercise: Exercise;
   set: number;
-  reps: number;
+  reps: string;
   weight: number;
 }
 
 export class LifthouseDatabase extends Dexie {
-  workouts!: Table<Workouts>;
+  routines!: Table<Routines>;
   exercises!: Table<Exercises>;
   logEntry!: Table<LogEntry>;
 
   constructor() {
     super("lifthousedatabase");
     this.version(1).stores({
-      workouts: "++id, workout, exercises, sets, reps",
+      routines: "++id, routine, exercises, sets, reps",
       exercises: "++id, name, type",
       logEntry: "++id, exercise, set, reps, weight",
     });
@@ -43,6 +48,10 @@ export class LifthouseDatabase extends Dexie {
         });
       }
     });
+  }
+
+  getRoutine(routine: Routine) {
+    return this.routines.where("routine").equals(routine).toArray();
   }
 }
 

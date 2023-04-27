@@ -1,4 +1,4 @@
-export enum Workout {
+export enum Routine {
   UPPER_INTENSITY = "UPPER_INTENSITY",
   UPPER_VOLUME = "UPPER_INTENSITY",
   LOWER_INTENSITY = "LOWER_INTENSITY",

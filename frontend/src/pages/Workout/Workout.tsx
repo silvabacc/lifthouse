@@ -1,20 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { WorkoutTypes } from "./types";
 import { Collapse, Tabs, TabsProps, Typography } from "antd";
-const { Panel } = Collapse;
 
 import "../../../../backend/db";
 import SetsReps from "./SetsReps";
+import { useDatabase } from "../hooks/useDatabase";
+import { pageTitleMapping, paramsMapping, routineSetup } from "./constants";
+import { Routine } from "../../../../backend/data";
 
+const { Panel } = Collapse;
 const { Title } = Typography;
-
-const pageTitleMapping = {
-  [WorkoutTypes.UPPER_INTENSITY]: "Upper Intensity",
-  [WorkoutTypes.UPPER_VOLUME]: "Upper Volume",
-  [WorkoutTypes.LOWER_INTENSITY]: "Lower Intensity",
-  [WorkoutTypes.LOWER_VOLUME]: "Lower Volume",
-};
 
 const items: TabsProps["items"] = [
   {
@@ -30,16 +25,29 @@ const items: TabsProps["items"] = [
 ];
 
 const Workout: React.FC = () => {
-  const { workoutType } = useParams();
+  const { routineType } = useParams();
+  const { fetchRoutinePlan } = useDatabase();
+
+  const routine: Routine = paramsMapping[routineType!];
+
+  const { data: routines } = fetchRoutinePlan(routine);
+
+  if (!routine) {
+    return <>404 Not found</>;
+  }
 
   return (
     <>
-      <Title>{pageTitleMapping[workoutType]}</Title>
-      <Collapse size="large">
-        <Panel header="Bench Press" key="1">
-          <Tabs items={items} />
-        </Panel>
-      </Collapse>
+      <Title>{pageTitleMapping[routine]}</Title>
+      {routineSetup[routine].map((item) => {
+        return (
+          <Collapse size="large">
+            <Panel header={item} key="1">
+              <Tabs items={items} />
+            </Panel>
+          </Collapse>
+        );
+      })}
     </>
   );
 };
