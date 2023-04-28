@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Collapse, Space, Tabs, TabsProps, Typography } from "antd";
+import { Button, Collapse, Space, Tabs, TabsProps, Typography } from "antd";
 
 import "../../../../backend/db";
 import SetsReps from "./SetsReps";
 import { useDatabase } from "../hooks/useDatabase";
 import { pageTitleMapping, paramsMapping } from "./constants";
 import { Routine } from "../../../../backend/data";
+import WorkoutButton from "./WorkoutButton";
 
 const { Panel } = Collapse;
 const { Title, Text } = Typography;
@@ -24,7 +25,7 @@ const Workout: React.FC = () => {
   }
 
   return (
-    <>
+    <Space direction="vertical">
       <Title>{pageTitleMapping[routine]}</Title>
       {routines?.exercises.map((exercise) => {
         const items: TabsProps["items"] = [
@@ -59,7 +60,8 @@ const Workout: React.FC = () => {
           </Collapse>
         );
       })}
-    </>
+      <WorkoutButton>Finish Workout</WorkoutButton>
+    </Space>
   );
 };
 

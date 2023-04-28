@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, StepProps, Steps } from "antd";
 import SetsRepsRow from "./SetsRepsRow";
-import style from "./SetsReps.module.scss";
+import WorkoutButton from "./WorkoutButton";
 
 interface SetsRepsProps {
   sets?: number;
@@ -24,14 +24,12 @@ const SetsReps: React.FC<SetsRepsProps> = ({ sets }) => {
   return (
     <>
       <Steps direction="vertical" current={current} items={items} />
-      <Button
-        type="primary"
-        className={style.SetsReps__Button}
+      <WorkoutButton
         onClick={() => setCurrent((prev) => prev - 1)}
         disabled={current === 0}
       >
         Previous Set
-      </Button>
+      </WorkoutButton>
     </>
   );
 };
