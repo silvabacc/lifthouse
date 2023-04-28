@@ -1,28 +1,15 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Collapse, Tabs, TabsProps, Typography } from "antd";
+import { Collapse, Space, Tabs, TabsProps, Typography } from "antd";
 
 import "../../../../backend/db";
 import SetsReps from "./SetsReps";
 import { useDatabase } from "../hooks/useDatabase";
-import { pageTitleMapping, paramsMapping, routineSetup } from "./constants";
+import { pageTitleMapping, paramsMapping } from "./constants";
 import { Routine } from "../../../../backend/data";
 
 const { Panel } = Collapse;
-const { Title } = Typography;
-
-const items: TabsProps["items"] = [
-  {
-    key: "1",
-    label: `Sets & Reps`,
-    children: <SetsReps />,
-  },
-  {
-    key: "2",
-    label: `History`,
-    children: `History`,
-  },
-];
+const { Title, Text } = Typography;
 
 const Workout: React.FC = () => {
   const { routineType } = useParams();
@@ -39,10 +26,34 @@ const Workout: React.FC = () => {
   return (
     <>
       <Title>{pageTitleMapping[routine]}</Title>
-      {routineSetup[routine].map((item) => {
+      {routines?.exercises.map((exercise) => {
+        const items: TabsProps["items"] = [
+          {
+            key: "sets",
+            label: `Sets & Reps`,
+            children: <SetsReps sets={exercise.sets} />,
+          },
+          {
+            key: "history",
+            label: `History`,
+            children: `History`,
+          },
+        ];
+
         return (
           <Collapse size="large">
-            <Panel header={item} key="1">
+            <Panel
+              header={
+                <Space direction="vertical">
+                  <Text strong>{exercise.name}</Text>
+                  <Space>
+                    <Text keyboard>{exercise.sets}</Text>x
+                    <Text keyboard>{exercise.reps}</Text>
+                  </Space>
+                </Space>
+              }
+              key={exercise.name}
+            >
               <Tabs items={items} />
             </Panel>
           </Collapse>

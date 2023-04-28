@@ -3,15 +3,15 @@ import {
   Exercise,
   ExerciseType,
   Routine,
+  exercises,
   exercises as exercisesData,
+  routineSetup,
 } from "./data";
 
 export interface Routines {
   id?: number;
   routine: Routine;
   exercises: Exercise[];
-  sets: number;
-  reps: string;
 }
 
 export interface Exercises {
@@ -36,7 +36,7 @@ export class LifthouseDatabase extends Dexie {
   constructor() {
     super("lifthousedatabase");
     this.version(1).stores({
-      routines: "++id, routine, exercises, sets, reps",
+      routines: "++id, routine, exercises",
       exercises: "++id, name, type",
       logEntry: "++id, exercise, set, reps, weight",
     });
@@ -45,6 +45,21 @@ export class LifthouseDatabase extends Dexie {
       if (!value) {
         exercisesData.forEach((exercise) => {
           this.exercises.add({ name: exercise.name, type: exercise.type });
+        });
+      }
+    });
+
+    this.routines.count().then((value) => {
+      if (!value) {
+        Object.values(Routine).forEach((routine) => {
+          this.routines.add({
+            routine,
+            exercises: routineSetup[routine].map((setup) => ({
+              ...exercises.find((exercise) => setup === exercise.type)!,
+              sets: 3,
+              reps: "8-12",
+            })),
+          });
         });
       }
     });

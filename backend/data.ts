@@ -1,6 +1,6 @@
 export enum Routine {
   UPPER_INTENSITY = "UPPER_INTENSITY",
-  UPPER_VOLUME = "UPPER_INTENSITY",
+  UPPER_VOLUME = "UPPER_VOLUME",
   LOWER_INTENSITY = "LOWER_INTENSITY",
   LOWER_VOLUME = "LOWER_VOLUME",
 }
@@ -49,7 +49,51 @@ const VolumeRepRange = {
   TEN_BY_TEN: { set: 10, reps: "10" },
 };
 
-export interface Exercise {
+export const routineSetup = {
+  [Routine.UPPER_INTENSITY]: [
+    ExerciseType.VERTICAL_PRESS,
+    ExerciseType.HORIZONTAL_PRESS,
+    ExerciseType.ACCESSORY_CHEST,
+    ExerciseType.UPPER_BACK,
+    ExerciseType.UPPER_BACK,
+    ExerciseType.ACCESSORY_SHOULDER,
+    ExerciseType.BICEPS,
+    ExerciseType.FOREARMS,
+  ],
+  [Routine.UPPER_VOLUME]: [
+    ExerciseType.VERTICAL_PRESS,
+    ExerciseType.HORIZONTAL_PRESS,
+    ExerciseType.UPPER_BACK,
+    ExerciseType.UPPER_BACK,
+    ExerciseType.TRAPS,
+    ExerciseType.ACCESSORY_SHOULDER,
+    ExerciseType.TRICEPS,
+    ExerciseType.TRICEPS,
+    ExerciseType.BICEPS,
+    ExerciseType.FOREARMS,
+  ],
+  [Routine.LOWER_INTENSITY]: [
+    ExerciseType.LEGS_SQUAT,
+    ExerciseType.LEGS_DV,
+    ExerciseType.ACCESSORY_LEGS,
+    ExerciseType.ACCESSORY_LEGS,
+    ExerciseType.VERTICAL_PULL,
+  ],
+  [Routine.LOWER_VOLUME]: [
+    ExerciseType.LEGS_SQUAT,
+    ExerciseType.LEGS_DV,
+    ExerciseType.ACCESSORY_LEGS,
+    ExerciseType.ACCESSORY_LEGS,
+    ExerciseType.VERTICAL_PULL,
+  ],
+};
+
+export interface RepRange {
+  sets?: number;
+  reps?: string;
+}
+
+export interface Exercise extends RepRange {
   name: string;
   type: ExerciseType;
 }
