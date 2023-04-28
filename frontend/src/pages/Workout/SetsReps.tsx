@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import { Button, StepProps, Steps } from "antd";
 import SetsRepsRow from "./SetsRepsRow";
 import WorkoutButton from "./WorkoutButton";
+import { useDatabase } from "../hooks/useDatabase";
+import { Exercise } from "../../../../backend/data";
 
 interface SetsRepsProps {
-  sets?: number;
+  exercise: Exercise;
 }
 
-const SetsReps: React.FC<SetsRepsProps> = ({ sets }) => {
+const SetsReps: React.FC<SetsRepsProps> = ({ exercise }) => {
   const [current, setCurrent] = useState(0);
+  const { sets } = exercise;
 
   let items: StepProps[] = [];
 
@@ -17,7 +20,14 @@ const SetsReps: React.FC<SetsRepsProps> = ({ sets }) => {
       ...items,
       {
         title: `Set ${i + 1}`,
-        description: <SetsRepsRow next={setCurrent} disabled={i !== current} />,
+        description: (
+          <SetsRepsRow
+            set={i + 1}
+            exercise={exercise}
+            next={setCurrent}
+            disabled={i !== current}
+          />
+        ),
       },
     ];
   }

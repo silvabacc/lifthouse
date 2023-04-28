@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button, Collapse, Space, Tabs, TabsProps, Typography } from "antd";
 
 import "../../../../backend/db";
@@ -14,54 +14,68 @@ const { Title, Text } = Typography;
 
 const Workout: React.FC = () => {
   const { routineType } = useParams();
-  const { fetchRoutinePlan } = useDatabase();
+  const { fetchRoutinePlan, clearTemporaryStorage } = useDatabase();
+  const navigate = useNavigate();
 
   const routine: Routine = paramsMapping[routineType!];
 
-  const { data: routines } = fetchRoutinePlan(routine);
+  const { data: routines, isLoading } = fetchRoutinePlan(routine);
 
   if (!routine) {
     return <>404 Not found</>;
   }
 
   return (
-    <Space direction="vertical">
-      <Title>{pageTitleMapping[routine]}</Title>
-      {routines?.exercises.map((exercise) => {
-        const items: TabsProps["items"] = [
-          {
-            key: "sets",
-            label: `Sets & Reps`,
-            children: <SetsReps sets={exercise.sets} />,
-          },
-          {
-            key: "history",
-            label: `History`,
-            children: `History`,
-          },
-        ];
+    <>
+      {isLoading ? (
+        <Text>Loading</Text>
+      ) : (
+        <Space direction="vertical">
+          <Title>{pageTitleMapping[routine]}</Title>
+          {routines?.exercises.map((exercise) => {
+            const items: TabsProps["items"] = [
+              {
+                key: "sets",
+                label: `Sets & Reps`,
+                children: <SetsReps exercise={exercise} />,
+              },
+              {
+                key: "history",
+                label: `History`,
+                children: `History`,
+              },
+            ];
 
-        return (
-          <Collapse size="large">
-            <Panel
-              header={
-                <Space direction="vertical">
-                  <Text strong>{exercise.name}</Text>
-                  <Space>
-                    <Text keyboard>{exercise.sets}</Text>x
-                    <Text keyboard>{exercise.reps}</Text>
-                  </Space>
-                </Space>
-              }
-              key={exercise.name}
-            >
-              <Tabs items={items} />
-            </Panel>
-          </Collapse>
-        );
-      })}
-      <WorkoutButton>Finish Workout</WorkoutButton>
-    </Space>
+            return (
+              <Collapse size="large">
+                <Panel
+                  header={
+                    <Space direction="vertical">
+                      <Text strong>{exercise.name}</Text>
+                      <Space>
+                        <Text keyboard>{exercise.sets}</Text>x
+                        <Text keyboard>{exercise.reps}</Text>
+                      </Space>
+                    </Space>
+                  }
+                  key={exercise.name}
+                >
+                  <Tabs items={items} />
+                </Panel>
+              </Collapse>
+            );
+          })}
+          <WorkoutButton
+            onClick={() => {
+              navigate("/");
+              clearTemporaryStorage();
+            }}
+          >
+            Finish Workout
+          </WorkoutButton>
+        </Space>
+      )}
+    </>
   );
 };
 

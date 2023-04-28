@@ -96,6 +96,7 @@ export interface RepRange {
 export interface Exercise extends RepRange {
   name: string;
   type: ExerciseType;
+  weight?: number;
 }
 
 export const exercises: Exercise[] = [
