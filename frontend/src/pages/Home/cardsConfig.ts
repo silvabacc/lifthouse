@@ -4,6 +4,7 @@ import EddieImage from "./components/WorkoutsCard/images/eddie_hall.png";
 import TomPlatzImage from "./components/WorkoutsCard/images/tom_platz.png";
 import GrizzlyImage from "./components/WorkoutsCard/images/grizzly.png";
 import MealTrackerImage from "./components/WorkoutsCard/images/meal_tracker.png";
+import { Routine } from "../../../../backend/data";
 
 const ROUTE = "/routine";
 
@@ -11,22 +12,22 @@ export const workoutCards = [
   {
     title: "Upper Intensity",
     image: BigZImage,
-    route: `${ROUTE}/upperintensity`,
+    route: `${ROUTE}/${Routine.UPPER_INTENSITY}`,
   },
   {
     title: "Upper Volume",
     image: ArnoldImage,
-    route: `${ROUTE}/uppervolume`,
+    route: `${ROUTE}/${Routine.UPPER_VOLUME}`,
   },
   {
     title: "Lower Intensity",
     image: EddieImage,
-    route: `${ROUTE}/lowerintensity`,
+    route: `${ROUTE}/${Routine.LOWER_INTENSITY}`,
   },
   {
     title: "Lower Volume",
     image: TomPlatzImage,
-    route: `${ROUTE}/lowervolume`,
+    route: `${ROUTE}/${Routine.LOWER_VOLUME}`,
   },
 ];
 

@@ -17,12 +17,10 @@ const Workout: React.FC = () => {
   const { fetchRoutinePlan, clearTemporaryStorage } = useDatabase();
   const navigate = useNavigate();
 
-  const routine: Routine = paramsMapping[routineType!];
+  const { data: routines, isLoading } = fetchRoutinePlan(routineType);
 
-  const { data: routines, isLoading } = fetchRoutinePlan(routine);
-
-  if (!routine) {
-    return <>404 Not found</>;
+  if (!Object.values(Routine).includes(routineType)) {
+    return <>Not found</>;
   }
 
   return (
@@ -31,7 +29,7 @@ const Workout: React.FC = () => {
         <Text>Loading</Text>
       ) : (
         <Space direction="vertical">
-          <Title>{pageTitleMapping[routine]}</Title>
+          <Title>{pageTitleMapping[routineType]}</Title>
           {routines?.exercises.map((exercise) => {
             const items: TabsProps["items"] = [
               {

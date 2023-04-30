@@ -31,6 +31,7 @@ export interface LogEntry {
 export interface TemporaryStorage {
   id?: number;
   exercise: Exercise;
+  routine: Routine;
   set: number;
   reps: string;
   weight: number;
@@ -48,7 +49,7 @@ export class LifthouseDatabase extends Dexie {
       routines: "++id, routine, exercises",
       exercises: "++id, name, type",
       logEntry: "++id, exercise, set, reps, weight",
-      temporaryStorage: "++id, exercise.name, set, reps, weight",
+      temporaryStorage: "++id, exercise.name, routine, set, reps, weight",
     });
 
     this.exercises.count().then((value) => {
@@ -79,21 +80,22 @@ export class LifthouseDatabase extends Dexie {
     return this.routines.where("routine").equals(routine).toArray();
   }
 
-  async getTemporaryStorage(exercise: Exercise) {
+  async getTemporaryStorage(routine: Routine) {
     return await this.temporaryStorage
-      .where("exercise.name")
-      .equals(exercise.name)
+      .where("routine")
+      .equals(routine)
       .reverse()
       .toArray();
   }
 
   writeTemporaryStorage(
     exercise: Exercise,
+    routine: Routine,
     set: number,
     weight: number,
     reps: string
   ) {
-    this.temporaryStorage.add({ exercise, set, weight, reps });
+    this.temporaryStorage.add({ exercise, routine, set, weight, reps });
   }
 
   clearTemporaryStorage() {

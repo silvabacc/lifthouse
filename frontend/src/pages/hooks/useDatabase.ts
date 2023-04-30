@@ -10,20 +10,21 @@ export const useDatabase = () => {
     });
   };
 
-  const fetchTemporaryStorage = (exercise: Exercise) => {
+  const fetchTemporaryStorage = (routine: Routine) => {
     return useQuery("temporary", async () => {
-      const result = await db.getTemporaryStorage(exercise);
+      const result = await db.getTemporaryStorage(routine);
       return result;
     });
   };
 
   const writeToTemporaryStorage = (
     exercise: Exercise,
+    routine: Routine,
     set: number,
     weight: number,
     reps: string
   ) => {
-    db.writeTemporaryStorage(exercise, set, weight, reps);
+    db.writeTemporaryStorage(exercise, routine, set, weight, reps);
   };
 
   const clearTemporaryStorage = () => {
