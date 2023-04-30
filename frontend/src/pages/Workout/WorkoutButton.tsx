@@ -6,9 +6,18 @@ interface WorkoutButtonProps extends ButtonProps {
   children: React.ReactNode;
 }
 
-const WorkoutButton: React.FC<WorkoutButtonProps> = ({ children, onClick }) => {
+const WorkoutButton: React.FC<WorkoutButtonProps> = ({
+  children,
+  disabled,
+  onClick,
+}) => {
   return (
-    <Button className={style.WorkoutButton} type="primary" onClick={onClick}>
+    <Button
+      className={style.WorkoutButton}
+      type="primary"
+      onClick={onClick}
+      disabled={disabled}
+    >
       {children}
     </Button>
   );
