@@ -1,6 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, Collapse, Space, Tabs, TabsProps, Typography } from "antd";
+import {
+  Button,
+  Collapse,
+  Space,
+  Tabs,
+  TabsProps,
+  Typography,
+  AutoComplete,
+} from "antd";
 
 import "../../../../backend/db";
 import SetsReps from "./SetsReps";
@@ -8,6 +16,7 @@ import { useDatabase } from "../hooks/useDatabase";
 import { pageTitleMapping, paramsMapping } from "./constants";
 import { Routine } from "../../../../backend/data";
 import WorkoutButton from "./WorkoutButton";
+import EditExercise from "./EditExercise";
 
 const { Panel } = Collapse;
 const { Title, Text } = Typography;
@@ -16,6 +25,8 @@ const Workout: React.FC = () => {
   const { routineType } = useParams();
   const { fetchRoutinePlan, clearTemporaryStorage } = useDatabase();
   const navigate = useNavigate();
+  const [edit, setEdit] = useState(false);
+  const [collapsed, setCollapsed] = useState<string[]>([]);
 
   const { data: routines, isLoading } = fetchRoutinePlan(routineType);
 
@@ -28,8 +39,19 @@ const Workout: React.FC = () => {
       {isLoading ? (
         <Text>Loading</Text>
       ) : (
-        <Space direction="vertical">
-          <Title>{pageTitleMapping[routineType]}</Title>
+        <Space direction="vertical" style={{ marginBottom: 8 }}>
+          <Space direction="horizontal">
+            <Title>{pageTitleMapping[routineType]}</Title>
+            <Button
+              onClick={() => {
+                setEdit((prev) => !prev);
+              }}
+              type="link"
+            >
+              {edit ? "Save" : "Edit"}
+            </Button>
+          </Space>
+
           {routines?.exercises.map((exercise) => {
             const items: TabsProps["items"] = [
               {
@@ -45,11 +67,24 @@ const Workout: React.FC = () => {
             ];
 
             return (
-              <Collapse size="large">
+              <Collapse
+                size="large"
+                collapsible={edit ? "disabled" : undefined}
+                activeKey={edit ? [] : collapsed}
+                style={{ width: edit ? "90%" : "100%" }}
+                onChange={(keys) => setCollapsed(keys as string[])}
+              >
                 <Panel
                   header={
                     <Space direction="vertical">
-                      <Text strong>{exercise.name}</Text>
+                      {edit ? (
+                        <EditExercise
+                          placeholder={exercise.name}
+                          exerciseType={exercise.type}
+                        />
+                      ) : (
+                        <Text strong>{exercise.name}</Text>
+                      )}
                       <Space>
                         <Text keyboard>{exercise.sets}</Text>x
                         <Text keyboard>{exercise.reps}</Text>
@@ -63,6 +98,7 @@ const Workout: React.FC = () => {
               </Collapse>
             );
           })}
+
           <WorkoutButton
             onClick={() => {
               navigate("/");

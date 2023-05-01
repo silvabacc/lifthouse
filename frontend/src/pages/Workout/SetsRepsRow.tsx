@@ -49,7 +49,6 @@ const SetsRepsRow: React.FC<SetsRepsRow> = ({
       />
       <Button
         type="ghost"
-        size="large"
         disabled={disabled}
         onClick={() => {
           writeToTemporaryStorage(

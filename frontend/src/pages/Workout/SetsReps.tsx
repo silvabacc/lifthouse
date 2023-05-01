@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, StepProps, Steps } from "antd";
+import { StepProps, Steps } from "antd";
 import SetsRepsRow from "./SetsRepsRow";
 import WorkoutButton from "./WorkoutButton";
 import { useDatabase } from "../hooks/useDatabase";
 import { Exercise, Routine } from "../../../../backend/data";
 import { useParams } from "react-router-dom";
-import { paramsMapping } from "./constants";
 
 interface SetsRepsProps {
   exercise: Exercise;

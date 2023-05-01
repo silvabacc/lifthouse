@@ -88,6 +88,10 @@ export class LifthouseDatabase extends Dexie {
       .toArray();
   }
 
+  getExercises(exerciseType: ExerciseType) {
+    return this.exercises.where("type").equals(exerciseType).toArray();
+  }
+
   writeTemporaryStorage(
     exercise: Exercise,
     routine: Routine,
@@ -96,6 +100,10 @@ export class LifthouseDatabase extends Dexie {
     reps: string
   ) {
     this.temporaryStorage.add({ exercise, routine, set, weight, reps });
+  }
+
+  writeExerciseToRoutine(routine: Routine, exercises: Exercise[]) {
+    this.routines.update(routine, exercises);
   }
 
   clearTemporaryStorage() {

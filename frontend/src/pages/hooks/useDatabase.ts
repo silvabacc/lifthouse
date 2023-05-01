@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { Exercise, Routine } from "../../../../backend/data";
+import { Exercise, ExerciseType, Routine } from "../../../../backend/data";
 import { db } from "../../../../backend/db";
 
 export const useDatabase = () => {
@@ -14,6 +14,13 @@ export const useDatabase = () => {
     return useQuery("temporary", async () => {
       const result = await db.getTemporaryStorage(routine);
       return result;
+    });
+  };
+
+  const fetchExercises = (exericseType: ExerciseType) => {
+    return useQuery("exercises", async () => {
+      const result = await db.getExercises(exericseType);
+      return result.map((exercise) => exercise.name);
     });
   };
 
@@ -34,6 +41,7 @@ export const useDatabase = () => {
   return {
     fetchRoutinePlan,
     fetchTemporaryStorage,
+    fetchExercises,
     writeToTemporaryStorage,
     clearTemporaryStorage,
   };
