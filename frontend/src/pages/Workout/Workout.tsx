@@ -8,6 +8,7 @@ import {
   TabsProps,
   Typography,
   AutoComplete,
+  Form,
 } from "antd";
 
 import "../../../../backend/db";
@@ -16,7 +17,8 @@ import { useDatabase } from "../hooks/useDatabase";
 import { pageTitleMapping, paramsMapping } from "./constants";
 import { Routine } from "../../../../backend/data";
 import WorkoutButton from "./WorkoutButton";
-import EditExercise from "./EditExercise";
+import SelectExercise from "./SelectExercise";
+import EditRoutine from "./EditRoutine";
 
 const { Panel } = Collapse;
 const { Title, Text } = Typography;
@@ -34,81 +36,80 @@ const Workout: React.FC = () => {
     return <>Not found</>;
   }
 
+  if (isLoading || !routines) {
+    return <>Loading...</>;
+  }
+
   return (
     <>
-      {isLoading ? (
-        <Text>Loading</Text>
-      ) : (
-        <Space direction="vertical" style={{ marginBottom: 8 }}>
-          <Space direction="horizontal">
-            <Title>{pageTitleMapping[routineType]}</Title>
-            <Button
-              onClick={() => {
-                setEdit((prev) => !prev);
-              }}
-              type="link"
-            >
-              {edit ? "Save" : "Edit"}
-            </Button>
-          </Space>
-
-          {routines?.exercises.map((exercise) => {
-            const items: TabsProps["items"] = [
-              {
-                key: "sets",
-                label: `Sets & Reps`,
-                children: <SetsReps exercise={exercise} />,
-              },
-              {
-                key: "history",
-                label: `History`,
-                children: `History`,
-              },
-            ];
-
-            return (
-              <Collapse
-                size="large"
-                collapsible={edit ? "disabled" : undefined}
-                activeKey={edit ? [] : collapsed}
-                style={{ width: edit ? "90%" : "100%" }}
-                onChange={(keys) => setCollapsed(keys as string[])}
-              >
-                <Panel
-                  header={
-                    <Space direction="vertical">
-                      {edit ? (
-                        <EditExercise
-                          placeholder={exercise.name}
-                          exerciseType={exercise.type}
-                        />
-                      ) : (
-                        <Text strong>{exercise.name}</Text>
-                      )}
-                      <Space>
-                        <Text keyboard>{exercise.sets}</Text>x
-                        <Text keyboard>{exercise.reps}</Text>
-                      </Space>
-                    </Space>
-                  }
-                  key={exercise.name}
-                >
-                  <Tabs items={items} />
-                </Panel>
-              </Collapse>
-            );
-          })}
-
-          <WorkoutButton
+      <Space direction="vertical" style={{ marginBottom: 8 }}>
+        <Space direction="horizontal">
+          <Title>{pageTitleMapping[routineType]}</Title>
+          <Button
             onClick={() => {
-              navigate("/");
-              clearTemporaryStorage();
+              setEdit((prev) => !prev);
             }}
+            type="link"
           >
-            Finish Workout
-          </WorkoutButton>
+            {edit ? "Save" : "Edit"}
+          </Button>
         </Space>
-      )}
+        {edit ? (
+          <>
+            <EditRoutine routine={routines} />
+          </>
+        ) : (
+          <>
+            {routines?.exercises.map((exercise) => {
+              const items: TabsProps["items"] = [
+                {
+                  key: "sets",
+                  label: `Sets & Reps`,
+                  children: <SetsReps exercise={exercise} />,
+                },
+                {
+                  key: "history",
+                  label: `History`,
+                  children: `History`,
+                },
+              ];
+
+              return (
+                <Collapse
+                  size="large"
+                  collapsible={edit ? "disabled" : undefined}
+                  activeKey={edit ? [] : collapsed}
+                  style={{ width: edit ? "90%" : "100%" }}
+                  onChange={(keys) => setCollapsed(keys as string[])}
+                >
+                  <Panel
+                    header={
+                      <Space direction="vertical">
+                        <Text strong>{exercise.name}</Text>
+                        <Space>
+                          <Text keyboard>{exercise.sets}</Text>x
+                          <Text keyboard>{exercise.reps}</Text>
+                        </Space>
+                      </Space>
+                    }
+                    key={exercise.name}
+                  >
+                    <Tabs items={items} />
+                  </Panel>
+                </Collapse>
+              );
+            })}
+            <WorkoutButton
+              onClick={() => {
+                navigate("/");
+                clearTemporaryStorage();
+              }}
+            >
+              Finish Workout
+            </WorkoutButton>
+          </>
+        )}
+      </Space>
     </>
   );
 };

@@ -3,6 +3,7 @@ import {
   Exercise,
   ExerciseType,
   Routine,
+  defaultRoutines,
   exercises,
   exercises as exercisesData,
   routineSetup,
@@ -62,16 +63,7 @@ export class LifthouseDatabase extends Dexie {
 
     this.routines.count().then((value) => {
       if (!value) {
-        Object.values(Routine).forEach((routine) => {
-          this.routines.add({
-            routine,
-            exercises: routineSetup[routine].map((setup) => ({
-              ...exercises.find((exercise) => setup === exercise.type)!,
-              sets: 3,
-              reps: "8-12",
-            })),
-          });
-        });
+        defaultRoutines.map((routine) => this.routines.add(routine));
       }
     });
   }
@@ -88,8 +80,8 @@ export class LifthouseDatabase extends Dexie {
       .toArray();
   }
 
-  getExercises(exerciseType: ExerciseType) {
-    return this.exercises.where("type").equals(exerciseType).toArray();
+  getExercises() {
+    return this.exercises.toArray();
   }
 
   writeTemporaryStorage(

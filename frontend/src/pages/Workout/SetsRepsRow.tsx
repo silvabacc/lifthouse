@@ -23,7 +23,7 @@ const SetsRepsRow: React.FC<SetsRepsRow> = ({
   disabled,
   next,
 }) => {
-  const { writeToTemporaryStorage } = useDatabase();
+  const { updateTemporaryStorage } = useDatabase();
   const { routineType } = useParams();
   const [reps, setReps] = useState(overrideReps);
   const [weight, setWeight] = useState(overrideWeights);
@@ -51,7 +51,7 @@ const SetsRepsRow: React.FC<SetsRepsRow> = ({
         type="ghost"
         disabled={disabled}
         onClick={() => {
-          writeToTemporaryStorage(
+          updateTemporaryStorage(
             exercise,
             routineType as Routine,
             set,

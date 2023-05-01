@@ -1,3 +1,5 @@
+import { Routines } from "./db";
+
 export enum Routine {
   UPPER_INTENSITY = "UPPER_INTENSITY",
   UPPER_VOLUME = "UPPER_VOLUME",
@@ -404,4 +406,179 @@ export const exercises: Exercise[] = [
   { name: "Cable Crunch", type: ExerciseType.ABS },
   { name: "Pullover Crunch", type: ExerciseType.ABS },
   { name: "Decline Twist", type: ExerciseType.ABS },
+];
+
+export const defaultRoutines: Routines[] = [
+  {
+    routine: Routine.UPPER_INTENSITY,
+    exercises: [
+      {
+        name: "Overhead Press with Barbell whilst standing",
+        type: ExerciseType.VERTICAL_PRESS,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Bench Press with Barbell",
+        type: ExerciseType.HORIZONTAL_PRESS,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Row with Barbell",
+        type: ExerciseType.UPPER_BACK,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Row with Dumbbells with 1h",
+        type: ExerciseType.UPPER_BACK,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Lateral Raise with Dumbbells",
+        type: ExerciseType.ACCESSORY_SHOULDER,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Spider Curl with Dumbbells",
+        type: ExerciseType.BICEPS,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Reverse Curl with Dumbbells",
+        type: ExerciseType.FOREARMS,
+        sets: 3,
+        reps: "8-12",
+      },
+    ],
+  },
+  {
+    routine: Routine.UPPER_VOLUME,
+    exercises: [
+      {
+        name: "Overhead Press with Barbell whilst standing",
+        type: ExerciseType.VERTICAL_PRESS,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Bench Press with Barbell",
+        type: ExerciseType.HORIZONTAL_PRESS,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Row with Barbell",
+        type: ExerciseType.UPPER_BACK,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Row with Dumbbells with 1h",
+        type: ExerciseType.UPPER_BACK,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Shrugs with Barbell",
+        type: ExerciseType.TRAPS,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Lateral Raise with Dumbbells",
+        type: ExerciseType.ACCESSORY_SHOULDER,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Spider Curl with Dumbbells",
+        type: ExerciseType.BICEPS,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Reverse Curl with Dumbbells",
+        type: ExerciseType.FOREARMS,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Skull Crushers with Ez Bar on flat bench",
+        type: ExerciseType.TRICEPS,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Skull Crushers with Ez Bar on 30 degree incline bench",
+        type: ExerciseType.TRICEPS,
+        sets: 3,
+        reps: "8-12",
+      },
+    ],
+  },
+  {
+    routine: Routine.LOWER_INTENSITY,
+    exercises: [
+      {
+        name: "Back Squat",
+        type: ExerciseType.LEGS_SQUAT,
+        sets: 3,
+        reps: "8-12",
+      },
+      { name: "Deadlift", type: ExerciseType.LEGS_DV, sets: 3, reps: "8-12" },
+      {
+        name: "Leg Extension with 2L",
+        type: ExerciseType.ACCESSORY_LEGS,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Lunge with Zercher hold",
+        type: ExerciseType.ACCESSORY_LEGS,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Pulldown with a wide grip",
+        type: ExerciseType.VERTICAL_PULL,
+        sets: 3,
+        reps: "8-12",
+      },
+    ],
+  },
+  {
+    routine: Routine.LOWER_VOLUME,
+    exercises: [
+      {
+        name: "Back Squat",
+        type: ExerciseType.LEGS_SQUAT,
+        sets: 3,
+        reps: "8-12",
+      },
+      { name: "Deadlift", type: ExerciseType.LEGS_DV, sets: 3, reps: "8-12" },
+      {
+        name: "Leg Extension with 2L",
+        type: ExerciseType.ACCESSORY_LEGS,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Lunge with Zercher hold",
+        type: ExerciseType.ACCESSORY_LEGS,
+        sets: 3,
+        reps: "8-12",
+      },
+      {
+        name: "Pulldown with a wide grip",
+        type: ExerciseType.VERTICAL_PULL,
+        sets: 3,
+        reps: "8-12",
+      },
+    ],
+  },
 ];

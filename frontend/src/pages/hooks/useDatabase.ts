@@ -17,14 +17,18 @@ export const useDatabase = () => {
     });
   };
 
-  const fetchExercises = (exericseType: ExerciseType) => {
+  const fetchExercises = () => {
     return useQuery("exercises", async () => {
-      const result = await db.getExercises(exericseType);
-      return result.map((exercise) => exercise.name);
+      const result = await db.getExercises();
+      return result;
     });
   };
 
-  const writeToTemporaryStorage = (
+  const updateRoutine = (exercises: Exercise[], routine: Routine) => {
+    db.writeExerciseToRoutine(routine, exercises);
+  };
+
+  const updateTemporaryStorage = (
     exercise: Exercise,
     routine: Routine,
     set: number,
@@ -42,7 +46,7 @@ export const useDatabase = () => {
     fetchRoutinePlan,
     fetchTemporaryStorage,
     fetchExercises,
-    writeToTemporaryStorage,
+    updateTemporaryStorage,
     clearTemporaryStorage,
   };
 };

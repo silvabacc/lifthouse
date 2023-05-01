@@ -9,17 +9,23 @@ interface EditExerciseProps extends AutoCompleteProps {
   exerciseType: ExerciseType;
 }
 
-const EditExercise: React.FC<EditExerciseProps> = ({
+const SelectExercise: React.FC<EditExerciseProps> = ({
   placeholder,
   exerciseType,
+  ...props
 }) => {
   const { fetchExercises } = useDatabase();
   const { data } = fetchExercises(exerciseType);
-  const [options, setOptions] = useState<{ value: string }[]>([]);
+  const [options, setOptions] = useState<{ label: string; value: string }[]>(
+    []
+  );
 
   useEffect(() => {
     if (data) {
-      const options = data.map((exercise) => ({ value: exercise }));
+      const options = data.map((exercise) => ({
+        label: exercise,
+        value: exercise,
+      }));
       setOptions(options);
     }
   }, [data]);
@@ -27,6 +33,7 @@ const EditExercise: React.FC<EditExerciseProps> = ({
   return (
     <>
       <Select
+        {...props}
         style={{ width: "90%" }}
         showSearch
         defaultValue={placeholder}
@@ -36,4 +43,4 @@ const EditExercise: React.FC<EditExerciseProps> = ({
   );
 };
 
-export default EditExercise;
+export default SelectExercise;
