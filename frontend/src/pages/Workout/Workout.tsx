@@ -1,23 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  Button,
-  Collapse,
-  Space,
-  Tabs,
-  TabsProps,
-  Typography,
-  AutoComplete,
-  Form,
-} from "antd";
+import { Button, Collapse, Space, Tabs, TabsProps, Typography } from "antd";
 
 import "../../../../backend/db";
 import SetsReps from "./SetsReps";
 import { useDatabase } from "../hooks/useDatabase";
-import { pageTitleMapping, paramsMapping } from "./constants";
+import { pageTitleMapping } from "./constants";
 import { Routine } from "../../../../backend/data";
-import WorkoutButton from "./WorkoutButton";
+import WorkoutButton from "./components/WorkoutButton";
 import EditRoutine from "./EditRoutine";
+import Container from "./WorkoutStyles";
 
 const { Panel } = Collapse;
 const { Title, Text } = Typography;
@@ -40,7 +32,7 @@ const Workout: React.FC = () => {
 
   return (
     <>
-      <Space direction="vertical" style={{ marginBottom: 8, width: "100%" }}>
+      <Container direction="vertical">
         <Space direction="horizontal">
           <Title>{pageTitleMapping[routineType]}</Title>
           <Button
@@ -101,7 +93,7 @@ const Workout: React.FC = () => {
             </WorkoutButton>
           </>
         )}
-      </Space>
+      </Container>
     </>
   );
 };

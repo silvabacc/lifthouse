@@ -1,6 +1,6 @@
 import { Button, ButtonProps } from "antd";
-import style from "./WorkoutButton.module.scss";
 import React from "react";
+import WorkoutButtonStyles from "./WorkoutButtonStyles";
 
 interface WorkoutButtonProps extends ButtonProps {
   children: React.ReactNode;
@@ -12,14 +12,9 @@ const WorkoutButton: React.FC<WorkoutButtonProps> = ({
   onClick,
 }) => {
   return (
-    <Button
-      className={style.WorkoutButton}
-      type="primary"
-      onClick={onClick}
-      disabled={disabled}
-    >
+    <WorkoutButtonStyles type="primary" onClick={onClick} disabled={disabled}>
       {children}
-    </Button>
+    </WorkoutButtonStyles>
   );
 };
 

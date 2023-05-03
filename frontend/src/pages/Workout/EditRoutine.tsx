@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useDatabase } from "../hooks/useDatabase";
-import { Exercise, Routine } from "../../../../backend/data";
+import { Exercise } from "../../../../backend/data";
 import { Routines } from "../../../../backend/db";
-import { Collapse, Select, Space, Typography } from "antd";
-import SelectExercise from "./SelectExercise";
+import { Collapse, Space, Typography } from "antd";
+import SelectExercise from "./components/SelectExercise";
+import Container from "./WorkoutStyles";
 
 const { Panel } = Collapse;
 const { Text } = Typography;
@@ -22,12 +23,12 @@ const EditRoutine: React.FC<EditRoutineProps> = ({ routine }) => {
   }
 
   return (
-    <Space direction="vertical" style={{ width: "100%" }}>
+    <Container direction="vertical">
       {routine.exercises.map((exercise) => (
         <Collapse collapsible="disabled" size="large">
           <Panel
             header={
-              <Space direction="vertical" style={{ width: "100%" }}>
+              <Container direction="vertical">
                 <SelectExercise
                   onChange={(value) => {
                     const routineWithoutExercise = routine.exercises.filter(
@@ -62,13 +63,13 @@ const EditRoutine: React.FC<EditRoutineProps> = ({ routine }) => {
                   <Text keyboard>{exercise.sets}</Text>x
                   <Text keyboard>{exercise.reps}</Text>
                 </Space>
-              </Space>
+              </Container>
             }
             key={exercise.name}
           />
         </Collapse>
       ))}
-    </Space>
+    </Container>
   );
 };
 

@@ -1,6 +1,6 @@
-import { Card, Typography } from "antd";
+import { Typography } from "antd";
 import React from "react";
-import styles from "./WorkoutCard.module.scss";
+import Card from "./Card";
 
 const { Meta } = Card;
 const { Text } = Typography;
@@ -18,7 +18,6 @@ const WorkoutsCard: React.FC<WorkoutsCardProps> = ({
 }) => {
   return (
     <Card
-      className={styles.WorkoutCard}
       bordered={false}
       hoverable
       cover={
