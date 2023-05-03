@@ -253,10 +253,6 @@ export const exercises: Exercise[] = [
     name: "Rear Delt Flyes with incline at 45 degrees",
     type: ExerciseType.ACCESSORY_SHOULDER,
   },
-  {
-    name: "Rear Delt Flyes with incline at 45 degrees",
-    type: ExerciseType.ACCESSORY_SHOULDER,
-  },
   { name: "Reverse Curl with Dumbbells", type: ExerciseType.FOREARMS },
   { name: "Reverse Curl with Ez Bar", type: ExerciseType.FOREARMS },
   { name: "Reverse Preacher Curl with Ez Bar", type: ExerciseType.FOREARMS },
@@ -312,7 +308,11 @@ export const exercises: Exercise[] = [
     type: ExerciseType.TRICEPS,
   },
   {
-    name: "Tricep Extensions with Dumbbells on 30 degree incline",
+    name: "Tricep Extensions with Cables with bar attachment",
+    type: ExerciseType.TRICEPS,
+  },
+  {
+    name: "Tate Press on a 45 degrees incline bench",
     type: ExerciseType.TRICEPS,
   },
   { name: "Overhead Tricep Extension with 1h", type: ExerciseType.TRICEPS },
@@ -324,24 +324,12 @@ export const exercises: Exercise[] = [
     type: ExerciseType.TRICEPS,
   },
   {
-    name: "Tricep Extensions with Cables with bar attachment",
-    type: ExerciseType.TRICEPS,
-  },
-  {
     name: "Tricep Extensions Cables with v attachment",
-    type: ExerciseType.TRICEPS,
-  },
-  {
-    name: "Tricep Extensions with Cables with bar attachment",
     type: ExerciseType.TRICEPS,
   },
   { name: "Tate Press on a flat bench", type: ExerciseType.TRICEPS },
   {
     name: "Tate Press on a 30 degrees incline bench",
-    type: ExerciseType.TRICEPS,
-  },
-  {
-    name: "Tate Press on a 45 degrees incline bench",
     type: ExerciseType.TRICEPS,
   },
   { name: "Floor Extensions", type: ExerciseType.TRICEPS },
@@ -407,6 +395,8 @@ export const exercises: Exercise[] = [
   { name: "Pullover Crunch", type: ExerciseType.ABS },
   { name: "Decline Twist", type: ExerciseType.ABS },
 ];
+
+console.log(exercises.length);
 
 export const defaultRoutines: Routines[] = [
   {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDatabase } from "../hooks/useDatabase";
 import { Exercise } from "../../../../backend/data";
 import { Routines } from "../../../../backend/db";
@@ -15,8 +15,10 @@ interface EditRoutineProps {
 
 const EditRoutine: React.FC<EditRoutineProps> = ({ routine }) => {
   const { fetchExercises } = useDatabase();
-  const { data: allExercises } = fetchExercises();
-  const [currentExercises, setCurrentExercises] = useState<Exercise[]>([]);
+  const { data: allExercises, status } = fetchExercises();
+  const [currentExercises, setCurrentExercises] = useState<Exercise[]>(
+    routine.exercises
+  );
 
   if (!allExercises) {
     return <>Loading...</>;
@@ -54,6 +56,10 @@ const EditRoutine: React.FC<EditRoutineProps> = ({ routine }) => {
                             (routineFromExercise) => routineFromExercise.name
                           )
                           .includes(exercise.name)
+                    )
+                    .filter(
+                      (exerciseFromAll) =>
+                        exerciseFromAll.type === exercise.type
                     )
                     .map((exercise) => ({
                       value: exercise.name,
