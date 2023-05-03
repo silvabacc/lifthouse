@@ -17,7 +17,6 @@ import { useDatabase } from "../hooks/useDatabase";
 import { pageTitleMapping, paramsMapping } from "./constants";
 import { Routine } from "../../../../backend/data";
 import WorkoutButton from "./WorkoutButton";
-import SelectExercise from "./SelectExercise";
 import EditRoutine from "./EditRoutine";
 
 const { Panel } = Collapse;
@@ -28,7 +27,6 @@ const Workout: React.FC = () => {
   const { fetchRoutinePlan, clearTemporaryStorage } = useDatabase();
   const navigate = useNavigate();
   const [edit, setEdit] = useState(false);
-  const [collapsed, setCollapsed] = useState<string[]>([]);
 
   const { data: routines, isLoading } = fetchRoutinePlan(routineType);
 
@@ -42,7 +40,7 @@ const Workout: React.FC = () => {
 
   return (
     <>
-      <Space direction="vertical" style={{ marginBottom: 8 }}>
+      <Space direction="vertical" style={{ marginBottom: 8, width: "100%" }}>
         <Space direction="horizontal">
           <Title>{pageTitleMapping[routineType]}</Title>
           <Button
@@ -75,13 +73,7 @@ const Workout: React.FC = () => {
               ];
 
               return (
-                <Collapse
-                  size="large"
-                  collapsible={edit ? "disabled" : undefined}
-                  activeKey={edit ? [] : collapsed}
-                  style={{ width: edit ? "90%" : "100%" }}
-                  onChange={(keys) => setCollapsed(keys as string[])}
-                >
+                <Collapse size="large">
                   <Panel
                     header={
                       <Space direction="vertical">

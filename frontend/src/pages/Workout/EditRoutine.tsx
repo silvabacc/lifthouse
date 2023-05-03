@@ -3,6 +3,7 @@ import { useDatabase } from "../hooks/useDatabase";
 import { Exercise, Routine } from "../../../../backend/data";
 import { Routines } from "../../../../backend/db";
 import { Collapse, Select, Space, Typography } from "antd";
+import SelectExercise from "./SelectExercise";
 
 const { Panel } = Collapse;
 const { Text } = Typography;
@@ -21,13 +22,13 @@ const EditRoutine: React.FC<EditRoutineProps> = ({ routine }) => {
   }
 
   return (
-    <Space direction="vertical">
+    <Space direction="vertical" style={{ width: "100%" }}>
       {routine.exercises.map((exercise) => (
         <Collapse collapsible="disabled" size="large">
           <Panel
             header={
-              <Space direction="vertical">
-                <Select
+              <Space direction="vertical" style={{ width: "100%" }}>
+                <SelectExercise
                   onChange={(value) => {
                     const routineWithoutExercise = routine.exercises.filter(
                       (exerciseFromRoutine) =>
@@ -42,7 +43,6 @@ const EditRoutine: React.FC<EditRoutineProps> = ({ routine }) => {
                       },
                     ]);
                   }}
-                  style={{ width: "100%" }}
                   showSearch
                   defaultValue={exercise.name}
                   options={allExercises
