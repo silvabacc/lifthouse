@@ -63,7 +63,8 @@ const EditRoutine: React.FC<EditRoutineProps> = ({ routine }) => {
                     )
                     .map((exercise) => ({
                       value: exercise.name,
-                    }))}
+                    }))
+                    .sort((a, b) => (a.value > b.value ? 1 : -1))}
                 />
                 <Space>
                   <Text keyboard>{exercise.sets}</Text>x
