@@ -5,8 +5,9 @@ const SelectExercise = styled(Select)`
   width: 100%;
 
   .ant-select-selection-item {
-    white-space: break-spaces;
+    white-space: normal;
     word-break: break-word;
+    height: 70px;
   }
 `;
 

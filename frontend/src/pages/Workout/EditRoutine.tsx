@@ -4,7 +4,7 @@ import { Exercise } from "../../../../backend/data";
 import { Routines } from "../../../../backend/db";
 import { Collapse, Space, Typography } from "antd";
 import SelectExercise from "./components/SelectExercise";
-import Container from "./WorkoutStyles";
+import { Container, RepContainer } from "./WorkoutStyles";
 
 const { Panel } = Collapse;
 const { Text } = Typography;
@@ -32,6 +32,7 @@ const EditRoutine: React.FC<EditRoutineProps> = ({ routine }) => {
             header={
               <Container direction="vertical">
                 <SelectExercise
+                  bordered={false}
                   onChange={(value) => {
                     const routineWithoutExercise = routine.exercises.filter(
                       (exerciseFromRoutine) =>
@@ -66,10 +67,10 @@ const EditRoutine: React.FC<EditRoutineProps> = ({ routine }) => {
                     }))
                     .sort((a, b) => (a.value > b.value ? 1 : -1))}
                 />
-                <Space>
+                <RepContainer>
                   <Text keyboard>{exercise.sets}</Text>x
                   <Text keyboard>{exercise.reps}</Text>
-                </Space>
+                </RepContainer>
               </Container>
             }
             key={exercise.name}
