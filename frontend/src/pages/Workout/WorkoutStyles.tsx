@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const Container = styled(Space)`
   width: 100%;
-  marginbottom: 8;
+  margin-bottom: 8px;
 `;
 
 export const RepContainer = styled(Space)`
