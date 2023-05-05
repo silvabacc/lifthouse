@@ -9,7 +9,7 @@ import { pageTitleMapping } from "./constants";
 import { Routine } from "../../../../backend/data";
 import WorkoutButton from "./components/WorkoutButton";
 import EditRoutine from "./EditRoutine";
-import Container from "./WorkoutStyles";
+import { Container } from "./WorkoutStyles";
 
 const { Panel } = Collapse;
 const { Title, Text } = Typography;

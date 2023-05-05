@@ -7,7 +7,12 @@ const SelectExercise = styled(Select)`
   .ant-select-selection-item {
     white-space: normal;
     word-break: break-word;
-    height: 70px;
+    min-height: 70px;
+    font-weight: bold;
+  }
+
+  .ant-select-arrow {
+    color: #000;
   }
 `;
 
