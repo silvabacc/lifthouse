@@ -7,7 +7,7 @@ const SelectExercise = styled(Select)`
   .ant-select-selection-item {
     white-space: normal;
     word-break: break-word;
-    min-height: 70px;
+    min-height: 55px;
     font-weight: bold;
   }
 

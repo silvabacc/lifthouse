@@ -7,5 +7,7 @@ export const Container = styled(Space)`
 `;
 
 export const RepContainer = styled(Space)`
-  margin-top: 24px;
+  width: 100%;
+  margin-top: 26px;
+  margin-left: 10px;
 `;

@@ -1,26 +1,30 @@
-import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Button, Collapse, Space, Tabs, TabsProps, Typography } from "antd";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Button, Collapse, Space, Typography } from "antd";
 
 import "../../../../backend/db";
-import SetsReps from "./SetsReps";
 import { useDatabase } from "../hooks/useDatabase";
 import { pageTitleMapping } from "./constants";
 import { Routine } from "../../../../backend/data";
-import WorkoutButton from "./components/WorkoutButton";
 import EditRoutine from "./EditRoutine";
 import { Container } from "./WorkoutStyles";
+import Exercises from "./Exercises";
 
 const { Panel } = Collapse;
 const { Title, Text } = Typography;
 
 const Workout: React.FC = () => {
   const { routineType } = useParams();
-  const { fetchRoutinePlan, clearTemporaryStorage } = useDatabase();
-  const navigate = useNavigate();
+  const { fetchRoutinePlan } = useDatabase();
   const [edit, setEdit] = useState(false);
 
-  const { data: routines, isLoading } = fetchRoutinePlan(routineType);
+  const { data: routines, isLoading, refetch } = fetchRoutinePlan(routineType);
+
+  useEffect(() => {
+    if (!edit) {
+      refetch();
+    }
+  }, [edit]);
 
   if (!Object.values(Routine).includes(routineType)) {
     return <>Not found</>;
@@ -44,55 +48,8 @@ const Workout: React.FC = () => {
             {edit ? "Save" : "Edit"}
           </Button>
         </Space>
-        {edit ? (
-          <>
-            <EditRoutine routine={routines} />
-          </>
-        ) : (
-          <>
-            {routines?.exercises.map((exercise) => {
-              const items: TabsProps["items"] = [
-                {
-                  key: "sets",
-                  label: `Sets & Reps`,
-                  children: <SetsReps exercise={exercise} />,
-                },
-                {
-                  key: "history",
-                  label: `History`,
-                  children: `History`,
-                },
-              ];
-
-              return (
-                <Collapse size="large">
-                  <Panel
-                    header={
-                      <Space direction="vertical">
-                        <Text strong>{exercise.name}</Text>
-                        <Space>
-                          <Text keyboard>{exercise.sets}</Text>x
-                          <Text keyboard>{exercise.reps}</Text>
-                        </Space>
-                      </Space>
-                    }
-                    key={exercise.name}
-                  >
-                    <Tabs items={items} />
-                  </Panel>
-                </Collapse>
-              );
-            })}
-            <WorkoutButton
-              onClick={() => {
-                navigate("/");
-                clearTemporaryStorage();
-              }}
-            >
-              Finish Workout
-            </WorkoutButton>
-          </>
-        )}
+        <EditRoutine routine={routines} edit={edit} />
+        <Exercises routines={routines} edit={edit} />
       </Container>
     </>
   );

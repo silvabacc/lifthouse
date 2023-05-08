@@ -94,8 +94,8 @@ export class LifthouseDatabase extends Dexie {
     this.temporaryStorage.add({ exercise, routine, set, weight, reps });
   }
 
-  writeExerciseToRoutine(routine: Routine, exercises: Exercise[]) {
-    this.routines.update(routine, exercises);
+  writeExerciseToRoutine(exercises: Exercise[], routine: Routines) {
+    this.routines.update(routine, { exercises: exercises });
   }
 
   clearTemporaryStorage() {
