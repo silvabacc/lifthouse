@@ -84,6 +84,10 @@ export class LifthouseDatabase extends Dexie {
     return this.exercises.toArray();
   }
 
+  writeLogEntry(entry: LogEntry) {
+    this.logEntry.add(entry);
+  }
+
   writeTemporaryStorage(
     exercise: Exercise,
     routine: Routine,

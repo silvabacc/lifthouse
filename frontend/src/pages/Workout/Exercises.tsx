@@ -16,7 +16,21 @@ const { Text } = Typography;
 
 const Exercises: React.FC<ExercisesProps> = ({ routines, edit }) => {
   const navigate = useNavigate();
-  const { clearTemporaryStorage } = useDatabase();
+  const { clearTemporaryStorage, fetchTemporaryStorage, logEntries } =
+    useDatabase();
+  const { data, refetch } = fetchTemporaryStorage(routines.routine);
+
+  const finishWorkout = () => {
+    refetch();
+
+    const entries = data?.map((entry) => ({
+      exercise: entry.exercise,
+      set: entry.set,
+      reps: entry.reps,
+      weight: entry.weight,
+    }));
+    logEntries(entries ?? []);
+  };
 
   if (edit) {
     return <></>;
@@ -60,6 +74,7 @@ const Exercises: React.FC<ExercisesProps> = ({ routines, edit }) => {
       <WorkoutButton
         onClick={() => {
           navigate("/");
+          finishWorkout();
           clearTemporaryStorage();
         }}
       >

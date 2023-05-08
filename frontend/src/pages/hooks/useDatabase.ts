@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import { Exercise, ExerciseType, Routine } from "../../../../backend/data";
-import { Routines, db } from "../../../../backend/db";
+import { LogEntry, Routines, db } from "../../../../backend/db";
 
 export const useDatabase = () => {
   const fetchRoutinePlan = (routine: Routine) => {
@@ -28,6 +28,10 @@ export const useDatabase = () => {
     db.writeExerciseToRoutine(exercises, routine);
   };
 
+  const logEntries = (logEntries: LogEntry[]) => {
+    logEntries.forEach((entry) => db.writeLogEntry(entry));
+  };
+
   const updateTemporaryStorage = (
     exercise: Exercise,
     routine: Routine,
@@ -47,6 +51,7 @@ export const useDatabase = () => {
     fetchTemporaryStorage,
     fetchExercises,
     updateRoutine,
+    logEntries,
     updateTemporaryStorage,
     clearTemporaryStorage,
   };

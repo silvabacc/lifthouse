@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Collapse, Space, Typography } from "antd";
+import { Button, Space, Typography } from "antd";
 
 import "../../../../backend/db";
 import { useDatabase } from "../hooks/useDatabase";
@@ -10,8 +10,7 @@ import EditRoutine from "./EditRoutine";
 import { Container } from "./WorkoutStyles";
 import Exercises from "./Exercises";
 
-const { Panel } = Collapse;
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const Workout: React.FC = () => {
   const { routineType } = useParams();
