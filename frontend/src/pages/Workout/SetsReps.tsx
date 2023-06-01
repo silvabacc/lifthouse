@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StepProps, Steps } from "antd";
 import SetsRepsRow from "./SetsRepsRow";
 import WorkoutButton from "./components/WorkoutButton";
-import { useDatabase } from "../hooks/useDatabase";
+import { useDatabase } from "../../hooks/useDatabase";
 import { Exercise, Routine } from "../../../../backend/data";
 import { useParams } from "react-router-dom";
 

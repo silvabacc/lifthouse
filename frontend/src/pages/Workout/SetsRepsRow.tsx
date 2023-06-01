@@ -2,7 +2,7 @@ import React, { Dispatch, useEffect, useState } from "react";
 import { Button, InputNumber, Space } from "antd";
 import { BsCheckSquareFill } from "react-icons/bs";
 import colors from "../../theme/colors";
-import { useDatabase } from "../hooks/useDatabase";
+import { useDatabase } from "../../hooks/useDatabase";
 import { Exercise, Routine } from "../../../../backend/data";
 import { useParams } from "react-router-dom";
 

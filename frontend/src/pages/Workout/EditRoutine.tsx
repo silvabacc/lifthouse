@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDatabase } from "../hooks/useDatabase";
+import { useDatabase } from "../../hooks/useDatabase";
 import {
   Exercise,
   ExerciseType,
@@ -8,7 +8,7 @@ import {
   Routine,
   VolumeRepRange,
 } from "../../../../backend/data";
-import { Routines } from "../../../../backend/db";
+import { Routines } from "../../../../backend/dexie";
 import { Collapse } from "antd";
 import SelectExercise from "./components/SelectExercise";
 import { Container, RepContainer } from "./WorkoutStyles";
