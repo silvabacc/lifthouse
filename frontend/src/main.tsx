@@ -6,6 +6,7 @@ import Home from "./pages/Home/Home";
 import Workout from "./pages/Workout/Workout";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Routine } from "../../backend/data";
+import Login from "./pages/Login/Login";
 
 //v6 react-router-dom removed regex support, so must statically route these
 const workoutRoutes = [
@@ -21,6 +22,10 @@ const workoutRoutes = [
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <Login />,
+  },
+  {
+    path: "/home",
     element: <Home />,
   },
   ...workoutRoutes,
