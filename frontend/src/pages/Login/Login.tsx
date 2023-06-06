@@ -1,9 +1,17 @@
-import { Input, Space, Typography } from "antd";
+import { Button, Input, Space, Typography } from "antd";
 import React from "react";
-import { FormContainer, LoginCaption, LoginHeader } from "./LoginStyles";
+import {
+  FormContainer,
+  LinkButtonWrapper,
+  LoginButton,
+  LoginCaption,
+  LoginHeader,
+} from "./LoginStyles";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 import { BiUser } from "react-icons/bi";
+import { LoginOutlined } from "@ant-design/icons";
+import { RiLockPasswordLine } from "react-icons/ri";
 
 const Login: React.FC = () => {
   return (
@@ -18,7 +26,24 @@ const Login: React.FC = () => {
           placeholder="Enter your email"
           prefix={<BiUser className="site-form-item-icon" />}
         />
-        <Input.Password placeholder="Password" />
+        <LinkButtonWrapper>
+          <Button type="link">New User? Sign Up</Button>
+        </LinkButtonWrapper>
+        <Input.Password
+          placeholder="Password"
+          prefix={<RiLockPasswordLine />}
+        />
+        <LinkButtonWrapper>
+          <Button type="link">Forgot password?</Button>
+        </LinkButtonWrapper>
+        <LoginButton
+          size="large"
+          type="primary"
+          shape="round"
+          icon={<LoginOutlined />}
+        >
+          Sign In
+        </LoginButton>
       </FormContainer>
     </>
   );
