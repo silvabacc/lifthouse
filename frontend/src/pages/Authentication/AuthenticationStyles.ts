@@ -1,6 +1,6 @@
-import { Button, Input, Space, Typography } from "antd";
-import styled from "styled-components";
+import { Button, Space, Typography } from "antd";
 import colors from "../../theme/colors";
+import styled from "styled-components";
 
 const { Title, Text } = Typography;
 
@@ -28,4 +28,9 @@ export const LinkButtonWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   width: 100%;
+`;
+
+export const AlreadyAUserButton = styled(Button)`
+  width: 100%;
+  justify-content: center;
 `;
