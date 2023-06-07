@@ -1,18 +1,7 @@
 import { Button, Space, Typography } from "antd";
-import colors from "../../theme/colors";
 import styled from "styled-components";
 
-const { Title, Text } = Typography;
-
-export const LoginHeader = styled(Title)`
-  &.ant-typography {
-    margin: 0px;
-  }
-`;
-
-export const LoginCaption = styled(Text)`
-  color: ${colors.grey};
-`;
+const { Text } = Typography;
 
 export const FormContainer = styled(Space)`
   height: 70%;
@@ -20,7 +9,7 @@ export const FormContainer = styled(Space)`
   justify-content: center;
 `;
 
-export const LoginButton = styled(Button)`
+export const FormButton = styled(Button)`
   width: 100%;
 `;
 
@@ -33,4 +22,8 @@ export const LinkButtonWrapper = styled.div`
 export const AlreadyAUserButton = styled(Button)`
   width: 100%;
   justify-content: center;
+`;
+
+export const ErrorText = styled(Text)`
+  color: red;
 `;

@@ -7,6 +7,7 @@ import Workout from "./pages/Workout/Workout";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Routine } from "../../backend/data";
 import Authentication from "./pages/Authentication/Authentication";
+import Verify from "./pages/Authentication/Verify/Verify";
 
 //v6 react-router-dom removed regex support, so must statically route these
 const workoutRoutes = [
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: "/home",
     element: <Home />,
+  },
+  {
+    path: "/verify",
+    element: <Verify />,
   },
   ...workoutRoutes,
 ]);
