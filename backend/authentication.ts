@@ -7,7 +7,9 @@ class Authentication {
   private supabase: SupabaseClient;
 
   constructor() {
-    this.supabase = createClient(SUPABASE_URL, ANON_PUBLIC_KEY);
+    this.supabase = createClient(SUPABASE_URL, ANON_PUBLIC_KEY, {
+      auth: { autoRefreshToken: true },
+    });
   }
 
   async login(email: string, password: string) {
@@ -35,6 +37,14 @@ class Authentication {
           session: signUpResult.data.session,
           message: "success",
         };
+  }
+
+  async signOut() {
+    this.supabase.auth.signOut();
+  }
+
+  async getUser() {
+    return this.supabase.auth.getUser();
   }
 }
 

@@ -1,5 +1,5 @@
 import { Button, Input, Space, Typography } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AlreadyAUserButton,
   FormContainer,
@@ -28,7 +28,14 @@ const Authentication: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>();
   const [disableFormButton, setDisableFormButton] = useState(false);
   const navigate = useNavigate();
-  const { login, signUp } = useAuthentication();
+  const { login, signUp, auth } = useAuthentication();
+  const { isAuthenticated, authLoading } = auth;
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/home");
+    }
+  }, [isAuthenticated]);
 
   const newUserOnClick = () => {
     setPageState(AuthenticationPageState.SIGNUP);
@@ -40,19 +47,17 @@ const Authentication: React.FC = () => {
 
     if (pageState === AuthenticationPageState.LOGIN) {
       const loginResult = await login(email, password);
-      if (loginResult.user === null) {
-        setErrorMessage(loginResult.message);
-      } else {
+      if (loginResult.success) {
         navigate("/home");
+      } else {
+        setErrorMessage(loginResult.message);
       }
     } else {
       const signUpResult = await signUp(email, password);
-      if (signUpResult.user === null) {
-        setErrorMessage(signUpResult.message);
-      } else {
-        setErrorMessage(null);
-        setPageState(AuthenticationPageState.LOGIN);
+      if (signUpResult.success) {
         navigate("/verify", { state: { email: email } });
+      } else {
+        setErrorMessage(signUpResult.message);
       }
     }
 
@@ -62,6 +67,10 @@ const Authentication: React.FC = () => {
   const isLoginState = pageState === AuthenticationPageState.LOGIN;
   const formTitle =
     pageState === AuthenticationPageState.LOGIN ? "Login" : "Sign up";
+
+  if (authLoading) {
+    return <>Loading</>;
+  }
 
   return (
     <>
