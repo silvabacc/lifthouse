@@ -1,4 +1,4 @@
-import { Button, Input, Space, Typography } from "antd";
+import { Button, Input, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   AlreadyAUserButton,
@@ -29,13 +29,7 @@ const Authentication: React.FC = () => {
   const [disableFormButton, setDisableFormButton] = useState(false);
   const navigate = useNavigate();
   const { login, signUp, auth } = useAuthentication();
-  const { isAuthenticated, authLoading } = auth;
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/home");
-    }
-  }, [isAuthenticated]);
+  const { authLoading } = auth;
 
   const newUserOnClick = () => {
     setPageState(AuthenticationPageState.SIGNUP);

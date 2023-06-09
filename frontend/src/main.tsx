@@ -1,13 +1,29 @@
 import "antd/dist/reset.css";
 import "./index.css";
 import ReactDOM from "react-dom/client";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  RouterProvider,
+  createBrowserRouter,
+  Navigate,
+} from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Workout from "./pages/Workout/Workout";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Routine } from "../../backend/data";
 import Authentication from "./pages/Authentication/Authentication";
 import Verify from "./pages/Authentication/Verify/Verify";
+import { AppContextProvider } from "./context/AppContext";
+import AuthenticationService from "@backend/authentication";
+
+const guardRoutes = async (element: JSX.Element) => {
+  const service = new AuthenticationService();
+  const result = await service.getUser();
+
+  if (result.data === null || result.error) {
+    return <Navigate to={"/"} />;
+  }
+  return element;
+};
 
 //v6 react-router-dom removed regex support, so must statically route these
 const workoutRoutes = [
@@ -15,31 +31,33 @@ const workoutRoutes = [
   { routeSegment: "upper_volume", prop: Routine.UPPER_VOLUME },
   { routeSegment: "lower_intensity", prop: Routine.LOWER_INTENSITY },
   { routeSegment: "lower_volume", prop: Routine.LOWER_VOLUME },
-].map((route) => ({
+].map(async (route) => ({
   path: `/routine/${route.routeSegment}`,
-  element: <Workout routine={route.prop} />,
+  element: await guardRoutes(<Workout routine={route.prop} />),
 }));
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Authentication />,
+    element: await guardRoutes(<Authentication />),
   },
   {
     path: "/home",
-    element: <Home />,
+    element: await guardRoutes(<Home />),
   },
   {
     path: "/verify",
-    element: <Verify />,
+    element: await guardRoutes(<Verify />),
   },
-  ...workoutRoutes,
+  ...(await Promise.all(workoutRoutes)),
 ]);
 
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <QueryClientProvider client={queryClient}>
-    <RouterProvider router={router} />
+    <AppContextProvider>
+      <RouterProvider router={router} />
+    </AppContextProvider>
   </QueryClientProvider>
 );
