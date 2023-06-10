@@ -44,7 +44,10 @@ class Authentication {
   }
 
   async getUser() {
-    return this.supabase.auth.getUser();
+    const result = await this.supabase.auth.getUser();
+
+    const isAuthenticated = result.data.user !== null;
+    return { isAuthenticated, user: result.data.user };
   }
 }
 

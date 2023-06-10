@@ -17,7 +17,8 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@backend/*": ["backend/*"]
+      "@backend/*": ["backend/*"],
+      "@frontend/*": ["frontend/src/*"]
     }
   },
   "include": ["frontend/src", "backend/config.ts"],

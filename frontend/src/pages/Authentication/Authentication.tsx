@@ -10,9 +10,10 @@ import {
 import { RiLockPasswordLine } from "react-icons/ri";
 import { LoginOutlined } from "@ant-design/icons";
 import { BiUser } from "react-icons/bi";
-import useAuthentication from "../../hooks/useAuthentication";
 import { useNavigate } from "react-router-dom";
 import AuthPageHeader from "./components/AuthPageHeader";
+import useAuthentication from "@frontend/hooks/useAuthentication";
+import { useAppContext } from "@frontend/context/AppContext";
 
 enum AuthenticationPageState {
   LOGIN = "LOGIN",
@@ -29,7 +30,12 @@ const Authentication: React.FC = () => {
   const [disableFormButton, setDisableFormButton] = useState(false);
   const navigate = useNavigate();
   const { login, signUp, auth } = useAuthentication();
-  const { authLoading } = auth;
+
+  useEffect(() => {
+    if (auth.isAuthenticated) {
+      navigate("/home");
+    }
+  }, [auth.isAuthenticated]);
 
   const newUserOnClick = () => {
     setPageState(AuthenticationPageState.SIGNUP);
@@ -38,7 +44,6 @@ const Authentication: React.FC = () => {
   const alreadyAUserOnClick = () => setPageState(AuthenticationPageState.LOGIN);
   const formButtonOnClick = async () => {
     setDisableFormButton(true);
-
     if (pageState === AuthenticationPageState.LOGIN) {
       const loginResult = await login(email, password);
       if (loginResult.success) {
@@ -54,17 +59,12 @@ const Authentication: React.FC = () => {
         setErrorMessage(signUpResult.message);
       }
     }
-
     setDisableFormButton(false);
   };
 
   const isLoginState = pageState === AuthenticationPageState.LOGIN;
   const formTitle =
     pageState === AuthenticationPageState.LOGIN ? "Login" : "Sign up";
-
-  if (authLoading) {
-    return <>Loading</>;
-  }
 
   return (
     <>

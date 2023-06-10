@@ -9,7 +9,8 @@ const { Title } = Typography;
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-
+  // const { signOut } = useAuthentication();
+  // signOut();
   return (
     <>
       <Title>Time to Grind 💪</Title>
@@ -26,7 +27,7 @@ const Home: React.FC = () => {
         <WorkoutsCard
           title={card.title}
           image={card.image}
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/home")}
         />
       ))}
     </>

@@ -6,7 +6,7 @@ interface AppContext {
   setUser: (user: User | null) => void;
 }
 
-const AppContext = createContext(null);
+const AppContext = createContext<AppContext>({} as AppContext);
 export const useAppContext = () => useContext(AppContext);
 
 export const AppContextProvider = ({ children }) => {
