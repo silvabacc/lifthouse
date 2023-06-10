@@ -11,7 +11,7 @@ const useAuthentication = () => {
       return { success: false, message: result.message };
     }
 
-    return { success: true };
+    return { success: true, message: "success" };
   };
 
   const signUp = async (email: string, password: string) => {
@@ -21,7 +21,7 @@ const useAuthentication = () => {
       return { success: false, message: result.message };
     }
 
-    return { success: true };
+    return { success: true, message: "success" };
   };
 
   const signOut = async () => {

@@ -9,7 +9,7 @@ export const FormContainer = styled(Space)`
   justify-content: center;
 `;
 
-export const FormButton = styled(Button)`
+export const FormButtonStyle = styled(Button)`
   width: 100%;
 `;
 

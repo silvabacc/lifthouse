@@ -4,6 +4,7 @@ import WorkoutsCard from "./components/WorkoutsCard/WorkoutsCard";
 import { Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import { dietCards, workoutCards } from "./cardsConfig";
+import useAuthentication from "@frontend/hooks/useAuthentication";
 
 const { Title } = Typography;
 

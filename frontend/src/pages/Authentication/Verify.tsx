@@ -1,5 +1,5 @@
 import React from "react";
-import AuthPageHeader from "../components/AuthPageHeader";
+import AuthPageHeader from "./components/AuthPageHeader";
 import { Button, Space, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import { VerifyContainer } from "./VerifyStyles";
@@ -18,7 +18,7 @@ const Verify: React.FC<VerifyProps> = ({ email }) => {
     ? `We have sent an email to ${email}, please verify this email in order to log in`
     : `Please verify your email in order to log in`;
 
-  const onBackPress = () => navigate("/");
+  const onBackPress = () => navigate("/login");
 
   return (
     <>

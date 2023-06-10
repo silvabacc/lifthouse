@@ -1,12 +1,26 @@
 import { Routine } from "@backend/data";
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import Authentication from "./pages/Authentication/Authentication";
-import Verify from "./pages/Authentication/Verify/Verify";
+import Verify from "./pages/Authentication/Verify";
 import Home from "./pages/Home/Home";
 import Workout from "./pages/Workout/Workout";
+import Login from "./pages/Authentication/Login";
+import SignUp from "./pages/Authentication/SignUp";
 
-const guardRoutes = (element: JSX.Element, isAuthenticated: boolean) => {
-  return isAuthenticated ? element : <Navigate to={"/"} />;
+const guardRoutes = (
+  element: JSX.Element,
+  isAuthenticated: boolean,
+  navigateTo?: string
+) => {
+  return isAuthenticated ? element : <Navigate to={navigateTo || "/"} />;
+};
+
+const authRoute = (
+  element: JSX.Element,
+  isAuthenticated: boolean,
+  navigateTo?: string
+) => {
+  return isAuthenticated ? <Navigate to={navigateTo || "/home"} /> : element;
 };
 
 //v6 react-router-dom removed regex support, so must statically route these
@@ -24,7 +38,15 @@ export const createRoutes = (isAuthenticated: boolean) => {
   return createBrowserRouter([
     {
       path: "/",
-      element: <Authentication />,
+      element: authRoute(<Login />, isAuthenticated),
+    },
+    {
+      path: "/login",
+      element: authRoute(<Login />, isAuthenticated),
+    },
+    {
+      path: "/signup",
+      element: authRoute(<SignUp />, isAuthenticated),
     },
     {
       path: "/home",
@@ -32,7 +54,7 @@ export const createRoutes = (isAuthenticated: boolean) => {
     },
     {
       path: "/verify",
-      element: guardRoutes(<Verify />, isAuthenticated),
+      element: <Verify />,
     },
     ...workoutRoutes,
   ]);
