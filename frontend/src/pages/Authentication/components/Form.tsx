@@ -2,6 +2,7 @@ import { Button, ButtonProps, Input, Typography } from "antd";
 import { BiUser } from "react-icons/bi";
 import { ErrorText, FormButtonStyle, LinkButtonWrapper } from "./FormStyles";
 import { LoginOutlined } from "@ant-design/icons";
+import { RiLockPasswordLine } from "react-icons/ri";
 
 const { Text } = Typography;
 
@@ -25,9 +26,9 @@ interface PasswordFieldProp {
 export const PasswordField: React.FC<PasswordFieldProp> = ({ setPassword }) => (
   <>
     <Text>Password</Text>
-    <Input
-      placeholder="Enter your email"
-      prefix={<BiUser className="site-form-item-icon" />}
+    <Input.Password
+      placeholder="Password"
+      prefix={<RiLockPasswordLine />}
       onChange={(e) => setPassword(e.target.value)}
     />
   </>
