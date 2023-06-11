@@ -29,6 +29,16 @@ const useAuthentication = () => {
     return true;
   };
 
+  const resetPasswordWithEmail = async (email: string) => {
+    const result = await auth.resetPasswordWithEmail(email);
+    return result;
+  };
+
+  const resetPassword = async (password: string) => {
+    const result = await auth.resetPassword(password);
+    return result;
+  };
+
   const { data, isLoading, refetch } = useQuery("session", async () => {
     const auth = new Authentication();
     const session = await auth.getUser();
@@ -39,6 +49,8 @@ const useAuthentication = () => {
     login,
     signUp,
     signOut,
+    resetPasswordWithEmail,
+    resetPassword,
     auth: {
       user: data?.user || null,
       isAuthenticated: data?.isAuthenticated || false,

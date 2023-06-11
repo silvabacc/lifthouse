@@ -1,11 +1,12 @@
 import { Routine } from "@backend/data";
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import Authentication from "./pages/Authentication/Authentication";
 import Verify from "./pages/Authentication/Verify";
 import Home from "./pages/Home/Home";
 import Workout from "./pages/Workout/Workout";
 import Login from "./pages/Authentication/Login";
 import SignUp from "./pages/Authentication/SignUp";
+import ForgotPassword from "./pages/Authentication/ForgotPassword";
+import PasswordReset from "./pages/Authentication/PasswordReset";
 
 const guardRoutes = (
   element: JSX.Element,
@@ -55,6 +56,15 @@ export const createRoutes = (isAuthenticated: boolean) => {
     {
       path: "/verify",
       element: <Verify />,
+    },
+    {
+      path: "/recovery",
+      element: <ForgotPassword />,
+    },
+    {
+      path: "/reset",
+      // element: guardRoutes(<PasswordReset />, isAuthenticated),
+      element: <PasswordReset />,
     },
     ...workoutRoutes,
   ]);

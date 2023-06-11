@@ -43,6 +43,26 @@ class Authentication {
     this.supabase.auth.signOut();
   }
 
+  async resetPasswordWithEmail(email: string) {
+    const result = await this.supabase.auth.resetPasswordForEmail(email);
+
+    if (result.error) {
+      return { success: false, message: result.error.message };
+    }
+
+    return { success: true, message: "" };
+  }
+
+  async resetPassword(password: string) {
+    const result = await this.supabase.auth.updateUser({ password: password });
+
+    if (result.error) {
+      return { success: false, message: result.error.message };
+    }
+
+    return { success: true, message: "" };
+  }
+
   async getUser() {
     const result = await this.supabase.auth.getUser();
 

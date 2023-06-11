@@ -39,6 +39,10 @@ const Login: React.FC = () => {
     setDisableButton(false);
   };
 
+  const forgotPasswordOnClick = () => {
+    navigate("/recovery");
+  };
+
   return (
     <>
       <AuthPageHeader />
@@ -48,7 +52,7 @@ const Login: React.FC = () => {
         <EmailField setEmail={setEmail} />
         <LinkButton text={"New User? Sign up"} onClick={newUserOnClick} />
         <PasswordField setPassword={setPassword} />
-        <LinkButton text={"Forgot password?"} />
+        <LinkButton text={"Forgot password?"} onClick={forgotPasswordOnClick} />
         <FormButton
           text={"Login"}
           disabled={disableButton}
