@@ -8,7 +8,7 @@ import { Typography } from "antd";
 const { Title, Text } = Typography;
 
 const ForgotPassword: React.FC = () => {
-  const { resetPassword } = useAuthentication();
+  const { resetPasswordWithEmail } = useAuthentication();
   const [email, setEmail] = useState<string | null>("");
   const [disableButton, setDisableButton] = useState(false);
   const [message, setMessage] = useState("");
@@ -17,7 +17,7 @@ const ForgotPassword: React.FC = () => {
     setMessage("");
     setDisableButton(true);
     if (email) {
-      const result = await resetPassword(email);
+      const result = await resetPasswordWithEmail(email);
       if (result.success) {
         setMessage(
           `Reset email have been sent to ${email}, please check your inbox and reset your password`
