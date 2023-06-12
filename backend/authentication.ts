@@ -69,6 +69,10 @@ class Authentication {
     const isAuthenticated = result.data.user !== null;
     return { isAuthenticated, user: result.data.user };
   }
+
+  googleLogin() {
+    this.supabase.auth.signInWithOAuth({ provider: "google" });
+  }
 }
 
 export default Authentication;

@@ -14,6 +14,10 @@ const useAuthentication = () => {
     return { success: true, message: "success" };
   };
 
+  const loginWithGoogle = () => {
+    auth.googleLogin();
+  };
+
   const signUp = async (email: string, password: string) => {
     const result = await auth.signUp(email, password);
 
@@ -47,6 +51,7 @@ const useAuthentication = () => {
 
   return {
     login,
+    loginWithGoogle,
     signUp,
     signOut,
     resetPasswordWithEmail,

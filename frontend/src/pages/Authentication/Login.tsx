@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import AuthPageHeader from "./components/AuthPageHeader";
-import { FormContainer } from "./components/FormStyles";
-import { Typography } from "antd";
+import {
+  FormContainer,
+  Line,
+  LoginWithContainer,
+  LoginWithText,
+  ProvidersConainer,
+} from "./components/FormStyles";
+import { Button, Space, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import {
@@ -11,8 +17,9 @@ import {
   LinkButton,
   PasswordField,
 } from "./components/Form";
+import { GoogleOutlined } from "@ant-design/icons";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const Login: React.FC = () => {
   const [error, setError] = useState<string | null>("");
@@ -20,7 +27,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState<string | null>("");
   const [disableButton, setDisableButton] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuthentication();
+  const { login, loginWithGoogle } = useAuthentication();
 
   const newUserOnClick = () => navigate("/signup");
 
@@ -43,6 +50,10 @@ const Login: React.FC = () => {
     navigate("/recovery");
   };
 
+  const signInWithGoogleOClick = () => {
+    loginWithGoogle();
+  };
+
   return (
     <>
       <AuthPageHeader />
@@ -58,6 +69,16 @@ const Login: React.FC = () => {
           disabled={disableButton}
           onClick={formButtonOnClick}
         />
+        <LoginWithContainer>
+          <Line />
+          <LoginWithText>Or Log in With</LoginWithText>
+          <Line />
+        </LoginWithContainer>
+        <ProvidersConainer>
+          <Button icon={<GoogleOutlined />} onClick={signInWithGoogleOClick}>
+            Google
+          </Button>
+        </ProvidersConainer>
       </FormContainer>
     </>
   );
