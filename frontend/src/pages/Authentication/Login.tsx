@@ -19,7 +19,7 @@ import {
 } from "./components/Form";
 import { GoogleOutlined } from "@ant-design/icons";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const Login: React.FC = () => {
   const [error, setError] = useState<string | null>("");
