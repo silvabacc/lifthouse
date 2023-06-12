@@ -16,6 +16,7 @@ const ForgotPassword: React.FC = () => {
   const onSubmit = async () => {
     setMessage("");
     setDisableButton(true);
+
     if (email) {
       const result = await resetPasswordWithEmail(email);
       if (result.success) {
@@ -28,6 +29,7 @@ const ForgotPassword: React.FC = () => {
     } else {
       setMessage("Please fill in your email");
     }
+
     setDisableButton(false);
   };
 

@@ -19,13 +19,13 @@ const PasswordReset: React.FC = () => {
   const resetPasswordOnClick = async () => {
     setDisableButton(true);
 
-    if (firstNewPassword) {
-      if (firstNewPassword !== secondNewPassword) {
-        setErrorMessage("Passwords do not match");
-        setDisableButton(false);
-        return;
-      }
+    if (firstNewPassword !== secondNewPassword) {
+      setErrorMessage("Passwords do not match");
+      setDisableButton(false);
+      return;
+    }
 
+    if (firstNewPassword) {
       const result = await resetPassword(firstNewPassword);
       if (result.success) {
         navigate("/home");
