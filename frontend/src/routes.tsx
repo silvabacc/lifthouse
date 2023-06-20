@@ -1,4 +1,4 @@
-import { Routine } from "@backend/data";
+import { RoutineType } from "@backend/types";
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import Verify from "./pages/Authentication/Verify";
 import Home from "./pages/Home/Home";
@@ -27,10 +27,10 @@ const authRoute = (
 //v6 react-router-dom removed regex support, so must statically route these
 export const createRoutes = (isAuthenticated: boolean) => {
   const workoutRoutes = [
-    { routeSegment: "upper_intensity", prop: Routine.UPPER_INTENSITY },
-    { routeSegment: "upper_volume", prop: Routine.UPPER_VOLUME },
-    { routeSegment: "lower_intensity", prop: Routine.LOWER_INTENSITY },
-    { routeSegment: "lower_volume", prop: Routine.LOWER_VOLUME },
+    { routeSegment: "upper_intensity", prop: RoutineType.UPPER_INTENSITY },
+    { routeSegment: "upper_volume", prop: RoutineType.UPPER_VOLUME },
+    { routeSegment: "lower_intensity", prop: RoutineType.LOWER_INTENSITY },
+    { routeSegment: "lower_volume", prop: RoutineType.LOWER_VOLUME },
   ].map((route) => ({
     path: `/routine/${route.routeSegment}`,
     element: guardRoutes(<Workout routine={route.prop} />, isAuthenticated),
@@ -63,8 +63,7 @@ export const createRoutes = (isAuthenticated: boolean) => {
     },
     {
       path: "/reset",
-      // element: guardRoutes(<PasswordReset />, isAuthenticated),
-      element: <PasswordReset />,
+      element: guardRoutes(<PasswordReset />, isAuthenticated),
     },
     ...workoutRoutes,
   ]);

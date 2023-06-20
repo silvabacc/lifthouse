@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
 import { createRoutes } from "./routes";
 import useAuthentication from "./hooks/useAuthentication";
@@ -6,15 +6,15 @@ import useAuthentication from "./hooks/useAuthentication";
 const App: React.FC = () => {
   const { auth } = useAuthentication();
 
-  const router = useCallback(() => {
-    return createRoutes(auth.isAuthenticated);
-  }, [auth.isAuthenticated]);
+  useEffect(() => {
+    auth.fetchAuthUser();
+  }, []);
 
-  return (
-    <>
-      {auth.authLoading ? <>Loading</> : <RouterProvider router={router()} />}
-    </>
-  );
+  if (auth.authLoading) {
+    return <>Loading</>;
+  }
+
+  return <RouterProvider router={createRoutes(auth.isAuthenticated)} />;
 };
 
 export default App;

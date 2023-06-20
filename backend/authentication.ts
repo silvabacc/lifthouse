@@ -40,7 +40,8 @@ class Authentication {
   }
 
   async signOut() {
-    this.supabase.auth.signOut();
+    await this.supabase.auth.signOut();
+    return true;
   }
 
   async resetPasswordWithEmail(email: string) {

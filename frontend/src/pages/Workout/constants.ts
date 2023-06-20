@@ -1,8 +1,8 @@
-import { Routine } from "../../../../backend/data";
+import { RoutineType } from "@backend/types";
 
 export const pageTitleMapping = {
-  [Routine.UPPER_INTENSITY]: "Upper Intensity",
-  [Routine.UPPER_VOLUME]: "Upper Volume",
-  [Routine.LOWER_INTENSITY]: "Lower Intensity",
-  [Routine.LOWER_VOLUME]: "Lower Volume",
+  [RoutineType.UPPER_INTENSITY]: "Upper Intensity",
+  [RoutineType.UPPER_VOLUME]: "Upper Volume",
+  [RoutineType.LOWER_INTENSITY]: "Lower Intensity",
+  [RoutineType.LOWER_VOLUME]: "Lower Volume",
 };

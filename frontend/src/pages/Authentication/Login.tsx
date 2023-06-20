@@ -7,7 +7,7 @@ import {
   LoginWithText,
   ProvidersConainer,
 } from "./components/FormStyles";
-import { Button, Space, Typography } from "antd";
+import { Button, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import {
