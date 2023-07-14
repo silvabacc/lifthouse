@@ -24,8 +24,12 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
   }, [data]);
 
   const items: StepProps[] = [];
+
   for (let i = 0; i < sets; i++) {
-    const info = temporaryStorage?.info.find((info) => info.set === i + 1);
+    const info =
+      temporaryStorage?.exerciseId === exercise.exerciseId
+        ? temporaryStorage?.info.find((info) => info.set === i + 1)
+        : undefined;
 
     items.push({
       title: `Set ${i + 1}`,
