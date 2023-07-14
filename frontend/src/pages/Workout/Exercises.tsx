@@ -1,28 +1,45 @@
 import { TabsProps, Collapse, Space, Tabs, Typography } from "antd";
-import { Routines } from "../../../../backend/dexie";
 import SetsReps from "./SetsReps";
 import WorkoutButton from "./components/WorkoutButton";
-import { useNavigate } from "react-router-dom";
-import { useDatabase } from "../../hooks/useDatabase";
 import { Container } from "./WorkoutStyles";
+import { Exercise, Routine } from "@backend/types";
+import { useDatabase } from "@frontend/hooks/useDatabase";
+import { useNavigate } from "react-router-dom";
 
 interface ExercisesProps {
-  routines: Routines;
+  routine: Routine;
   edit: boolean;
 }
 
 const { Panel } = Collapse;
 const { Text } = Typography;
 
-const Exercises: React.FC<ExercisesProps> = ({ routines, edit }) => {
+const Exercises: React.FC<ExercisesProps> = ({ routine, edit }) => {
+  const { queryExercises } = useDatabase();
+  const navigate = useNavigate();
+
+  const exerciseIds = routine.exercises.map((exercise) => exercise.exerciseId);
+  const { data: exercisesData, isLoading } = queryExercises(exerciseIds);
+
+  if (isLoading || exercisesData === undefined) {
+    return <>Loading...</>;
+  }
+
   return (
     <Container direction="vertical">
-      {routines?.exercises.map((exercise) => {
-        const items: TabsProps["items"] = [
+      {routine.exercises.map((exerciseFromRoutine) => {
+        const exercise =
+          exercisesData.find(
+            (exercise) => exercise.exerciseId === exerciseFromRoutine.exerciseId
+          ) || ({} as Exercise);
+
+        const items = [
           {
             key: "sets",
             label: `Sets & Reps`,
-            children: <SetsReps exercise={exercise} />,
+            children: (
+              <SetsReps exercise={exercise} sets={exerciseFromRoutine.sets} />
+            ),
           },
           {
             key: "history",
@@ -36,14 +53,14 @@ const Exercises: React.FC<ExercisesProps> = ({ routines, edit }) => {
             <Panel
               header={
                 <Space direction="vertical">
-                  <Text strong>{exercise.name}</Text>
+                  <Text strong>{exercise.exerciseName}</Text>
                   <Space>
-                    <Text keyboard>{exercise.sets}</Text>x
-                    <Text keyboard>{exercise.reps}</Text>
+                    <Text keyboard>{exerciseFromRoutine.sets}</Text>x
+                    <Text keyboard>{exerciseFromRoutine.reps}</Text>
                   </Space>
                 </Space>
               }
-              key={exercise.name}
+              key={exercise.exerciseName}
             >
               <Tabs items={items} />
             </Panel>
@@ -53,8 +70,8 @@ const Exercises: React.FC<ExercisesProps> = ({ routines, edit }) => {
       <WorkoutButton
         onClick={() => {
           navigate("/");
-          finishWorkout();
-          clearTemporaryStorage();
+          // finishWorkout();
+          // clearTemporaryStorage();
         }}
       >
         Finish Workout

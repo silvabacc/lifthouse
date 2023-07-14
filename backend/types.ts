@@ -37,7 +37,7 @@ export interface Exercise {
 }
 
 export interface Exercises {
-  exercisesId: string;
+  exerciseId: string;
   sets: number;
   reps: string;
 }

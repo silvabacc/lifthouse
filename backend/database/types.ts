@@ -18,8 +18,8 @@ export enum RoutinesColumns {
   exercises = "exercises",
 }
 
-export enum ExercisesColumns {
-  exercises_id = "exercises_id",
+export enum ExerciseColumns {
+  exercise_id = "exercise_id",
   exercise_type = "exercise_type",
   exercise_name = "exercise_name",
 }

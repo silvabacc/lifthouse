@@ -2,12 +2,12 @@ import { SupabaseClient, User, createClient } from "@supabase/supabase-js";
 import getConfig from "../config";
 import { routineSetup } from "../data";
 import {
-  ExercisesColumns,
+  ExerciseColumns,
   RoutineORM,
   RoutinesColumns,
   TableNames,
 } from "./types";
-import { Routine, RoutineType } from "@backend/types";
+import { Exercise, Routine, RoutineType } from "@backend/types";
 
 const { SUPABASE_URL, ANON_PUBLIC_KEY } = getConfig();
 
@@ -24,14 +24,14 @@ class LiftHouseDatabase {
         const { data } = await this.supabase
           .from(TableNames.exercises)
           .select("*")
-          .eq(ExercisesColumns.exercise_type, exercise)
+          .eq(ExerciseColumns.exercise_type, exercise)
           .limit(1);
 
         // This probably needs changing in the future
         return {
           exercise_id: data?.[0].exercise_id,
-          sets: 8,
-          reps: "12",
+          sets: 3,
+          reps: "8-12",
         };
       }
     );
@@ -70,9 +70,15 @@ class LiftHouseDatabase {
     }
 
     const routineORM = data[0] as RoutineORM;
-    const parsedExercises = routineORM.exercises.map((exercise) => ({
-      ...JSON.parse(exercise),
-    }));
+    const parsedExercises = routineORM.exercises
+      .map((exercise) => ({
+        ...JSON.parse(exercise),
+      }))
+      .map((exercise) => ({
+        exerciseId: exercise.exercise_id,
+        sets: exercise.sets,
+        reps: exercise.reps,
+      }));
 
     return {
       routineId: routineORM.routine_id,
@@ -80,6 +86,23 @@ class LiftHouseDatabase {
       exercises: parsedExercises,
       userId: routineORM.user_id,
     };
+  }
+
+  async getExercises(exerciseIds: string[]): Promise<Exercise[]> {
+    const { data, error } = await this.supabase
+      .from(TableNames.exercises)
+      .select("*")
+      .in(ExerciseColumns.exercise_id, exerciseIds);
+
+    if (data === null) {
+      throw new Error("No data returned");
+    }
+
+    return data.map((exercise) => ({
+      exerciseId: exercise.exercise_id,
+      exerciseName: exercise.exercise_name,
+      exerciseType: exercise.exercise_type,
+    }));
   }
 }
 

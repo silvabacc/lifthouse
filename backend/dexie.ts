@@ -1,45 +1,59 @@
 import Dexie, { Table } from "dexie";
-import { Exercise, Routine } from "./data";
 
-export interface TemporaryStorage {
-  id?: number;
-  exercise: Exercise;
-  routine: Routine;
+interface Info {
   set: number;
-  reps: string;
+  reps: number;
   weight: number;
 }
 
+//* sets, weighs and reps should map to each other
+export interface LogEntryStorage {
+  exerciseId: string;
+  info: Info[];
+}
+
 export class LocalStorageDb extends Dexie {
-  temporaryStorage!: Table<TemporaryStorage>;
+  logEntryStorage!: Table<LogEntryStorage>;
 
   constructor() {
     super("lifthousedatabase");
     this.version(1).stores({
-      temporaryStorage: "++id, exercise.name, routine, set, reps, weight",
+      logEntryStorage: "++exerciseId, info",
     });
   }
 
-  async getTemporaryStorage(routine: Routine) {
-    return await this.temporaryStorage
-      .where("routine")
-      .equals(routine)
-      .reverse()
-      .toArray();
+  async getTemporaryStorage(exerciseId: string) {
+    return await this.logEntryStorage.get(exerciseId);
   }
 
-  writeTemporaryStorage(
-    exercise: Exercise,
-    routine: Routine,
+  async writeTemporaryStorage(
+    exerciseId: string,
     set: number,
-    weight: number,
-    reps: string
+    reps: number,
+    weight: number
   ) {
-    this.temporaryStorage.add({ exercise, routine, set, weight, reps });
+    const current = await this.logEntryStorage.get(exerciseId);
+
+    if (current) {
+      await this.logEntryStorage.update(exerciseId, {
+        exerciseId,
+        info: [
+          //Removes duplicated sets
+          ...current.info.filter((info) => info.set !== set),
+          { set, reps, weight },
+        ],
+      });
+      return;
+    }
+
+    await this.logEntryStorage.add({
+      exerciseId,
+      info: [{ set, reps, weight }],
+    });
   }
 
   clearTemporaryStorage() {
-    this.temporaryStorage.clear();
+    this.logEntryStorage.clear();
   }
 }
 

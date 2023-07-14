@@ -8,6 +8,7 @@ import { Container } from "./WorkoutStyles";
 import { useAppContext } from "@frontend/context/AppContext";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { useDatabase } from "@frontend/hooks/useDatabase";
+import Exercises from "./Exercises";
 
 const { Title } = Typography;
 
@@ -17,15 +18,14 @@ interface WorkoutProps {
 
 const Workout: React.FC<WorkoutProps> = ({ routine }) => {
   const { queryRoutine } = useDatabase();
-  const {
-    auth: { user },
-  } = useAuthentication();
-  const { data } = queryRoutine(routine, user.id);
-
-  console.log(data);
+  const { data, isLoading } = queryRoutine(routine);
 
   const [edit, setEdit] = useState(false);
   const onEdit = () => setEdit((prev) => !prev);
+
+  if (isLoading || data === undefined) {
+    return <>Loading...</>;
+  }
 
   return (
     <>
@@ -37,7 +37,7 @@ const Workout: React.FC<WorkoutProps> = ({ routine }) => {
           </Button>
         </Space>
         {/* <EditRoutine routine={routines} edit={edit} /> */}
-        {/* <Exercises routines={routines} edit={edit} /> */}
+        <Exercises routine={data} edit={edit} />
       </Container>
     </>
   );

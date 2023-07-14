@@ -2,58 +2,55 @@ import React, { useEffect, useState } from "react";
 import { StepProps, Steps } from "antd";
 import SetsRepsRow from "./SetsRepsRow";
 import WorkoutButton from "./components/WorkoutButton";
-import { useDatabase } from "../../hooks/useDatabase";
-import { Exercise, Routine } from "../../../../backend/data";
-import { useParams } from "react-router-dom";
+import { Exercise } from "@backend/types";
+import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
+import { LogEntryStorage } from "@backend/dexie";
 
 interface SetsRepsProps {
   exercise: Exercise;
+  sets: number;
 }
 
-const SetsReps: React.FC<SetsRepsProps> = ({ exercise }) => {
-  const { routineType } = useParams();
-
+const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
   const [current, setCurrent] = useState(0);
-  const { fetchTemporaryStorage } = useDatabase();
-  const { data } = fetchTemporaryStorage(routineType as Routine);
+  const { getTemporaryStorage } = useTemporaryStorage();
+  const { data } = getTemporaryStorage(exercise.exerciseId);
+  const [temporaryStorage, setTemporaryStorage] = useState<LogEntryStorage>();
 
   useEffect(() => {
-    if (data && data?.length) {
-      const currentFromTempStorage = data.find(
-        (tempStorage) => tempStorage.exercise.name === exercise.name
-      );
-      currentFromTempStorage && setCurrent(currentFromTempStorage?.set);
+    if (data) {
+      setTemporaryStorage(data);
     }
   }, [data]);
 
-  const { sets } = exercise;
+  const items: StepProps[] = [];
+  for (let i = 0; i < sets; i++) {
+    const info = temporaryStorage?.info.find((info) => info.set === i + 1);
 
-  let items: StepProps[] = [];
-
-  for (let i = 0; i < (sets || 0); i++) {
-    const tempStorage =
-      data &&
-      data?.find(
-        (temp) => temp.set === i && temp.exercise.name === exercise.name
-      );
-
-    items = [
-      ...items,
-      {
-        title: `Set ${i + 1}`,
-        description: (
-          <SetsRepsRow
-            set={i + 1}
-            exercise={exercise}
-            overrideReps={tempStorage?.reps}
-            overrideWeights={tempStorage?.weight}
-            next={setCurrent}
-            disabled={i !== current}
-          />
-        ),
-      },
-    ];
+    items.push({
+      title: `Set ${i + 1}`,
+      description: (
+        <SetsRepsRow
+          set={i + 1}
+          exercise={exercise}
+          overrideReps={info?.reps}
+          overrideWeights={info?.reps}
+          next={setCurrent}
+          disabled={i !== current}
+        />
+      ),
+    });
   }
+
+  useEffect(() => {
+    if (
+      temporaryStorage &&
+      temporaryStorage.exerciseId === exercise.exerciseId
+    ) {
+      setCurrent(temporaryStorage.info.length);
+    }
+  }, [temporaryStorage]);
+
   return (
     <>
       <Steps direction="vertical" current={current} items={items} />
