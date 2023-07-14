@@ -18,10 +18,10 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
   const [temporaryStorage, setTemporaryStorage] = useState<LogEntryStorage>();
 
   useEffect(() => {
-    if (data) {
-      setTemporaryStorage(data);
-    }
+    setTemporaryStorage(data);
   }, [data]);
+
+  console.log(exercise.exerciseId, data);
 
   const items: StepProps[] = [];
 

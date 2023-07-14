@@ -27,7 +27,7 @@ const Exercises: React.FC<ExercisesProps> = ({ routine, edit }) => {
 
   return (
     <Container direction="vertical">
-      {routine.exercises.map((exerciseFromRoutine) => {
+      {routine.exercises.map((exerciseFromRoutine, index) => {
         const exercise =
           exercisesData.find(
             (exercise) => exercise.exerciseId === exerciseFromRoutine.exerciseId
@@ -49,7 +49,7 @@ const Exercises: React.FC<ExercisesProps> = ({ routine, edit }) => {
         ];
 
         return (
-          <Collapse size="large">
+          <Collapse size="large" key={index}>
             <Panel
               header={
                 <Space direction="vertical">

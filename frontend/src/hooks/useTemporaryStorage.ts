@@ -5,7 +5,7 @@ export const useTemporaryStorage = () => {
   const dexie = new LocalStorageDb();
 
   const getTemporaryStorage = (exerciseId: string) => {
-    return useQuery("temporaryStorage", async () => {
+    return useQuery(["temporaryStorage", exerciseId], async () => {
       return await dexie.getTemporaryStorage(exerciseId);
     });
   };

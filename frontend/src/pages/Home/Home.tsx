@@ -21,6 +21,7 @@ const Home: React.FC = () => {
       <Title level={4}>Workouts 🏋</Title>
       {workoutCards.map((card) => (
         <WorkoutsCard
+          key={card.title}
           title={card.title}
           image={card.image}
           onClick={() => navigate(card.route)}
@@ -29,6 +30,7 @@ const Home: React.FC = () => {
       <Title level={4}>Diet 🥑</Title>
       {dietCards.map((card) => (
         <WorkoutsCard
+          key={card.title}
           title={card.title}
           image={card.image}
           onClick={() => navigate("/home")}
