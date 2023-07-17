@@ -1,25 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useDatabase } from "../../hooks/useDatabase";
-import {
-  Exercise,
-  ExerciseType,
-  IntensityRepRange,
-  RepRange,
-  Routine,
-  VolumeRepRange,
-} from "../../../../backend/data";
-import { Routines } from "../../../../backend/dexie";
+import { IntensityRepRange, VolumeRepRange } from "../../../../backend/data";
 import { Collapse } from "antd";
 import SelectExercise from "./components/SelectExercise";
 import { Container, RepContainer } from "./WorkoutStyles";
 import SelectRepRange from "./components/SelectRepRange";
 import { useParams } from "react-router-dom";
+import { Routine } from "@backend/types";
 
 const { Panel } = Collapse;
 
 interface EditRoutineProps {
-  routine: Routines;
-  edit: boolean;
+  routine: Routine;
 }
 
 const RepRangeMapping = {
@@ -29,7 +21,7 @@ const RepRangeMapping = {
   [Routine.LOWER_VOLUME]: VolumeRepRange,
 };
 
-const EditRoutine: React.FC<EditRoutineProps> = ({ routine, edit }) => {
+const EditRoutine: React.FC<EditRoutineProps> = ({ routine }) => {
   const { fetchExercises, updateRoutine } = useDatabase();
   const { routineType } = useParams();
   const { data: allExercises } = fetchExercises();

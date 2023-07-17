@@ -1,19 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Space, Typography } from "antd";
 
 import "../../../../backend/dexie";
 import { pageTitleMapping } from "./constants";
-import { Routine } from "../../../../backend/data";
 import { Container } from "./WorkoutStyles";
-import { useAppContext } from "@frontend/context/AppContext";
-import useAuthentication from "@frontend/hooks/useAuthentication";
 import { useDatabase } from "@frontend/hooks/useDatabase";
 import Exercises from "./Exercises";
+import { RoutineType } from "@backend/types";
 
 const { Title } = Typography;
 
 interface WorkoutProps {
-  routine: Routine;
+  routine: RoutineType;
 }
 
 const Workout: React.FC<WorkoutProps> = ({ routine }) => {
@@ -36,8 +34,8 @@ const Workout: React.FC<WorkoutProps> = ({ routine }) => {
             {edit ? "Save" : "Edit"}
           </Button>
         </Space>
-        {/* <EditRoutine routine={routines} edit={edit} /> */}
-        <Exercises routine={data} edit={edit} />
+        {/* {edit ? <EditRoutine routine={data} /> : <Exercises routine={data} />} */}
+        <Exercises data={data} />
       </Container>
     </>
   );

@@ -1,35 +1,28 @@
-import { TabsProps, Collapse, Space, Tabs, Typography } from "antd";
+import { Collapse, Space, Tabs, Typography } from "antd";
 import SetsReps from "./SetsReps";
 import WorkoutButton from "./components/WorkoutButton";
 import { Container } from "./WorkoutStyles";
 import { Exercise, Routine } from "@backend/types";
-import { useDatabase } from "@frontend/hooks/useDatabase";
 import { useNavigate } from "react-router-dom";
 
 interface ExercisesProps {
-  routine: Routine;
-  edit: boolean;
+  data: {
+    routine: Routine;
+    exercises: Exercise[];
+  };
 }
 
 const { Panel } = Collapse;
 const { Text } = Typography;
 
-const Exercises: React.FC<ExercisesProps> = ({ routine, edit }) => {
-  const { queryExercises } = useDatabase();
+const Exercises: React.FC<ExercisesProps> = ({ data }) => {
   const navigate = useNavigate();
-
-  const exerciseIds = routine.exercises.map((exercise) => exercise.exerciseId);
-  const { data: exercisesData, isLoading } = queryExercises(exerciseIds);
-
-  if (isLoading || exercisesData === undefined) {
-    return <>Loading...</>;
-  }
 
   return (
     <Container direction="vertical">
-      {routine.exercises.map((exerciseFromRoutine, index) => {
+      {data.routine.exercises.map((exerciseFromRoutine, index) => {
         const exercise =
-          exercisesData.find(
+          data.exercises.find(
             (exercise) => exercise.exerciseId === exerciseFromRoutine.exerciseId
           ) || ({} as Exercise);
 
