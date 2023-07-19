@@ -15,8 +15,11 @@ export const useDatabase = () => {
    * @param exercises list of exercies to save for the routine
    * @returns
    */
-  const updateRoutine = (routineId: string, exercises: RoutineExercise[]) => {
-    dbService.updateRoutine(routineId, exercises);
+  const updateRoutine = async (
+    routineId: string,
+    exercises: RoutineExercise[]
+  ) => {
+    await dbService.updateRoutine(routineId, exercises);
   };
 
   const queryRoutine = (routineType: RoutineType) => {

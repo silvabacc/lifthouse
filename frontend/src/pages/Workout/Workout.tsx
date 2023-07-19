@@ -18,7 +18,7 @@ interface WorkoutProps {
 const Workout: React.FC<WorkoutProps> = ({ routine }) => {
   const [currentExercises, setCurrentExercises] = useState<RoutineExercise[]>();
   const { queryRoutine, updateRoutine } = useDatabase();
-  const { data, isLoading } = queryRoutine(routine);
+  const { data, isLoading, refetch } = queryRoutine(routine);
 
   const [edit, setEdit] = useState(false);
 
@@ -28,11 +28,13 @@ const Workout: React.FC<WorkoutProps> = ({ routine }) => {
     }
   }, [edit]);
 
-  const onEdit = () => {
+  const onEdit = async () => {
     setEdit((prev) => !prev);
 
     if (data && currentExercises) {
-      updateRoutine(data?.routine.routineId, currentExercises);
+      await updateRoutine(data?.routine.routineId, currentExercises);
+      //May avoid refetching
+      refetch();
     }
   };
 
