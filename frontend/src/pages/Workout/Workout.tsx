@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Space, Typography } from "antd";
 
 import "../../../../backend/dexie";
@@ -6,7 +6,8 @@ import { pageTitleMapping } from "./constants";
 import { Container } from "./WorkoutStyles";
 import { useDatabase } from "@frontend/hooks/useDatabase";
 import Exercises from "./Exercises";
-import { RoutineType } from "@backend/types";
+import { RoutineExercise, RoutineType } from "@backend/types";
+import EditRoutine from "./EditRoutine";
 
 const { Title } = Typography;
 
@@ -15,11 +16,25 @@ interface WorkoutProps {
 }
 
 const Workout: React.FC<WorkoutProps> = ({ routine }) => {
-  const { queryRoutine } = useDatabase();
+  const [currentExercises, setCurrentExercises] = useState<RoutineExercise[]>();
+  const { queryRoutine, updateRoutine } = useDatabase();
   const { data, isLoading } = queryRoutine(routine);
 
   const [edit, setEdit] = useState(false);
-  const onEdit = () => setEdit((prev) => !prev);
+
+  useEffect(() => {
+    if (data) {
+      setCurrentExercises(data.routine.exercises);
+    }
+  }, [edit]);
+
+  const onEdit = () => {
+    setEdit((prev) => !prev);
+
+    if (data && currentExercises) {
+      updateRoutine(data?.routine.routineId, currentExercises);
+    }
+  };
 
   if (isLoading || data === undefined) {
     return <>Loading...</>;
@@ -34,8 +49,16 @@ const Workout: React.FC<WorkoutProps> = ({ routine }) => {
             {edit ? "Save" : "Edit"}
           </Button>
         </Space>
-        {/* {edit ? <EditRoutine routine={data} /> : <Exercises routine={data} />} */}
-        <Exercises data={data} />
+        {edit ? (
+          <EditRoutine
+            data={data}
+            currentExercises={currentExercises}
+            setCurrentExercises={setCurrentExercises}
+          />
+        ) : (
+          <Exercises data={data} />
+        )}
+        {/* <Exercises data={data} /> */}
       </Container>
     </>
   );

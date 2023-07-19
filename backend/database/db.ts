@@ -7,7 +7,12 @@ import {
   RoutinesColumns,
   TableNames,
 } from "./types";
-import { Exercise, Routine, RoutineType } from "@backend/types";
+import {
+  Exercise,
+  Routine,
+  RoutineExercise,
+  RoutineType,
+} from "@backend/types";
 
 const { SUPABASE_URL, ANON_PUBLIC_KEY } = getConfig();
 
@@ -37,65 +42,74 @@ class LiftHouseDatabase {
     );
 
     const defaultExercises = await Promise.all(fetchDefaultExercises);
-    const stringifedDefaultExercises = defaultExercises.map((exercise) =>
-      JSON.stringify(exercise).replace("[", "{").replace("]", "}")
-    );
 
     const insertDefaultRoutine = {
       [RoutinesColumns.routine_type]: routine,
-      [RoutinesColumns.exercises]: stringifedDefaultExercises,
+      [RoutinesColumns.exercises]: defaultExercises,
       [RoutinesColumns.user_id]: userId,
     };
 
     await this.supabase.from(TableNames.routines).insert(insertDefaultRoutine);
   }
 
-  public async getRoutines(
-    routine: RoutineType,
-    userId: string
-  ): Promise<Routine> {
-    const { data, error } = await this.supabase
+  async updateRoutine(routineId: string, exercises: RoutineExercise[]) {
+    const exerciseORM = exercises.map((exercise) => ({
+      exercise_id: exercise.exerciseId,
+      sets: exercise.sets,
+      reps: exercise.reps,
+    }));
+
+    await this.supabase
+      .from(TableNames.routines)
+      .update({ exercises: exerciseORM })
+      .eq(RoutinesColumns.routine_id, routineId);
+  }
+
+  async getRoutines(routine: RoutineType, userId: string): Promise<Routine> {
+    const { data } = await this.supabase
       .from(TableNames.routines)
       .select("*")
       .eq(RoutinesColumns.user_id, userId)
       .eq(RoutinesColumns.routine_type, routine);
 
-    if (data === null) {
-      throw new Error("No data returned");
-    }
-
-    if (data?.length === 0) {
+    if (data?.length === 0 || data === null) {
       await this.createDefaultRoutine(routine, userId);
       return this.getRoutines(routine, userId);
     }
 
     const routineORM = data[0] as RoutineORM;
-    const parsedExercises = routineORM.exercises
-      .map((exercise) => ({
-        ...JSON.parse(exercise),
-      }))
-      .map((exercise) => ({
-        exerciseId: exercise.exercise_id,
-        sets: exercise.sets,
-        reps: exercise.reps,
-      }));
+    const parsedExercises = routineORM.exercises.map((exercise) => ({
+      exerciseId: exercise.exercise_id,
+      sets: exercise.sets,
+      reps: exercise.reps,
+    }));
 
     return {
       routineId: routineORM.routine_id,
-      routinesType: routineORM.routine_type,
+      routinesType: routineORM.routine_type as RoutineType,
       exercises: parsedExercises,
       userId: routineORM.user_id,
     };
   }
 
-  async getExercises(exerciseIds: string[]): Promise<Exercise[]> {
-    const { data, error } = await this.supabase
+  /**
+   *
+   * @param exerciseIds returns exercises with the given ids. If empty, returns all exercises
+   * @returns Exercisees
+   */
+  async getExercises(exerciseIds?: string[]): Promise<Exercise[]> {
+    const selectExercises = this.supabase
       .from(TableNames.exercises)
-      .select("*")
-      .in(ExerciseColumns.exercise_id, exerciseIds);
+      .select("*");
+
+    if (exerciseIds) {
+      selectExercises.in(ExerciseColumns.exercise_id, exerciseIds);
+    }
+
+    const { data } = await selectExercises;
 
     if (data === null) {
-      throw new Error("No data returned");
+      throw new Error("No data returned for exercises");
     }
 
     return data.map((exercise) => ({

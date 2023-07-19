@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import LiftHouseDatabase from "@backend/database/db";
-import { RoutineType } from "@backend/types";
+import { RoutineExercise, RoutineType } from "@backend/types";
 import useAuthentication from "./useAuthentication";
 
 export const useDatabase = () => {
@@ -8,6 +8,16 @@ export const useDatabase = () => {
   const {
     auth: { user },
   } = useAuthentication();
+
+  /**
+   *
+   * @param routineId routine id to save to.
+   * @param exercises list of exercies to save for the routine
+   * @returns
+   */
+  const updateRoutine = (routineId: string, exercises: RoutineExercise[]) => {
+    dbService.updateRoutine(routineId, exercises);
+  };
 
   const queryRoutine = (routineType: RoutineType) => {
     return useQuery(["fetchRoutine", routineType, user.id], async () => {
@@ -20,13 +30,17 @@ export const useDatabase = () => {
     });
   };
 
-  //May not need this
-  const queryExercises = (exerciseIds: string[]) => {
+  /**
+   *
+   * @param exerciseIds returns exercises with the given ids. If empty, returns all exercises
+   * @returns Exercises
+   */
+  const queryExercises = (exerciseIds?: string[]) => {
     return useQuery(["fetchExercises", exerciseIds], async () => {
       const exercises = await dbService.getExercises(exerciseIds);
       return exercises;
     });
   };
 
-  return { queryRoutine, queryExercises };
+  return { queryRoutine, queryExercises, updateRoutine };
 };

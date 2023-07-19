@@ -8,7 +8,11 @@ export interface RoutineORM {
   routine_id: string;
   user_id: string;
   routine_type: string;
-  exercises: string[];
+  exercises: {
+    exercise_id: string;
+    sets: number;
+    reps: string;
+  }[];
 }
 
 export enum RoutinesColumns {

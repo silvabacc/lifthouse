@@ -22,6 +22,11 @@ export enum ExerciseType {
   ABS = "ABS",
 }
 
+export interface RepRange {
+  sets: number;
+  reps: string;
+}
+
 export interface LogEntries {
   logEntryId: string;
   exerciseId: string;
@@ -36,7 +41,7 @@ export interface Exercise {
   exerciseType: ExerciseType;
 }
 
-export interface Exercises {
+export interface RoutineExercise {
   exerciseId: string;
   sets: number;
   reps: string;
@@ -45,6 +50,6 @@ export interface Exercises {
 export interface Routine {
   routineId: string;
   userId: string;
-  routinesType: string;
-  exercises: Exercises[];
+  routinesType: RoutineType;
+  exercises: RoutineExercise[];
 }
