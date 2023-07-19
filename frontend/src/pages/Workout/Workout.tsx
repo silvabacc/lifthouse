@@ -33,7 +33,6 @@ const Workout: React.FC<WorkoutProps> = ({ routine }) => {
 
     if (data && currentExercises) {
       await updateRoutine(data?.routine.routineId, currentExercises);
-      //May avoid refetching
       refetch();
     }
   };
@@ -60,7 +59,6 @@ const Workout: React.FC<WorkoutProps> = ({ routine }) => {
         ) : (
           <Exercises data={data} />
         )}
-        {/* <Exercises data={data} /> */}
       </Container>
     </>
   );

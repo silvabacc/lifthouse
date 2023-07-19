@@ -13,6 +13,7 @@ import {
   RoutineExercise,
   RoutineType,
 } from "@backend/types";
+import { LogEntryStorage } from "@backend/dexie";
 
 const { SUPABASE_URL, ANON_PUBLIC_KEY } = getConfig();
 
@@ -63,6 +64,18 @@ class LiftHouseDatabase {
       .from(TableNames.routines)
       .update({ exercises: exerciseORM })
       .eq(RoutinesColumns.routine_id, routineId);
+  }
+
+  logEntry(entries: (LogEntryStorage | undefined)[], userId: string) {
+    entries.map(async (entry) => {
+      if (entry) {
+        await this.supabase.from(TableNames.log_entries).insert({
+          exercise_id: entry.exerciseId,
+          info: entry.info,
+          user_id: userId,
+        });
+      }
+    });
   }
 
   async getRoutines(routine: RoutineType, userId: string): Promise<Routine> {

@@ -5,9 +5,7 @@ export const useTemporaryStorage = () => {
   const dexie = new LocalStorageDb();
 
   const getTemporaryStorage = (exerciseId: string) => {
-    return useQuery(["temporaryStorage", exerciseId], async () => {
-      return await dexie.getTemporaryStorage(exerciseId);
-    });
+    return dexie.getTemporaryStorage(exerciseId);
   };
 
   const writeTemporaryStorage = (
@@ -19,5 +17,18 @@ export const useTemporaryStorage = () => {
     dexie.writeTemporaryStorage(exerciseId, set, reps, weight);
   };
 
-  return { getTemporaryStorage, writeTemporaryStorage };
+  const removeSetFromExercise = (exerciseId: string, set: number) => {
+    dexie.removeSetFromExercise(exerciseId, set);
+  };
+
+  const clearTemporaryStorage = () => {
+    dexie.clearTemporaryStorage();
+  };
+
+  return {
+    getTemporaryStorage,
+    writeTemporaryStorage,
+    removeSetFromExercise,
+    clearTemporaryStorage,
+  };
 };

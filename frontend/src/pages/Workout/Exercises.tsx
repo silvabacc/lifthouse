@@ -4,6 +4,8 @@ import WorkoutButton from "./components/WorkoutButton";
 import { Container } from "./WorkoutStyles";
 import { Exercise, Routine } from "@backend/types";
 import { useNavigate } from "react-router-dom";
+import { useDatabase } from "@frontend/hooks/useDatabase";
+import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 
 interface ExercisesProps {
   data: {
@@ -17,6 +19,14 @@ const { Text } = Typography;
 
 const Exercises: React.FC<ExercisesProps> = ({ data }) => {
   const navigate = useNavigate();
+  const { logEntry } = useDatabase();
+  const { clearTemporaryStorage } = useTemporaryStorage();
+
+  const finishWorkout = () => {
+    logEntry(data.exercises);
+    clearTemporaryStorage();
+    navigate("/");
+  };
 
   return (
     <Container direction="vertical">
@@ -62,9 +72,7 @@ const Exercises: React.FC<ExercisesProps> = ({ data }) => {
       })}
       <WorkoutButton
         onClick={() => {
-          navigate("/");
-          // finishWorkout();
-          // clearTemporaryStorage();
+          finishWorkout();
         }}
       >
         Finish Workout

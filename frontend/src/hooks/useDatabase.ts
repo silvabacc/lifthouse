@@ -1,13 +1,15 @@
 import { useQuery } from "react-query";
 import LiftHouseDatabase from "@backend/database/db";
-import { RoutineExercise, RoutineType } from "@backend/types";
+import { Exercise, RoutineExercise, RoutineType } from "@backend/types";
 import useAuthentication from "./useAuthentication";
+import { useTemporaryStorage } from "./useTemporaryStorage";
 
 export const useDatabase = () => {
   const dbService = new LiftHouseDatabase();
   const {
     auth: { user },
   } = useAuthentication();
+  const { getTemporaryStorage } = useTemporaryStorage();
 
   /**
    *
@@ -20,6 +22,16 @@ export const useDatabase = () => {
     exercises: RoutineExercise[]
   ) => {
     await dbService.updateRoutine(routineId, exercises);
+  };
+
+  const logEntry = async (exercises: Exercise[]) => {
+    const temporaryStorage = exercises.map((exercise) => {
+      return getTemporaryStorage(exercise.exerciseId);
+    });
+
+    const result = await Promise.all(temporaryStorage);
+
+    dbService.logEntry(result, user.id);
   };
 
   const queryRoutine = (routineType: RoutineType) => {
@@ -45,5 +57,5 @@ export const useDatabase = () => {
     });
   };
 
-  return { queryRoutine, queryExercises, updateRoutine };
+  return { queryRoutine, queryExercises, updateRoutine, logEntry };
 };

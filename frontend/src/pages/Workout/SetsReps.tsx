@@ -13,17 +13,19 @@ interface SetsRepsProps {
 
 const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
   const [current, setCurrent] = useState(0);
-  const { getTemporaryStorage } = useTemporaryStorage();
-  const { data } = getTemporaryStorage(exercise.exerciseId);
+  const { getTemporaryStorage, removeSetFromExercise } = useTemporaryStorage();
+  const tempData = getTemporaryStorage(exercise.exerciseId);
   const [temporaryStorage, setTemporaryStorage] = useState<LogEntryStorage>();
 
   useEffect(() => {
-    setTemporaryStorage(data);
-  }, [data]);
+    const fetchTemporaryStorage = async () => {
+      setTemporaryStorage(await tempData);
+    };
 
-  console.log(exercise.exerciseId, data);
+    fetchTemporaryStorage();
+  }, [tempData]);
 
-  const items: StepProps[] = [];
+  const stepItems: StepProps[] = [];
 
   for (let i = 0; i < sets; i++) {
     const info =
@@ -31,7 +33,7 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
         ? temporaryStorage?.info.find((info) => info.set === i + 1)
         : undefined;
 
-    items.push({
+    stepItems.push({
       title: `Set ${i + 1}`,
       description: (
         <SetsRepsRow
@@ -53,13 +55,16 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
     ) {
       setCurrent(temporaryStorage.info.length);
     }
-  }, [temporaryStorage]);
+  }, [JSON.stringify(temporaryStorage)]);
 
   return (
     <>
-      <Steps direction="vertical" current={current} items={items} />
+      <Steps direction="vertical" current={current} items={stepItems} />
       <WorkoutButton
-        onClick={() => setCurrent((prev) => prev - 1)}
+        onClick={() => {
+          removeSetFromExercise(exercise.exerciseId, current);
+          setCurrent((prev) => prev - 1);
+        }}
         disabled={current === 0}
       >
         Previous Set

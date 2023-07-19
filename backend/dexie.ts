@@ -52,6 +52,18 @@ export class LocalStorageDb extends Dexie {
     });
   }
 
+  async removeSetFromExercise(exerciseId: string, set: number) {
+    const current = await this.logEntryStorage.get(exerciseId);
+
+    if (current) {
+      await this.logEntryStorage.update(exerciseId, {
+        exerciseId,
+        info: [...current.info.filter((info) => info.set !== set)],
+      });
+      return;
+    }
+  }
+
   clearTemporaryStorage() {
     this.logEntryStorage.clear();
   }
