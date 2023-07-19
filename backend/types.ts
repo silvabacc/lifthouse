@@ -27,12 +27,16 @@ export interface RepRange {
   reps: string;
 }
 
-export interface LogEntries {
-  logEntryId: string;
-  exerciseId: string;
+interface Info {
   set: number;
-  reps: string;
+  reps: number;
   weight: number;
+}
+
+//* sets, weighs and reps should map to each other
+export interface LogEntry {
+  exerciseId: string;
+  info: Info[];
 }
 
 export interface Exercise {

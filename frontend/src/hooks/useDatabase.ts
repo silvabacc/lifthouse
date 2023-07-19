@@ -34,8 +34,14 @@ export const useDatabase = () => {
     dbService.logEntry(result, user.id);
   };
 
+  const getExerciseHistory = (exerciseId: string) => {
+    return useQuery(["getExerciseHistory", exerciseId, user.id], async () => {
+      return await dbService.getExerciseHistory(exerciseId, user.id);
+    });
+  };
+
   const queryRoutine = (routineType: RoutineType) => {
-    return useQuery(["fetchRoutine", routineType, user.id], async () => {
+    return useQuery(["queryRoutine", routineType, user.id], async () => {
       const routine = await dbService.getRoutines(routineType, user.id);
       const exerciseIds = routine.exercises.map(
         (exercise) => exercise.exerciseId
@@ -51,11 +57,17 @@ export const useDatabase = () => {
    * @returns Exercises
    */
   const queryExercises = (exerciseIds?: string[]) => {
-    return useQuery(["fetchExercises", exerciseIds], async () => {
+    return useQuery(["queryExercises", exerciseIds], async () => {
       const exercises = await dbService.getExercises(exerciseIds);
       return exercises;
     });
   };
 
-  return { queryRoutine, queryExercises, updateRoutine, logEntry };
+  return {
+    queryRoutine,
+    queryExercises,
+    updateRoutine,
+    logEntry,
+    getExerciseHistory,
+  };
 };

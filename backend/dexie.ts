@@ -1,19 +1,8 @@
 import Dexie, { Table } from "dexie";
-
-interface Info {
-  set: number;
-  reps: number;
-  weight: number;
-}
-
-//* sets, weighs and reps should map to each other
-export interface LogEntryStorage {
-  exerciseId: string;
-  info: Info[];
-}
+import { LogEntry } from "./types";
 
 export class LocalStorageDb extends Dexie {
-  logEntryStorage!: Table<LogEntryStorage>;
+  logEntryStorage!: Table<LogEntry>;
 
   constructor() {
     super("lifthousedatabase");

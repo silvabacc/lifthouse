@@ -3,6 +3,7 @@ import getConfig from "../config";
 import { routineSetup } from "../data";
 import {
   ExerciseColumns,
+  LogEntriesColumns,
   RoutineORM,
   RoutinesColumns,
   TableNames,
@@ -12,8 +13,8 @@ import {
   Routine,
   RoutineExercise,
   RoutineType,
+  LogEntry,
 } from "@backend/types";
-import { LogEntryStorage } from "@backend/dexie";
 
 const { SUPABASE_URL, ANON_PUBLIC_KEY } = getConfig();
 
@@ -66,7 +67,7 @@ class LiftHouseDatabase {
       .eq(RoutinesColumns.routine_id, routineId);
   }
 
-  logEntry(entries: (LogEntryStorage | undefined)[], userId: string) {
+  logEntry(entries: (LogEntry | undefined)[], userId: string) {
     entries.map(async (entry) => {
       if (entry) {
         await this.supabase.from(TableNames.log_entries).insert({
@@ -76,6 +77,30 @@ class LiftHouseDatabase {
         });
       }
     });
+  }
+
+  /**
+   *
+   * @param exercisesIds returns exercises with the given ids. If empty, returns all exercises
+   */
+  async getExerciseHistory(
+    exerciseId: string,
+    userId: string
+  ): Promise<LogEntry[]> {
+    const { data } = await this.supabase
+      .from(TableNames.log_entries)
+      .select("*")
+      .eq(LogEntriesColumns.exercise_id, exerciseId)
+      .eq(LogEntriesColumns.user_id, userId);
+
+    if (data === null) {
+      throw new Error("No data returned for exercise history");
+    }
+
+    return data.map((entry) => ({
+      exerciseId: entry.exercise_id,
+      info: entry.info,
+    }));
   }
 
   async getRoutines(routine: RoutineType, userId: string): Promise<Routine> {

@@ -6,6 +6,7 @@ import { Exercise, Routine } from "@backend/types";
 import { useNavigate } from "react-router-dom";
 import { useDatabase } from "@frontend/hooks/useDatabase";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
+import History from "./History";
 
 interface ExercisesProps {
   data: {
@@ -47,7 +48,7 @@ const Exercises: React.FC<ExercisesProps> = ({ data }) => {
           {
             key: "history",
             label: `History`,
-            children: `History`,
+            children: <History exerciseId={exercise.exerciseId} />,
           },
         ];
 

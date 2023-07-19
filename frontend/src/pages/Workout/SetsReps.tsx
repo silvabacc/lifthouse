@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { StepProps, Steps } from "antd";
 import SetsRepsRow from "./SetsRepsRow";
 import WorkoutButton from "./components/WorkoutButton";
-import { Exercise } from "@backend/types";
+import { Exercise, LogEntry } from "@backend/types";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
-import { LogEntryStorage } from "@backend/dexie";
 
 interface SetsRepsProps {
   exercise: Exercise;
@@ -15,7 +14,7 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
   const [current, setCurrent] = useState(0);
   const { getTemporaryStorage, removeSetFromExercise } = useTemporaryStorage();
   const tempData = getTemporaryStorage(exercise.exerciseId);
-  const [temporaryStorage, setTemporaryStorage] = useState<LogEntryStorage>();
+  const [temporaryStorage, setTemporaryStorage] = useState<LogEntry>();
 
   useEffect(() => {
     const fetchTemporaryStorage = async () => {

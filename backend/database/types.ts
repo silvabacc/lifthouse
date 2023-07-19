@@ -31,8 +31,6 @@ export enum ExerciseColumns {
 export enum LogEntriesColumns {
   log_entries_id = "log_entries_id",
   exercise_id = "exercise_id",
+  info = "info",
   user_id = "user_id",
-  sets = "sets",
-  reps = "reps",
-  weight = "weight",
 }

@@ -12,6 +12,7 @@ body {
   letter-spacing: -0.003em;
   font-size: 3vw;
   padding: 16px;
+  overflow-x: hidden;
 }
 
 /* Ant Design */
