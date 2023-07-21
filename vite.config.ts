@@ -9,8 +9,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@backend": "backend/",
-      "@frontend": "frontend/src/",
+      "@backend": "/backend/",
+      "@frontend": "/frontend/src/",
     },
   },
   plugins: [

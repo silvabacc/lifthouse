@@ -37,7 +37,7 @@ interface Info {
 export interface LogEntry {
   exerciseId: string;
   info: Info[];
-  date: Date;
+  date?: Date;
 }
 
 export interface Exercise {
