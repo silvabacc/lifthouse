@@ -33,7 +33,7 @@ const Home: React.FC = () => {
           key={card.title}
           title={card.title}
           image={card.image}
-          onClick={() => navigate("/home")}
+          onClick={() => navigate(card.route)}
         />
       ))}
     </>
