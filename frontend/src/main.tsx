@@ -1,6 +1,6 @@
 import "antd/dist/reset.css";
-import "react-multi-carousel/lib/styles.css";
 import "./index.css";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import ReactDOM from "react-dom/client";
 import App from "./app";
 import { QueryClient, QueryClientProvider } from "react-query";

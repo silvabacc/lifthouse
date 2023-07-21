@@ -58,7 +58,7 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
 
   return (
     <>
-      <Steps direction="vertical" current={current} items={stepItems} />
+      <Steps current={current} items={stepItems} />
       <WorkoutButton
         onClick={() => {
           removeSetFromExercise(exercise.exerciseId, current);

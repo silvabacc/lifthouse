@@ -74,6 +74,7 @@ class LiftHouseDatabase {
           exercise_id: entry.exerciseId,
           info: entry.info,
           user_id: userId,
+          date: new Date(),
         });
       }
     });
@@ -100,6 +101,7 @@ class LiftHouseDatabase {
     return data.map((entry) => ({
       exerciseId: entry.exercise_id,
       info: entry.info,
+      date: new Date(entry.date),
     }));
   }
 
