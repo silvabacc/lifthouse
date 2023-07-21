@@ -12,6 +12,7 @@ import {
   RoutineExercise,
   RoutineType,
 } from "@backend/types";
+import Loading from "../common/Loading";
 
 const { Panel } = Collapse;
 
@@ -50,7 +51,7 @@ const EditRoutine: React.FC<EditRoutineProps> = ({
   );
 
   if (!currentExercises) {
-    return <>Loading...</>;
+    return <Loading />;
   }
 
   const onRepRangeChange = (value: string, index: number) => {

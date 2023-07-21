@@ -5,6 +5,7 @@ import { CarouselButtons, HistoryContainer } from "./HistoryStyles";
 import moment from "moment";
 import { Carousel } from "react-responsive-carousel";
 import { DownOutlined, UpOutlined } from "@ant-design/icons";
+import Loading from "../common/Loading";
 
 interface HistoryProps {
   exerciseId: string;
@@ -17,7 +18,7 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
   const { data } = getExerciseHistory(exerciseId);
 
   if (data === undefined) {
-    return <>Loading...</>;
+    return <Loading />;
   }
 
   if (data.length === 0) {

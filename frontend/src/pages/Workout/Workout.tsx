@@ -8,6 +8,7 @@ import { useDatabase } from "@frontend/hooks/useDatabase";
 import Exercises from "./Exercises";
 import { RoutineExercise, RoutineType } from "@backend/types";
 import EditRoutine from "./EditRoutine";
+import Loading from "../common/Loading";
 
 const { Title } = Typography;
 
@@ -38,7 +39,7 @@ const Workout: React.FC<WorkoutProps> = ({ routine }) => {
   };
 
   if (isLoading || data === undefined) {
-    return <>Loading...</>;
+    return <Loading />;
   }
 
   return (
