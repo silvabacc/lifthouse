@@ -1,7 +1,7 @@
 import { useDatabase } from "@frontend/hooks/useDatabase";
 import { InputNumber, StepProps, Steps, Typography } from "antd";
 import React from "react";
-import { CarouselButtons, HistoryContainer } from "./HistroyStyles";
+import { CarouselButtons, HistoryContainer } from "./HistoryStyles";
 import moment from "moment";
 import { Carousel } from "react-responsive-carousel";
 import { DownOutlined, UpOutlined } from "@ant-design/icons";
@@ -27,6 +27,7 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
   return (
     <Carousel
       showThumbs={false}
+      swipeable={false}
       renderArrowNext={(clickHandler: () => void, hasNext: boolean) => {
         if (hasNext) {
           return (
