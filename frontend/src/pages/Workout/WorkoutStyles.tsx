@@ -1,9 +1,18 @@
-import { Space } from "antd";
+import { Button, Space } from "antd";
 import styled from "styled-components";
 
 export const Container = styled(Space)`
   width: 100%;
   margin-bottom: 8px;
+`;
+
+export const HeadContainer = styled(Space)`
+  width: 100%;
+  justify-content: space-between;
+`;
+
+export const EditButton = styled(Button)`
+  margin-right: auto;
 `;
 
 export const RepContainer = styled(Space)`

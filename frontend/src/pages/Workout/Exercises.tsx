@@ -1,70 +1,70 @@
-import { TabsProps, Collapse, Space, Tabs, Typography } from "antd";
-import { Routines } from "../../../../backend/db";
+import { Collapse, Space, Tabs, Typography } from "antd";
 import SetsReps from "./SetsReps";
 import WorkoutButton from "./components/WorkoutButton";
-import { useNavigate } from "react-router-dom";
-import { useDatabase } from "../hooks/useDatabase";
 import { Container } from "./WorkoutStyles";
+import { Exercise, Routine } from "@backend/types";
+import { useNavigate } from "react-router-dom";
+import { useDatabase } from "@frontend/hooks/useDatabase";
+import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
+import History from "./History";
 
 interface ExercisesProps {
-  routines: Routines;
-  edit: boolean;
+  data: {
+    routine: Routine;
+    exercises: Exercise[];
+  };
 }
 
 const { Panel } = Collapse;
 const { Text } = Typography;
 
-const Exercises: React.FC<ExercisesProps> = ({ routines, edit }) => {
+const Exercises: React.FC<ExercisesProps> = ({ data }) => {
   const navigate = useNavigate();
-  const { clearTemporaryStorage, fetchTemporaryStorage, logEntries } =
-    useDatabase();
-  const { data, refetch } = fetchTemporaryStorage(routines.routine);
+  const { logEntry } = useDatabase();
+  const { clearTemporaryStorage } = useTemporaryStorage();
 
   const finishWorkout = () => {
-    refetch();
-
-    const entries = data?.map((entry) => ({
-      exercise: entry.exercise,
-      set: entry.set,
-      reps: entry.reps,
-      weight: entry.weight,
-    }));
-    logEntries(entries ?? []);
+    logEntry(data.exercises);
+    clearTemporaryStorage();
+    navigate("/");
   };
-
-  if (edit) {
-    return <></>;
-  }
 
   return (
     <Container direction="vertical">
-      {routines?.exercises.map((exercise) => {
-        const items: TabsProps["items"] = [
+      {data.routine.exercises.map((exerciseFromRoutine, index) => {
+        const exercise =
+          data.exercises.find(
+            (exercise) => exercise.exerciseId === exerciseFromRoutine.exerciseId
+          ) || ({} as Exercise);
+
+        const items = [
           {
             key: "sets",
             label: `Sets & Reps`,
-            children: <SetsReps exercise={exercise} />,
+            children: (
+              <SetsReps exercise={exercise} sets={exerciseFromRoutine.sets} />
+            ),
           },
           {
             key: "history",
             label: `History`,
-            children: `History`,
+            children: <History exerciseId={exercise.exerciseId} />,
           },
         ];
 
         return (
-          <Collapse size="large">
+          <Collapse size="large" key={index}>
             <Panel
               header={
                 <Space direction="vertical">
-                  <Text strong>{exercise.name}</Text>
+                  <Text strong>{exercise.exerciseName}</Text>
                   <Space>
-                    <Text keyboard>{exercise.sets}</Text>x
-                    <Text keyboard>{exercise.reps}</Text>
+                    <Text keyboard>{exerciseFromRoutine.sets}</Text>x
+                    <Text keyboard>{exerciseFromRoutine.reps}</Text>
                   </Space>
                 </Space>
               }
-              key={exercise.name}
+              key={exercise.exerciseName}
             >
               <Tabs items={items} />
             </Panel>
@@ -73,9 +73,7 @@ const Exercises: React.FC<ExercisesProps> = ({ routines, edit }) => {
       })}
       <WorkoutButton
         onClick={() => {
-          navigate("/");
           finishWorkout();
-          clearTemporaryStorage();
         }}
       >
         Finish Workout

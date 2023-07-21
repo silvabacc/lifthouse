@@ -2,29 +2,28 @@ import React, { Dispatch, useEffect, useState } from "react";
 import { Button, InputNumber, Space } from "antd";
 import { BsCheckSquareFill } from "react-icons/bs";
 import colors from "../../theme/colors";
-import { useDatabase } from "../hooks/useDatabase";
-import { Exercise, Routine } from "../../../../backend/data";
 import { useParams } from "react-router-dom";
+import { Exercise, Routine } from "@backend/types";
+import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 
-interface SetsRepsRow {
+interface SetsRepsRowProps {
   exercise: Exercise;
   set: number;
-  overrideReps?: string;
+  overrideReps?: number;
   overrideWeights?: number;
   disabled?: boolean;
   next?: Dispatch<React.SetStateAction<number>>;
 }
 
-const SetsRepsRow: React.FC<SetsRepsRow> = ({
+const SetsRepsRow: React.FC<SetsRepsRowProps> = ({
   set,
-  overrideReps = "0",
+  overrideReps = 0,
   overrideWeights = 0,
   exercise,
   disabled,
   next,
 }) => {
-  const { updateTemporaryStorage } = useDatabase();
-  const { routineType } = useParams();
+  const { writeTemporaryStorage } = useTemporaryStorage();
   const [reps, setReps] = useState(overrideReps);
   const [weight, setWeight] = useState(overrideWeights);
 
@@ -39,25 +38,19 @@ const SetsRepsRow: React.FC<SetsRepsRow> = ({
         prefix="kg"
         disabled={disabled}
         value={weight}
-        onChange={(value) => value && setWeight(value as number)}
+        onChange={(value) => value && setWeight(value)}
       />
       <InputNumber
         prefix="reps"
         disabled={disabled}
         value={reps}
-        onChange={(value) => value && setReps(value as string)}
+        onChange={(value) => value && setReps(value)}
       />
       <Button
         type="ghost"
         disabled={disabled}
         onClick={() => {
-          updateTemporaryStorage(
-            exercise,
-            routineType as Routine,
-            set,
-            weight,
-            reps
-          );
+          writeTemporaryStorage(exercise.exerciseId, { set, reps, weight });
           next && next((current) => (current += 1));
         }}
         icon={

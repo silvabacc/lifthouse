@@ -12,4 +12,12 @@ body {
   letter-spacing: -0.003em;
   font-size: 3vw;
   padding: 16px;
+  overflow-x: hidden;
+}
+
+/* Ant Design */
+/* Select component menu items render outside of the Select component*/
+/* We can't apply local css, this needs to be done globally*/
+.ant-select-item-option-content {
+  white-space: normal !important;
 }

@@ -1,69 +1,94 @@
 import React, { useEffect, useState } from "react";
-import { StepProps, Steps } from "antd";
+import { Input, Space, StepProps, Steps } from "antd";
 import SetsRepsRow from "./SetsRepsRow";
 import WorkoutButton from "./components/WorkoutButton";
-import { useDatabase } from "../hooks/useDatabase";
-import { Exercise, Routine } from "../../../../backend/data";
-import { useParams } from "react-router-dom";
+import { Exercise, LogEntry } from "@backend/types";
+import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 
 interface SetsRepsProps {
   exercise: Exercise;
+  sets: number;
 }
 
-const SetsReps: React.FC<SetsRepsProps> = ({ exercise }) => {
-  const { routineType } = useParams();
+const { TextArea } = Input;
 
+const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
   const [current, setCurrent] = useState(0);
-  const { fetchTemporaryStorage } = useDatabase();
-  const { data } = fetchTemporaryStorage(routineType as Routine);
+  const { getTemporaryStorage, removeSetFromExercise, writeTemporaryStorage } =
+    useTemporaryStorage();
+  const tempData = getTemporaryStorage(exercise.exerciseId);
+  const [temporaryStorage, setTemporaryStorage] = useState<LogEntry>();
+  const [notes, setNotes] = useState<string>();
 
   useEffect(() => {
-    if (data && data?.length) {
-      const currentFromTempStorage = data.find(
-        (tempStorage) => tempStorage.exercise.name === exercise.name
-      );
-      currentFromTempStorage && setCurrent(currentFromTempStorage?.set);
-    }
-  }, [data]);
+    const fetchTemporaryStorage = async () => {
+      setTemporaryStorage(await tempData);
+    };
 
-  const { sets } = exercise;
+    fetchTemporaryStorage();
+  }, [tempData]);
 
-  let items: StepProps[] = [];
+  const handleOnChangeNotes = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setNotes(e.target.value);
+    writeTemporaryStorage(exercise.exerciseId, undefined, e.target.value);
+  };
 
-  for (let i = 0; i < (sets || 0); i++) {
-    const tempStorage =
-      data &&
-      data?.find(
-        (temp) => temp.set === i && temp.exercise.name === exercise.name
-      );
+  const stepItems: StepProps[] = [];
 
-    items = [
-      ...items,
-      {
-        title: `Set ${i + 1}`,
-        description: (
-          <SetsRepsRow
-            set={i + 1}
-            exercise={exercise}
-            overrideReps={tempStorage?.reps}
-            overrideWeights={tempStorage?.weight}
-            next={setCurrent}
-            disabled={i !== current}
-          />
-        ),
-      },
-    ];
+  for (let i = 0; i < sets; i++) {
+    const info =
+      temporaryStorage?.exerciseId === exercise.exerciseId
+        ? temporaryStorage?.info.find((info) => info.set === i + 1)
+        : undefined;
+
+    stepItems.push({
+      title: `Set ${i + 1}`,
+      description: (
+        <SetsRepsRow
+          set={i + 1}
+          exercise={exercise}
+          overrideReps={info?.reps}
+          overrideWeights={info?.reps}
+          next={setCurrent}
+          disabled={i !== current}
+        />
+      ),
+    });
   }
+
+  useEffect(() => {
+    if (
+      temporaryStorage &&
+      temporaryStorage.exerciseId === exercise.exerciseId
+    ) {
+      setCurrent(temporaryStorage.info.length);
+    }
+  }, [JSON.stringify(temporaryStorage)]);
+
   return (
-    <>
-      <Steps direction="vertical" current={current} items={items} />
+    <Space style={{ width: "100%" }} direction="vertical">
+      <Steps
+        style={{ alignItems: "center" }}
+        direction="vertical"
+        current={current}
+        items={stepItems}
+      />
+      <TextArea
+        placeholder="Notes..."
+        value={notes}
+        onChange={handleOnChangeNotes}
+        autoSize={{ minRows: 3, maxRows: 5 }}
+      />
       <WorkoutButton
-        onClick={() => setCurrent((prev) => prev - 1)}
+        onClick={() => {
+          removeSetFromExercise(exercise.exerciseId, current);
+          setCurrent((prev) => prev - 1);
+        }}
         disabled={current === 0}
       >
         Previous Set
       </WorkoutButton>
-    </>
+    </Space>
   );
 };
 

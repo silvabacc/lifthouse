@@ -4,6 +4,8 @@ import WorkoutsCard from "./components/WorkoutsCard/WorkoutsCard";
 import { Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import { dietCards, workoutCards } from "./cardsConfig";
+import SettingMenu from "./components/WorkoutsCard/SettingMenu";
+import { HeaderContainer } from "./HomeStyles";
 
 const { Title } = Typography;
 
@@ -12,10 +14,14 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <Title>Time to Grind 💪</Title>
+      <HeaderContainer>
+        <Title>Time to Grind 💪</Title>
+        <SettingMenu />
+      </HeaderContainer>
       <Title level={4}>Workouts 🏋</Title>
       {workoutCards.map((card) => (
         <WorkoutsCard
+          key={card.title}
           title={card.title}
           image={card.image}
           onClick={() => navigate(card.route)}
@@ -24,9 +30,10 @@ const Home: React.FC = () => {
       <Title level={4}>Diet 🥑</Title>
       {dietCards.map((card) => (
         <WorkoutsCard
+          key={card.title}
           title={card.title}
           image={card.image}
-          onClick={() => navigate("/")}
+          onClick={() => navigate(card.route)}
         />
       ))}
     </>

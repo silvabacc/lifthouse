@@ -1,104 +1,103 @@
-import React, { useEffect, useState } from "react";
-import { useDatabase } from "../hooks/useDatabase";
-import {
-  Exercise,
-  ExerciseType,
-  IntensityRepRange,
-  RepRange,
-  Routine,
-  VolumeRepRange,
-} from "../../../../backend/data";
-import { Routines } from "../../../../backend/db";
+import React from "react";
+import { useDatabase } from "../../hooks/useDatabase";
+import { IntensityRepRange, VolumeRepRange } from "../../../../backend/data";
 import { Collapse } from "antd";
 import SelectExercise from "./components/SelectExercise";
 import { Container, RepContainer } from "./WorkoutStyles";
 import SelectRepRange from "./components/SelectRepRange";
-import { useParams } from "react-router-dom";
+import {
+  Exercise,
+  RepRange,
+  Routine,
+  RoutineExercise,
+  RoutineType,
+} from "@backend/types";
+import Loading from "../common/Loading";
 
 const { Panel } = Collapse;
 
 interface EditRoutineProps {
-  routine: Routines;
-  edit: boolean;
+  data: {
+    routine: Routine;
+    exercises: Exercise[];
+  };
+  currentExercises?: RoutineExercise[];
+  setCurrentExercises: (value?: RoutineExercise[]) => void;
 }
 
 const RepRangeMapping = {
-  [Routine.UPPER_INTENSITY]: IntensityRepRange,
-  [Routine.LOWER_INTENSITY]: IntensityRepRange,
-  [Routine.UPPER_VOLUME]: VolumeRepRange,
-  [Routine.LOWER_VOLUME]: VolumeRepRange,
+  [RoutineType.UPPER_INTENSITY]: IntensityRepRange,
+  [RoutineType.LOWER_INTENSITY]: IntensityRepRange,
+  [RoutineType.UPPER_VOLUME]: VolumeRepRange,
+  [RoutineType.LOWER_VOLUME]: VolumeRepRange,
 };
 
-const EditRoutine: React.FC<EditRoutineProps> = ({ routine, edit }) => {
-  const { fetchExercises, updateRoutine } = useDatabase();
-  const { routineType } = useParams();
-  const { data: allExercises } = fetchExercises();
-  const [currentExercises, setCurrentExercises] = useState<Exercise[]>(
-    routine.exercises
-  );
+const EditRoutine: React.FC<EditRoutineProps> = ({
+  data,
+  currentExercises,
+  setCurrentExercises,
+}) => {
+  const { queryExercises } = useDatabase();
+  const { data: allExercises = [] } = queryExercises();
 
-  useEffect(() => {
-    if (!edit) {
-      updateRoutine(currentExercises, routine);
-    }
-  }, [edit]);
-
-  if (!allExercises) {
-    return <>Loading...</>;
-  }
-
-  if (!edit) {
-    return <></>;
-  }
+  const routineType = data.routine.routinesType;
 
   const repRangeOptions = RepRangeMapping[routineType].map(
     (setRepRange: RepRange) => {
       return {
-        label: `${setRepRange.sets} x ${setRepRange.reps}`,
         value: `${setRepRange.sets} x ${setRepRange.reps}`,
       };
     }
   );
 
-  /**
-   *
-   * @param newExercise New exercise that will update @param exerciseToUpdate
-   * @param exerciseToUpdate Exercise name that will be replaced with the @param newExercise
-   *                         if left empty, it will add the exercise to the list
-   */
-  const updateExercise = (newExercise: Exercise, exerciseToUpdate?: string) => {
-    const routineWithoutExercise = currentExercises.filter(
-      (exerciseFromRoutine) => exerciseFromRoutine.name !== exerciseToUpdate
+  if (!currentExercises) {
+    return <Loading />;
+  }
+
+  const onRepRangeChange = (value: string, index: number) => {
+    const exercises = currentExercises.slice();
+    const [sets, reps] = value.split(" x ");
+    exercises[index] = {
+      ...exercises[index],
+      sets: parseInt(sets),
+      reps: reps,
+    };
+    setCurrentExercises(exercises);
+  };
+
+  const onExerciseChange = (value: string, index: number) => {
+    const exercises = currentExercises.slice();
+    const exerciseToUpdate = allExercises.find(
+      (exerciseFromList) => exerciseFromList.exerciseId === value
     );
+    if (exerciseToUpdate) {
+      exercises[index] = {
+        ...exercises[index],
+        exerciseId: exerciseToUpdate.exerciseId,
+      };
+    }
 
-    const orderedTypes = Object.values(ExerciseType);
-
-    const sortedExercises = [...routineWithoutExercise, newExercise].sort(
-      (a, b) => {
-        const indexA = orderedTypes.indexOf(a.type);
-        const indexB = orderedTypes.indexOf(b.type);
-        return indexA - indexB;
-      }
-    );
-
-    setCurrentExercises(sortedExercises);
+    setCurrentExercises(exercises);
   };
 
   return (
     <Container direction="vertical">
       {currentExercises.map((exercise, index) => {
-        const exercisesNotInRoutine = allExercises
+        const exerciseInfo = allExercises.find(
+          (exerciseFromList) =>
+            exerciseFromList.exerciseId === exercise.exerciseId
+        );
+
+        const exercisesWithType = allExercises
           .filter(
-            (exercise) =>
-              !currentExercises
-                .map((routineFromExercise) => routineFromExercise.name)
-                .includes(exercise.name)
+            (exerciseFromList) =>
+              exerciseInfo?.exerciseType === exerciseFromList.exerciseType
           )
-          .filter((exerciseFromAll) => exerciseFromAll.type === exercise.type)
-          .map((exercise) => ({
-            value: exercise.name,
+          .map((exerciseFromList) => ({
+            value: exerciseFromList.exerciseId,
+            label: exerciseFromList.exerciseName,
           }))
-          .sort((a, b) => (a.value > b.value ? 1 : -1));
+          .sort((a, b) => a.label.localeCompare(b.label));
 
         return (
           <Collapse collapsible="disabled" size="large" key={index}>
@@ -107,50 +106,30 @@ const EditRoutine: React.FC<EditRoutineProps> = ({ routine, edit }) => {
                 <Container direction="vertical">
                   <SelectExercise
                     bordered={false}
-                    onChange={(value) => {
-                      const previousExercise = currentExercises.find(
-                        (currentExercise) =>
-                          currentExercise.name == exercise.name
-                      );
-
-                      updateExercise(
-                        {
-                          name: value as string,
-                          type: exercise.type,
-                          sets: previousExercise?.sets,
-                          reps: previousExercise?.reps,
-                        },
-                        previousExercise?.name
-                      );
-                    }}
+                    filterOption={(input, option) =>
+                      option?.label
+                        .toLocaleLowerCase()
+                        .indexOf(input.toLocaleLowerCase()) >= 0
+                    }
+                    onChange={(value) =>
+                      onExerciseChange(value as string, index)
+                    }
                     showSearch
-                    defaultValue={exercise.name}
-                    options={exercisesNotInRoutine}
+                    value={exerciseInfo?.exerciseName}
+                    options={exercisesWithType}
                   />
                   <RepContainer>
                     <SelectRepRange
                       options={repRangeOptions}
                       defaultValue={`${exercise.sets} x ${exercise.reps}`}
-                      onChange={(value) => {
-                        const setRepsValueChange = (value as string)
-                          .split("x")
-                          .map((setRepRange) => setRepRange.trim());
-
-                        updateExercise(
-                          {
-                            name: exercise.name,
-                            type: exercise.type,
-                            sets: parseInt(setRepsValueChange[0]),
-                            reps: setRepsValueChange[1],
-                          },
-                          exercise.name
-                        );
-                      }}
+                      onChange={(value) =>
+                        onRepRangeChange(value as string, index)
+                      }
                     />
                   </RepContainer>
                 </Container>
               }
-              key={exercise.name}
+              key={exercise.exerciseId}
             />
           </Collapse>
         );

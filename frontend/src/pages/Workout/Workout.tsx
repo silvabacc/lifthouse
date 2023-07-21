@@ -1,54 +1,65 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Button, Space, Typography } from "antd";
+import { Typography } from "antd";
 
-import "../../../../backend/db";
-import { useDatabase } from "../hooks/useDatabase";
+import "../../../../backend/dexie";
 import { pageTitleMapping } from "./constants";
-import { Routine } from "../../../../backend/data";
-import EditRoutine from "./EditRoutine";
-import { Container } from "./WorkoutStyles";
+import { Container, EditButton, HeadContainer } from "./WorkoutStyles";
+import { useDatabase } from "@frontend/hooks/useDatabase";
 import Exercises from "./Exercises";
+import { RoutineExercise, RoutineType } from "@backend/types";
+import EditRoutine from "./EditRoutine";
+import Loading from "../common/Loading";
 
 const { Title } = Typography;
 
-const Workout: React.FC = () => {
-  const { routineType } = useParams();
-  const { fetchRoutinePlan } = useDatabase();
+interface WorkoutProps {
+  routine: RoutineType;
+}
+
+const Workout: React.FC<WorkoutProps> = ({ routine }) => {
+  const [currentExercises, setCurrentExercises] = useState<RoutineExercise[]>();
+  const { queryRoutine, updateRoutine } = useDatabase();
+  const { data, isLoading, refetch } = queryRoutine(routine);
+
   const [edit, setEdit] = useState(false);
 
-  const { data: routines, isLoading, refetch } = fetchRoutinePlan(routineType);
-
   useEffect(() => {
-    if (!edit) {
-      refetch();
+    if (data) {
+      setCurrentExercises(data.routine.exercises);
     }
   }, [edit]);
 
-  if (!Object.values(Routine).includes(routineType)) {
-    return <>Not found</>;
-  }
+  const onEdit = async () => {
+    setEdit((prev) => !prev);
 
-  if (isLoading || !routines) {
-    return <>Loading...</>;
+    if (data && currentExercises) {
+      await updateRoutine(data?.routine.routineId, currentExercises);
+      refetch();
+    }
+  };
+
+  if (isLoading || data === undefined) {
+    return <Loading />;
   }
 
   return (
     <>
       <Container direction="vertical">
-        <Space direction="horizontal">
-          <Title>{pageTitleMapping[routineType]}</Title>
-          <Button
-            onClick={() => {
-              setEdit((prev) => !prev);
-            }}
-            type="link"
-          >
+        <HeadContainer direction="horizontal">
+          <Title>{pageTitleMapping[routine]}</Title>
+          <EditButton onClick={onEdit} type="link">
             {edit ? "Save" : "Edit"}
-          </Button>
-        </Space>
-        <EditRoutine routine={routines} edit={edit} />
-        <Exercises routines={routines} edit={edit} />
+          </EditButton>
+        </HeadContainer>
+        {edit ? (
+          <EditRoutine
+            data={data}
+            currentExercises={currentExercises}
+            setCurrentExercises={setCurrentExercises}
+          />
+        ) : (
+          <Exercises data={data} />
+        )}
       </Container>
     </>
   );
