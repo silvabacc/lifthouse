@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDatabase } from "../../hooks/useDatabase";
 import { IntensityRepRange, VolumeRepRange } from "../../../../backend/data";
 import { Collapse } from "antd";
 import SelectExercise from "./components/SelectExercise";
 import { Container, RepContainer } from "./WorkoutStyles";
 import SelectRepRange from "./components/SelectRepRange";
-import { useParams } from "react-router-dom";
 import {
   Exercise,
   RepRange,

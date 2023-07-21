@@ -26,6 +26,7 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
 
   return (
     <Carousel
+      showThumbs={false}
       renderArrowNext={(clickHandler: () => void, hasNext: boolean) => {
         if (hasNext) {
           return (
@@ -63,10 +64,10 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
           };
         });
         return (
-          <>
+          <div key={entry.exerciseId}>
             <Text>{moment(entry.date).format("Do MMMM YYYY")}</Text>
             <Steps style={{ height: HEIGHT }} items={stepItems} />
-          </>
+          </div>
         );
       })}
     </Carousel>
