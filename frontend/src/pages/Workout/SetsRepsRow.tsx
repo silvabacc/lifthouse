@@ -50,7 +50,7 @@ const SetsRepsRow: React.FC<SetsRepsRowProps> = ({
         type="ghost"
         disabled={disabled}
         onClick={() => {
-          writeTemporaryStorage(exercise.exerciseId, set, reps, weight);
+          writeTemporaryStorage(exercise.exerciseId, { set, reps, weight });
           next && next((current) => (current += 1));
         }}
         icon={

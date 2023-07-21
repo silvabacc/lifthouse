@@ -75,6 +75,7 @@ class LiftHouseDatabase {
           info: entry.info,
           user_id: userId,
           date: new Date(),
+          notes: entry.notes,
         });
       }
     });
@@ -98,10 +99,13 @@ class LiftHouseDatabase {
       throw new Error("No data returned for exercise history");
     }
 
+    console.log(data);
+
     return data.map((entry) => ({
       exerciseId: entry.exercise_id,
       info: entry.info,
       date: new Date(entry.date),
+      notes: entry.notes,
     }));
   }
 

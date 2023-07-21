@@ -27,7 +27,7 @@ export interface RepRange {
   reps: string;
 }
 
-interface Info {
+export interface Info {
   set: number;
   reps: number;
   weight: number;
@@ -38,6 +38,7 @@ export interface LogEntry {
   exerciseId: string;
   info: Info[];
   date?: Date;
+  notes?: string;
 }
 
 export interface Exercise {

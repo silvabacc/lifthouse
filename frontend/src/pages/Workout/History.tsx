@@ -1,7 +1,11 @@
 import { useDatabase } from "@frontend/hooks/useDatabase";
-import { InputNumber, Space, StepProps, Steps, Typography } from "antd";
+import { Input, InputNumber, Space, StepProps, Steps, Typography } from "antd";
 import React from "react";
-import { CarouselButtons, HistoryContainer } from "./HistoryStyles";
+import {
+  CarouselButtons,
+  HistoryContainer,
+  HistoryStepsContainer,
+} from "./HistoryStyles";
 import moment from "moment";
 import { Carousel } from "react-responsive-carousel";
 import { DownOutlined, UpOutlined } from "@ant-design/icons";
@@ -11,7 +15,9 @@ interface HistoryProps {
   exerciseId: string;
 }
 
-const { Text } = Typography;
+const { TextArea } = Input;
+
+const { Text, Title } = Typography;
 
 const History: React.FC<HistoryProps> = ({ exerciseId }) => {
   const { getExerciseHistory } = useDatabase();
@@ -24,6 +30,16 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
   if (data.length === 0) {
     return <Text>No records found for this exercise</Text>;
   }
+
+  const HEIGHT =
+    data.reduce((acc, curr) => {
+      if (curr.info.length > acc) {
+        return curr.info.length;
+      }
+      return acc;
+    }, 0) * 100;
+
+  const HistoryContainerElement = HistoryContainer(HEIGHT);
 
   return (
     <Carousel
@@ -52,28 +68,40 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
       axis="vertical"
     >
       {data?.map((entry) => {
-        let HEIGHT;
         const stepItems: StepProps[] = entry.info.map((i) => {
-          HEIGHT = entry.info.length * 90;
           return {
             title: `Set ${i.set}`,
             description: (
-              <HistoryContainer>
+              <HistoryStepsContainer>
                 <InputNumber readOnly prefix="kg" value={i.weight} />
                 <InputNumber readOnly prefix="reps" value={i.reps} />
-              </HistoryContainer>
+              </HistoryStepsContainer>
             ),
           };
         });
+
         return (
-          <Space direction="vertical" key={entry.exerciseId}>
-            <Text>{moment(entry.date).format("Do MMMM YYYY")}</Text>
-            <Steps
-              direction="vertical"
-              style={{ height: HEIGHT }}
-              items={stepItems}
-            />
-          </Space>
+          <HistoryContainerElement>
+            <Space direction="vertical" key={entry.exerciseId}>
+              <Title level={5}>
+                {moment(entry.date).format("Do MMMM YYYY")}
+              </Title>
+              <Steps direction="vertical" items={stepItems} />
+              {entry.info.length === 0 && (
+                <Text>No sets were recorded for this entry</Text>
+              )}
+            </Space>
+            {entry.notes && (
+              <Space style={{ marginTop: 16 }} direction="vertical">
+                <Title level={5}>Notes</Title>
+                <TextArea
+                  value={entry.notes}
+                  readOnly
+                  autoSize={{ minRows: 3, maxRows: 5 }}
+                />
+              </Space>
+            )}
+          </HistoryContainerElement>
         );
       })}
     </Carousel>

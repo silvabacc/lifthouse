@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Space, StepProps, Steps } from "antd";
+import { Input, Space, StepProps, Steps } from "antd";
 import SetsRepsRow from "./SetsRepsRow";
 import WorkoutButton from "./components/WorkoutButton";
 import { Exercise, LogEntry } from "@backend/types";
@@ -10,11 +10,15 @@ interface SetsRepsProps {
   sets: number;
 }
 
+const { TextArea } = Input;
+
 const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
   const [current, setCurrent] = useState(0);
-  const { getTemporaryStorage, removeSetFromExercise } = useTemporaryStorage();
+  const { getTemporaryStorage, removeSetFromExercise, writeTemporaryStorage } =
+    useTemporaryStorage();
   const tempData = getTemporaryStorage(exercise.exerciseId);
   const [temporaryStorage, setTemporaryStorage] = useState<LogEntry>();
+  const [notes, setNotes] = useState<string>();
 
   useEffect(() => {
     const fetchTemporaryStorage = async () => {
@@ -23,6 +27,11 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
 
     fetchTemporaryStorage();
   }, [tempData]);
+
+  const handleOnChangeNotes = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setNotes(e.target.value);
+    writeTemporaryStorage(exercise.exerciseId, undefined, e.target.value);
+  };
 
   const stepItems: StepProps[] = [];
 
@@ -63,6 +72,12 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
         direction="vertical"
         current={current}
         items={stepItems}
+      />
+      <TextArea
+        placeholder="Notes..."
+        value={notes}
+        onChange={handleOnChangeNotes}
+        autoSize={{ minRows: 3, maxRows: 5 }}
       />
       <WorkoutButton
         onClick={() => {

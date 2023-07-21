@@ -1,5 +1,5 @@
 import Dexie, { Table } from "dexie";
-import { LogEntry } from "./types";
+import { Info, LogEntry } from "./types";
 
 export class LocalStorageDb extends Dexie {
   logEntryStorage!: Table<LogEntry>;
@@ -15,17 +15,14 @@ export class LocalStorageDb extends Dexie {
     return await this.logEntryStorage.get(exerciseId);
   }
 
-  async writeTemporaryStorage(
-    exerciseId: string,
-    set: number,
-    reps: number,
-    weight: number
-  ) {
+  async writeTemporaryStorage(exerciseId: string, info?: Info, notes?: string) {
+    console.log("notes", notes);
     const current = await this.logEntryStorage.get(exerciseId);
 
-    if (current) {
+    if (current && info) {
+      const { set, reps, weight } = info;
+
       await this.logEntryStorage.update(exerciseId, {
-        exerciseId,
         info: [
           //Removes duplicated sets
           ...current.info.filter((info) => info.set !== set),
@@ -35,9 +32,17 @@ export class LocalStorageDb extends Dexie {
       return;
     }
 
+    if (current && notes) {
+      await this.logEntryStorage.update(exerciseId, {
+        notes,
+      });
+      return;
+    }
+
     await this.logEntryStorage.add({
       exerciseId,
-      info: [{ set, reps, weight }],
+      info: info ? [info] : [],
+      notes: notes,
     });
   }
 
@@ -46,7 +51,6 @@ export class LocalStorageDb extends Dexie {
 
     if (current) {
       await this.logEntryStorage.update(exerciseId, {
-        exerciseId,
         info: [...current.info.filter((info) => info.set !== set)],
       });
       return;
