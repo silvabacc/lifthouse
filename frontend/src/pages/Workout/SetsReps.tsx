@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StepProps, Steps } from "antd";
+import { Space, StepProps, Steps } from "antd";
 import SetsRepsRow from "./SetsRepsRow";
 import WorkoutButton from "./components/WorkoutButton";
 import { Exercise, LogEntry } from "@backend/types";
@@ -57,8 +57,13 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
   }, [JSON.stringify(temporaryStorage)]);
 
   return (
-    <>
-      <Steps current={current} items={stepItems} />
+    <Space style={{ width: "100%" }} direction="vertical">
+      <Steps
+        style={{ alignItems: "center" }}
+        direction="vertical"
+        current={current}
+        items={stepItems}
+      />
       <WorkoutButton
         onClick={() => {
           removeSetFromExercise(exercise.exerciseId, current);
@@ -68,7 +73,7 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
       >
         Previous Set
       </WorkoutButton>
-    </>
+    </Space>
   );
 };
 

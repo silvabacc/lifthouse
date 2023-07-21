@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Button, Space, Typography } from "antd";
+import { Typography } from "antd";
 
 import "../../../../backend/dexie";
 import { pageTitleMapping } from "./constants";
-import { Container } from "./WorkoutStyles";
+import { Container, EditButton, HeadContainer } from "./WorkoutStyles";
 import { useDatabase } from "@frontend/hooks/useDatabase";
 import Exercises from "./Exercises";
 import { RoutineExercise, RoutineType } from "@backend/types";
@@ -44,12 +44,12 @@ const Workout: React.FC<WorkoutProps> = ({ routine }) => {
   return (
     <>
       <Container direction="vertical">
-        <Space direction="horizontal">
+        <HeadContainer direction="horizontal">
           <Title>{pageTitleMapping[routine]}</Title>
-          <Button onClick={onEdit} type="link">
+          <EditButton onClick={onEdit} type="link">
             {edit ? "Save" : "Edit"}
-          </Button>
-        </Space>
+          </EditButton>
+        </HeadContainer>
         {edit ? (
           <EditRoutine
             data={data}

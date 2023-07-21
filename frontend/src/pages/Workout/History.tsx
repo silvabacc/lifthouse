@@ -1,5 +1,5 @@
 import { useDatabase } from "@frontend/hooks/useDatabase";
-import { InputNumber, StepProps, Steps, Typography } from "antd";
+import { InputNumber, Space, StepProps, Steps, Typography } from "antd";
 import React from "react";
 import { CarouselButtons, HistoryContainer } from "./HistoryStyles";
 import moment from "moment";
@@ -65,10 +65,14 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
           };
         });
         return (
-          <div key={entry.exerciseId}>
+          <Space direction="vertical" key={entry.exerciseId}>
             <Text>{moment(entry.date).format("Do MMMM YYYY")}</Text>
-            <Steps style={{ height: HEIGHT }} items={stepItems} />
-          </div>
+            <Steps
+              direction="vertical"
+              style={{ height: HEIGHT }}
+              items={stepItems}
+            />
+          </Space>
         );
       })}
     </Carousel>
