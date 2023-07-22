@@ -16,7 +16,6 @@ export class LocalStorageDb extends Dexie {
   }
 
   async writeTemporaryStorage(exerciseId: string, info?: Info, notes?: string) {
-    console.log("notes", notes);
     const current = await this.logEntryStorage.get(exerciseId);
 
     if (current && info) {

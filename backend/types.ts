@@ -59,3 +59,8 @@ export interface Routine {
   routinesType: RoutineType;
   exercises: RoutineExercise[];
 }
+
+export interface DailyWeighIn {
+  weight: number;
+  date: Date;
+}

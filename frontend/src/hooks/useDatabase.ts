@@ -3,6 +3,8 @@ import LiftHouseDatabase from "@backend/database/db";
 import { Exercise, RoutineExercise, RoutineType } from "@backend/types";
 import useAuthentication from "./useAuthentication";
 import { useTemporaryStorage } from "./useTemporaryStorage";
+import { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 
 export const useDatabase = () => {
   const dbService = new LiftHouseDatabase();
@@ -32,6 +34,27 @@ export const useDatabase = () => {
     const result = await Promise.all(temporaryStorage);
 
     dbService.logEntry(result, user.id);
+  };
+
+  const addWeighIn = async (weight: number, date: Dayjs) => {
+    await dbService.insertDailyWeighIn(user.id, weight, date.toDate());
+  };
+
+  const getDailyWeighInsForMonth = (month: number, year: number) => {
+    return useQuery(
+      ["getDailyWeighInsForMonth", month, year, user.id],
+      async () => {
+        const data = await dbService.getDailyWeighInsForMonth(
+          user.id,
+          month,
+          year
+        );
+        return data.map((weighIn) => ({
+          ...weighIn,
+          date: dayjs(weighIn.date),
+        }));
+      }
+    );
   };
 
   const getExerciseHistory = (exerciseId: string) => {
@@ -64,6 +87,8 @@ export const useDatabase = () => {
   };
 
   return {
+    addWeighIn,
+    getDailyWeighInsForMonth,
     queryRoutine,
     queryExercises,
     updateRoutine,

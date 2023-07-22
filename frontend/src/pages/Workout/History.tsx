@@ -6,10 +6,10 @@ import {
   HistoryContainer,
   HistoryStepsContainer,
 } from "./HistoryStyles";
-import moment from "moment";
 import { Carousel } from "react-responsive-carousel";
 import { DownOutlined, UpOutlined } from "@ant-design/icons";
 import Loading from "../common/Loading";
+import dayjs from "dayjs";
 
 interface HistoryProps {
   exerciseId: string;
@@ -84,7 +84,7 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
           <HistoryContainerElement>
             <Space direction="vertical" key={entry.exerciseId}>
               <Title level={5}>
-                {moment(entry.date).format("Do MMMM YYYY")}
+                {dayjs(entry.date).format("Do MMMM YYYY")}
               </Title>
               <Steps direction="vertical" items={stepItems} />
               {entry.info.length === 0 && (

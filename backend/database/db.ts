@@ -2,6 +2,7 @@ import { SupabaseClient, User, createClient } from "@supabase/supabase-js";
 import getConfig from "../config";
 import { routineSetup } from "../data";
 import {
+  DailyWeighInColumns,
   ExerciseColumns,
   LogEntriesColumns,
   RoutineORM,
@@ -14,6 +15,7 @@ import {
   RoutineExercise,
   RoutineType,
   LogEntry,
+  DailyWeighIn,
 } from "@backend/types";
 
 const { SUPABASE_URL, ANON_PUBLIC_KEY } = getConfig();
@@ -99,8 +101,6 @@ class LiftHouseDatabase {
       throw new Error("No data returned for exercise history");
     }
 
-    console.log(data);
-
     return data.map((entry) => ({
       exerciseId: entry.exercise_id,
       info: entry.info,
@@ -160,6 +160,39 @@ class LiftHouseDatabase {
       exerciseId: exercise.exercise_id,
       exerciseName: exercise.exercise_name,
       exerciseType: exercise.exercise_type,
+    }));
+  }
+
+  async insertDailyWeighIn(userId: string, weight: number, date: Date) {
+    await this.supabase.from(TableNames.daily_weigh_in).insert({
+      weight,
+      date,
+      user_id: userId,
+    });
+  }
+
+  async getDailyWeighInsForMonth(
+    userId: string,
+    month: number,
+    year: number
+  ): Promise<DailyWeighIn[]> {
+    const { data } = await this.supabase
+      .from(TableNames.daily_weigh_in)
+      .select("*")
+      .eq(DailyWeighInColumns.user_id, userId)
+      .gte(DailyWeighInColumns.date, new Date(year, month, 1).toISOString())
+      .lte(
+        DailyWeighInColumns.date,
+        new Date(year, month + 1, 0).toISOString()
+      );
+
+    if (data === null) {
+      throw new Error("No data returned for daily weigh ins");
+    }
+
+    return data.map((weighIn) => ({
+      weight: weighIn.weight,
+      date: new Date(weighIn.date),
     }));
   }
 }
