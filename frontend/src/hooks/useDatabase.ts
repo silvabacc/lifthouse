@@ -6,6 +6,11 @@ import { useTemporaryStorage } from "./useTemporaryStorage";
 import { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 
+export interface DailyWeighInMonth {
+  date: Dayjs;
+  weight: number;
+}
+
 export const useDatabase = () => {
   const dbService = new LiftHouseDatabase();
   const {
@@ -52,7 +57,7 @@ export const useDatabase = () => {
         return data.map((weighIn) => ({
           ...weighIn,
           date: dayjs(weighIn.date),
-        }));
+        })) as DailyWeighInMonth[];
       }
     );
   };

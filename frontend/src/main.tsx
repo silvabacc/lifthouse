@@ -1,6 +1,7 @@
 import "antd/dist/reset.css";
 import "./index.css";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import "chart.js/auto";
 import ReactDOM from "react-dom/client";
 import dayjs from "dayjs";
 import WeekDayPlugin from "dayjs/plugin/weekday";
