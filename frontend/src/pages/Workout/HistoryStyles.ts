@@ -1,3 +1,4 @@
+import colors from "@frontend/theme/colors";
 import { Card, Space } from "antd";
 import styled from "styled-components";
 
@@ -12,7 +13,7 @@ export const HistoryStepsContainer = styled(Space)`
 export const CarouselButtons = styled.div`
   display: flex;
   justify-content: center;
-  background-color: #d3d3d3;
+  background-color: ${colors.light_grey};
   width: 100%;
   padding-top: 10px;
   padding-bottom: 10px;

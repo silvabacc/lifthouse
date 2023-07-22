@@ -1,10 +1,11 @@
-import { Calendar, InputNumber, Modal, Space, Typography } from "antd";
+import { Calendar, Card, InputNumber, Modal, Space, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import type { CellRenderInfo } from "rc-picker/lib/interface";
 import { useDatabase } from "@frontend/hooks/useDatabase";
 import Loading from "../common/Loading";
+import colors from "@frontend/theme/colors";
 
 const { Text } = Typography;
 
@@ -12,6 +13,7 @@ const DailyWeighInCalendar: React.FC = () => {
   const [selectedValue, setSelectedValue] = useState(() => dayjs());
   const [monthSelected, setMonthSelected] = useState(dayjs().month());
   const [yearSelected, setYearSelected] = useState(dayjs().year());
+  const [weeklyGoal, setWeeklyGoal] = useState(0);
   const [weight, setWeight] = useState<number | null>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { addWeighIn, getDailyWeighInsForMonth } = useDatabase();
@@ -19,6 +21,17 @@ const DailyWeighInCalendar: React.FC = () => {
     monthSelected,
     yearSelected
   );
+
+  const mondayOfCurrentWeek = dayjs().weekday(0);
+
+  useEffect(() => {
+    if (data) {
+      const weekWeightGoal = data?.find(
+        (weighIn) => weighIn.date.day() === mondayOfCurrentWeek.day()
+      );
+      setWeeklyGoal(weekWeightGoal?.weight || 0);
+    }
+  }, [data]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -71,7 +84,7 @@ const DailyWeighInCalendar: React.FC = () => {
     );
     if (currentDayWeighIn) {
       return (
-        <Text style={{ fontSize: 12, color: "#1677ff" }}>
+        <Text style={{ fontSize: 12, color: colors.highlight }}>
           {currentDayWeighIn.weight}
         </Text>
       );
@@ -80,6 +93,17 @@ const DailyWeighInCalendar: React.FC = () => {
 
   return (
     <>
+      {weeklyGoal === 0 ? (
+        <Text strong style={{ color: colors.warning }}>
+          No weekly goal. Weekly goals are set when a weigh in is entered on the
+          Monday of the current week
+        </Text>
+      ) : (
+        <Text>
+          This week's weight goal is{" "}
+          <span style={{ color: colors.highlight }}>{weeklyGoal}</span> kg{" "}
+        </Text>
+      )}
       <Calendar
         disabledDate={(date) => date.year() > dayjs().year()}
         onPanelChange={onPanelChange}
