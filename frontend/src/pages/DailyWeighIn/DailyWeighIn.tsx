@@ -14,10 +14,10 @@ const DailyWeighIn: React.FC = () => {
   const [monthSelected, setMonthSelected] = useState(dayjs().month());
   const [yearSelected, setYearSelected] = useState(dayjs().year());
   const [weeklyGoal, setWeeklyGoal] = useState(0);
-  const [weight, setWeight] = useState<number | null>();
+  const [weight, setWeight] = useState<number | null>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { addWeighIn, getDailyWeighInsForMonth } = useDatabase();
-  const { data, isLoading } = getDailyWeighInsForMonth(
+  const { addWeighIn, getDailyWeighInsForMonth, updateWeighIn } = useDatabase();
+  const { data, isLoading, refetch } = getDailyWeighInsForMonth(
     monthSelected,
     yearSelected
   );
@@ -56,11 +56,23 @@ const DailyWeighIn: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
-    if (weight) {
-      addWeighIn(weight, selectedValue);
+  const handleOk = async () => {
+    if (weight === null) {
+      return;
+    }
+
+    if (
+      data?.find((dailyWeighIn) =>
+        dailyWeighIn.date.isSame(selectedValue, "day")
+      )
+    ) {
+      await updateWeighIn(weight, selectedValue);
+    } else {
+      await addWeighIn(weight, selectedValue);
       setWeight(null);
     }
+
+    refetch();
     setIsModalOpen(false);
   };
 
@@ -106,7 +118,10 @@ const DailyWeighIn: React.FC = () => {
       ) : (
         <Text>
           This week's weight goal is{" "}
-          <span style={{ color: colors.highlight }}>{weeklyGoal}</span> kg
+          <span style={{ color: colors.highlight }}>
+            {(weeklyGoal - weeklyGoal * 0.01).toFixed(1)}
+          </span>{" "}
+          kg
         </Text>
       )}
       <Calendar
@@ -124,9 +139,9 @@ const DailyWeighIn: React.FC = () => {
         <Space style={{ width: "100%", justifyContent: "center", padding: 16 }}>
           <Text>Weight: </Text>
           <InputNumber
+            min={0}
             value={weight}
             onChange={setWeight}
-            min={1}
             prefix="kg"
           />
         </Space>

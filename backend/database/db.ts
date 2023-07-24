@@ -171,6 +171,25 @@ class LiftHouseDatabase {
     });
   }
 
+  async updateDailyWeighIn(userId: string, weight: number, date: Date) {
+    if (weight <= 0) {
+      await this.supabase
+        .from(TableNames.daily_weigh_in)
+        .delete()
+        .eq(DailyWeighInColumns.user_id, userId)
+        .eq(DailyWeighInColumns.date, date.toISOString());
+      return;
+    }
+
+    await this.supabase
+      .from(TableNames.daily_weigh_in)
+      .update({
+        weight: weight,
+      })
+      .eq(DailyWeighInColumns.user_id, userId)
+      .eq(DailyWeighInColumns.date, date.toISOString());
+  }
+
   async getDailyWeighInsForMonth(
     userId: string,
     month: number,
@@ -180,10 +199,10 @@ class LiftHouseDatabase {
       .from(TableNames.daily_weigh_in)
       .select("*")
       .eq(DailyWeighInColumns.user_id, userId)
-      .gte(DailyWeighInColumns.date, new Date(year, month, 1).toISOString())
+      .gte(DailyWeighInColumns.date, new Date(year, month, 1).toDateString())
       .lte(
         DailyWeighInColumns.date,
-        new Date(year, month + 1, 0).toISOString()
+        new Date(year, month + 1, 0).toDateString()
       );
 
     if (data === null) {

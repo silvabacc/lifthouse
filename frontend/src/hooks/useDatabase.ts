@@ -45,6 +45,10 @@ export const useDatabase = () => {
     await dbService.insertDailyWeighIn(user.id, weight, date.toDate());
   };
 
+  const updateWeighIn = async (weight: number, date: Dayjs) => {
+    await dbService.updateDailyWeighIn(user.id, weight, date.toDate());
+  };
+
   const getDailyWeighInsForMonth = (month: number, year: number) => {
     return useQuery(
       ["getDailyWeighInsForMonth", month, year, user.id],
@@ -54,6 +58,7 @@ export const useDatabase = () => {
           month,
           year
         );
+
         return data.map((weighIn) => ({
           ...weighIn,
           date: dayjs(weighIn.date),
@@ -93,6 +98,7 @@ export const useDatabase = () => {
 
   return {
     addWeighIn,
+    updateWeighIn,
     getDailyWeighInsForMonth,
     queryRoutine,
     queryExercises,
