@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Typography } from "antd";
+import { Space, Typography } from "antd";
 
 import "../../../../backend/dexie";
 import { pageTitleMapping } from "./constants";
-import { Container, EditButton, HeadContainer } from "./WorkoutStyles";
+import { Container, EditButton } from "./WorkoutStyles";
 import { useDatabase } from "@frontend/hooks/useDatabase";
 import Exercises from "./Exercises";
 import { RoutineExercise, RoutineType } from "@backend/types";
 import EditRoutine from "./EditRoutine";
 import Loading from "../common/Loading";
+import Header from "../common/Header";
 
 const { Title } = Typography;
 
@@ -45,12 +46,14 @@ const Workout: React.FC<WorkoutProps> = ({ routine }) => {
   return (
     <>
       <Container direction="vertical">
-        <HeadContainer direction="horizontal">
-          <Title>{pageTitleMapping[routine]}</Title>
-          <EditButton onClick={onEdit} type="link">
-            {edit ? "Save" : "Edit"}
-          </EditButton>
-        </HeadContainer>
+        <Header
+          title={pageTitleMapping[routine]}
+          rightHandSide={
+            <EditButton onClick={onEdit} type="link">
+              {edit ? "Save" : "Edit"}
+            </EditButton>
+          }
+        />
         {edit ? (
           <EditRoutine
             data={data}

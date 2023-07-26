@@ -6,6 +6,7 @@ import colors from "@frontend/theme/colors";
 import Loading from "../common/Loading";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
+import Header from "../common/Header";
 
 const { Title, Text } = Typography;
 
@@ -105,7 +106,7 @@ const DailyWeighIn: React.FC = () => {
 
   return (
     <Space direction="vertical">
-      <Title>Daily Weigh In</Title>
+      <Header title="Daily Weigh In" />
       <DailyWeighInChart
         data={data}
         title={`Monthly progress for ${selectedValue.format("MMMM YYYY")}`}

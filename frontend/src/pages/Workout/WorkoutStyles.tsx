@@ -6,11 +6,6 @@ export const Container = styled(Space)`
   margin-bottom: 8px;
 `;
 
-export const HeadContainer = styled(Space)`
-  width: 100%;
-  justify-content: space-between;
-`;
-
 export const EditButton = styled(Button)`
   margin-right: auto;
 `;
