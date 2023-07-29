@@ -1,7 +1,8 @@
-import { Space, Typography } from "antd";
+import { Typography } from "antd";
 import React from "react";
-import { BackNavigationIcon, HeadContainer } from "./HeaderStyles";
+import { HeaderContainer, TitleContainer } from "./HeaderStyles";
 import { useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
 
 const { Title } = Typography;
 
@@ -18,15 +19,13 @@ const Header: React.FC<HeaderProps> = ({ title, rightHandSide }) => {
   };
 
   return (
-    <HeadContainer>
-      <Space>
-        <div onClick={onClickBack}>
-          <BackNavigationIcon size={24} />
-        </div>
+    <HeaderContainer direction="vertical">
+      <FaArrowLeft onClick={onClickBack} size={24} />
+      <TitleContainer>
         <Title level={3}>{title}</Title>
-      </Space>
-      {rightHandSide}
-    </HeadContainer>
+        {rightHandSide}
+      </TitleContainer>
+    </HeaderContainer>
   );
 };
 
