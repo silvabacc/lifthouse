@@ -1,9 +1,9 @@
 import colors from "@frontend/theme/colors";
-import { Card, Space } from "antd";
+import { Space } from "antd";
 import styled from "styled-components";
 
-export const HistoryTextBox = styled.div`
-  border: 1px solid black;
+export const CarouselContainer = styled(Space)`
+  width: 100%;
 `;
 
 export const HistoryStepsContainer = styled(Space)`
@@ -17,11 +17,12 @@ export const CarouselButtons = styled.div`
   width: 100%;
   padding-top: 10px;
   padding-bottom: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   border-radius: 4px;
 `;
 
-export const HistoryContainer = (height: number) => styled.div`
+export const HistoryContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: ${height}px;
 `;

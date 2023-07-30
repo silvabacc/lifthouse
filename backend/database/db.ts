@@ -95,7 +95,8 @@ class LiftHouseDatabase {
       .from(TableNames.log_entries)
       .select("*")
       .eq(LogEntriesColumns.exercise_id, exerciseId)
-      .eq(LogEntriesColumns.user_id, userId);
+      .eq(LogEntriesColumns.user_id, userId)
+      .order(LogEntriesColumns.date, { ascending: false });
 
     if (data === null) {
       throw new Error("No data returned for exercise history");

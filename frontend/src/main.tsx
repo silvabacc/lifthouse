@@ -1,6 +1,11 @@
 import "antd/dist/reset.css";
 import "./index.css";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import "swiper/css";
+import "pure-react-carousel/dist/react-carousel.es.css";
+import "@splidejs/react-splide/css";
 import "chart.js/auto";
 import ReactDOM from "react-dom/client";
 import dayjs from "dayjs";

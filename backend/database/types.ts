@@ -34,6 +34,7 @@ export enum LogEntriesColumns {
   exercise_id = "exercise_id",
   info = "info",
   user_id = "user_id",
+  date = "date",
 }
 
 export enum DailyWeighInColumns {
