@@ -8,13 +8,14 @@ import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import Header from "../common/Header";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const DailyWeighIn: React.FC = () => {
   const [selectedValue, setSelectedValue] = useState(() => dayjs());
   const [monthSelected, setMonthSelected] = useState(dayjs().month());
   const [yearSelected, setYearSelected] = useState(dayjs().year());
   const [weeklyGoal, setWeeklyGoal] = useState(0);
+  const [previousWeeklyGoal, setPreviouslyWeeklyGoal] = useState(0);
   const [weight, setWeight] = useState<number | null>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { addWeighIn, getDailyWeighInsForMonth, updateWeighIn } = useDatabase();
@@ -24,13 +25,18 @@ const DailyWeighIn: React.FC = () => {
   );
 
   const mondayOfCurrentWeek = dayjs().weekday(0);
+  const previousMonday = dayjs().subtract(1, "week").weekday(0);
 
   useEffect(() => {
     if (data) {
       const weekWeightGoal = data?.find(
-        (weighIn) => weighIn.date.day() === mondayOfCurrentWeek.day()
+        (weighIn) => weighIn.date.date() === mondayOfCurrentWeek.date()
+      );
+      const previousWeightGoal = data?.find(
+        (weighIn) => weighIn.date.date() === previousMonday.date()
       );
       setWeeklyGoal(weekWeightGoal?.weight || 0);
+      setPreviouslyWeeklyGoal(previousWeightGoal?.weight || 0);
     }
   }, [data]);
 
@@ -104,6 +110,8 @@ const DailyWeighIn: React.FC = () => {
     }
   };
 
+  console.log("previousWeeklyGoal", previousWeeklyGoal);
+
   return (
     <Space direction="vertical">
       <Header title="Daily Weigh In" />
@@ -117,13 +125,24 @@ const DailyWeighIn: React.FC = () => {
           the Monday of the current week
         </Text>
       ) : (
-        <Text>
-          This week's weight goal is{" "}
-          <span style={{ color: colors.highlight }}>
-            {(weeklyGoal - weeklyGoal * 0.01).toFixed(1)}
-          </span>{" "}
-          kg
-        </Text>
+        <>
+          <Text>
+            This week's weight goal is{" "}
+            <span style={{ color: colors.highlight }}>
+              {(weeklyGoal - weeklyGoal * 0.01).toFixed(1)}
+            </span>{" "}
+            kg
+          </Text>
+          {previousWeeklyGoal !== 0 && (
+            <Text>
+              Last week's weight goal was{" "}
+              <span style={{ color: colors.highlight }}>
+                {(previousWeeklyGoal - previousWeeklyGoal * 0.01).toFixed(1)}
+              </span>{" "}
+              kg
+            </Text>
+          )}
+        </>
       )}
       <Calendar
         disabledDate={(date) => date.year() > dayjs().year()}
