@@ -110,8 +110,6 @@ const DailyWeighIn: React.FC = () => {
     }
   };
 
-  console.log("previousWeeklyGoal", previousWeeklyGoal);
-
   return (
     <Space direction="vertical">
       <Header title="Daily Weigh In" />
