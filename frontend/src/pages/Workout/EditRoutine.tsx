@@ -12,7 +12,6 @@ import {
   RoutineExercise,
   RoutineType,
 } from "@backend/types";
-import Loading from "../common/Loading";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 
 const { Panel } = Collapse;
@@ -22,8 +21,8 @@ interface EditRoutineProps {
     routine: Routine;
     exercises: Exercise[];
   };
-  currentExercises?: RoutineExercise[];
-  setCurrentExercises: (value?: RoutineExercise[]) => void;
+  currentExercises: RoutineExercise[];
+  setCurrentExercises: (value: RoutineExercise[]) => void;
 }
 
 const RepRangeMapping = {
@@ -51,10 +50,6 @@ const EditRoutine: React.FC<EditRoutineProps> = ({
       };
     }
   );
-
-  if (!currentExercises) {
-    return <Loading />;
-  }
 
   const onRepRangeChange = (value: string, index: number) => {
     const exercises = currentExercises.slice();
@@ -95,14 +90,24 @@ const EditRoutine: React.FC<EditRoutineProps> = ({
         );
 
         const exercisesWithType = allExercises
+          //Filters exercises by type e.g. Vertical Push, Horizontal Push, etc
           .filter(
             (exerciseFromList) =>
               exerciseInfo?.exerciseType === exerciseFromList.exerciseType
           )
+          //Removes any duplicated exercises from the list if already in the routine
+          .filter(
+            (exerciseFromList) =>
+              !currentExercises
+                .map((i) => i.exerciseId)
+                .includes(exerciseFromList.exerciseId)
+          )
+          //Maps the exercises to the format required by the Select component
           .map((exerciseFromList) => ({
             value: exerciseFromList.exerciseId,
             label: exerciseFromList.exerciseName,
           }))
+          //Sorts the exercises alphabetically
           .sort((a, b) => a.label.localeCompare(b.label));
 
         return (

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Space, Typography } from "antd";
 
 import "../../../../backend/dexie";
 import { pageTitleMapping } from "./constants";
