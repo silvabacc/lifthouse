@@ -56,6 +56,10 @@ export class LocalStorageDb extends Dexie {
     }
   }
 
+  clearTemporaryStorageForExercise(exerciseId: string) {
+    this.logEntryStorage.delete(exerciseId);
+  }
+
   clearTemporaryStorage() {
     this.logEntryStorage.clear();
   }

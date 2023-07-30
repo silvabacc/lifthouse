@@ -32,10 +32,15 @@ export const useTemporaryStorage = () => {
     dexie.clearTemporaryStorage();
   };
 
+  const clearTemporaryStorageForExercise = (exerciseId: string) => {
+    dexie.clearTemporaryStorageForExercise(exerciseId);
+  };
+
   return {
     getTemporaryStorage,
     writeTemporaryStorage,
     removeSetFromExercise,
+    clearTemporaryStorageForExercise,
     clearTemporaryStorage,
   };
 };

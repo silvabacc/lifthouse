@@ -11,14 +11,14 @@ import EditRoutine from "./EditRoutine";
 import Loading from "../common/Loading";
 import Header from "../common/Header";
 
-const { Title } = Typography;
-
 interface WorkoutProps {
   routine: RoutineType;
 }
 
 const Workout: React.FC<WorkoutProps> = ({ routine }) => {
-  const [currentExercises, setCurrentExercises] = useState<RoutineExercise[]>();
+  const [currentExercises, setCurrentExercises] = useState<RoutineExercise[]>(
+    []
+  );
   const { queryRoutine, updateRoutine } = useDatabase();
   const { data, isLoading, refetch } = queryRoutine(routine);
 
@@ -28,12 +28,12 @@ const Workout: React.FC<WorkoutProps> = ({ routine }) => {
     if (data) {
       setCurrentExercises(data.routine.exercises);
     }
-  }, [edit]);
+  }, [edit, data]);
 
   const onEdit = async () => {
     setEdit((prev) => !prev);
 
-    if (data && currentExercises) {
+    if (data) {
       await updateRoutine(data?.routine.routineId, currentExercises);
       refetch();
     }

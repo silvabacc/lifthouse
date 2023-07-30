@@ -13,6 +13,7 @@ import {
   RoutineType,
 } from "@backend/types";
 import Loading from "../common/Loading";
+import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 
 const { Panel } = Collapse;
 
@@ -38,6 +39,7 @@ const EditRoutine: React.FC<EditRoutineProps> = ({
   setCurrentExercises,
 }) => {
   const { queryExercises } = useDatabase();
+  const { clearTemporaryStorageForExercise } = useTemporaryStorage();
   const { data: allExercises = [] } = queryExercises();
 
   const routineType = data.routine.routinesType;
@@ -56,17 +58,21 @@ const EditRoutine: React.FC<EditRoutineProps> = ({
 
   const onRepRangeChange = (value: string, index: number) => {
     const exercises = currentExercises.slice();
+    const updatedExercise = exercises[index];
     const [sets, reps] = value.split(" x ");
     exercises[index] = {
       ...exercises[index],
       sets: parseInt(sets),
       reps: reps,
     };
+    clearTemporaryStorageForExercise(updatedExercise.exerciseId);
     setCurrentExercises(exercises);
   };
 
   const onExerciseChange = (value: string, index: number) => {
     const exercises = currentExercises.slice();
+    const updatedExercise = exercises[index];
+
     const exerciseToUpdate = allExercises.find(
       (exerciseFromList) => exerciseFromList.exerciseId === value
     );
@@ -76,7 +82,7 @@ const EditRoutine: React.FC<EditRoutineProps> = ({
         exerciseId: exerciseToUpdate.exerciseId,
       };
     }
-
+    clearTemporaryStorageForExercise(updatedExercise.exerciseId);
     setCurrentExercises(exercises);
   };
 
