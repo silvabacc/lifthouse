@@ -1,30 +1,21 @@
 import { useDatabase } from "@frontend/hooks/useDatabase";
-import { Input, InputNumber, Space, StepProps, Steps, Typography } from "antd";
+import { Input, InputNumber, StepProps, Steps, Typography } from "antd";
 import Slider from "react-slick";
-import React, { useRef, useState } from "react";
-import {
-  CarouselButtons,
-  CarouselContainer,
-  HistoryStepsContainer,
-} from "./HistoryStyles";
-import { DownOutlined, UpOutlined } from "@ant-design/icons";
+import React from "react";
+import { CarouselContainer, HistoryStepsContainer } from "./HistoryStyles";
 import Loading from "../common/Loading";
 import dayjs from "dayjs";
-import { Splide, SplideSlide } from "@splidejs/react-splide";
 
 interface HistoryProps {
   exerciseId: string;
 }
 
 const { TextArea } = Input;
-
 const { Text, Title } = Typography;
 
 const History: React.FC<HistoryProps> = ({ exerciseId }) => {
   const { getExerciseHistory } = useDatabase();
   const { data } = getExerciseHistory(exerciseId);
-  const [active, setActive] = useState(0);
-  const splideRef = useRef<Splide>(null);
 
   if (data === undefined) {
     return <Loading />;
@@ -34,35 +25,16 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
     return <Text>No records found for this exercise</Text>;
   }
 
-  const HEIGHT =
-    data.reduce((acc, curr) => {
-      if (curr.info.length > acc) {
-        return curr.info.length;
-      }
-      return acc;
-    }, 0) * 110;
-
-  const onClickNext = () => splideRef.current && splideRef.current.go("+1");
-  const onClickPrev = () => splideRef.current && splideRef.current.go("-1");
+  const settings = {
+    dots: true,
+    adaptiveHeight: true,
+    infinite: false,
+    speed: 100,
+  };
 
   return (
     <>
-      {active !== 0 && (
-        <CarouselButtons onClick={onClickPrev}>
-          <UpOutlined />
-        </CarouselButtons>
-      )}
-      <Splide
-        onMove={(e) => setActive(e.index)}
-        ref={splideRef}
-        options={{
-          direction: "ttb",
-          height: HEIGHT,
-          arrows: false,
-          pagination: false,
-          drag: false,
-        }}
-      >
+      <Slider {...settings}>
         {data?.map((entry, index) => {
           const stepItems: StepProps[] = entry.info.map((i) => {
             return {
@@ -77,7 +49,7 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
           });
 
           return (
-            <SplideSlide key={index}>
+            <div key={index}>
               <CarouselContainer direction="vertical" key={entry.exerciseId}>
                 <div>
                   <Title level={5}>
@@ -103,15 +75,10 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
                   />
                 </div>
               </CarouselContainer>
-            </SplideSlide>
+            </div>
           );
         })}
-      </Splide>
-      {active !== data.length - 1 && (
-        <CarouselButtons onClick={onClickNext}>
-          <DownOutlined />
-        </CarouselButtons>
-      )}
+      </Slider>
     </>
   );
 };
