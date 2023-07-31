@@ -64,3 +64,14 @@ export interface DailyWeighIn {
   weight: number;
   date: Date;
 }
+
+export interface Meal {
+  name: string;
+  calories: number;
+  protein: number;
+}
+
+export interface MealEntry {
+  date: Date;
+  meals: Meal[];
+}

@@ -1,15 +1,21 @@
 import Dexie, { Table } from "dexie";
-import { Info, LogEntry } from "./types";
+import { Info, LogEntry, Meal, MealEntry } from "./types";
 
 export class LocalStorageDb extends Dexie {
   logEntryStorage!: Table<LogEntry>;
+  mealEntryStorage!: Table<MealEntry>;
 
   constructor() {
     super("lifthousedatabase");
     this.version(1).stores({
       logEntryStorage: "++exerciseId, info",
+      mealEntryStorage: "++date, meals",
     });
   }
+
+  // async getMealEntry(date: Date) {}
+
+  // async writeMealEntry(date: Date, meals: Meal[]) {}
 
   async getTemporaryStorage(exerciseId: string) {
     return await this.logEntryStorage.get(exerciseId);

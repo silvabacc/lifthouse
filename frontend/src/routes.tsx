@@ -8,6 +8,7 @@ import SignUp from "./pages/Authentication/SignUp";
 import ForgotPassword from "./pages/Authentication/ForgotPassword";
 import PasswordReset from "./pages/Authentication/PasswordReset";
 import DailyWeighIn from "./pages/DailyWeighIn/DailyWeighIn";
+import MealTracker from "./pages/MealTracker/MealTracker";
 
 const guardRoutes = (
   element: JSX.Element,
@@ -69,6 +70,10 @@ export const createRoutes = (isAuthenticated: boolean) => {
     {
       path: "/weigh-in",
       element: guardRoutes(<DailyWeighIn />, isAuthenticated),
+    },
+    {
+      path: "/meal-tracker",
+      element: guardRoutes(<MealTracker />, isAuthenticated),
     },
     ...workoutRoutes,
   ]);

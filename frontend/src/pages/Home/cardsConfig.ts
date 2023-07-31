@@ -33,5 +33,5 @@ export const workoutCards = [
 
 export const dietCards = [
   { title: "Daily Weigh In", image: GrizzlyImage, route: `/weigh-in` },
-  { title: "Meal Tracker", image: MealTrackerImage, route: "/home" },
+  { title: "Meal Tracker", image: MealTrackerImage, route: "/meal-tracker" },
 ];

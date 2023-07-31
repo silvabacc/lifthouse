@@ -2,7 +2,7 @@ import { Typography } from "antd";
 import React from "react";
 import { HeaderContainer, TitleContainer } from "./HeaderStyles";
 import { useNavigate } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa";
+import { RxCross1 } from "react-icons/rx";
 
 const { Title } = Typography;
 
@@ -20,9 +20,9 @@ const Header: React.FC<HeaderProps> = ({ title, rightHandSide }) => {
 
   return (
     <HeaderContainer direction="vertical">
-      <FaArrowLeft onClick={onClickBack} size={24} />
+      <RxCross1 onClick={onClickBack} size={24} />
       <TitleContainer>
-        <Title level={3}>{title}</Title>
+        <Title>{title}</Title>
         {rightHandSide}
       </TitleContainer>
     </HeaderContainer>
