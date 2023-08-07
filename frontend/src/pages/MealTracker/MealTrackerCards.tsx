@@ -1,23 +1,41 @@
-import { Card, Input, Space } from "antd";
+import { Card, Input } from "antd";
 import React, { useState } from "react";
 import colors from "@frontend/theme/colors";
-import { CardContainers, EditNameButton } from "./MealTrackerCardsStyles";
+import {
+  CardContainers,
+  DeleteButton,
+  EditNameButton,
+} from "./MealTrackerCardsStyles";
 import { NutrientContainer, NutrientText } from "./MealTrackerStyles";
 
 const MealTrackerCard: React.FC = () => {
   const [editName, setEditName] = useState(false);
+  const [mealTitle, setMealTitle] = useState("Test");
+
+  const onDelete = () => {};
 
   return (
     <CardContainers direction="vertical">
       <Card
         type="inner"
-        extra={
-          <EditNameButton
-            onClick={() => setEditName((prev) => !prev)}
-            color={colors.primary}
-          />
+        extra={<DeleteButton onClick={onDelete} color={colors.primary} />}
+        title={
+          <>
+            <EditNameButton
+              onClick={() => setEditName((prev) => !prev)}
+              color={colors.primary}
+            />
+            {editName ? (
+              <Input
+                value={mealTitle}
+                onChange={(e) => setMealTitle(e.target.value)}
+                style={{ width: "80%" }}
+              />
+            ) : (
+              mealTitle
+            )}
+          </>
         }
-        title={editName ? <Input /> : "Test"}
       >
         <NutrientContainer>
           <NutrientText>Calories</NutrientText>
