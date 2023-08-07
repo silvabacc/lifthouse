@@ -1,9 +1,8 @@
-import { Button, Card, Input } from "antd";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import { Card, Input } from "antd";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   AddEntryButton,
-  NutrientContainer,
-  NutrientLabelContainer,
+  Errortext,
   NutrientLabelInput,
   NutrientLabelText,
   NutrientText,
@@ -18,6 +17,7 @@ const AddEntry: React.FC = () => {
   const [proteinPer, setProteinPer] = useState(0);
   const [proteinGrams, setProteinGrams] = useState(0);
   const [proteinTotal, setProteinTotal] = useState(0);
+  const [error, setError] = useState(false);
 
   const handleMealTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMealTitle(e.target.value);
@@ -31,14 +31,38 @@ const AddEntry: React.FC = () => {
   const caloriesRow = [
     { state: caloriesPer, set: setCaloriesPer },
     { state: caloriesGrams, set: setCaloriesGrams },
-    { state: caloriesTotal, set: setCaloriesTotal },
   ];
 
   const proteinRow = [
     { state: proteinPer, set: setProteinPer },
     { state: proteinGrams, set: setProteinGrams },
-    { state: proteinTotal, set: setProteinTotal },
   ];
+
+  useEffect(() => {
+    setCaloriesTotal(caloriesPer * (caloriesGrams / 100));
+  }, [caloriesPer, caloriesGrams]);
+
+  useEffect(() => {
+    setProteinTotal(proteinGrams * (proteinPer / 100));
+  }, [proteinPer, proteinGrams]);
+
+  const handleCalorieTotalChange = () => {
+    setCaloriesGrams(0);
+    setCaloriesPer(0);
+  };
+
+  const handleProteinTotalChange = () => {
+    setProteinGrams(0);
+    setProteinPer(0);
+  };
+
+  const handleAdd = () => {
+    if (mealTitle.length === 0) {
+      setError(true);
+    } else {
+      setError(false);
+    }
+  };
 
   return (
     <Card
@@ -67,12 +91,16 @@ const AddEntry: React.FC = () => {
               <NutritionTableData key={index}>
                 <NutrientLabelInput
                   value={item.state}
-                  onChange={(e) =>
-                    handleNutritionInput(parseInt(e.target.value), item.set)
-                  }
+                  onChange={(e) => handleNutritionInput(e as number, item.set)}
                 />
               </NutritionTableData>
             ))}
+            <NutritionTableData>
+              <NutrientLabelInput
+                value={caloriesTotal}
+                onChange={handleCalorieTotalChange}
+              />
+            </NutritionTableData>
           </tr>
           <tr>
             <td>
@@ -82,16 +110,23 @@ const AddEntry: React.FC = () => {
               <NutritionTableData key={index}>
                 <NutrientLabelInput
                   value={item.state}
-                  onChange={(e) =>
-                    handleNutritionInput(parseInt(e.target.value), item.set)
-                  }
+                  onChange={(e) => handleNutritionInput(e as number, item.set)}
                 />
               </NutritionTableData>
             ))}
+            <NutritionTableData>
+              <NutrientLabelInput
+                value={proteinTotal}
+                onChange={handleProteinTotalChange}
+              />
+            </NutritionTableData>
           </tr>
         </tbody>
       </table>
-      <AddEntryButton type="primary">Add</AddEntryButton>
+      {error && <Errortext>Please make sure to have added a title</Errortext>}
+      <AddEntryButton onClick={handleAdd} type="primary">
+        Add
+      </AddEntryButton>
     </Card>
   );
 };
