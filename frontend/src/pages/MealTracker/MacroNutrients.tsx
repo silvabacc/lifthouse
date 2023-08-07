@@ -7,10 +7,7 @@ const { Title } = Typography;
 const MacroNutrients: React.FC = () => {
   return (
     <MacroNumbersContainer>
-      <Space
-        style={{ justifyContent: "center", width: "100%" }}
-        direction="vertical"
-      >
+      <Space direction="vertical">
         <Title level={3}>Calories</Title>
         <NumberText>2345</NumberText>
       </Space>
