@@ -29,19 +29,16 @@ const MealTracker: React.FC = () => {
     refetch();
   };
 
-  const MealCards = data ? (
-    data?.map((meal) => (
-      <MealTrackerCard data={meal} onDeleteCard={() => onDeleteCard(meal.id)} />
-    ))
-  ) : (
-    <>No meals were recorded</>
-  );
-
   const items: TabsProps["items"] = [
     {
       key: "1",
       label: `Meals`,
-      children: MealCards,
+      children: data?.map((meal) => (
+        <MealTrackerCard
+          data={meal}
+          onDeleteCard={() => onDeleteCard(meal.id)}
+        />
+      )),
     },
     {
       key: "2",
