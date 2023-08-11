@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import LiftHouseDatabase from "@backend/database/db";
-import { Exercise, RoutineExercise, RoutineType } from "@backend/types";
+import { Exercise, Meal, RoutineExercise, RoutineType } from "@backend/types";
 import useAuthentication from "./useAuthentication";
 import { useTemporaryStorage } from "./useTemporaryStorage";
 import { Dayjs } from "dayjs";
@@ -47,6 +47,24 @@ export const useDatabase = () => {
 
   const updateWeighIn = async (weight: number, date: Dayjs) => {
     await dbService.updateDailyWeighIn(user.id, weight, date.toDate());
+  };
+
+  const addMeal = async (
+    mealName: string,
+    calories: number,
+    protein: number
+  ) => {
+    await dbService.addMeal(mealName, calories, protein, user.id);
+  };
+
+  const deleteMeal = async (mealId: string) => {
+    await dbService.deleteMeal(mealId);
+  };
+
+  const getMeals = (date: Date) => {
+    return useQuery(["getMeals", date], async () => {
+      return await dbService.getMeals(date, user.id);
+    });
   };
 
   const getDailyWeighInsForMonth = (month: number, year: number) => {
@@ -105,5 +123,8 @@ export const useDatabase = () => {
     updateRoutine,
     logEntry,
     getExerciseHistory,
+    addMeal,
+    deleteMeal,
+    getMeals,
   };
 };

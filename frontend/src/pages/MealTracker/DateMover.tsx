@@ -5,19 +5,37 @@ import {
   DateRightArrowButton,
   DateSquare,
 } from "./DateMoverStyles";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { Space, Typography } from "antd";
 
 const { Title } = Typography;
 
-const DateMover: React.FC = () => {
+interface DateMoverProps {
+  selectedDay: Dayjs;
+  setSelectedDay: (value: Dayjs) => void;
+}
+
+const DateMover: React.FC<DateMoverProps> = ({
+  selectedDay,
+  setSelectedDay,
+}) => {
+  const onLeftArrowClick = () => {
+    setSelectedDay(selectedDay.subtract(1, "day"));
+  };
+
+  const onRightArrowClick = () => {
+    setSelectedDay(selectedDay.add(1, "day"));
+  };
+
   return (
     <DateMoverContainer>
       <Space>
-        <DateLeftArrowButton size={24} />
+        <DateLeftArrowButton size={24} onClick={onLeftArrowClick} />
         <DateSquare>Today</DateSquare>
-        <DateRightArrowButton size={24} />
+        <DateRightArrowButton size={24} onClick={onRightArrowClick} />
       </Space>
-      <Title level={5}>02/01/20203</Title>
+      <Title level={5}>{selectedDay.format("DD/MM/YYYY")}</Title>
     </DateMoverContainer>
   );
 };

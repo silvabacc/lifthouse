@@ -5,6 +5,7 @@ import {
   DailyWeighInColumns,
   ExerciseColumns,
   LogEntriesColumns,
+  MealsColumns,
   RoutineORM,
   RoutinesColumns,
   TableNames,
@@ -16,6 +17,7 @@ import {
   RoutineType,
   LogEntry,
   DailyWeighIn,
+  Meal,
 } from "@backend/types";
 
 const { SUPABASE_URL, ANON_PUBLIC_KEY } = getConfig();
@@ -214,6 +216,50 @@ class LiftHouseDatabase {
       weight: weighIn.weight,
       date: new Date(weighIn.date),
     }));
+  }
+
+  async addMeal(
+    mealName: string,
+    calories: number,
+    protein: number,
+    userId: string
+  ) {
+    const insertMeal = {
+      [MealsColumns.meal_name]: mealName,
+      [MealsColumns.calorie]: calories,
+      [MealsColumns.protein]: protein,
+      [MealsColumns.date]: new Date(),
+      [MealsColumns.user_id]: userId,
+    };
+
+    await this.supabase.from(TableNames.meals).insert(insertMeal);
+  }
+
+  async getMeals(date: Date, userId: string): Promise<Meal[]> {
+    const { data } = await this.supabase
+      .from(TableNames.meals)
+      .select("*")
+      .eq(MealsColumns.user_id, userId)
+      .eq(MealsColumns.date, date.toISOString());
+
+    if (data === null) {
+      throw new Error("No data returned for meals");
+    }
+
+    return data.map((meal) => ({
+      id: meal.id,
+      mealName: meal.meal_name,
+      calories: meal.calorie,
+      protein: meal.protein,
+      date: new Date(meal.date),
+    }));
+  }
+
+  async deleteMeal(mealId: string) {
+    await this.supabase
+      .from(TableNames.meals)
+      .delete()
+      .eq(MealsColumns.id, mealId);
   }
 }
 

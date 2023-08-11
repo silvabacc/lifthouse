@@ -3,6 +3,7 @@ export enum TableNames {
   exercises = "exercises",
   log_entries = "log_entries",
   daily_weigh_in = "daily_weigh_in",
+  meals = "meals",
 }
 
 export interface RoutineORM {
@@ -40,5 +41,14 @@ export enum LogEntriesColumns {
 export enum DailyWeighInColumns {
   date = "date",
   weight = "weight",
+  user_id = "user_id",
+}
+
+export enum MealsColumns {
+  id = "id",
+  meal_name = "meal_name",
+  calorie = "calorie",
+  protein = "protein",
+  date = "date",
   user_id = "user_id",
 }

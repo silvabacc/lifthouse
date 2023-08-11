@@ -4,16 +4,24 @@ import { MacroNumbersContainer, NumberText } from "./MacroNutrientsStyles";
 
 const { Title } = Typography;
 
-const MacroNutrients: React.FC = () => {
+interface MacroNutrientsProps {
+  calories: number;
+  protein: number;
+}
+
+const MacroNutrients: React.FC<MacroNutrientsProps> = ({
+  calories,
+  protein,
+}) => {
   return (
     <MacroNumbersContainer>
       <Space direction="vertical">
         <Title level={3}>Calories</Title>
-        <NumberText>2345</NumberText>
+        <NumberText>{calories}</NumberText>
       </Space>
       <Space direction="vertical">
         <Title level={3}> Protein</Title>
-        <NumberText>165g</NumberText>
+        <NumberText>{protein}</NumberText>
       </Space>
     </MacroNumbersContainer>
   );

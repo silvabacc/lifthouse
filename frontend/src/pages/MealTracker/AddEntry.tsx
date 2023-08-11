@@ -8,8 +8,13 @@ import {
   NutrientText,
   NutritionTableData,
 } from "./MealTrackerStyles";
+import { useDatabase } from "@frontend/hooks/useDatabase";
 
-const AddEntry: React.FC = () => {
+interface AddEntryProps {
+  goToMealTab: () => void;
+}
+
+const AddEntry: React.FC<AddEntryProps> = ({ goToMealTab }) => {
   const [mealTitle, setMealTitle] = useState("");
   const [caloriesPer, setCaloriesPer] = useState(0);
   const [caloriesGrams, setCaloriesGrams] = useState(0);
@@ -18,6 +23,7 @@ const AddEntry: React.FC = () => {
   const [proteinGrams, setProteinGrams] = useState(0);
   const [proteinTotal, setProteinTotal] = useState(0);
   const [error, setError] = useState(false);
+  const { addMeal } = useDatabase();
 
   const handleMealTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMealTitle(e.target.value);
@@ -46,12 +52,14 @@ const AddEntry: React.FC = () => {
     setProteinTotal(proteinGrams * (proteinPer / 100));
   }, [proteinPer, proteinGrams]);
 
-  const handleCalorieTotalChange = () => {
+  const handleCalorieTotalChange = (value: number) => {
+    setCaloriesTotal(value);
     setCaloriesGrams(0);
     setCaloriesPer(0);
   };
 
-  const handleProteinTotalChange = () => {
+  const handleProteinTotalChange = (value: number) => {
+    setProteinTotal(value);
     setProteinGrams(0);
     setProteinPer(0);
   };
@@ -60,8 +68,21 @@ const AddEntry: React.FC = () => {
     if (mealTitle.length === 0) {
       setError(true);
     } else {
+      addMeal(mealTitle, caloriesTotal, proteinTotal);
+      goToMealTab();
+      clearAll();
       setError(false);
     }
+  };
+
+  const clearAll = () => {
+    setMealTitle("");
+    setCaloriesPer(0);
+    setCaloriesGrams(0);
+    setCaloriesTotal(0);
+    setProteinPer(0);
+    setProteinGrams(0);
+    setProteinTotal(0);
   };
 
   return (
@@ -98,7 +119,7 @@ const AddEntry: React.FC = () => {
             <NutritionTableData>
               <NutrientLabelInput
                 value={caloriesTotal}
-                onChange={handleCalorieTotalChange}
+                onChange={(e) => handleCalorieTotalChange(e as number)}
               />
             </NutritionTableData>
           </tr>
@@ -117,7 +138,7 @@ const AddEntry: React.FC = () => {
             <NutritionTableData>
               <NutrientLabelInput
                 value={proteinTotal}
-                onChange={handleProteinTotalChange}
+                onChange={(e) => handleProteinTotalChange(e as number)}
               />
             </NutritionTableData>
           </tr>
