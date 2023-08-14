@@ -9,7 +9,9 @@ import ForgotPassword from "./pages/Authentication/ForgotPassword";
 import PasswordReset from "./pages/Authentication/PasswordReset";
 import DailyWeighIn from "./pages/DailyWeighIn/DailyWeighIn";
 import MealTracker from "./pages/MealTracker/MealTracker";
+import ChangePassword from "./pages/Authentication/ChangePassword";
 
+//Redirects user to login if not authenticated
 const guardRoutes = (
   element: JSX.Element,
   isAuthenticated: boolean,
@@ -18,6 +20,7 @@ const guardRoutes = (
   return isAuthenticated ? element : <Navigate to={navigateTo || "/"} />;
 };
 
+//Redirects user to home if authenticated
 const authRoute = (
   element: JSX.Element,
   isAuthenticated: boolean,
@@ -50,6 +53,10 @@ export const createRoutes = (isAuthenticated: boolean) => {
     {
       path: "/signup",
       element: authRoute(<SignUp />, isAuthenticated),
+    },
+    {
+      path: "/change-password",
+      element: guardRoutes(<ChangePassword />, isAuthenticated),
     },
     {
       path: "/home",

@@ -58,6 +58,8 @@ const useAuthentication = () => {
     { enabled: false }
   );
 
+  console.log(isLoading);
+
   return {
     login,
     loginWithGoogle,

@@ -5,7 +5,6 @@ import { Tabs, TabsProps } from "antd";
 import MealTrackerCard from "./MealTrackerCard";
 import MacroNutrients from "./MacroNutrients";
 import AddEntry from "./AddEntry";
-import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { useDatabase } from "@frontend/hooks/useDatabase";
 import Loading from "../common/Loading";
