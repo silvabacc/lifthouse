@@ -193,6 +193,13 @@ class LiftHouseDatabase {
       .eq(DailyWeighInColumns.date, date.toISOString());
   }
 
+  /**
+   *
+   * @param userId user id for the user to get the weigh ins for
+   * @param month month to get the weigh ins for
+   * @param year year to get the weigh ins for
+   * @returns the month weigh ins that is given and also the previous month
+   */
   async getDailyWeighInsForMonth(
     userId: string,
     month: number,
@@ -202,7 +209,10 @@ class LiftHouseDatabase {
       .from(TableNames.daily_weigh_in)
       .select("*")
       .eq(DailyWeighInColumns.user_id, userId)
-      .gte(DailyWeighInColumns.date, new Date(year, month, 1).toDateString())
+      .gte(
+        DailyWeighInColumns.date,
+        new Date(year, month - 1, 1).toDateString()
+      )
       .lte(
         DailyWeighInColumns.date,
         new Date(year, month + 1, 0).toDateString()
