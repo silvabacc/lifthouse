@@ -1,6 +1,5 @@
 import { useQuery } from "react-query";
 import Authentication from "@backend/authentication";
-import { User } from "@supabase/supabase-js";
 
 const useAuthentication = () => {
   const auth = new Authentication();
@@ -47,7 +46,7 @@ const useAuthentication = () => {
     return result;
   };
 
-  const { data, isLoading, refetch } = useQuery(
+  const { data, isLoading, isFetched, refetch } = useQuery(
     "session",
     async () => {
       const auth = new Authentication();
@@ -58,8 +57,6 @@ const useAuthentication = () => {
     { enabled: false }
   );
 
-  console.log(isLoading);
-
   return {
     login,
     loginWithGoogle,
@@ -68,9 +65,9 @@ const useAuthentication = () => {
     resetPasswordWithEmail,
     resetPassword,
     auth: {
-      user: data?.user || ({} as User),
+      user: data?.user,
       isAuthenticated: data?.isAuthenticated || false,
-      authLoading: isLoading,
+      authFetched: isFetched,
       fetchAuthUser: refetch,
     },
   };

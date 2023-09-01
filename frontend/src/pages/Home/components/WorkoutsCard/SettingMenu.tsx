@@ -1,6 +1,10 @@
 import React from "react";
-import { LogoutOutlined, DownOutlined } from "@ant-design/icons";
-import { Button, Dropdown, MenuProps, Space } from "antd";
+import {
+  LogoutOutlined,
+  UnlockOutlined,
+  DownOutlined,
+} from "@ant-design/icons";
+import { Button, Dropdown, MenuProps } from "antd";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { useNavigate } from "react-router-dom";
 
@@ -10,8 +14,13 @@ const SettingMenu: React.FC = () => {
 
   const items: MenuProps["items"] = [
     {
-      label: "Logout",
+      label: "Change Password",
       key: "0",
+      icon: <UnlockOutlined />,
+    },
+    {
+      label: "Logout",
+      key: "1",
       icon: <LogoutOutlined />,
     },
   ];
@@ -19,6 +28,9 @@ const SettingMenu: React.FC = () => {
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     switch (e.key) {
       case "0":
+        navigate("/change-password");
+        break;
+      case "1":
         signOut();
         navigate("/login");
         break;
