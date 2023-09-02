@@ -6,10 +6,6 @@ export const CarouselContainer = styled(Space)`
   width: 100%;
 `;
 
-export const HistoryStepsContainer = styled(Space)`
-  width: 100%;
-`;
-
 export const CarouselButtons = styled.div`
   display: flex;
   justify-content: center;

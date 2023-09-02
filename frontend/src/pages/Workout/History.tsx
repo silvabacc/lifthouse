@@ -1,12 +1,11 @@
 import { useDatabase } from "@frontend/hooks/useDatabase";
-import { Input, InputNumber, StepProps, Steps, Typography } from "antd";
+import { Input, InputNumber, Space, StepProps, Steps, Typography } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import Slider from "react-slick";
 import React from "react";
 import {
   CarouselContainer,
   DeleteButton,
-  HistoryStepsContainer,
   HistoryTitleContainer,
 } from "./HistoryStyles";
 import Loading from "../common/Loading";
@@ -54,10 +53,10 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
             return {
               title: `Set ${i.set}`,
               description: (
-                <HistoryStepsContainer>
+                <Space>
                   <InputNumber readOnly prefix="kg" value={i.weight} />
                   <InputNumber readOnly prefix="reps" value={i.reps} />
-                </HistoryStepsContainer>
+                </Space>
               ),
             };
           });
@@ -73,10 +72,14 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
                     <DeleteButton
                       type="ghost"
                       icon={<DeleteOutlined color={colors.delete} />}
-                      onClick={() => onDeleteEntry(entry.logEntryId)}
+                      onClick={() => onDeleteEntry(entry.logEntryId!)}
                     />
                   </HistoryTitleContainer>
-                  <Steps direction="vertical" items={stepItems} />
+                  <Steps
+                    style={{ alignItems: "center" }}
+                    direction="vertical"
+                    items={stepItems}
+                  />
                   {entry.info.length === 0 && (
                     <Text>No sets were recorded for this entry</Text>
                   )}

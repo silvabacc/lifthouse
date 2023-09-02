@@ -2,8 +2,7 @@ import React, { Dispatch, useEffect, useState } from "react";
 import { Button, InputNumber, Space } from "antd";
 import { BsCheckSquareFill } from "react-icons/bs";
 import colors from "../../theme/colors";
-import { useParams } from "react-router-dom";
-import { Exercise, Routine } from "@backend/types";
+import { Exercise } from "@backend/types";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 
 interface SetsRepsRowProps {
