@@ -85,9 +85,9 @@ export const useDatabase = () => {
     );
   };
 
-  const getExerciseHistory = (exerciseId: string) => {
+  const getExerciseHistory = (exerciseId: string, limit?: number) => {
     return useQuery(["getExerciseHistory", exerciseId, user.id], async () => {
-      return await dbService.getExerciseHistory(exerciseId, user.id);
+      return await dbService.getExerciseHistory(exerciseId, user.id, limit);
     });
   };
 

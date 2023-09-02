@@ -2,7 +2,7 @@ import React, { Dispatch, useEffect, useState } from "react";
 import { Button, InputNumber, Space } from "antd";
 import { BsCheckSquareFill } from "react-icons/bs";
 import colors from "../../theme/colors";
-import { Exercise } from "@backend/types";
+import { Exercise, LogEntry } from "@backend/types";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 
 interface SetsRepsRowProps {
@@ -10,15 +10,17 @@ interface SetsRepsRowProps {
   set: number;
   overrideReps?: number;
   overrideWeights?: number;
+  placeHolderInfo?: LogEntry;
   disabled?: boolean;
   next?: Dispatch<React.SetStateAction<number>>;
 }
 
 const SetsRepsRow: React.FC<SetsRepsRowProps> = ({
   set,
-  overrideReps = 0,
-  overrideWeights = 0,
+  overrideReps,
+  overrideWeights,
   exercise,
+  placeHolderInfo,
   disabled,
   next,
 }) => {
@@ -36,12 +38,14 @@ const SetsRepsRow: React.FC<SetsRepsRowProps> = ({
       <InputNumber
         prefix="kg"
         disabled={disabled}
+        placeholder={placeHolderInfo?.info?.[set - 1]?.weight?.toString()}
         value={weight}
         onChange={(value) => value && setWeight(value)}
       />
       <InputNumber
         prefix="reps"
         disabled={disabled}
+        placeholder={placeHolderInfo?.info?.[set - 1]?.reps?.toString()}
         value={reps}
         onChange={(value) => value && setReps(value)}
       />
@@ -49,7 +53,11 @@ const SetsRepsRow: React.FC<SetsRepsRowProps> = ({
         type="ghost"
         disabled={disabled}
         onClick={() => {
-          writeTemporaryStorage(exercise.exerciseId, { set, reps, weight });
+          writeTemporaryStorage(exercise.exerciseId, {
+            set,
+            reps: reps || 0,
+            weight: weight || 0,
+          });
           next && next((current) => (current += 1));
         }}
         icon={
