@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import LiftHouseDatabase from "@backend/database/db";
 import { Exercise, Meal, RoutineExercise, RoutineType } from "@backend/types";
 import useAuthentication from "./useAuthentication";
@@ -114,6 +114,10 @@ export const useDatabase = () => {
     });
   };
 
+  const deleteLogEntry = (logEntryId: string) => {
+    return dbService.deleteLogEntry(logEntryId);
+  };
+
   return {
     addWeighIn,
     updateWeighIn,
@@ -126,5 +130,6 @@ export const useDatabase = () => {
     addMeal,
     deleteMeal,
     getMeals,
+    deleteLogEntry,
   };
 };

@@ -105,6 +105,7 @@ class LiftHouseDatabase {
     }
 
     return data.map((entry) => ({
+      logEntryId: entry.log_entry_id,
       exerciseId: entry.exercise_id,
       info: entry.info,
       date: new Date(entry.date),
@@ -270,6 +271,18 @@ class LiftHouseDatabase {
       .from(TableNames.meals)
       .delete()
       .eq(MealsColumns.id, mealId);
+  }
+
+  async deleteLogEntry(logEntryId: string) {
+    const { error } = await this.supabase
+      .from(TableNames.log_entries)
+      .delete()
+      .eq(LogEntriesColumns.log_entry_id, logEntryId);
+
+    if (!error) {
+      return true;
+    }
+    return false;
   }
 }
 

@@ -35,6 +35,7 @@ export interface Info {
 
 //* sets, weighs and reps should map to each other
 export interface LogEntry {
+  logEntryId: string;
   exerciseId: string;
   info: Info[];
   date?: Date;

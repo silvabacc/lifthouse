@@ -1,10 +1,17 @@
 import { useDatabase } from "@frontend/hooks/useDatabase";
 import { Input, InputNumber, StepProps, Steps, Typography } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
 import Slider from "react-slick";
 import React from "react";
-import { CarouselContainer, HistoryStepsContainer } from "./HistoryStyles";
+import {
+  CarouselContainer,
+  DeleteButton,
+  HistoryStepsContainer,
+  HistoryTitleContainer,
+} from "./HistoryStyles";
 import Loading from "../common/Loading";
 import dayjs from "dayjs";
+import colors from "@frontend/theme/colors";
 
 interface HistoryProps {
   exerciseId: string;
@@ -14,8 +21,15 @@ const { TextArea } = Input;
 const { Text, Title } = Typography;
 
 const History: React.FC<HistoryProps> = ({ exerciseId }) => {
-  const { getExerciseHistory } = useDatabase();
-  const { data } = getExerciseHistory(exerciseId);
+  const { getExerciseHistory, deleteLogEntry } = useDatabase();
+  const { data, refetch } = getExerciseHistory(exerciseId);
+
+  const onDeleteEntry = async (logEntryId: string) => {
+    const isSuccess = await deleteLogEntry(logEntryId);
+    if (isSuccess) {
+      refetch();
+    }
+  };
 
   if (data === undefined) {
     return <Loading />;
@@ -52,9 +66,16 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
             <div key={index}>
               <CarouselContainer direction="vertical" key={entry.exerciseId}>
                 <div>
-                  <Title level={5}>
-                    {dayjs(entry.date).format("Do MMMM YYYY")}
-                  </Title>
+                  <HistoryTitleContainer>
+                    <Title level={5}>
+                      {dayjs(entry.date).format("Do MMMM YYYY")}
+                    </Title>
+                    <DeleteButton
+                      type="ghost"
+                      icon={<DeleteOutlined color={colors.delete} />}
+                      onClick={() => onDeleteEntry(entry.logEntryId)}
+                    />
+                  </HistoryTitleContainer>
                   <Steps direction="vertical" items={stepItems} />
                   {entry.info.length === 0 && (
                     <Text>No sets were recorded for this entry</Text>
