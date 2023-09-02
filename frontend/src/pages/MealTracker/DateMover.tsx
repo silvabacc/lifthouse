@@ -6,7 +6,6 @@ import {
   DateSquare,
 } from "./DateMoverStyles";
 import type { Dayjs } from "dayjs";
-import dayjs from "dayjs";
 import { Space, Typography } from "antd";
 
 const { Title } = Typography;
@@ -25,15 +24,31 @@ const DateMover: React.FC<DateMoverProps> = ({
   };
 
   const onRightArrowClick = () => {
+    if (selectedDay.isToday()) {
+      return;
+    }
     setSelectedDay(selectedDay.add(1, "day"));
   };
+
+  let title = selectedDay.format("dddd");
+
+  if (selectedDay.isToday()) {
+    title = "Today";
+  }
+  if (selectedDay.isYesterday()) {
+    title = "Yesterday";
+  }
 
   return (
     <DateMoverContainer>
       <Space>
         <DateLeftArrowButton size={24} onClick={onLeftArrowClick} />
-        <DateSquare>Today</DateSquare>
-        <DateRightArrowButton size={24} onClick={onRightArrowClick} />
+        <DateSquare>{title}</DateSquare>
+        <DateRightArrowButton
+          style={{ visibility: selectedDay.isToday() ? "hidden" : "visible" }}
+          size={24}
+          onClick={onRightArrowClick}
+        />
       </Space>
       <Title level={5}>{selectedDay.format("DD/MM/YYYY")}</Title>
     </DateMoverContainer>

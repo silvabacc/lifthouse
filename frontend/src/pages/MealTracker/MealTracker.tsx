@@ -32,12 +32,16 @@ const MealTracker: React.FC = () => {
     {
       key: "1",
       label: `Meals`,
-      children: data?.map((meal) => (
-        <MealTrackerCard
-          data={meal}
-          onDeleteCard={() => onDeleteCard(meal.id)}
-        />
-      )),
+      children: data?.length ? (
+        data.map((meal) => (
+          <MealTrackerCard
+            data={meal}
+            onDeleteCard={() => onDeleteCard(meal.id)}
+          />
+        ))
+      ) : (
+        <p style={{ textAlign: "center" }}>No meals recorded today</p>
+      ),
     },
     {
       key: "2",

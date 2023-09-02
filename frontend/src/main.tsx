@@ -7,12 +7,16 @@ import ReactDOM from "react-dom/client";
 import dayjs from "dayjs";
 import WeekDayPlugin from "dayjs/plugin/weekday";
 import updateLocale from "dayjs/plugin/updateLocale";
+import isToday from "dayjs/plugin/isToday";
+import isYesterday from "dayjs/plugin/isYesterday";
 import App from "./app";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AppContextProvider } from "./context/AppContext";
 
 dayjs.extend(WeekDayPlugin);
 dayjs.extend(updateLocale);
+dayjs.extend(isToday);
+dayjs.extend(isYesterday);
 dayjs.updateLocale("en", {
   weekStart: 1,
 });

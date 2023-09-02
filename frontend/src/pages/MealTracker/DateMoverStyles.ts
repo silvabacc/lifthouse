@@ -13,6 +13,9 @@ export const DateSquare = styled.div`
   background-color: ${colors.primary};
   border-radius: 5px;
   color: white;
+  font-size: 14px;
+  text-align: center;
+  width: 125px;
   padding: 10px 32px 10px 32px;
 `;
 

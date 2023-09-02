@@ -96,7 +96,7 @@ const AddEntry: React.FC<AddEntryProps> = ({ goToMealTab }) => {
         />
       }
     >
-      <table>
+      <table style={{ width: "100%" }}>
         <tbody>
           <tr>
             <th></th>
