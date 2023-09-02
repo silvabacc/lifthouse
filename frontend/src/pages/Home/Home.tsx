@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import WorkoutsCard from "./components/WorkoutsCard/WorkoutsCard";
 
 import { Col, Row, Typography } from "antd";
