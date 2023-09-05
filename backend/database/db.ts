@@ -120,6 +120,16 @@ class LiftHouseDatabase {
     }));
   }
 
+  async updateExerciseHistory(entry: LogEntry) {
+    await this.supabase
+      .from(TableNames.log_entries)
+      .update({
+        info: entry.info,
+        notes: entry.notes,
+      })
+      .eq(LogEntriesColumns.log_entry_id, entry.logEntryId);
+  }
+
   async getRoutines(routine: RoutineType, userId: string): Promise<Routine> {
     const { data } = await this.supabase
       .from(TableNames.routines)

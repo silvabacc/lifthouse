@@ -55,8 +55,8 @@ const Exercises: React.FC<ExercisesProps> = ({ data }) => {
           ];
 
           return (
-            <Col xs={24} sm={12}>
-              <Collapse size="large" key={index}>
+            <Col xs={24} sm={12} key={index}>
+              <Collapse size="large">
                 <Panel
                   header={
                     <Space direction="vertical">

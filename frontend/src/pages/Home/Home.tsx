@@ -21,9 +21,8 @@ const Home: React.FC = () => {
       <Title level={4}>Workouts 🏋</Title>
       <Row gutter={6}>
         {workoutCards.map((card) => (
-          <Col xs={24} sm={12}>
+          <Col xs={24} sm={12} key={card.title}>
             <WorkoutsCard
-              key={card.title}
               title={card.title}
               image={card.image}
               onClick={() => navigate(card.route)}

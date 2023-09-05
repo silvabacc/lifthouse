@@ -19,6 +19,7 @@ import {
 } from "./HistoryStyles";
 import Loading from "../common/Loading";
 import dayjs from "dayjs";
+import { LogEntry } from "@backend/types";
 
 interface HistoryProps {
   exerciseId: string;
@@ -28,7 +29,10 @@ const { TextArea } = Input;
 const { Text, Title } = Typography;
 
 const History: React.FC<HistoryProps> = ({ exerciseId }) => {
-  const { getExerciseHistory, deleteLogEntry } = useDatabase();
+  const { getExerciseHistory, deleteLogEntry, updateLogEntries } =
+    useDatabase();
+  const [exerciseHistory, setExerciseHistory] = useState<LogEntry[]>([]);
+  const [updatedEntries, setUpdatedEntries] = useState<LogEntry[]>([]);
   const { data, refetch } = getExerciseHistory(exerciseId);
   const [isEditing, setEditing] = useState(false);
 
@@ -39,16 +43,53 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
     }
   };
 
-  if (data === undefined) {
+  useEffect(() => {
+    if (data) {
+      setExerciseHistory(data);
+    }
+  }, [data]);
+
+  if (exerciseHistory === undefined) {
     return <Loading />;
   }
 
-  if (data.length === 0) {
+  if (exerciseHistory.length === 0) {
     return <Text>No records found for this exercise</Text>;
   }
 
   const onSave = () => {
     setEditing(false);
+    updateLogEntries(updatedEntries);
+  };
+
+  const onChange = (
+    entryId: string | undefined,
+    set: number,
+    value: number | null,
+    type: "weight" | "reps"
+  ) => {
+    if (!value || !entryId) {
+      return;
+    }
+
+    const newExerciseHistory = exerciseHistory
+      .slice()
+      .filter((i) => i.logEntryId !== entryId);
+    const entryToUpdate = exerciseHistory.find((i) => i.logEntryId === entryId);
+    const index = exerciseHistory.findIndex((i) => i.logEntryId === entryId);
+
+    if (!entryToUpdate) {
+      return;
+    }
+
+    const entry = entryToUpdate.info[set - 1];
+
+    type === "weight" ? (entry.weight = value) : (entry.reps = value);
+
+    setUpdatedEntries((prev) => [...prev, entryToUpdate]);
+
+    newExerciseHistory.splice(index, 0, entryToUpdate);
+    setExerciseHistory(newExerciseHistory);
   };
 
   const settings = {
@@ -61,7 +102,7 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
   return (
     <>
       <Slider {...settings}>
-        {data?.map((entry, index) => {
+        {exerciseHistory.map((entry, index) => {
           const stepItems: StepProps[] = entry.info.map((i) => {
             return {
               title: `Set ${i.set}`,
@@ -71,11 +112,17 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
                     readOnly={!isEditing}
                     prefix="kg"
                     defaultValue={i.weight}
+                    onChange={(value) =>
+                      onChange(entry.logEntryId, i.set, value, "weight")
+                    }
                   />
                   <InputNumber
                     readOnly={!isEditing}
                     prefix="reps"
                     defaultValue={i.reps}
+                    onChange={(value) =>
+                      onChange(entry.logEntryId, i.set, value, "reps")
+                    }
                   />
                 </Space>
               ),
@@ -100,7 +147,7 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
                         <DeleteButton
                           type="ghost"
                           icon={<DeleteOutlined />}
-                          onClick={() => onDeleteEntry(entry.logEntryId!)}
+                          onClick={() => onDeleteEntry(entry.logEntryId)}
                         />
                       </Space>
                     )}

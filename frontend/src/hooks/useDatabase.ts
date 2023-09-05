@@ -1,6 +1,12 @@
 import { useMutation, useQuery } from "react-query";
 import LiftHouseDatabase from "@backend/database/db";
-import { Exercise, Meal, RoutineExercise, RoutineType } from "@backend/types";
+import {
+  Exercise,
+  LogEntry,
+  Meal,
+  RoutineExercise,
+  RoutineType,
+} from "@backend/types";
 import useAuthentication from "./useAuthentication";
 import { useTemporaryStorage } from "./useTemporaryStorage";
 import { Dayjs } from "dayjs";
@@ -86,9 +92,16 @@ export const useDatabase = () => {
   };
 
   const getExerciseHistory = (exerciseId: string, limit?: number) => {
-    return useQuery(["getExerciseHistory", exerciseId, user.id], async () => {
-      return await dbService.getExerciseHistory(exerciseId, user.id, limit);
-    });
+    return useQuery(
+      ["getExerciseHistory", exerciseId, user.id, limit],
+      async () => {
+        return await dbService.getExerciseHistory(exerciseId, user.id, limit);
+      }
+    );
+  };
+
+  const updateLogEntries = async (logEntries: LogEntry[]) => {
+    logEntries.forEach((logEntry) => dbService.updateExerciseHistory(logEntry));
   };
 
   const queryRoutine = (routineType: RoutineType) => {
@@ -129,6 +142,7 @@ export const useDatabase = () => {
     getExerciseHistory,
     addMeal,
     deleteMeal,
+    updateLogEntries,
     getMeals,
     deleteLogEntry,
   };
