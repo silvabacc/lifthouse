@@ -113,6 +113,7 @@ const EditRoutine: React.FC<EditRoutineProps> = ({
         return (
           <Collapse collapsible="disabled" size="large" key={index}>
             <Panel
+              key={exercise.exerciseId}
               header={
                 <Container direction="vertical">
                   <SelectExercise
@@ -140,7 +141,6 @@ const EditRoutine: React.FC<EditRoutineProps> = ({
                   </RepContainer>
                 </Container>
               }
-              key={exercise.exerciseId}
             />
           </Collapse>
         );
