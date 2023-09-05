@@ -36,7 +36,11 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
   const { data, refetch } = getExerciseHistory(exerciseId);
   const [isEditing, setEditing] = useState(false);
 
-  const onDeleteEntry = async (logEntryId: string) => {
+  const onDeleteEntry = async (logEntryId?: string) => {
+    if (!logEntryId) {
+      return;
+    }
+
     const isSuccess = await deleteLogEntry(logEntryId);
     if (isSuccess) {
       refetch();
