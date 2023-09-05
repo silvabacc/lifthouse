@@ -58,6 +58,7 @@ const Exercises: React.FC<ExercisesProps> = ({ data }) => {
             <Col xs={24} sm={12} key={index}>
               <Collapse size="large">
                 <Panel
+                  key={exercise.exerciseName}
                   header={
                     <Space direction="vertical">
                       <Text strong>{exercise.exerciseName}</Text>
@@ -67,7 +68,6 @@ const Exercises: React.FC<ExercisesProps> = ({ data }) => {
                       </Space>
                     </Space>
                   }
-                  key={exercise.exerciseName}
                 >
                   <Tabs items={items} />
                 </Panel>
