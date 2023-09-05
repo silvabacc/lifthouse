@@ -1,16 +1,24 @@
 import { useDatabase } from "@frontend/hooks/useDatabase";
-import { Input, InputNumber, Space, StepProps, Steps, Typography } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Input,
+  InputNumber,
+  Space,
+  StepProps,
+  Steps,
+  Typography,
+} from "antd";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import Slider from "react-slick";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   CarouselContainer,
   DeleteButton,
+  EditButton,
   HistoryTitleContainer,
 } from "./HistoryStyles";
 import Loading from "../common/Loading";
 import dayjs from "dayjs";
-import colors from "@frontend/theme/colors";
 
 interface HistoryProps {
   exerciseId: string;
@@ -22,6 +30,7 @@ const { Text, Title } = Typography;
 const History: React.FC<HistoryProps> = ({ exerciseId }) => {
   const { getExerciseHistory, deleteLogEntry } = useDatabase();
   const { data, refetch } = getExerciseHistory(exerciseId);
+  const [isEditing, setEditing] = useState(false);
 
   const onDeleteEntry = async (logEntryId: string) => {
     const isSuccess = await deleteLogEntry(logEntryId);
@@ -37,6 +46,10 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
   if (data.length === 0) {
     return <Text>No records found for this exercise</Text>;
   }
+
+  const onSave = () => {
+    setEditing(false);
+  };
 
   const settings = {
     dots: true,
@@ -54,8 +67,16 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
               title: `Set ${i.set}`,
               description: (
                 <Space>
-                  <InputNumber readOnly prefix="kg" value={i.weight} />
-                  <InputNumber readOnly prefix="reps" value={i.reps} />
+                  <InputNumber
+                    readOnly={!isEditing}
+                    prefix="kg"
+                    defaultValue={i.weight}
+                  />
+                  <InputNumber
+                    readOnly={!isEditing}
+                    prefix="reps"
+                    defaultValue={i.reps}
+                  />
                 </Space>
               ),
             };
@@ -69,11 +90,20 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
                     <Title level={5}>
                       {dayjs(entry.date).format("Do MMMM YYYY")}
                     </Title>
-                    <DeleteButton
-                      type="ghost"
-                      icon={<DeleteOutlined color={colors.delete} />}
-                      onClick={() => onDeleteEntry(entry.logEntryId!)}
-                    />
+                    {!isEditing && (
+                      <Space>
+                        <EditButton
+                          onClick={() => setEditing((prev) => !prev)}
+                          type="ghost"
+                          icon={<EditOutlined />}
+                        />
+                        <DeleteButton
+                          type="ghost"
+                          icon={<DeleteOutlined />}
+                          onClick={() => onDeleteEntry(entry.logEntryId!)}
+                        />
+                      </Space>
+                    )}
                   </HistoryTitleContainer>
                   <Steps
                     style={{ alignItems: "center" }}
@@ -94,10 +124,17 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
                   <Title level={5}>Notes</Title>
                   <TextArea
                     value={entry.notes}
-                    readOnly
+                    readOnly={!isEditing}
                     autoSize={{ minRows: 3, maxRows: 5 }}
                   />
                 </div>
+                {isEditing && (
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <Button type="primary" onClick={onSave}>
+                      Save
+                    </Button>
+                  </div>
+                )}
               </CarouselContainer>
             </div>
           );

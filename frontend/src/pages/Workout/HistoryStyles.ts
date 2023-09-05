@@ -1,5 +1,5 @@
 import colors from "@frontend/theme/colors";
-import { Button, Space } from "antd";
+import { Button, InputNumber, Space } from "antd";
 import styled from "styled-components";
 
 export const CarouselContainer = styled(Space)`
@@ -30,4 +30,14 @@ export const HistoryTitleContainer = styled(Space)`
 
 export const DeleteButton = styled(Button)`
   color: ${colors.delete};
+`;
+
+export const EditButton = styled(Button)`
+  color: ${colors.primary};
+`;
+
+export const HistoryInputNumber = styled(InputNumber)`
+  ::placeholder {
+    color: "red";
+  }
 `;
