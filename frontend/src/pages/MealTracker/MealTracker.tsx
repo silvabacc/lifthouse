@@ -17,8 +17,8 @@ const MealTracker: React.FC = () => {
   const { isLoading, data, refetch } = getMeals(selectedDay.toDate());
 
   const goToMealTab = () => {
-    setActivetab("1");
     refetch();
+    setActivetab("1");
   };
 
   const { deleteMeal } = useDatabase();
@@ -35,6 +35,7 @@ const MealTracker: React.FC = () => {
       children: data?.length ? (
         data.map((meal) => (
           <MealTrackerCard
+            key={meal.id}
             data={meal}
             onDeleteCard={() => onDeleteCard(meal.id)}
           />
