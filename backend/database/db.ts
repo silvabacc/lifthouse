@@ -71,18 +71,26 @@ class LiftHouseDatabase {
       .eq(RoutinesColumns.routine_id, routineId);
   }
 
-  logEntry(entries: (LogEntry | undefined)[], userId: string) {
-    entries.map(async (entry) => {
-      if (entry) {
-        await this.supabase.from(TableNames.log_entries).insert({
-          exercise_id: entry.exerciseId,
-          info: entry.info,
-          user_id: userId,
-          date: new Date(),
-          notes: entry.notes,
-        });
-      }
-    });
+  async logEntry(entries: (LogEntry | undefined)[], userId: string) {
+    const data = entries
+      .map((entry) => ({
+        exercise_id: entry?.exerciseId,
+        info: entry?.info,
+        user_id: userId,
+        date: new Date(),
+        notes: entry?.notes,
+      }))
+      .filter((entry) => entry.exercise_id !== undefined);
+
+    const { error } = await this.supabase
+      .from(TableNames.log_entries)
+      .insert(data);
+
+    if (error) {
+      return false;
+    }
+
+    return true;
   }
 
   /**

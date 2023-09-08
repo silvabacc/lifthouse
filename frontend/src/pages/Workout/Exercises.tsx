@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useDatabase } from "@frontend/hooks/useDatabase";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 import History from "./History";
+import { useState } from "react";
 
 interface ExercisesProps {
   data: {
@@ -20,13 +21,18 @@ const { Text } = Typography;
 
 const Exercises: React.FC<ExercisesProps> = ({ data }) => {
   const navigate = useNavigate();
+  const [saving, setSaving] = useState(false);
   const { logEntry } = useDatabase();
   const { clearTemporaryStorage } = useTemporaryStorage();
 
-  const finishWorkout = () => {
-    logEntry(data.exercises);
-    clearTemporaryStorage();
-    navigate("/");
+  const finishWorkout = async () => {
+    setSaving(true);
+    const saved = await logEntry(data.exercises);
+    if (saved) {
+      clearTemporaryStorage();
+      navigate("/");
+      setSaving(false);
+    }
   };
 
   return (
@@ -76,11 +82,12 @@ const Exercises: React.FC<ExercisesProps> = ({ data }) => {
           );
         })}
         <WorkoutButton
+          type={saving ? "default" : "primary"}
           onClick={() => {
             finishWorkout();
           }}
         >
-          Finish Workout
+          {saving ? "Saving..." : "Finish Workout"}
         </WorkoutButton>
       </Row>
     </Container>

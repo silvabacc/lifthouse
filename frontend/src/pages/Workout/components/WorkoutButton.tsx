@@ -10,9 +10,10 @@ const WorkoutButton: React.FC<WorkoutButtonProps> = ({
   children,
   disabled,
   onClick,
+  type = "primary",
 }) => {
   return (
-    <WorkoutButtonStyles type="primary" onClick={onClick} disabled={disabled}>
+    <WorkoutButtonStyles type={type} onClick={onClick} disabled={disabled}>
       {children}
     </WorkoutButtonStyles>
   );

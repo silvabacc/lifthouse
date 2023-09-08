@@ -44,7 +44,7 @@ export const useDatabase = () => {
 
     const result = await Promise.all(temporaryStorage);
 
-    dbService.logEntry(result, user.id);
+    return await dbService.logEntry(result, user.id);
   };
 
   const addWeighIn = async (weight: number, date: Dayjs) => {
