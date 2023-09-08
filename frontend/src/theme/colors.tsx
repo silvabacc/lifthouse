@@ -2,7 +2,8 @@ const colors = {
   primary: "#1677ff",
   grey: "#808080",
   delete: "#C70000",
-  light_grey: "#d3d3d3",
+  medium_grey: "#d3d3d3",
+  light_grey: "#f0f0f0",
   warning: "#FF770D",
   highlight: "#1677ff",
 };

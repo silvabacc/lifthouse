@@ -9,7 +9,7 @@ export const CarouselContainer = styled(Space)`
 export const CarouselButtons = styled.div`
   display: flex;
   justify-content: center;
-  background-color: ${colors.light_grey};
+  background-color: ${colors.medium_grey};
   width: 100%;
   padding-top: 10px;
   padding-bottom: 10px;
