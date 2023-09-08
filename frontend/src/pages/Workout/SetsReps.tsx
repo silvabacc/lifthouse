@@ -29,7 +29,7 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
     };
 
     fetchTemporaryStorage();
-  }, [tempData]);
+  }, [JSON.stringify(tempData)]);
 
   const handleOnChangeNotes = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNotes(e.target.value);
