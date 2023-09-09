@@ -22,7 +22,7 @@ const Header: React.FC<HeaderProps> = ({ title, rightHandSide }) => {
     <HeaderContainer direction="vertical">
       <RxCross1 onClick={onClickBack} size={24} />
       <TitleContainer>
-        <Title>{title}</Title>
+        <Title level={2}>{title}</Title>
         {rightHandSide}
       </TitleContainer>
     </HeaderContainer>
