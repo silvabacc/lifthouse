@@ -18,7 +18,6 @@ Most of my training knowledge comes from [Alex Leonidas](https://www.youtube.com
     <td align="center"><img src="/docs/images/home_1.png" alt="Image 1" ></td>
     <td align="center"><img src="docs/images/routine_1.png" alt="Image 2" ></td>
     <td align="center"><img src="docs/images/routine_2.png" alt="Image 3" ></td>
-    <td align="center"><img src="docs/images/routine_3.png" alt="Image 3" ></td>
   </tr>
   <tr>
     <td align="center"><img src="/docs/images/meal_1.png" alt="Image 1" ></td>
