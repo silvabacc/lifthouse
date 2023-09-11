@@ -23,8 +23,8 @@ const MealTracker: React.FC = () => {
 
   const { deleteMeal } = useDatabase();
 
-  const onDeleteCard = (id: string) => {
-    deleteMeal(id);
+  const onDeleteCard = async (id: string) => {
+    await deleteMeal(id);
     refetch();
   };
 

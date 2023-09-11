@@ -4,6 +4,7 @@ import colors from "@frontend/theme/colors";
 import { CardContainers, DeleteButton } from "./MealTrackerCardStyles";
 import { NutrientContainer, NutrientText } from "./MealTrackerStyles";
 import { Meal } from "@backend/types";
+import MealTrackerNumberText from "./MealTrackerNumberText";
 
 interface MealTrackerCardProps {
   data: Meal;
@@ -23,11 +24,11 @@ const MealTrackerCard: React.FC<MealTrackerCardProps> = ({
       >
         <NutrientContainer>
           <NutrientText>Calories</NutrientText>
-          <p>{data.calories}</p>
+          <MealTrackerNumberText value={data.calories} />
         </NutrientContainer>
         <NutrientContainer>
           <NutrientText>Protein</NutrientText>
-          <p>{data.protein}</p>
+          <MealTrackerNumberText value={data.protein} />
         </NutrientContainer>
       </Card>
     </CardContainers>

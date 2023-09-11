@@ -64,11 +64,11 @@ const AddEntry: React.FC<AddEntryProps> = ({ goToMealTab }) => {
     setProteinPer(0);
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (mealTitle.length === 0) {
       setError(true);
     } else {
-      addMeal(mealTitle, caloriesTotal, proteinTotal);
+      await addMeal(mealTitle, caloriesTotal, proteinTotal);
       goToMealTab();
       clearAll();
       setError(false);
@@ -111,6 +111,7 @@ const AddEntry: React.FC<AddEntryProps> = ({ goToMealTab }) => {
             {caloriesRow.map((item, index) => (
               <NutritionTableData key={index}>
                 <NutrientLabelInput
+                  precision={1}
                   value={item.state}
                   onChange={(e) => handleNutritionInput(e as number, item.set)}
                 />
@@ -118,6 +119,7 @@ const AddEntry: React.FC<AddEntryProps> = ({ goToMealTab }) => {
             ))}
             <NutritionTableData>
               <NutrientLabelInput
+                precision={1}
                 value={caloriesTotal}
                 onChange={(e) => handleCalorieTotalChange(e as number)}
               />
@@ -130,6 +132,7 @@ const AddEntry: React.FC<AddEntryProps> = ({ goToMealTab }) => {
             {proteinRow.map((item, index) => (
               <NutritionTableData key={index}>
                 <NutrientLabelInput
+                  precision={1}
                   value={item.state}
                   onChange={(e) => handleNutritionInput(e as number, item.set)}
                 />
@@ -137,6 +140,7 @@ const AddEntry: React.FC<AddEntryProps> = ({ goToMealTab }) => {
             ))}
             <NutritionTableData>
               <NutrientLabelInput
+                precision={1}
                 value={proteinTotal}
                 onChange={(e) => handleProteinTotalChange(e as number)}
               />

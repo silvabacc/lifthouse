@@ -1,6 +1,7 @@
 import { Space, Typography } from "antd";
 import React from "react";
 import { MacroNumbersContainer, NumberText } from "./MacroNutrientsStyles";
+import MealTrackerNumberText from "./MealTrackerNumberText";
 
 const { Title } = Typography;
 
@@ -17,11 +18,15 @@ const MacroNutrients: React.FC<MacroNutrientsProps> = ({
     <MacroNumbersContainer>
       <Space direction="vertical">
         <Title level={3}>Calories</Title>
-        <NumberText>{calories}</NumberText>
+        <NumberText>
+          <MealTrackerNumberText value={calories} />
+        </NumberText>
       </Space>
       <Space direction="vertical">
         <Title level={3}> Protein</Title>
-        <NumberText>{protein}</NumberText>
+        <NumberText>
+          <MealTrackerNumberText value={protein} />
+        </NumberText>
       </Space>
     </MacroNumbersContainer>
   );

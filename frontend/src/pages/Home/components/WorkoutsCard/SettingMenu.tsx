@@ -14,8 +14,6 @@ const SettingMenu: React.FC = () => {
   const { email } = auth.user;
   const navigate = useNavigate();
 
-  console.log(email);
-
   const items: MenuProps["items"] = [
     {
       label: email,

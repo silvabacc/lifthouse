@@ -264,7 +264,7 @@ class LiftHouseDatabase {
       [MealsColumns.meal_name]: mealName,
       [MealsColumns.calorie]: calories,
       [MealsColumns.protein]: protein,
-      [MealsColumns.date]: new Date(),
+      [MealsColumns.date]: new Date().toDateString(),
       [MealsColumns.user_id]: userId,
     };
 
@@ -276,7 +276,7 @@ class LiftHouseDatabase {
       .from(TableNames.meals)
       .select("*")
       .eq(MealsColumns.user_id, userId)
-      .eq(MealsColumns.date, date.toISOString());
+      .eq(MealsColumns.date, date.toDateString());
 
     if (data === null) {
       throw new Error("No data returned for meals");
