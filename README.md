@@ -5,7 +5,7 @@ This application is designed for mobile devices but since it is also a PWA, you 
 
 # Tech Stack
 * React
-* Supabase (using a postgres db and their authentication servers)
+* Supabase (using a postgres db and their authentication service)
 * Firebase for deployment (which you can find [here](https://lifthouse.web.app/))
   * You can signup without authentication an email (for now)
 * Vite PWA plugin
