@@ -195,7 +195,7 @@ class LiftHouseDatabase {
   async insertDailyWeighIn(userId: string, weight: number, date: Date) {
     await this.supabase.from(TableNames.daily_weigh_in).insert({
       weight,
-      date,
+      date: date.toDateString(),
       user_id: userId,
     });
   }
