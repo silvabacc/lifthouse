@@ -11,7 +11,7 @@ This application is designed for mobile devices but since it is also a PWA, you 
 * Vite PWA plugin
 
 # My Training
-Most of my training knowledge comes from [Alex Leonidas](https://www.youtube.com/@AlexLeonidas). He advocates for strength training and building overall strength in various exercises such as SBD, OHP, Z-Press, Zercher Squat, Box Squats, and many more. Highly specialised training to strengthen weak points and build an naturally appleaing body (overemhpaising shoulder, tricep, forearm and neck muscles or known as yoke training). My application is loosely build on exercises that he recommends and rep schemes but in no way his programme e.g. I follow a 4 day split, he recommends full body 2 day split. If you want to know more about him, I suggest going to his [website](https://outalpha.com/)
+Most of my training knowledge comes from [Alex Leonidas](https://www.youtube.com/@AlexLeonidas). He advocates for strength training in various exercises such as SBD, OHP, Z-Press, Zercher Squat, Box Squats, and many more. Highly specialised training to strengthen weak points and build an naturally appleaing body (overemphasising shoulder, tricep, forearm and neck muscles or known as yoke training). My application is loosely built on exercises that he recommends and rep schemes but in no way his programme e.g. I follow a 4 day split, he recommends full body 2 day split. If you want to know more about him, I suggest going to his [website](https://outalpha.com/)
 
 # Screenshots
 <table>
