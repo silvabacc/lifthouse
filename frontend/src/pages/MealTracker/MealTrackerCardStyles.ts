@@ -11,5 +11,6 @@ export const DeleteButton = styled(MdDeleteOutline)``;
 
 export const CardContainers = styled(Space)`
   margin-top: 24px;
+  margin-bottom: 24px;
   width: 100%;
 `;

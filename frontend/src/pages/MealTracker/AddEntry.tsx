@@ -1,4 +1,4 @@
-import { Card, Input } from "antd";
+import { Card, Input, Space } from "antd";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   AddEntryButton,
@@ -17,10 +17,9 @@ interface AddEntryProps {
 const AddEntry: React.FC<AddEntryProps> = ({ goToMealTab }) => {
   const [mealTitle, setMealTitle] = useState("");
   const [caloriesPer, setCaloriesPer] = useState(0);
-  const [caloriesGrams, setCaloriesGrams] = useState(0);
+  const [grams, setGrams] = useState(0);
   const [caloriesTotal, setCaloriesTotal] = useState(0);
   const [proteinPer, setProteinPer] = useState(0);
-  const [proteinGrams, setProteinGrams] = useState(0);
   const [proteinTotal, setProteinTotal] = useState(0);
   const [error, setError] = useState(false);
   const { addMeal } = useDatabase();
@@ -34,33 +33,25 @@ const AddEntry: React.FC<AddEntryProps> = ({ goToMealTab }) => {
     setFn: Dispatch<SetStateAction<number>>
   ) => setFn(value);
 
-  const caloriesRow = [
-    { state: caloriesPer, set: setCaloriesPer },
-    { state: caloriesGrams, set: setCaloriesGrams },
-  ];
+  const caloriesRow = [{ state: caloriesPer, set: setCaloriesPer }];
 
-  const proteinRow = [
-    { state: proteinPer, set: setProteinPer },
-    { state: proteinGrams, set: setProteinGrams },
-  ];
+  const proteinRow = [{ state: proteinPer, set: setProteinPer }];
 
   useEffect(() => {
-    setCaloriesTotal(caloriesPer * (caloriesGrams / 100));
-  }, [caloriesPer, caloriesGrams]);
+    setCaloriesTotal(caloriesPer * (grams / 100));
+  }, [caloriesPer, grams]);
 
   useEffect(() => {
-    setProteinTotal(proteinGrams * (proteinPer / 100));
-  }, [proteinPer, proteinGrams]);
+    setProteinTotal(grams * (proteinPer / 100));
+  }, [proteinPer, grams]);
 
   const handleCalorieTotalChange = (value: number) => {
     setCaloriesTotal(value);
-    setCaloriesGrams(0);
     setCaloriesPer(0);
   };
 
   const handleProteinTotalChange = (value: number) => {
     setProteinTotal(value);
-    setProteinGrams(0);
     setProteinPer(0);
   };
 
@@ -78,10 +69,9 @@ const AddEntry: React.FC<AddEntryProps> = ({ goToMealTab }) => {
   const clearAll = () => {
     setMealTitle("");
     setCaloriesPer(0);
-    setCaloriesGrams(0);
     setCaloriesTotal(0);
+    setGrams(0);
     setProteinPer(0);
-    setProteinGrams(0);
     setProteinTotal(0);
   };
 
@@ -99,9 +89,19 @@ const AddEntry: React.FC<AddEntryProps> = ({ goToMealTab }) => {
       <table style={{ width: "100%" }}>
         <tbody>
           <tr>
-            <th></th>
+            <td style={{ paddingBottom: 16 }}>
+              <NutrientText>Grams of food</NutrientText>
+            </td>
+            <td style={{ paddingBottom: 16 }}>
+              <NutrientLabelInput
+                precision={1}
+                onChange={(e) => setGrams(e as number)}
+              />
+            </td>
+          </tr>
+          <tr>
+            <div />
             <NutrientLabelText>per 100g</NutrientLabelText>
-            <NutrientLabelText>grams</NutrientLabelText>
             <NutrientLabelText>Total</NutrientLabelText>
           </tr>
           <tr>
