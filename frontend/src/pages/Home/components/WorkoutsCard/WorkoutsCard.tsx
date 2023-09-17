@@ -21,7 +21,12 @@ const WorkoutsCard: React.FC<WorkoutsCardProps> = ({
       bordered={false}
       hoverable
       cover={
-        <img alt="example" src={image} onClick={() => onClick && onClick()} />
+        <img
+          style={{ height: 230, objectFit: "cover" }}
+          alt="example"
+          src={image}
+          onClick={() => onClick && onClick()}
+        />
       }
     >
       <Meta description={<Text strong>{title}</Text>} />

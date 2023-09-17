@@ -1,13 +1,14 @@
 import { Col, Collapse, Row, Space, Tabs, Typography } from "antd";
 import SetsReps from "./SetsReps";
 import WorkoutButton from "./components/WorkoutButton";
-import { Container } from "./WorkoutStyles";
+import { Container, FinishWorkoutFooter } from "./WorkoutStyles";
 import { Exercise, Routine } from "@backend/types";
 import { useNavigate } from "react-router-dom";
 import { useDatabase } from "@frontend/hooks/useDatabase";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 import History from "./History";
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import React from "react";
 
 interface ExercisesProps {
   data: {
@@ -61,7 +62,7 @@ const Exercises: React.FC<ExercisesProps> = ({ data }) => {
           ];
 
           return (
-            <Col xs={24} sm={12} key={index}>
+            <Col xs={24} sm={8} key={index}>
               <Collapse size="large">
                 <Panel
                   key={exercise.exerciseName}
@@ -81,6 +82,8 @@ const Exercises: React.FC<ExercisesProps> = ({ data }) => {
             </Col>
           );
         })}
+      </Row>
+      <FinishWorkoutFooter>
         <WorkoutButton
           type={saving ? "default" : "primary"}
           onClick={() => {
@@ -89,7 +92,7 @@ const Exercises: React.FC<ExercisesProps> = ({ data }) => {
         >
           {saving ? "Saving..." : "Finish Workout"}
         </WorkoutButton>
-      </Row>
+      </FinishWorkoutFooter>
     </Container>
   );
 };

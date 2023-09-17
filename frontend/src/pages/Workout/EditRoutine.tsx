@@ -1,7 +1,7 @@
 import React from "react";
 import { useDatabase } from "../../hooks/useDatabase";
 import { IntensityRepRange, VolumeRepRange } from "../../../../backend/data";
-import { Collapse } from "antd";
+import { Col, Collapse, Row } from "antd";
 import SelectExercise from "./components/SelectExercise";
 import { Container, RepContainer } from "./WorkoutStyles";
 import SelectRepRange from "./components/SelectRepRange";
@@ -83,68 +83,72 @@ const EditRoutine: React.FC<EditRoutineProps> = ({
 
   return (
     <Container direction="vertical">
-      {currentExercises.map((exercise, index) => {
-        const exerciseInfo = allExercises.find(
-          (exerciseFromList) =>
-            exerciseFromList.exerciseId === exercise.exerciseId
-        );
-
-        const exercisesWithType = allExercises
-          //Filters exercises by type e.g. Vertical Push, Horizontal Push, etc
-          .filter(
+      <Row gutter={[6, 6]}>
+        {currentExercises.map((exercise, index) => {
+          const exerciseInfo = allExercises.find(
             (exerciseFromList) =>
-              exerciseInfo?.exerciseType === exerciseFromList.exerciseType
-          )
-          //Removes any duplicated exercises from the list if already in the routine
-          .filter(
-            (exerciseFromList) =>
-              !currentExercises
-                .map((i) => i.exerciseId)
-                .includes(exerciseFromList.exerciseId)
-          )
-          //Maps the exercises to the format required by the Select component
-          .map((exerciseFromList) => ({
-            value: exerciseFromList.exerciseId,
-            label: exerciseFromList.exerciseName,
-          }))
-          //Sorts the exercises alphabetically
-          .sort((a, b) => a.label.localeCompare(b.label));
+              exerciseFromList.exerciseId === exercise.exerciseId
+          );
 
-        return (
-          <Collapse collapsible="disabled" size="large" key={index}>
-            <Panel
-              key={exercise.exerciseId}
-              header={
-                <Container direction="vertical">
-                  <SelectExercise
-                    bordered={false}
-                    filterOption={(input, option) =>
-                      option?.label
-                        .toLocaleLowerCase()
-                        .indexOf(input.toLocaleLowerCase()) >= 0
-                    }
-                    onChange={(value) =>
-                      onExerciseChange(value as string, index)
-                    }
-                    showSearch
-                    value={exerciseInfo?.exerciseName}
-                    options={exercisesWithType}
-                  />
-                  <RepContainer>
-                    <SelectRepRange
-                      options={repRangeOptions}
-                      defaultValue={`${exercise.sets} x ${exercise.reps}`}
-                      onChange={(value) =>
-                        onRepRangeChange(value as string, index)
-                      }
-                    />
-                  </RepContainer>
-                </Container>
-              }
-            />
-          </Collapse>
-        );
-      })}
+          const exercisesWithType = allExercises
+            //Filters exercises by type e.g. Vertical Push, Horizontal Push, etc
+            .filter(
+              (exerciseFromList) =>
+                exerciseInfo?.exerciseType === exerciseFromList.exerciseType
+            )
+            //Removes any duplicated exercises from the list if already in the routine
+            .filter(
+              (exerciseFromList) =>
+                !currentExercises
+                  .map((i) => i.exerciseId)
+                  .includes(exerciseFromList.exerciseId)
+            )
+            //Maps the exercises to the format required by the Select component
+            .map((exerciseFromList) => ({
+              value: exerciseFromList.exerciseId,
+              label: exerciseFromList.exerciseName,
+            }))
+            //Sorts the exercises alphabetically
+            .sort((a, b) => a.label.localeCompare(b.label));
+
+          return (
+            <Col xs={24} sm={8} key={index}>
+              <Collapse collapsible="disabled" size="large">
+                <Panel
+                  key={exercise.exerciseId}
+                  header={
+                    <Container direction="vertical">
+                      <SelectExercise
+                        bordered={false}
+                        filterOption={(input, option) =>
+                          option?.label
+                            .toLocaleLowerCase()
+                            .indexOf(input.toLocaleLowerCase()) >= 0
+                        }
+                        onChange={(value) =>
+                          onExerciseChange(value as string, index)
+                        }
+                        showSearch
+                        value={exerciseInfo?.exerciseName}
+                        options={exercisesWithType}
+                      />
+                      <RepContainer>
+                        <SelectRepRange
+                          options={repRangeOptions}
+                          defaultValue={`${exercise.sets} x ${exercise.reps}`}
+                          onChange={(value) =>
+                            onRepRangeChange(value as string, index)
+                          }
+                        />
+                      </RepContainer>
+                    </Container>
+                  }
+                />
+              </Collapse>
+            </Col>
+          );
+        })}
+      </Row>
     </Container>
   );
 };

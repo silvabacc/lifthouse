@@ -21,7 +21,7 @@ const Home: React.FC = () => {
       <Title level={4}>Workouts 🏋</Title>
       <Row gutter={6}>
         {workoutCards.map((card) => (
-          <Col xs={24} sm={12} key={card.title}>
+          <Col xs={24} sm={6} key={card.title}>
             <WorkoutsCard
               title={card.title}
               image={card.image}
@@ -33,7 +33,7 @@ const Home: React.FC = () => {
       <Title level={4}>Diet 🥑</Title>
       <Row gutter={6}>
         {dietCards.map((card) => (
-          <Col xs={24} sm={12} key={card.title}>
+          <Col xs={24} sm={6} key={card.title}>
             <WorkoutsCard
               title={card.title}
               image={card.image}

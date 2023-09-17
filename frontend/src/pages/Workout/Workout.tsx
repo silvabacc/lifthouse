@@ -43,27 +43,25 @@ const Workout: React.FC<WorkoutProps> = ({ routine }) => {
   }
 
   return (
-    <>
-      <Container direction="vertical">
-        <Header
-          title={pageTitleMapping[routine]}
-          rightHandSide={
-            <EditButton onClick={onEdit} type="link">
-              {edit ? "Save" : "Edit"}
-            </EditButton>
-          }
+    <Container direction="vertical">
+      <Header
+        title={pageTitleMapping[routine]}
+        rightHandSide={
+          <EditButton onClick={onEdit} type="link">
+            {edit ? "Save" : "Edit"}
+          </EditButton>
+        }
+      />
+      {edit ? (
+        <EditRoutine
+          data={data}
+          currentExercises={currentExercises}
+          setCurrentExercises={setCurrentExercises}
         />
-        {edit ? (
-          <EditRoutine
-            data={data}
-            currentExercises={currentExercises}
-            setCurrentExercises={setCurrentExercises}
-          />
-        ) : (
-          <Exercises data={data} />
-        )}
-      </Container>
-    </>
+      ) : (
+        <Exercises data={data} />
+      )}
+    </Container>
   );
 };
 
