@@ -1,13 +1,13 @@
-import { Col, Collapse, Row, Space, Tabs, Typography } from "antd";
+import { Col, Collapse, Layout, Row, Space, Tabs, Typography } from "antd";
 import SetsReps from "./SetsReps";
 import WorkoutButton from "./components/WorkoutButton";
-import { Container, FinishWorkoutFooter } from "./WorkoutStyles";
+import { FinishWorkoutFooter } from "./WorkoutStyles";
 import { Exercise, Routine } from "@backend/types";
 import { useNavigate } from "react-router-dom";
 import { useDatabase } from "@frontend/hooks/useDatabase";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 import History from "./History";
-import { useMemo, useRef, useState } from "react";
+import { useState } from "react";
 import React from "react";
 
 interface ExercisesProps {
@@ -19,6 +19,7 @@ interface ExercisesProps {
 
 const { Panel } = Collapse;
 const { Text } = Typography;
+const { Content, Footer } = Layout;
 
 const Exercises: React.FC<ExercisesProps> = ({ data }) => {
   const navigate = useNavigate();
@@ -37,63 +38,70 @@ const Exercises: React.FC<ExercisesProps> = ({ data }) => {
   };
 
   return (
-    <Container direction="vertical">
-      <Row gutter={[6, 6]}>
-        {data.routine.exercises.map((exerciseFromRoutine, index) => {
-          const exercise =
-            data.exercises.find(
-              (exercise) =>
-                exercise.exerciseId === exerciseFromRoutine.exerciseId
-            ) || ({} as Exercise);
+    <Layout style={{ backgroundColor: "white" }}>
+      <Content>
+        <Row gutter={[6, 6]}>
+          {data.routine.exercises.map((exerciseFromRoutine, index) => {
+            const exercise =
+              data.exercises.find(
+                (exercise) =>
+                  exercise.exerciseId === exerciseFromRoutine.exerciseId
+              ) || ({} as Exercise);
 
-          const items = [
-            {
-              key: "sets",
-              label: `Sets & Reps`,
-              children: (
-                <SetsReps exercise={exercise} sets={exerciseFromRoutine.sets} />
-              ),
-            },
-            {
-              key: "history",
-              label: `History`,
-              children: <History exerciseId={exercise.exerciseId} />,
-            },
-          ];
+            const items = [
+              {
+                key: "sets",
+                label: `Sets & Reps`,
+                children: (
+                  <SetsReps
+                    exercise={exercise}
+                    sets={exerciseFromRoutine.sets}
+                  />
+                ),
+              },
+              {
+                key: "history",
+                label: `History`,
+                children: <History exerciseId={exercise.exerciseId} />,
+              },
+            ];
 
-          return (
-            <Col xs={24} sm={8} key={index}>
-              <Collapse size="large">
-                <Panel
-                  key={exercise.exerciseName}
-                  header={
-                    <Space direction="vertical">
-                      <Text strong>{exercise.exerciseName}</Text>
-                      <Space>
-                        <Text keyboard>{exerciseFromRoutine.sets}</Text>x
-                        <Text keyboard>{exerciseFromRoutine.reps}</Text>
+            return (
+              <Col xs={24} sm={8} key={index}>
+                <Collapse size="large">
+                  <Panel
+                    key={exercise.exerciseName}
+                    header={
+                      <Space direction="vertical">
+                        <Text strong>{exercise.exerciseName}</Text>
+                        <Space>
+                          <Text keyboard>{exerciseFromRoutine.sets}</Text>x
+                          <Text keyboard>{exerciseFromRoutine.reps}</Text>
+                        </Space>
                       </Space>
-                    </Space>
-                  }
-                >
-                  <Tabs items={items} />
-                </Panel>
-              </Collapse>
-            </Col>
-          );
-        })}
-      </Row>
-      <FinishWorkoutFooter>
-        <WorkoutButton
-          type={saving ? "default" : "primary"}
-          onClick={() => {
-            finishWorkout();
-          }}
-        >
-          {saving ? "Saving..." : "Finish Workout"}
-        </WorkoutButton>
-      </FinishWorkoutFooter>
-    </Container>
+                    }
+                  >
+                    <Tabs items={items} />
+                  </Panel>
+                </Collapse>
+              </Col>
+            );
+          })}
+        </Row>
+      </Content>
+      <Footer style={{ marginTop: 8 }}>
+        <FinishWorkoutFooter>
+          <WorkoutButton
+            type={saving ? "default" : "primary"}
+            onClick={() => {
+              finishWorkout();
+            }}
+          >
+            {saving ? "Saving..." : "Finish Workout"}
+          </WorkoutButton>
+        </FinishWorkoutFooter>
+      </Footer>
+    </Layout>
   );
 };
 
