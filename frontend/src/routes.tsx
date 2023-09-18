@@ -1,5 +1,5 @@
 import { RoutineType } from "@backend/types";
-import { Navigate, createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter, useLocation } from "react-router-dom";
 import Verify from "./pages/Authentication/Verify";
 import Home from "./pages/Home/Home";
 import Workout from "./pages/Workout/Workout";
@@ -10,6 +10,7 @@ import PasswordReset from "./pages/Authentication/PasswordReset";
 import DailyWeighIn from "./pages/DailyWeighIn/DailyWeighIn";
 import MealTracker from "./pages/MealTracker/MealTracker";
 import ChangePassword from "./pages/Authentication/ChangePassword";
+import { useEffect } from "react";
 
 //Redirects user to login if not authenticated
 const guardRoutes = (
@@ -17,7 +18,12 @@ const guardRoutes = (
   isAuthenticated: boolean,
   navigateTo?: string
 ) => {
-  return isAuthenticated ? element : <Navigate to={navigateTo || "/"} />;
+  return (
+    <>
+      <ScrollToTop />
+      {isAuthenticated ? element : <Navigate to={navigateTo || "/"} />}
+    </>
+  );
 };
 
 //Redirects user to home if authenticated
@@ -26,7 +32,12 @@ const authRoute = (
   isAuthenticated: boolean,
   navigateTo?: string
 ) => {
-  return isAuthenticated ? <Navigate to={navigateTo || "/home"} /> : element;
+  return (
+    <>
+      <ScrollToTop />
+      {isAuthenticated ? <Navigate to={navigateTo || "/home"} /> : element}
+    </>
+  );
 };
 
 //v6 react-router-dom removed regex support, so must statically route these
@@ -85,3 +96,13 @@ export const createRoutes = (isAuthenticated: boolean) => {
     ...workoutRoutes,
   ]);
 };
+
+export default function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
