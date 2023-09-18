@@ -89,7 +89,7 @@ const Exercises: React.FC<ExercisesProps> = ({ data }) => {
           })}
         </Row>
       </Content>
-      <Footer style={{ marginTop: 8 }}>
+      <Footer style={{ marginTop: 8, backgroundColor: "white" }}>
         <FinishWorkoutFooter>
           <WorkoutButton
             type={saving ? "default" : "primary"}
