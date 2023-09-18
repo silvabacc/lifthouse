@@ -7,7 +7,7 @@ import {
   LoginWithText,
   ProvidersConainer,
 } from "./components/FormStyles";
-import { Button, Typography } from "antd";
+import { Button, Typography, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import {
@@ -19,17 +19,26 @@ import {
 } from "./components/Form";
 import { GoogleOutlined } from "@ant-design/icons";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const Login: React.FC = () => {
   const [error, setError] = useState<string | null>("");
   const [email, setEmail] = useState<string | null>("");
   const [password, setPassword] = useState<string | null>("");
+  const [messageApi, contextHolder] = message.useMessage();
   const [disableButton, setDisableButton] = useState(false);
   const navigate = useNavigate();
   const { login, loginWithGoogle } = useAuthentication();
 
   const newUserOnClick = () => navigate("/signup");
+
+  const loggingInMessage = () => {
+    messageApi.open({
+      type: "loading",
+      content: "Logging in you...",
+      duration: 1,
+    });
+  };
 
   const formButtonOnClick = async () => {
     setDisableButton(true);
@@ -51,11 +60,13 @@ const Login: React.FC = () => {
   };
 
   const signInWithGoogleOClick = () => {
+    loggingInMessage();
     loginWithGoogle();
   };
 
   return (
     <>
+      {contextHolder}
       <AuthPageHeader />
       <FormContainer direction="vertical">
         <Title level={4}>Login</Title>
