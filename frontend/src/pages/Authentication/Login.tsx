@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AuthPageHeader from "./components/AuthPageHeader";
 import {
   FormContainer,
@@ -8,7 +8,7 @@ import {
   ProvidersConainer,
 } from "./components/FormStyles";
 import { Button, Typography, message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import {
   EmailField,
@@ -19,7 +19,7 @@ import {
 } from "./components/Form";
 import { GoogleOutlined } from "@ant-design/icons";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const Login: React.FC = () => {
   const [error, setError] = useState<string | null>("");
@@ -29,6 +29,7 @@ const Login: React.FC = () => {
   const [disableButton, setDisableButton] = useState(false);
   const navigate = useNavigate();
   const { login, loginWithGoogle } = useAuthentication();
+  const { state } = useLocation();
 
   const newUserOnClick = () => navigate("/signup");
 
@@ -39,6 +40,20 @@ const Login: React.FC = () => {
       duration: 1,
     });
   };
+
+  const accountCreatedMessage = () => {
+    messageApi.open({
+      type: "success",
+      content: "Account Created",
+      duration: 1,
+    });
+  };
+
+  useEffect(() => {
+    if (state?.accountCreated) {
+      accountCreatedMessage();
+    }
+  }, [state]);
 
   const formButtonOnClick = async () => {
     setDisableButton(true);

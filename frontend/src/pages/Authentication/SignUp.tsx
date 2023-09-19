@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import AuthPageHeader from "./components/AuthPageHeader";
 import { AlreadyAUserButton, FormContainer } from "./components/FormStyles";
-import { Typography } from "antd";
+import { Typography, message } from "antd";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { useNavigate } from "react-router-dom";
 import {
@@ -14,6 +14,7 @@ import {
 const { Title } = Typography;
 
 const SignUp: React.FC = () => {
+  const [messageApi, contextHolder] = message.useMessage();
   const [error, setError] = useState<string | null>("");
   const [email, setEmail] = useState<string | null>("");
   const [firstPassword, setFirstPassword] = useState<string | null>("");
@@ -23,6 +24,23 @@ const SignUp: React.FC = () => {
   const navigate = useNavigate();
 
   const alreadyAUserOnClick = () => navigate("/login");
+
+  const loadingToastMessage = () => {
+    messageApi.open({
+      type: "loading",
+      content: "Creating account...",
+      duration: 1,
+    });
+  };
+
+  const errorToastMessage = () => {
+    messageApi.destroy();
+    messageApi.open({
+      type: "error",
+      content: "Failed to create account",
+      duration: 1,
+    });
+  };
 
   const formButtonOnClick = async () => {
     setDisableButton(true);
@@ -34,9 +52,11 @@ const SignUp: React.FC = () => {
         return;
       }
 
+      loadingToastMessage();
+
       const signUpResult = await signUp(email, firstPassword);
       if (signUpResult.success) {
-        navigate("/verify", { state: { email: email } });
+        navigate("/login", { state: { accountCreated: true } });
       } else {
         setError(signUpResult.message);
       }
@@ -44,11 +64,13 @@ const SignUp: React.FC = () => {
       setError("Please fill in the details below");
     }
 
+    errorToastMessage();
     setDisableButton(false);
   };
 
   return (
     <>
+      {contextHolder}
       <AuthPageHeader />
       <FormContainer direction="vertical">
         <Title level={4}>Sign Up</Title>

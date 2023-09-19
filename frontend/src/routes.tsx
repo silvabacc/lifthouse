@@ -1,15 +1,13 @@
 import { RoutineType } from "@backend/types";
 import { Navigate, createBrowserRouter, useLocation } from "react-router-dom";
-import Verify from "./pages/Authentication/Verify";
 import Home from "./pages/Home/Home";
 import Workout from "./pages/Workout/Workout";
 import Login from "./pages/Authentication/Login";
 import SignUp from "./pages/Authentication/SignUp";
 import ForgotPassword from "./pages/Authentication/ForgotPassword";
-import PasswordReset from "./pages/Authentication/PasswordReset";
 import DailyWeighIn from "./pages/DailyWeighIn/DailyWeighIn";
 import MealTracker from "./pages/MealTracker/MealTracker";
-import ChangePassword from "./pages/Authentication/ChangePassword";
+import UpdatePassword from "./pages/Authentication/UpdatePassword";
 import { useEffect } from "react";
 
 //Redirects user to login if not authenticated
@@ -21,27 +19,48 @@ const guardRoutes = (
   return (
     <>
       <ScrollToTop />
-      {isAuthenticated ? element : <Navigate to={navigateTo || "/"} />}
-    </>
-  );
-};
-
-//Redirects user to home if authenticated
-const authRoute = (
-  element: JSX.Element,
-  isAuthenticated: boolean,
-  navigateTo?: string
-) => {
-  return (
-    <>
-      <ScrollToTop />
-      {isAuthenticated ? <Navigate to={navigateTo || "/home"} /> : element}
+      {isAuthenticated ? element : <Navigate to={navigateTo || "/login"} />}
     </>
   );
 };
 
 //v6 react-router-dom removed regex support, so must statically route these
 export const createRoutes = (isAuthenticated: boolean) => {
+  const routes = [
+    {
+      path: "/",
+      element: guardRoutes(<Home />, isAuthenticated),
+    },
+    {
+      path: "/update-password",
+      element: guardRoutes(<UpdatePassword />, isAuthenticated),
+    },
+    {
+      path: "/home",
+      element: guardRoutes(<Home />, isAuthenticated),
+    },
+    {
+      path: "/weigh-in",
+      element: guardRoutes(<DailyWeighIn />, isAuthenticated),
+    },
+    {
+      path: "/meal-tracker",
+      element: guardRoutes(<MealTracker />, isAuthenticated),
+    },
+    {
+      path: "/recovery",
+      element: <ForgotPassword />,
+    },
+    {
+      path: "/login",
+      element: <Login />,
+    },
+    {
+      path: "/signup",
+      element: <SignUp />,
+    },
+  ];
+
   const workoutRoutes = [
     { routeSegment: "upper_intensity", prop: RoutineType.UPPER_INTENSITY },
     { routeSegment: "upper_volume", prop: RoutineType.UPPER_VOLUME },
@@ -52,49 +71,7 @@ export const createRoutes = (isAuthenticated: boolean) => {
     element: guardRoutes(<Workout routine={route.prop} />, isAuthenticated),
   }));
 
-  return createBrowserRouter([
-    {
-      path: "/",
-      element: authRoute(<Login />, isAuthenticated),
-    },
-    {
-      path: "/login",
-      element: authRoute(<Login />, isAuthenticated),
-    },
-    {
-      path: "/signup",
-      element: authRoute(<SignUp />, isAuthenticated),
-    },
-    {
-      path: "/change-password",
-      element: guardRoutes(<ChangePassword />, isAuthenticated),
-    },
-    {
-      path: "/home",
-      element: guardRoutes(<Home />, isAuthenticated),
-    },
-    {
-      path: "/verify",
-      element: <Verify />,
-    },
-    {
-      path: "/recovery",
-      element: <ForgotPassword />,
-    },
-    {
-      path: "/reset",
-      element: guardRoutes(<PasswordReset />, isAuthenticated),
-    },
-    {
-      path: "/weigh-in",
-      element: guardRoutes(<DailyWeighIn />, isAuthenticated),
-    },
-    {
-      path: "/meal-tracker",
-      element: guardRoutes(<MealTracker />, isAuthenticated),
-    },
-    ...workoutRoutes,
-  ]);
+  return createBrowserRouter([...routes, ...workoutRoutes]);
 };
 
 export default function ScrollToTop() {

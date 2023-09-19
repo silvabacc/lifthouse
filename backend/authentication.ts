@@ -54,7 +54,7 @@ class Authentication {
     return { success: true, message: "" };
   }
 
-  async resetPassword(password: string) {
+  async updatePassword(password: string) {
     const result = await this.supabase.auth.updateUser({ password: password });
 
     if (result.error) {
