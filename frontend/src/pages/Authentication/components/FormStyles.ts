@@ -1,12 +1,14 @@
+import colors from "@frontend/theme/colors";
 import { Button, Space, Typography } from "antd";
 import styled from "styled-components";
 
 const { Text } = Typography;
 
-export const FormContainer = styled(Space)`
-  height: 70%;
-  width: 100%;
-  justify-content: center;
+export const FormWrapper = styled.div`
+  width: 350px;
+  padding: 16px;
+  background-color: ${colors.formBackgroundColor};
+  border-radius: 8px;
 `;
 
 export const FormButtonStyle = styled(Button)`
@@ -29,16 +31,13 @@ export const ErrorText = styled(Text)`
 `;
 
 export const LoginWithContainer = styled.div`
-  margin-top: 16px;
   display: flex;
-  justify-content: center;
-  width: 100%;
 `;
 
 export const Line = styled.hr`
   height: 1px;
   color: black;
-  flex: 1;
+  width: 100px;
   background-color: black;
 `;
 

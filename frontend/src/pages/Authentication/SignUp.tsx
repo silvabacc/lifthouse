@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import AuthPageHeader from "./components/AuthPageHeader";
-import { AlreadyAUserButton, FormContainer } from "./components/FormStyles";
+import { AlreadyAUserButton } from "./components/FormStyles";
 import { Typography, message } from "antd";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { useNavigate } from "react-router-dom";
@@ -72,21 +72,19 @@ const SignUp: React.FC = () => {
     <>
       {contextHolder}
       <AuthPageHeader />
-      <FormContainer direction="vertical">
-        <Title level={4}>Sign Up</Title>
-        <ErrorMessage message={error} />
-        <EmailField setEmail={setEmail} />
-        <PasswordField setPassword={setFirstPassword} />
-        <PasswordField setPassword={setSecondPassword} />
-        <FormButton
-          text={"Sign Up"}
-          onClick={formButtonOnClick}
-          disabled={disableButton}
-        />
-        <AlreadyAUserButton onClick={alreadyAUserOnClick} type="link">
-          Already a user?
-        </AlreadyAUserButton>
-      </FormContainer>
+      <Title level={4}>Sign Up</Title>
+      <ErrorMessage message={error} />
+      <EmailField setEmail={setEmail} />
+      <PasswordField setPassword={setFirstPassword} />
+      <PasswordField setPassword={setSecondPassword} />
+      <FormButton
+        text={"Sign Up"}
+        onClick={formButtonOnClick}
+        disabled={disableButton}
+      />
+      <AlreadyAUserButton onClick={alreadyAUserOnClick} type="link">
+        Already a user?
+      </AlreadyAUserButton>
     </>
   );
 };

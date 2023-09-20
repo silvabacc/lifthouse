@@ -2,7 +2,6 @@ import useAuthentication from "@frontend/hooks/useAuthentication";
 import React, { useEffect, useState } from "react";
 import { EmailField, FormButton } from "./components/Form";
 import AuthPageHeader from "./components/AuthPageHeader";
-import { FormContainer } from "./components/FormStyles";
 import { Typography } from "antd";
 
 const { Title, Text } = Typography;
@@ -36,12 +35,10 @@ const ForgotPassword: React.FC = () => {
   return (
     <>
       <AuthPageHeader />
-      <FormContainer direction="vertical">
-        <Title level={4}>Enter your registered Email</Title>
-        <Text>{message}</Text>
-        <EmailField setEmail={setEmail} />
-        <FormButton text="Submit" disabled={disableButton} onClick={onSubmit} />
-      </FormContainer>
+      <Title level={4}>Enter your registered Email</Title>
+      <Text>{message}</Text>
+      <EmailField setEmail={setEmail} />
+      <FormButton text="Submit" disabled={disableButton} onClick={onSubmit} />
     </>
   );
 };

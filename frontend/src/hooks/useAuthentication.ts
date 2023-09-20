@@ -12,7 +12,7 @@ const useAuthentication = () => {
       return { success: false, message: result.message };
     }
 
-    refetch();
+    await refetch();
 
     return { success: true, message: "success" };
   };
