@@ -1,23 +1,22 @@
-import { Button, ButtonProps, Input, Typography } from "antd";
+import { Button, ButtonProps, Form, Input, Typography } from "antd";
 import { BiUser } from "react-icons/bi";
 import { ErrorText, FormButtonStyle, LinkButtonWrapper } from "./FormStyles";
 import { LoginOutlined } from "@ant-design/icons";
 import { RiLockPasswordLine } from "react-icons/ri";
+import { UserOutlined } from "@ant-design/icons";
 
 const { Text } = Typography;
 
-interface EmailFieldProps {
-  setEmail: React.Dispatch<React.SetStateAction<string | null>>;
-}
-export const EmailField: React.FC<EmailFieldProps> = ({ setEmail }) => (
-  <>
-    <Text>Email</Text>
-    <Input
-      placeholder="Enter your email"
-      prefix={<BiUser className="site-form-item-icon" />}
-      onChange={(e) => setEmail(e.target.value)}
-    />
-  </>
+export const EmailField: React.FC = () => (
+  <Form.Item
+    name="email"
+    rules={[
+      { required: true, message: "Please input your email" },
+      { type: "email", message: "Please input your email" },
+    ]}
+  >
+    <Input prefix={<UserOutlined />} placeholder="Email" />
+  </Form.Item>
 );
 
 interface PasswordFieldProp {
@@ -48,16 +47,19 @@ export const LinkButton: React.FC<LinkButtonProps> = ({ text, ...props }) => (
 interface FormButtonProps extends ButtonProps {
   text: string;
 }
+
 export const FormButton: React.FC<FormButtonProps> = ({ text, ...props }) => (
-  <FormButtonStyle
-    size="large"
-    type="primary"
-    shape="round"
-    icon={<LoginOutlined />}
-    {...props}
-  >
-    {text}
-  </FormButtonStyle>
+  <Form.Item>
+    <Button
+      {...props}
+      style={{ marginTop: 8 }}
+      type="primary"
+      htmlType="submit"
+      block
+    >
+      {text}
+    </Button>
+  </Form.Item>
 );
 
 interface ErrorMessageProps {

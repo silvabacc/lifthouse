@@ -3,10 +3,11 @@ import AuthPageHeader from "./components/AuthPageHeader";
 import { FormWrapper, LoginWithText } from "./components/FormStyles";
 import { Alert, Button, Divider, Form, Input, message } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { LockOutlined } from "@ant-design/icons";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { GoogleOutlined } from "@ant-design/icons";
 import { AuthenticationContainer } from "./AuthenticationStyles";
+import { EmailField, FormButton } from "./components/Form";
 
 interface FieldType {
   email: string;
@@ -79,17 +80,9 @@ const Login: React.FC = () => {
       )}
       <FormWrapper>
         <Form name="login-form" onFinish={onFinish}>
-          <Form.Item
-            name="email"
-            rules={[
-              { required: true, message: "Please input your email!" },
-              { type: "email", message: "Please input your email!" },
-            ]}
-          >
-            <Input prefix={<UserOutlined />} placeholder="Email" />
-          </Form.Item>
+          <EmailField />
           <Form.Item>
-            <a href="/recovery">New User? Sign up here</a>
+            <a href="/signup">New User? Sign up here</a>
           </Form.Item>
           <Form.Item
             name="password"
@@ -105,11 +98,7 @@ const Login: React.FC = () => {
           <Form.Item>
             <a href="/recovery">Forgot password</a>
           </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block>
-              Log in
-            </Button>
-          </Form.Item>
+          <FormButton text={"Login"} />
         </Form>
         <Divider style={{ borderColor: "black" }}>
           <LoginWithText>Or Log in With</LoginWithText>
