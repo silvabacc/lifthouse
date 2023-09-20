@@ -12,7 +12,7 @@ const useAuthentication = () => {
       return { success: false, message: result.message };
     }
 
-    refetch();
+    await refetch();
 
     return { success: true, message: "success" };
   };
@@ -28,6 +28,8 @@ const useAuthentication = () => {
       return { success: false, message: result.message };
     }
 
+    await refetch();
+
     return { success: true, message: "success" };
   };
 
@@ -42,8 +44,8 @@ const useAuthentication = () => {
     return result;
   };
 
-  const resetPassword = async (password: string) => {
-    const result = await auth.resetPassword(password);
+  const updatePassword = async (password: string) => {
+    const result = await auth.updatePassword(password);
     return result;
   };
 
@@ -64,7 +66,7 @@ const useAuthentication = () => {
     signUp,
     signOut,
     resetPasswordWithEmail,
-    resetPassword,
+    updatePassword,
     auth: {
       user: data?.user || ({} as User),
       isAuthenticated: data?.isAuthenticated || false,

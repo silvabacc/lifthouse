@@ -30,6 +30,8 @@ class Authentication {
   async signUp(email: string, password: string) {
     const signUpResult = await this.supabase.auth.signUp({ email, password });
 
+    console.log("result!!", signUpResult);
+
     return signUpResult.error
       ? { user: null, session: null, message: signUpResult.error.message }
       : {
@@ -54,7 +56,7 @@ class Authentication {
     return { success: true, message: "" };
   }
 
-  async resetPassword(password: string) {
+  async updatePassword(password: string) {
     const result = await this.supabase.auth.updateUser({ password: password });
 
     if (result.error) {

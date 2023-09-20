@@ -2,7 +2,7 @@ import React from "react";
 import {
   LogoutOutlined,
   UnlockOutlined,
-  DownOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import { Button, Dropdown, MenuProps } from "antd";
 import useAuthentication from "@frontend/hooks/useAuthentication";
@@ -21,7 +21,7 @@ const SettingMenu: React.FC = () => {
       style: { backgroundColor: colors.light_grey },
     },
     {
-      label: "Change Password",
+      label: "Update Password",
       key: "1",
       icon: <UnlockOutlined />,
     },
@@ -35,7 +35,7 @@ const SettingMenu: React.FC = () => {
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     switch (e.key) {
       case "1":
-        navigate("/change-password");
+        navigate("/update-password");
         break;
       case "2":
         signOut();
@@ -52,7 +52,7 @@ const SettingMenu: React.FC = () => {
   return (
     <Dropdown menu={menuProps}>
       <Button type="ghost">
-        <DownOutlined />
+        <SettingOutlined style={{ fontSize: 20 }} />
       </Button>
     </Dropdown>
   );

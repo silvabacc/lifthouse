@@ -2,18 +2,29 @@ import React, { useEffect } from "react";
 import WorkoutsCard from "./components/WorkoutsCard/WorkoutsCard";
 
 import { Col, Row, Typography } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { dietCards, workoutCards } from "./cardsConfig";
 import SettingMenu from "./components/WorkoutsCard/SettingMenu";
 import { HeaderContainer } from "./HomeStyles";
+import useMessage from "antd/es/message/useMessage";
 
 const { Title } = Typography;
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const [messageApi, contextHolder] = useMessage();
+  const { state } = useLocation();
+
+  useEffect(() => {
+    if (state?.passwordUpdated) {
+      window.history.replaceState({}, document.title);
+      messageApi.success("Password updated successfully!");
+    }
+  }, [state]);
 
   return (
     <>
+      {contextHolder}
       <HeaderContainer>
         <Title>Time to Grind 💪</Title>
         <SettingMenu />

@@ -1,68 +1,101 @@
-import { Button, ButtonProps, Input, Typography } from "antd";
-import { BiUser } from "react-icons/bi";
-import { ErrorText, FormButtonStyle, LinkButtonWrapper } from "./FormStyles";
-import { LoginOutlined } from "@ant-design/icons";
-import { RiLockPasswordLine } from "react-icons/ri";
+import { Button, ButtonProps, Form, Input, Typography, FormProps } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import colors from "@frontend/theme/colors";
 
-const { Text } = Typography;
+const { Title } = Typography;
 
-interface EmailFieldProps {
-  setEmail: React.Dispatch<React.SetStateAction<string | null>>;
+interface FormWrapperProps extends FormProps {
+  title?: string;
+  children: React.ReactNode;
 }
-export const EmailField: React.FC<EmailFieldProps> = ({ setEmail }) => (
-  <>
-    <Text>Email</Text>
-    <Input
-      placeholder="Enter your email"
-      prefix={<BiUser className="site-form-item-icon" />}
-      onChange={(e) => setEmail(e.target.value)}
-    />
-  </>
+
+export const FormWrapper: React.FC<FormWrapperProps> = ({
+  title,
+  children,
+  ...props
+}) => {
+  return (
+    <>
+      <Title level={4}>{title}</Title>
+      <div
+        style={{
+          width: 350,
+          padding: 16,
+          backgroundColor: colors.formBackgroundColor,
+          borderRadius: 8,
+        }}
+      >
+        <Form {...props}>{children}</Form>
+      </div>
+    </>
+  );
+};
+
+export const EmailField: React.FC = () => (
+  <Form.Item
+    name="email"
+    rules={[
+      { required: true, message: "Please input your email" },
+      { type: "email", message: "Please input your email" },
+    ]}
+  >
+    <Input prefix={<UserOutlined />} placeholder="Email" />
+  </Form.Item>
 );
 
-interface PasswordFieldProp {
-  setPassword: React.Dispatch<React.SetStateAction<string | null>>;
-}
-export const PasswordField: React.FC<PasswordFieldProp> = ({ setPassword }) => (
-  <>
-    <Text>Password</Text>
+export const PasswordField: React.FC = () => (
+  <Form.Item
+    name={"password"}
+    rules={[{ required: true, message: "Please input your Password" }]}
+  >
     <Input.Password
-      placeholder="Password"
-      prefix={<RiLockPasswordLine />}
-      onChange={(e) => setPassword(e.target.value)}
+      prefix={<LockOutlined />}
+      type="password"
+      placeholder={"Password"}
+      visibilityToggle
     />
-  </>
+  </Form.Item>
 );
 
-interface LinkButtonProps extends ButtonProps {
-  text: string;
-}
-export const LinkButton: React.FC<LinkButtonProps> = ({ text, ...props }) => (
-  <LinkButtonWrapper>
-    <Button type="link" {...props}>
-      {text}
-    </Button>
-  </LinkButtonWrapper>
+export const ConfirmPasswordField: React.FC = () => (
+  <Form.Item
+    name="confirm"
+    dependencies={["password"]}
+    rules={[
+      {
+        required: true,
+        message: "Please confirm your password!",
+      },
+      ({ getFieldValue }) => ({
+        validator(_, value) {
+          if (!value || getFieldValue("password") === value) {
+            return Promise.resolve();
+          }
+          return Promise.reject(
+            new Error("The new password that you entered do not match!")
+          );
+        },
+      }),
+    ]}
+  >
+    <Input.Password prefix={<LockOutlined />} placeholder="Confirm Password" />
+  </Form.Item>
 );
 
 interface FormButtonProps extends ButtonProps {
   text: string;
 }
-export const FormButton: React.FC<FormButtonProps> = ({ text, ...props }) => (
-  <FormButtonStyle
-    size="large"
-    type="primary"
-    shape="round"
-    icon={<LoginOutlined />}
-    {...props}
-  >
-    {text}
-  </FormButtonStyle>
-);
 
-interface ErrorMessageProps {
-  message: string | null;
-}
-export const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => (
-  <ErrorText>{message}</ErrorText>
+export const FormButton: React.FC<FormButtonProps> = ({ text, ...props }) => (
+  <Form.Item>
+    <Button
+      {...props}
+      style={{ marginTop: 8 }}
+      type="primary"
+      htmlType="submit"
+      block
+    >
+      {text}
+    </Button>
+  </Form.Item>
 );

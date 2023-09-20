@@ -1,48 +1,63 @@
 import useAuthentication from "@frontend/hooks/useAuthentication";
-import React, { useEffect, useState } from "react";
-import { EmailField, FormButton } from "./components/Form";
+import React, { useState } from "react";
+import { EmailField, FormButton, FormWrapper } from "./components/Form";
 import AuthPageHeader from "./components/AuthPageHeader";
-import { FormContainer } from "./components/FormStyles";
-import { Typography } from "antd";
+import { Alert, Form, Typography, message } from "antd";
+import { AuthenticationContainer } from "./AuthenticationStyles";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
+
+interface FieldType {
+  email: string;
+  required?: boolean;
+}
 
 const ForgotPassword: React.FC = () => {
   const { resetPasswordWithEmail } = useAuthentication();
-  const [email, setEmail] = useState<string | null>("");
   const [disableButton, setDisableButton] = useState(false);
-  const [message, setMessage] = useState("");
+  const [messageApi, contextHolder] = message.useMessage();
+  const [alert, setAlert] = useState("");
 
-  const onSubmit = async () => {
-    setMessage("");
+  const toastMessage = (message: string) => {
+    messageApi.destroy();
+    messageApi.success(message);
+  };
+
+  const onFinish = async (info: FieldType) => {
+    const { email } = info;
     setDisableButton(true);
 
-    if (email) {
-      const result = await resetPasswordWithEmail(email);
-      if (result.success) {
-        setMessage(
-          `Reset email have been sent to ${email}, please check your inbox and reset your password`
-        );
-      } else {
-        setMessage(result.message);
-      }
+    const result = await resetPasswordWithEmail(email);
+    if (result.success) {
+      toastMessage(
+        `Reset email have been sent to ${email}, please check your inbox and reset your password`
+      );
     } else {
-      setMessage("Please fill in your email");
+      setAlert(result.message);
     }
 
     setDisableButton(false);
   };
 
   return (
-    <>
+    <AuthenticationContainer>
+      {contextHolder}
       <AuthPageHeader />
-      <FormContainer direction="vertical">
-        <Title level={4}>Enter your registered Email</Title>
-        <Text>{message}</Text>
-        <EmailField setEmail={setEmail} />
-        <FormButton text="Submit" disabled={disableButton} onClick={onSubmit} />
-      </FormContainer>
-    </>
+      <Title level={4}>Enter your registered Email</Title>
+      {alert && (
+        <Alert
+          closable
+          onClose={() => setAlert("")}
+          style={{ marginBottom: 12 }}
+          message={alert}
+          type="error"
+        />
+      )}
+      <FormWrapper name="reset-password-form" onFinish={onFinish}>
+        <EmailField />
+        <FormButton disabled={disableButton} text={"Send Recovery Email"} />
+      </FormWrapper>
+    </AuthenticationContainer>
   );
 };
 

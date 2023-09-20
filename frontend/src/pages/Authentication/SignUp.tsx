@@ -1,71 +1,71 @@
 import React, { useState } from "react";
 import AuthPageHeader from "./components/AuthPageHeader";
-import { AlreadyAUserButton, FormContainer } from "./components/FormStyles";
-import { Typography } from "antd";
+import { Alert, message } from "antd";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { useNavigate } from "react-router-dom";
 import {
   EmailField,
-  ErrorMessage,
+  FormWrapper,
   FormButton,
   PasswordField,
+  ConfirmPasswordField,
 } from "./components/Form";
+import { AuthenticationContainer } from "./AuthenticationStyles";
 
-const { Title } = Typography;
+interface FieldType {
+  email: string;
+  password: string;
+  confirm: string;
+  required?: boolean;
+}
 
 const SignUp: React.FC = () => {
-  const [error, setError] = useState<string | null>("");
-  const [email, setEmail] = useState<string | null>("");
-  const [firstPassword, setFirstPassword] = useState<string | null>("");
-  const [secondPassword, setSecondPassword] = useState<string | null>("");
+  const [messageApi, contextHolder] = message.useMessage();
+  const [alert, setAlert] = useState<string | null>("");
   const [disableButton, setDisableButton] = useState(false);
   const { signUp } = useAuthentication();
   const navigate = useNavigate();
 
-  const alreadyAUserOnClick = () => navigate("/login");
-
-  const formButtonOnClick = async () => {
+  const onFinish = async (info: FieldType) => {
+    const { email, password } = info;
     setDisableButton(true);
+    setAlert("");
+    messageApi.loading("Creating account...");
 
-    if (email && firstPassword) {
-      if (firstPassword !== secondPassword) {
-        setError("Passwords do not match");
-        setDisableButton(false);
-        return;
-      }
-
-      const signUpResult = await signUp(email, firstPassword);
-      if (signUpResult.success) {
-        navigate("/verify", { state: { email: email } });
-      } else {
-        setError(signUpResult.message);
-      }
+    const signUpResult = await signUp(email, password);
+    if (signUpResult.success) {
+      navigate("/login", { state: { accountCreated: true } });
     } else {
-      setError("Please fill in the details below");
+      setAlert(signUpResult.message);
     }
 
+    messageApi.destroy();
     setDisableButton(false);
   };
 
   return (
-    <>
+    <AuthenticationContainer>
+      {contextHolder}
       <AuthPageHeader />
-      <FormContainer direction="vertical">
-        <Title level={4}>Sign Up</Title>
-        <ErrorMessage message={error} />
-        <EmailField setEmail={setEmail} />
-        <PasswordField setPassword={setFirstPassword} />
-        <PasswordField setPassword={setSecondPassword} />
-        <FormButton
-          text={"Sign Up"}
-          onClick={formButtonOnClick}
-          disabled={disableButton}
+      {alert && (
+        <Alert
+          closable
+          onClose={() => setAlert("")}
+          style={{ marginBottom: 12 }}
+          message={alert}
+          type="error"
         />
-        <AlreadyAUserButton onClick={alreadyAUserOnClick} type="link">
+      )}
+      <FormWrapper title="Sign up" onFinish={onFinish}>
+        <EmailField />
+        <PasswordField />
+        <ConfirmPasswordField />
+        <FormButton text={"Sign Up"} disabled={disableButton} />
+        <a type="link" href="/login">
           Already a user?
-        </AlreadyAUserButton>
-      </FormContainer>
-    </>
+        </a>
+      </FormWrapper>
+    </AuthenticationContainer>
   );
 };
 

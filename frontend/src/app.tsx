@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
 import { createRoutes } from "./routes";
 import useAuthentication from "./hooks/useAuthentication";
