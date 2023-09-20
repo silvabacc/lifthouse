@@ -12,7 +12,7 @@ import isYesterday from "dayjs/plugin/isYesterday";
 import App from "./app";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AppContextProvider } from "./context/AppContext";
-import { ConfigProvider } from "antd";
+import { ConfigProvider } from "./theme/configProvider";
 
 dayjs.extend(WeekDayPlugin);
 dayjs.extend(updateLocale);
@@ -27,13 +27,7 @@ const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <QueryClientProvider client={queryClient}>
     <AppContextProvider>
-      <ConfigProvider
-        theme={{
-          components: {
-            Layout: { colorBgBody: "#FFF", colorBgHeader: "#FFF" },
-          },
-        }}
-      >
+      <ConfigProvider>
         <App />
       </ConfigProvider>
     </AppContextProvider>
