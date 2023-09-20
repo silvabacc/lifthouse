@@ -28,6 +28,8 @@ const useAuthentication = () => {
       return { success: false, message: result.message };
     }
 
+    await refetch();
+
     return { success: true, message: "success" };
   };
 

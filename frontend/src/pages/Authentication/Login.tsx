@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import AuthPageHeader from "./components/AuthPageHeader";
-import { FormWrapper, LoginWithText } from "./components/FormStyles";
-import { Alert, Button, Divider, Form, Input, message } from "antd";
+
+import { Alert, Button, Divider, Form, Input, Typography, message } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LockOutlined } from "@ant-design/icons";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { GoogleOutlined } from "@ant-design/icons";
 import { AuthenticationContainer } from "./AuthenticationStyles";
-import { EmailField, FormButton } from "./components/Form";
+import { EmailField, FormButton, FormWrapper } from "./components/Form";
+
+const { Text } = Typography;
 
 interface FieldType {
   email: string;
@@ -78,30 +80,28 @@ const Login: React.FC = () => {
           type="error"
         />
       )}
-      <FormWrapper>
-        <Form name="login-form" onFinish={onFinish}>
-          <EmailField />
-          <Form.Item>
-            <a href="/signup">New User? Sign up here</a>
-          </Form.Item>
-          <Form.Item
-            name="password"
-            rules={[{ required: true, message: "Please input your Password!" }]}
-          >
-            <Input.Password
-              prefix={<LockOutlined />}
-              type="password"
-              placeholder="Password"
-              visibilityToggle
-            />
-          </Form.Item>
-          <Form.Item>
-            <a href="/recovery">Forgot password</a>
-          </Form.Item>
-          <FormButton text={"Login"} />
-        </Form>
+      <FormWrapper name="login-form" onFinish={onFinish}>
+        <EmailField />
+        <Form.Item>
+          <a href="/signup">New User? Sign up here</a>
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[{ required: true, message: "Please input your Password!" }]}
+        >
+          <Input.Password
+            prefix={<LockOutlined />}
+            type="password"
+            placeholder="Password"
+            visibilityToggle
+          />
+        </Form.Item>
+        <Form.Item>
+          <a href="/recovery">Forgot password</a>
+        </Form.Item>
+        <FormButton text={"Login"} />
         <Divider style={{ borderColor: "black" }}>
-          <LoginWithText>Or Log in With</LoginWithText>
+          <Text>Or Log in With</Text>
         </Divider>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Button icon={<GoogleOutlined />} onClick={signInWithGoogleOClick}>

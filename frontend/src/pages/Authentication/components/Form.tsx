@@ -1,11 +1,35 @@
-import { Button, ButtonProps, Form, Input, Typography } from "antd";
-import { BiUser } from "react-icons/bi";
-import { ErrorText, FormButtonStyle, LinkButtonWrapper } from "./FormStyles";
-import { LoginOutlined } from "@ant-design/icons";
-import { RiLockPasswordLine } from "react-icons/ri";
-import { UserOutlined } from "@ant-design/icons";
+import { Button, ButtonProps, Form, Input, Typography, FormProps } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import colors from "@frontend/theme/colors";
 
-const { Text } = Typography;
+const { Title } = Typography;
+
+interface FormWrapperProps extends FormProps {
+  title?: string;
+  children: React.ReactNode;
+}
+
+export const FormWrapper: React.FC<FormWrapperProps> = ({
+  title,
+  children,
+  ...props
+}) => {
+  return (
+    <>
+      <Title level={4}>{title}</Title>
+      <div
+        style={{
+          width: 350,
+          padding: 16,
+          backgroundColor: colors.formBackgroundColor,
+          borderRadius: 8,
+        }}
+      >
+        <Form {...props}>{children}</Form>
+      </div>
+    </>
+  );
+};
 
 export const EmailField: React.FC = () => (
   <Form.Item
@@ -19,29 +43,18 @@ export const EmailField: React.FC = () => (
   </Form.Item>
 );
 
-interface PasswordFieldProp {
-  setPassword: React.Dispatch<React.SetStateAction<string | null>>;
-}
-export const PasswordField: React.FC<PasswordFieldProp> = ({ setPassword }) => (
-  <>
-    <Text>Password</Text>
+export const PasswordField: React.FC = () => (
+  <Form.Item
+    name={"password"}
+    rules={[{ required: true, message: "Please input your Password" }]}
+  >
     <Input.Password
-      placeholder="Password"
-      prefix={<RiLockPasswordLine />}
-      onChange={(e) => setPassword(e.target.value)}
+      prefix={<LockOutlined />}
+      type="password"
+      placeholder={"Password"}
+      visibilityToggle
     />
-  </>
-);
-
-interface LinkButtonProps extends ButtonProps {
-  text: string;
-}
-export const LinkButton: React.FC<LinkButtonProps> = ({ text, ...props }) => (
-  <LinkButtonWrapper>
-    <Button type="link" {...props}>
-      {text}
-    </Button>
-  </LinkButtonWrapper>
+  </Form.Item>
 );
 
 interface FormButtonProps extends ButtonProps {
@@ -60,11 +73,4 @@ export const FormButton: React.FC<FormButtonProps> = ({ text, ...props }) => (
       {text}
     </Button>
   </Form.Item>
-);
-
-interface ErrorMessageProps {
-  message: string | null;
-}
-export const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => (
-  <ErrorText>{message}</ErrorText>
 );

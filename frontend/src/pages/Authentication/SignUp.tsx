@@ -1,29 +1,30 @@
 import React, { useState } from "react";
 import AuthPageHeader from "./components/AuthPageHeader";
-import { AlreadyAUserButton } from "./components/FormStyles";
-import { Typography, message } from "antd";
+import { Alert, Form, Input, message } from "antd";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { useNavigate } from "react-router-dom";
 import {
   EmailField,
-  ErrorMessage,
+  FormWrapper,
   FormButton,
   PasswordField,
 } from "./components/Form";
+import { AuthenticationContainer } from "./AuthenticationStyles";
+import { LockOutlined } from "@ant-design/icons";
 
-const { Title } = Typography;
+interface FieldType {
+  email: string;
+  password: string;
+  confirm: string;
+  required?: boolean;
+}
 
 const SignUp: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
-  const [error, setError] = useState<string | null>("");
-  const [email, setEmail] = useState<string | null>("");
-  const [firstPassword, setFirstPassword] = useState<string | null>("");
-  const [secondPassword, setSecondPassword] = useState<string | null>("");
+  const [alert, setAlert] = useState<string | null>("");
   const [disableButton, setDisableButton] = useState(false);
   const { signUp } = useAuthentication();
   const navigate = useNavigate();
-
-  const alreadyAUserOnClick = () => navigate("/login");
 
   const loadingToastMessage = () => {
     messageApi.open({
@@ -33,59 +34,70 @@ const SignUp: React.FC = () => {
     });
   };
 
-  const errorToastMessage = () => {
-    messageApi.destroy();
-    messageApi.open({
-      type: "error",
-      content: "Failed to create account",
-      duration: 1,
-    });
-  };
-
-  const formButtonOnClick = async () => {
+  const onFinish = async (info: FieldType) => {
+    const { email, password } = info;
     setDisableButton(true);
+    setAlert("");
+    loadingToastMessage();
 
-    if (email && firstPassword) {
-      if (firstPassword !== secondPassword) {
-        setError("Passwords do not match");
-        setDisableButton(false);
-        return;
-      }
-
-      loadingToastMessage();
-
-      const signUpResult = await signUp(email, firstPassword);
-      if (signUpResult.success) {
-        navigate("/login", { state: { accountCreated: true } });
-      } else {
-        setError(signUpResult.message);
-      }
+    const signUpResult = await signUp(email, password);
+    if (signUpResult.success) {
+      navigate("/login", { state: { accountCreated: true } });
     } else {
-      setError("Please fill in the details below");
+      setAlert(signUpResult.message);
     }
 
-    errorToastMessage();
+    messageApi.destroy();
     setDisableButton(false);
   };
 
   return (
-    <>
+    <AuthenticationContainer>
       {contextHolder}
       <AuthPageHeader />
-      <Title level={4}>Sign Up</Title>
-      <ErrorMessage message={error} />
-      <EmailField setEmail={setEmail} />
-      <PasswordField setPassword={setFirstPassword} />
-      <PasswordField setPassword={setSecondPassword} />
-      <FormButton
-        text={"Sign Up"}
-        onClick={formButtonOnClick}
-        disabled={disableButton}
-      />
-      <AlreadyAUserButton onClick={alreadyAUserOnClick} type="link">
-        Already a user?
-      </AlreadyAUserButton>
-    </>
+      {alert && (
+        <Alert
+          closable
+          onClose={() => setAlert("")}
+          style={{ marginBottom: 12 }}
+          message={alert}
+          type="error"
+        />
+      )}
+      <FormWrapper title="Sign up" onFinish={onFinish}>
+        <EmailField />
+        <PasswordField />
+        <Form.Item
+          name="confirm"
+          dependencies={["password"]}
+          rules={[
+            {
+              required: true,
+              message: "Please confirm your password!",
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("password") === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(
+                  new Error("The new password that you entered do not match!")
+                );
+              },
+            }),
+          ]}
+        >
+          <Input.Password
+            prefix={<LockOutlined />}
+            placeholder="Confirm Password"
+          />
+        </Form.Item>
+        <FormButton text={"Sign Up"} disabled={disableButton} />
+        <a type="link" href="/login">
+          Already a user?
+        </a>
+      </FormWrapper>
+    </AuthenticationContainer>
   );
 };
 

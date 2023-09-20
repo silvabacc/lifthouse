@@ -35,7 +35,7 @@ const SettingMenu: React.FC = () => {
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     switch (e.key) {
       case "1":
-        navigate("/change-password");
+        navigate("/update-password");
         break;
       case "2":
         signOut();

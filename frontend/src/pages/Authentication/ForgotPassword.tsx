@@ -1,10 +1,9 @@
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import React, { useState } from "react";
-import { EmailField, FormButton } from "./components/Form";
+import { EmailField, FormButton, FormWrapper } from "./components/Form";
 import AuthPageHeader from "./components/AuthPageHeader";
 import { Alert, Form, Typography, message } from "antd";
 import { AuthenticationContainer } from "./AuthenticationStyles";
-import { FormWrapper } from "./components/FormStyles";
 
 const { Title } = Typography;
 
@@ -58,11 +57,9 @@ const ForgotPassword: React.FC = () => {
           type="error"
         />
       )}
-      <FormWrapper>
-        <Form name="reset-password-form" onFinish={onFinish}>
-          <EmailField />
-          <FormButton disabled={disableButton} text={"Send Recovery Email"} />
-        </Form>
+      <FormWrapper name="reset-password-form" onFinish={onFinish}>
+        <EmailField />
+        <FormButton disabled={disableButton} text={"Send Recovery Email"} />
       </FormWrapper>
     </AuthenticationContainer>
   );

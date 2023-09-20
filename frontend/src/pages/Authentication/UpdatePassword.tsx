@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Header from "../common/Header";
-import { ErrorMessage, PasswordField, FormButton } from "./components/Form";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { useNavigate } from "react-router-dom";
 
@@ -38,14 +37,14 @@ const UpdatePassword: React.FC = () => {
   return (
     <>
       <Header title="Update Password" />
-      <ErrorMessage message={errorMessage} />
+      {/* <ErrorMessage message={errorMessage} />
       <PasswordField setPassword={setFirstNewPassword} />
       <PasswordField setPassword={setsecondNewPassword} />
       <FormButton
         text={"Update Password"}
         onClick={onClickUpdatePassword}
         disabled={disableButton}
-      />
+      /> */}
     </>
   );
 };
