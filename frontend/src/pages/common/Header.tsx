@@ -2,7 +2,7 @@ import { Typography } from "antd";
 import React from "react";
 import { HeaderContainer, TitleContainer } from "./HeaderStyles";
 import { useNavigate } from "react-router-dom";
-import { RxCross1 } from "react-icons/rx";
+import { CloseOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 
@@ -20,7 +20,7 @@ const Header: React.FC<HeaderProps> = ({ title, rightHandSide }) => {
 
   return (
     <HeaderContainer direction="vertical">
-      <RxCross1 onClick={onClickBack} size={24} />
+      <CloseOutlined style={{ fontSize: 24 }} onClick={onClickBack} />
       <TitleContainer>
         <Title level={2}>{title}</Title>
         {rightHandSide}
