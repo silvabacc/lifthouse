@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import AuthPageHeader from "./components/AuthPageHeader";
-import { Alert, Form, Input, message } from "antd";
+import { Alert, message } from "antd";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { useNavigate } from "react-router-dom";
 import {
@@ -8,9 +8,9 @@ import {
   FormWrapper,
   FormButton,
   PasswordField,
+  ConfirmPasswordField,
 } from "./components/Form";
 import { AuthenticationContainer } from "./AuthenticationStyles";
-import { LockOutlined } from "@ant-design/icons";
 
 interface FieldType {
   email: string;
@@ -26,19 +26,11 @@ const SignUp: React.FC = () => {
   const { signUp } = useAuthentication();
   const navigate = useNavigate();
 
-  const loadingToastMessage = () => {
-    messageApi.open({
-      type: "loading",
-      content: "Creating account...",
-      duration: 1,
-    });
-  };
-
   const onFinish = async (info: FieldType) => {
     const { email, password } = info;
     setDisableButton(true);
     setAlert("");
-    loadingToastMessage();
+    messageApi.loading("Creating account...");
 
     const signUpResult = await signUp(email, password);
     if (signUpResult.success) {
@@ -67,31 +59,7 @@ const SignUp: React.FC = () => {
       <FormWrapper title="Sign up" onFinish={onFinish}>
         <EmailField />
         <PasswordField />
-        <Form.Item
-          name="confirm"
-          dependencies={["password"]}
-          rules={[
-            {
-              required: true,
-              message: "Please confirm your password!",
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(
-                  new Error("The new password that you entered do not match!")
-                );
-              },
-            }),
-          ]}
-        >
-          <Input.Password
-            prefix={<LockOutlined />}
-            placeholder="Confirm Password"
-          />
-        </Form.Item>
+        <ConfirmPasswordField />
         <FormButton text={"Sign Up"} disabled={disableButton} />
         <a type="link" href="/login">
           Already a user?

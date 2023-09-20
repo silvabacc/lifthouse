@@ -24,27 +24,14 @@ const Login: React.FC = () => {
   const { login, loginWithGoogle } = useAuthentication();
   const { state } = useLocation();
 
-  const loggingInToastMessage = () => {
-    messageApi.open({
-      type: "loading",
-      content: "Logging in you...",
-      duration: 1,
-    });
-  };
-
-  const accountCreatedToastMessage = () => {
-    messageApi.open({
-      type: "success",
-      content: "Account Created",
-      duration: 1,
-    });
-  };
+  const loggingInToastMessage = () => messageApi.loading("Logging in you...");
 
   //State from navigation
   //When the user creates an account, the state is set to accountCreated
   useEffect(() => {
     if (state?.accountCreated) {
-      accountCreatedToastMessage();
+      window.history.replaceState({}, document.title);
+      messageApi.success("Account Created");
     }
   }, [state]);
 

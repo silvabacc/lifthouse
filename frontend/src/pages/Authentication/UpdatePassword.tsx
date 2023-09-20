@@ -2,50 +2,71 @@ import React, { useState } from "react";
 import Header from "../common/Header";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { useNavigate } from "react-router-dom";
+import {
+  ConfirmPasswordField,
+  FormButton,
+  FormWrapper,
+  PasswordField,
+} from "./components/Form";
+import { AuthenticationContainer } from "./AuthenticationStyles";
+import AuthPageHeader from "./components/AuthPageHeader";
+import { Alert, message } from "antd";
+
+interface FieldType {
+  password: string;
+  confirm: string;
+}
 
 const UpdatePassword: React.FC = () => {
-  const [firstNewPassword, setFirstNewPassword] = useState<string | null>("");
-  const [secondNewPassword, setsecondNewPassword] = useState<string | null>("");
-  const [errorMessage, setErrorMessage] = useState<string | null>("");
+  const [alert, setAlert] = useState<string | null>("");
+  const [messageApi, contextHolder] = message.useMessage();
   const [disableButton, setDisableButton] = useState(false);
   const { updatePassword } = useAuthentication();
   const navigate = useNavigate();
 
-  const onClickUpdatePassword = async () => {
+  const onFinish = async (info: FieldType) => {
+    const { password } = info;
     setDisableButton(true);
+    setAlert("");
 
-    if (firstNewPassword !== secondNewPassword) {
-      setErrorMessage("Passwords do not match");
-      setDisableButton(false);
-      return;
-    }
-
-    if (firstNewPassword) {
-      const result = await updatePassword(firstNewPassword);
-      if (result.success) {
-        navigate("/home");
-      } else {
-        setErrorMessage(result.message);
-      }
+    messageApi.loading("Updating password...");
+    const result = await updatePassword(password);
+    if (result.success) {
+      navigate("/home", { state: { passwordUpdated: true } });
     } else {
-      setErrorMessage("Please enter your new password");
+      messageApi.destroy();
+      setAlert(result.message);
     }
 
     setDisableButton(false);
   };
 
   return (
-    <>
-      <Header title="Update Password" />
-      {/* <ErrorMessage message={errorMessage} />
-      <PasswordField setPassword={setFirstNewPassword} />
-      <PasswordField setPassword={setsecondNewPassword} />
-      <FormButton
-        text={"Update Password"}
-        onClick={onClickUpdatePassword}
-        disabled={disableButton}
-      /> */}
-    </>
+    <div style={{ height: "50vh" }}>
+      {contextHolder}
+      <Header title="" />
+      <AuthenticationContainer>
+        <AuthPageHeader />
+        {alert && (
+          <Alert
+            closable
+            onClose={() => setAlert("")}
+            style={{ marginBottom: 12 }}
+            message={alert}
+            type="error"
+          />
+        )}
+        <FormWrapper
+          title="Update Password"
+          name="update-password"
+          onFinish={onFinish}
+        >
+          <PasswordField />
+          <ConfirmPasswordField />
+          <FormButton disabled={disableButton} text="Update Password" />
+        </FormWrapper>
+      </AuthenticationContainer>
+    </div>
   );
 };
 

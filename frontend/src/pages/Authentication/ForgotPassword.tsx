@@ -20,11 +20,7 @@ const ForgotPassword: React.FC = () => {
 
   const toastMessage = (message: string) => {
     messageApi.destroy();
-    messageApi.open({
-      type: "success",
-      content: message,
-      duration: 5,
-    });
+    messageApi.success(message);
   };
 
   const onFinish = async (info: FieldType) => {

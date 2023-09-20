@@ -57,6 +57,31 @@ export const PasswordField: React.FC = () => (
   </Form.Item>
 );
 
+export const ConfirmPasswordField: React.FC = () => (
+  <Form.Item
+    name="confirm"
+    dependencies={["password"]}
+    rules={[
+      {
+        required: true,
+        message: "Please confirm your password!",
+      },
+      ({ getFieldValue }) => ({
+        validator(_, value) {
+          if (!value || getFieldValue("password") === value) {
+            return Promise.resolve();
+          }
+          return Promise.reject(
+            new Error("The new password that you entered do not match!")
+          );
+        },
+      }),
+    ]}
+  >
+    <Input.Password prefix={<LockOutlined />} placeholder="Confirm Password" />
+  </Form.Item>
+);
+
 interface FormButtonProps extends ButtonProps {
   text: string;
 }
