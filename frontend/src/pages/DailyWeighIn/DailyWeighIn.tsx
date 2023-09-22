@@ -1,11 +1,10 @@
 import {
   Alert,
+  Button,
   Calendar,
-  ConfigProvider,
   Divider,
   InputNumber,
-  Modal,
-  Space,
+  Tooltip,
   Typography,
 } from "antd";
 import React, { useEffect, useState } from "react";
@@ -16,6 +15,8 @@ import Loading from "../common/Loading";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import Header from "../common/Header";
+import { DailyWeighInConfigProvider } from "./DailyWeighInStyles";
+import { CellRenderInfo } from "rc-picker/lib/interface";
 
 const { Text } = Typography;
 
@@ -82,11 +83,6 @@ const DailyWeighIn: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  const handleCancel = () => {
-    setWeight(null);
-    setIsModalOpen(false);
-  };
-
   const onPanelChange = (date: Dayjs) => {
     setMonthSelected(date.month());
     setYearSelected(date.year());
@@ -109,98 +105,89 @@ const DailyWeighIn: React.FC = () => {
     }
   };
 
+  const fullCellRender = (date: Dayjs, info: CellRenderInfo<Dayjs>) => {
+    const tooltipEl = (
+      <div style={{ display: "flex", padding: 16, alignItems: "center" }}>
+        <Text style={{ marginRight: 6 }}>Weight:</Text>
+        <InputNumber
+          style={{ marginRight: 6 }}
+          min={0}
+          value={weight}
+          onChange={setWeight}
+          prefix="kg"
+        />
+        <Button type="primary" onClick={handleOk}>
+          Ok
+        </Button>
+      </div>
+    );
+
+    if (isLoading) {
+      return <Loading />;
+    }
+
+    const currentDayWeighIn = data?.find((day) => day.date.isSame(date, "day"));
+    return (
+      <Tooltip
+        trigger={"click"}
+        color="white"
+        onOpenChange={() => setWeight(0)}
+        title={tooltipEl}
+        autoAdjustOverflow
+      >
+        <div style={{ display: "flex", flexDirection: "column", margin: 6 }}>
+          {info.originNode}
+          <Text style={{ fontSize: 12, color: colors.highlight }}>
+            {currentDayWeighIn?.weight}
+          </Text>
+        </div>
+      </Tooltip>
+    );
+  };
+
   return (
-    <ConfigProvider
-      theme={{
-        components: {
-          Calendar: {
-            miniContentHeight: window.innerHeight / 2,
-          },
-        },
-      }}
-    >
+    <DailyWeighInConfigProvider>
       <div style={{ height: "100%", overflow: "hidden" }}>
         <Header title="Daily Weigh In" />
         <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            height: "100%",
-          }}
+          style={{ display: "flex", flexDirection: "column", height: "100%" }}
         >
           <DailyWeighInChart
             data={data}
             title={`Monthly progress for ${selectedValue.format("MMMM YYYY")}`}
           />
-          <div
-            style={{
-              display: "flex",
-
-              marginTop: 42,
-            }}
-          >
+          <div style={{ marginTop: 42 }}>
             {weeklyGoal === 0 ? (
               <Alert
                 type="warning"
                 closable
                 message="No weekly goal set. Weekly goals are set when a weigh in is
               entered on the Monday of the current week"
-              ></Alert>
+              />
             ) : (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-beween",
-                  width: "100%",
-                }}
-              >
-                <Alert
-                  type="info"
-                  showIcon
-                  style={{ width: "100%" }}
-                  message={`This Week's Weight Goal is ${(
-                    weeklyGoal -
-                    weeklyGoal * 0.01
-                  ).toFixed(1)} kg`}
-                />
-              </div>
+              <Alert
+                type="info"
+                showIcon
+                style={{ width: "100%" }}
+                message={`This Week's Weight Goal is ${(
+                  weeklyGoal -
+                  weeklyGoal * 0.01
+                ).toFixed(1)} kg`}
+              />
             )}
           </div>
           <Divider style={{ margin: 8 }} />
-          <div
-            style={{
-              display: "flex",
-            }}
-          >
-            <Calendar
-              disabledDate={(date) => date.year() > dayjs().year()}
-              onPanelChange={onPanelChange}
-              onSelect={onSelect}
-              fullscreen={false}
-              cellRender={cellRender}
-            />
-          </div>
-          <Modal
-            title={selectedValue.format("MMMM Do, YYYY")}
-            open={isModalOpen}
-            onOk={handleOk}
-            onCancel={handleCancel}
-          >
-            <Space
-              style={{ width: "100%", justifyContent: "center", padding: 16 }}
-            >
-              <Text>Weight: </Text>
-              <InputNumber
-                min={0}
-                value={weight}
-                onChange={setWeight}
-                prefix="kg"
-              />
-            </Space>
-          </Modal>
+          <Calendar
+            disabledDate={(date) => date.year() > dayjs().year()}
+            onPanelChange={onPanelChange}
+            onSelect={onSelect}
+            fullscreen={false}
+            fullCellRender={fullCellRender}
+            cellRender={cellRender}
+          />
         </div>
       </div>
-    </ConfigProvider>
+    </DailyWeighInConfigProvider>
   );
 };
 
