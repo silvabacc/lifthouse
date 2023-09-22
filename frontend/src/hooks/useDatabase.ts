@@ -8,8 +8,6 @@ import {
 } from "@backend/types";
 import useAuthentication from "./useAuthentication";
 import { useTemporaryStorage } from "./useTemporaryStorage";
-import { Dayjs } from "dayjs";
-import dayjs from "dayjs";
 
 export const useDatabase = () => {
   const dbService = new LiftHouseDatabase();

@@ -1,7 +1,7 @@
 import React from "react";
-import { DailyWeighInConfigProvider } from "./DailyWeighInStyles";
 import { DailyWeightInContextProvider } from "./DailyWeightInContext";
 import DailyWeighInContent from "./DailyWeighInContent";
+import { DailyWeighInConfigProvider } from "@frontend/theme/configProvider";
 
 const DailyWeightIn: React.FC = () => {
   return (

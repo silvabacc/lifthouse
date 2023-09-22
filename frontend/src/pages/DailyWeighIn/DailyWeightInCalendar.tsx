@@ -42,6 +42,7 @@ const DailyWeightInCalendar: React.FC = () => {
 
     refetch();
   };
+
   const fullCellRender = (date: Dayjs, info: CellRenderInfo<Dayjs>) => {
     if (isLoading) {
       return <Loading />;
@@ -63,7 +64,7 @@ const DailyWeightInCalendar: React.FC = () => {
       </div>
     );
 
-    const currentDayWeighIn = dailyWeightInData.find((day) =>
+    const cellDayWeighIn = dailyWeightInData.find((day) =>
       day.date.isSame(date, "day")
     );
 
@@ -78,7 +79,7 @@ const DailyWeightInCalendar: React.FC = () => {
         <div style={{ display: "flex", flexDirection: "column", margin: 6 }}>
           {info.originNode}
           <Text style={{ fontSize: 12, color: colors.highlight }}>
-            {currentDayWeighIn?.weight}
+            {cellDayWeighIn?.weight}
           </Text>
         </div>
       </Tooltip>

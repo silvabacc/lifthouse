@@ -13,6 +13,7 @@ const { Title } = Typography;
 
 const DailyWeighInChart: React.FC<DailyWeighInChartProps> = ({ title }) => {
   const { dailyWeightInData, isLoading } = useDailyWeightInContext();
+
   if (isLoading) {
     return <Loading />;
   }

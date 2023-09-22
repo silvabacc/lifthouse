@@ -13,3 +13,19 @@ export const ConfigProvider = ({ children }: any) => {
     </AntConfigProvider>
   );
 };
+
+export const DailyWeighInConfigProvider = ({ children }: any) => {
+  return (
+    <AntConfigProvider
+      theme={{
+        components: {
+          Calendar: {
+            miniContentHeight: window.innerHeight / 2.3,
+          },
+        },
+      }}
+    >
+      {children}
+    </AntConfigProvider>
+  );
+};

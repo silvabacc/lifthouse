@@ -3,8 +3,9 @@ import React from "react";
 import { useDailyWeightInContext } from "./DailyWeightInContext";
 import dayjs from "dayjs";
 
-const DailyWeightInAlert: React.FC = ({}) => {
+const DailyWeightInAlert: React.FC = () => {
   const { dailyWeightInData } = useDailyWeightInContext();
+
   const mondayOfCurrentWeek = dayjs().weekday(0);
 
   const weeklyGoal =
