@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 
 import "../../../../backend/dexie";
 import { pageTitleMapping } from "./constants";
-import { Container, EditButton } from "./WorkoutStyles";
+import { Container } from "./WorkoutStyles";
 import { useDatabase } from "@frontend/hooks/useDatabase";
 import Exercises from "./Exercises";
 import { RoutineExercise, RoutineType } from "@backend/types";
 import EditRoutine from "./EditRoutine";
 import Loading from "../common/Loading";
 import Header from "../common/Header";
+import { Button } from "antd";
 
 interface WorkoutProps {
   routine: RoutineType;
@@ -47,9 +48,9 @@ const Workout: React.FC<WorkoutProps> = ({ routine }) => {
       <Header
         title={pageTitleMapping[routine]}
         rightHandSide={
-          <EditButton onClick={onEdit} type="link">
+          <Button onClick={onEdit} type="link">
             {edit ? "Save" : "Edit"}
-          </EditButton>
+          </Button>
         }
       />
       {edit ? (

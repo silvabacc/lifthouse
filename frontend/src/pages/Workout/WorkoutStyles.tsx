@@ -8,10 +8,6 @@ export const Container = styled(Space)`
   margin-bottom: 8px;
 `;
 
-export const EditButton = styled(Button)`
-  margin-right: auto;
-`;
-
 export const RepContainer = styled(Space)`
   width: 100%;
   margin-top: 26px;

@@ -1,19 +1,20 @@
 import React from "react";
-import { Space, Spin } from "antd";
-import styled from "styled-components";
+import { Spin } from "antd";
 
 const Loading: React.FC = () => {
   return (
-    <LoadingContainer>
+    <div
+      style={{
+        display: "flex",
+        width: "100%",
+        height: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Spin size="large" />
-    </LoadingContainer>
+    </div>
   );
 };
 
 export default Loading;
-
-const LoadingContainer = styled(Space)`
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-`;

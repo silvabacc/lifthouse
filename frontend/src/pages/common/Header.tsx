@@ -1,6 +1,5 @@
 import { Typography } from "antd";
 import React from "react";
-import { HeaderContainer, TitleContainer } from "./HeaderStyles";
 import { useNavigate } from "react-router-dom";
 import { CloseOutlined } from "@ant-design/icons";
 
@@ -19,13 +18,20 @@ const Header: React.FC<HeaderProps> = ({ title, rightHandSide }) => {
   };
 
   return (
-    <HeaderContainer direction="vertical">
+    <>
       <CloseOutlined style={{ fontSize: 24 }} onClick={onClickBack} />
-      <TitleContainer>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          width: "100%",
+          alignItems: "center",
+        }}
+      >
         <Title level={2}>{title}</Title>
         {rightHandSide}
-      </TitleContainer>
-    </HeaderContainer>
+      </div>
+    </>
   );
 };
 
