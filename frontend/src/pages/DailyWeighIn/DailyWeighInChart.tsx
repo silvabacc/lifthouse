@@ -3,6 +3,7 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 import Loading from "../common/Loading";
 import { Typography } from "antd";
+import { ChartData, ChartOptions } from "chart.js";
 
 interface DailyWeighInChartProps {
   data?: DailyWeighInMonth[];
@@ -21,17 +22,19 @@ const DailyWeighInChart: React.FC<DailyWeighInChartProps> = ({
 
   const labels = data.map((weighIn) => weighIn.date.format("Do"));
 
-  const linechartData = {
+  const linechartData: ChartData<"line"> = {
     labels,
     datasets: [
       {
+        showLine: true,
         label: title,
         data: data.map((weighIn) => weighIn.weight),
       },
     ],
   };
 
-  const options = {
+  const options: ChartOptions<"line"> = {
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: false,
@@ -39,6 +42,7 @@ const DailyWeighInChart: React.FC<DailyWeighInChartProps> = ({
     },
     scales: {
       y: {
+        grid: { display: false },
         title: {
           display: true,
           text: "kg",
@@ -48,10 +52,10 @@ const DailyWeighInChart: React.FC<DailyWeighInChartProps> = ({
   };
 
   return (
-    <>
+    <div style={{ height: "20%" }}>
       <Title level={5}>{title}</Title>
       <Line data={linechartData} options={options} />
-    </>
+    </div>
   );
 };
 

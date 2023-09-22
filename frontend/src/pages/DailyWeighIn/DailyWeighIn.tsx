@@ -1,4 +1,13 @@
-import { Calendar, InputNumber, Modal, Row, Space, Typography } from "antd";
+import {
+  Alert,
+  Calendar,
+  ConfigProvider,
+  Divider,
+  InputNumber,
+  Modal,
+  Space,
+  Typography,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import DailyWeighInChart from "./DailyWeighInChart";
 import { useDatabase } from "@frontend/hooks/useDatabase";
@@ -15,7 +24,6 @@ const DailyWeighIn: React.FC = () => {
   const [monthSelected, setMonthSelected] = useState(dayjs().month());
   const [yearSelected, setYearSelected] = useState(dayjs().year());
   const [weeklyGoal, setWeeklyGoal] = useState(0);
-  const [previousWeeklyGoal, setPreviouslyWeeklyGoal] = useState(0);
   const [weight, setWeight] = useState<number | null>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { addWeighIn, getDailyWeighInsForMonth, updateWeighIn } = useDatabase();
@@ -25,24 +33,15 @@ const DailyWeighIn: React.FC = () => {
   );
 
   const mondayOfCurrentWeek = dayjs().weekday(0);
-  const previousMonday = dayjs().subtract(1, "week").weekday(0);
 
   useEffect(() => {
     if (data) {
       const weekWeightGoal = data?.find(
         (weighIn) => weighIn.date.date() === mondayOfCurrentWeek.date()
       );
-      const previousWeightGoal = data?.find(
-        (weighIn) => weighIn.date.date() === previousMonday.date()
-      );
       setWeeklyGoal(weekWeightGoal?.weight || 0);
-      setPreviouslyWeeklyGoal(previousWeightGoal?.weight || 0);
     }
   }, [data]);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   const onSelect = (date: Dayjs) => {
     setSelectedValue(date);
@@ -111,60 +110,97 @@ const DailyWeighIn: React.FC = () => {
   };
 
   return (
-    <Space direction="vertical">
-      <Header title="Daily Weigh In" />
-      <DailyWeighInChart
-        data={data}
-        title={`Monthly progress for ${selectedValue.format("MMMM YYYY")}`}
-      />
-      {weeklyGoal === 0 ? (
-        <Text strong style={{ color: colors.warning }}>
-          No weekly goal set. Weekly goals are set when a weigh in is entered on
-          the Monday of the current week
-        </Text>
-      ) : (
-        <>
-          <Text>
-            This week's weight goal is{" "}
-            <span style={{ color: colors.highlight }}>
-              {(weeklyGoal - weeklyGoal * 0.01).toFixed(1)}
-            </span>{" "}
-            kg
-          </Text>
-          {previousWeeklyGoal !== 0 && (
-            <Text>
-              Last week's weight goal was{" "}
-              <span style={{ color: colors.highlight }}>
-                {(previousWeeklyGoal - previousWeeklyGoal * 0.01).toFixed(1)}
-              </span>{" "}
-              kg
-            </Text>
-          )}
-        </>
-      )}
-      <Calendar
-        disabledDate={(date) => date.year() > dayjs().year()}
-        onPanelChange={onPanelChange}
-        onSelect={onSelect}
-        cellRender={cellRender}
-      />
-      <Modal
-        title={selectedValue.format("MMMM Do, YYYY")}
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <Space style={{ width: "100%", justifyContent: "center", padding: 16 }}>
-          <Text>Weight: </Text>
-          <InputNumber
-            min={0}
-            value={weight}
-            onChange={setWeight}
-            prefix="kg"
+    <ConfigProvider
+      theme={{
+        components: {
+          Calendar: {
+            miniContentHeight: window.innerHeight / 2,
+          },
+        },
+      }}
+    >
+      <div style={{ height: "100%", overflow: "hidden" }}>
+        <Header title="Daily Weigh In" />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+          }}
+        >
+          <DailyWeighInChart
+            data={data}
+            title={`Monthly progress for ${selectedValue.format("MMMM YYYY")}`}
           />
-        </Space>
-      </Modal>
-    </Space>
+          <div
+            style={{
+              display: "flex",
+
+              marginTop: 42,
+            }}
+          >
+            {weeklyGoal === 0 ? (
+              <Alert
+                type="warning"
+                closable
+                message="No weekly goal set. Weekly goals are set when a weigh in is
+              entered on the Monday of the current week"
+              ></Alert>
+            ) : (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-beween",
+                  width: "100%",
+                }}
+              >
+                <Alert
+                  type="info"
+                  showIcon
+                  style={{ width: "100%" }}
+                  message={`This Week's Weight Goal is ${(
+                    weeklyGoal -
+                    weeklyGoal * 0.01
+                  ).toFixed(1)} kg`}
+                />
+              </div>
+            )}
+          </div>
+          <Divider style={{ margin: 8 }} />
+          <div
+            style={{
+              display: "flex",
+            }}
+          >
+            <Calendar
+              disabledDate={(date) => date.year() > dayjs().year()}
+              onPanelChange={onPanelChange}
+              onSelect={onSelect}
+              fullscreen={false}
+              cellRender={cellRender}
+            />
+          </div>
+          <Modal
+            title={selectedValue.format("MMMM Do, YYYY")}
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+          >
+            <Space
+              style={{ width: "100%", justifyContent: "center", padding: 16 }}
+            >
+              <Text>Weight: </Text>
+              <InputNumber
+                min={0}
+                value={weight}
+                onChange={setWeight}
+                prefix="kg"
+              />
+            </Space>
+          </Modal>
+        </div>
+      </div>
+    </ConfigProvider>
   );
 };
 
