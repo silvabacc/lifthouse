@@ -5,10 +5,10 @@ import Workout from "./pages/Workout/Workout";
 import Login from "./pages/Authentication/Login";
 import SignUp from "./pages/Authentication/SignUp";
 import ForgotPassword from "./pages/Authentication/ForgotPassword";
-import DailyWeighIn from "./pages/DailyWeighIn/DailyWeighIn";
 import MealTracker from "./pages/MealTracker/MealTracker";
 import UpdatePassword from "./pages/Authentication/UpdatePassword";
 import { useEffect } from "react";
+import DailyWeightIn from "./pages/DailyWeighIn/DailyWeightIn";
 
 //Redirects user to login if not authenticated
 const guardRoutes = (
@@ -41,7 +41,7 @@ export const createRoutes = (isAuthenticated: boolean) => {
     },
     {
       path: "/weigh-in",
-      element: guardRoutes(<DailyWeighIn />, isAuthenticated),
+      element: guardRoutes(<DailyWeightIn />, isAuthenticated),
     },
     {
       path: "/meal-tracker",

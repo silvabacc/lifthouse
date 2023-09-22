@@ -4,23 +4,21 @@ import { Line } from "react-chartjs-2";
 import Loading from "../common/Loading";
 import { Typography } from "antd";
 import { ChartData, ChartOptions } from "chart.js";
+import { useDailyWeightInContext } from "./DailyWeightInContext";
 
 interface DailyWeighInChartProps {
-  data?: DailyWeighInMonth[];
   title: string;
 }
 
 const { Title } = Typography;
 
-const DailyWeighInChart: React.FC<DailyWeighInChartProps> = ({
-  data,
-  title,
-}) => {
-  if (!data) {
+const DailyWeighInChart: React.FC<DailyWeighInChartProps> = ({ title }) => {
+  const { dailyWeightInData, isLoading } = useDailyWeightInContext();
+  if (isLoading) {
     return <Loading />;
   }
 
-  const labels = data.map((weighIn) => weighIn.date.format("Do"));
+  const labels = dailyWeightInData.map((weighIn) => weighIn.date.format("Do"));
 
   const linechartData: ChartData<"line"> = {
     labels,
@@ -28,7 +26,7 @@ const DailyWeighInChart: React.FC<DailyWeighInChartProps> = ({
       {
         showLine: true,
         label: title,
-        data: data.map((weighIn) => weighIn.weight),
+        data: dailyWeightInData.map((weighIn) => weighIn.weight),
       },
     ],
   };
