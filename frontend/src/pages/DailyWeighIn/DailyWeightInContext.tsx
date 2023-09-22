@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { DailyWeighInMonth, useDatabase } from "@frontend/hooks/useDatabase";
-import { DailyWeighIn } from "@backend/types";
+import { DailyWeighInMonth, useDailyWeighIn } from "./useDailyweighIn";
 
 interface DailyWeightInContextType {
   selectedValue: dayjs.Dayjs;
@@ -25,12 +24,11 @@ const DailyWeightInContextProvider = ({ children }: any) => {
   const [selectedValue, setSelectedValue] = useState(() => dayjs());
   const [monthSelected, setMonthSelected] = useState(dayjs().month());
   const [yearSelected, setYearSelected] = useState(dayjs().year());
-  //Might need to look into this type
   const [dailyWeightInData, setDailyWeighInData] = useState<
     DailyWeighInMonth[]
   >([]);
 
-  const { getDailyWeighInsForMonth } = useDatabase();
+  const { getDailyWeighInsForMonth } = useDailyWeighIn();
 
   const { data, isLoading, refetch } = getDailyWeighInsForMonth(
     monthSelected,

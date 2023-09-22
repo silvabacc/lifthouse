@@ -5,8 +5,8 @@ import Loading from "../common/Loading";
 import type { Dayjs } from "dayjs";
 import { CellRenderInfo } from "rc-picker/lib/interface";
 import colors from "@frontend/theme/colors";
-import { useDatabase } from "@frontend/hooks/useDatabase";
 import { useDailyWeightInContext } from "./DailyWeightInContext";
+import { useDailyWeighIn } from "./useDailyweighIn";
 
 const { Text } = Typography;
 
@@ -20,7 +20,7 @@ const DailyWeightInCalendar: React.FC = () => {
     isLoading,
     refetch,
   } = useDailyWeightInContext();
-  const { updateWeighIn, addWeighIn } = useDatabase();
+  const { updateWeighIn, addWeighIn } = useDailyWeighIn();
   const [weight, setWeight] = useState(0);
 
   const onPanelChange = (date: Dayjs) => {

@@ -1,9 +1,8 @@
-import { useMutation, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import LiftHouseDatabase from "@backend/database/db";
 import {
   Exercise,
   LogEntry,
-  Meal,
   RoutineExercise,
   RoutineType,
 } from "@backend/types";
@@ -11,11 +10,6 @@ import useAuthentication from "./useAuthentication";
 import { useTemporaryStorage } from "./useTemporaryStorage";
 import { Dayjs } from "dayjs";
 import dayjs from "dayjs";
-
-export interface DailyWeighInMonth {
-  date: Dayjs;
-  weight: number;
-}
 
 export const useDatabase = () => {
   const dbService = new LiftHouseDatabase();
@@ -47,14 +41,6 @@ export const useDatabase = () => {
     return await dbService.logEntry(result, user.id);
   };
 
-  const addWeighIn = async (weight: number, date: Dayjs) => {
-    await dbService.insertDailyWeighIn(user.id, weight, date.toDate());
-  };
-
-  const updateWeighIn = async (weight: number, date: Dayjs) => {
-    await dbService.updateDailyWeighIn(user.id, weight, date.toDate());
-  };
-
   const addMeal = async (
     mealName: string,
     calories: number,
@@ -71,24 +57,6 @@ export const useDatabase = () => {
     return useQuery(["getMeals", date], async () => {
       return await dbService.getMeals(date, user.id);
     });
-  };
-
-  const getDailyWeighInsForMonth = (month: number, year: number) => {
-    return useQuery(
-      ["getDailyWeighInsForMonth", month, year, user.id],
-      async () => {
-        const data = await dbService.getDailyWeighInsForMonth(
-          user.id,
-          month,
-          year
-        );
-
-        return data.map((weighIn) => ({
-          ...weighIn,
-          date: dayjs(weighIn.date),
-        })) as DailyWeighInMonth[];
-      }
-    );
   };
 
   const getExerciseHistory = (exerciseId: string, limit?: number) => {
@@ -132,9 +100,6 @@ export const useDatabase = () => {
   };
 
   return {
-    addWeighIn,
-    updateWeighIn,
-    getDailyWeighInsForMonth,
     queryRoutine,
     queryExercises,
     updateRoutine,

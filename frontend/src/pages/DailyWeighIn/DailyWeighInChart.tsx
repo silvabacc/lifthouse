@@ -1,4 +1,3 @@
-import { DailyWeighInMonth } from "@frontend/hooks/useDatabase";
 import React from "react";
 import { Line } from "react-chartjs-2";
 import Loading from "../common/Loading";
