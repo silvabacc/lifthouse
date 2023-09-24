@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Header from "../common/Header";
-import DateMover from "./DateMover";
+import DateMover from "./components/DateMover/DateMover";
 import { Tabs, TabsProps } from "antd";
 import MealTrackerCard from "./MealTrackerCard";
-import MacroNutrients from "./MacroNutrients";
+import MacroNutrients from "./components/MacroNutrients/MacroNutrients";
 import AddEntry from "./AddEntry";
 import dayjs from "dayjs";
 import { useDatabase } from "@frontend/hooks/useDatabase";
