@@ -8,9 +8,14 @@ const { Title } = Typography;
 interface HeaderProps {
   title: string;
   rightHandSide?: React.ReactNode;
+  showBackButton?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ title, rightHandSide }) => {
+const Header: React.FC<HeaderProps> = ({
+  title,
+  rightHandSide,
+  showBackButton = true,
+}) => {
   const navigate = useNavigate();
 
   const onClickBack = () => {
@@ -19,12 +24,13 @@ const Header: React.FC<HeaderProps> = ({ title, rightHandSide }) => {
 
   return (
     <>
-      <CloseOutlined style={{ fontSize: 24 }} onClick={onClickBack} />
+      {showBackButton && (
+        <CloseOutlined style={{ fontSize: 24 }} onClick={onClickBack} />
+      )}
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
-          width: "100%",
           alignItems: "center",
         }}
       >

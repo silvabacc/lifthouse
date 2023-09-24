@@ -1,12 +1,18 @@
-import BigZImage from "./components/WorkoutsCard/images/big_z.png";
-import ArnoldImage from "./components/WorkoutsCard/images/arnold.png";
-import EddieImage from "./components/WorkoutsCard/images/eddie_hall.png";
-import TomPlatzImage from "./components/WorkoutsCard/images/tom_platz.png";
-import GrizzlyImage from "./components/WorkoutsCard/images/grizzly.png";
-import MealTrackerImage from "./components/WorkoutsCard/images/meal_tracker.png";
+import BigZImage from "./images/big_z.png";
+import ArnoldImage from "./images/arnold.png";
+import EddieImage from "./images/eddie_hall.png";
+import TomPlatzImage from "./images/tom_platz.png";
+import GrizzlyImage from "./images/grizzly.png";
+import MealTrackerImage from "./images/meal_tracker.png";
 import { RoutineType } from "@backend/types";
 
 const ROUTE = "/routine";
+
+export interface HomeCardConfig {
+  title: string;
+  image: string;
+  route: string;
+}
 
 export const workoutCards = [
   {

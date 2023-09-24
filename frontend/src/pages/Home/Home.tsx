@@ -1,17 +1,16 @@
 import React, { useEffect } from "react";
-import WorkoutsCard from "./components/WorkoutsCard/WorkoutsCard";
 
-import { Col, Row, Typography } from "antd";
-import { useLocation, useNavigate } from "react-router-dom";
-import { dietCards, workoutCards } from "./cardsConfig";
-import SettingMenu from "./components/WorkoutsCard/SettingMenu";
-import { HeaderContainer } from "./HomeStyles";
+import { Typography } from "antd";
+import { useLocation } from "react-router-dom";
+import SettingMenu from "./components/SettingMenu";
 import useMessage from "antd/es/message/useMessage";
+import Header from "../common/Header";
+import { HomeCards } from "./components/HomeCards/HomeCards";
+import { dietCards, workoutCards } from "./components/HomeCards/cardsConfig";
 
 const { Title } = Typography;
 
 const Home: React.FC = () => {
-  const navigate = useNavigate();
   const [messageApi, contextHolder] = useMessage();
   const { state } = useLocation();
 
@@ -25,34 +24,15 @@ const Home: React.FC = () => {
   return (
     <>
       {contextHolder}
-      <HeaderContainer>
-        <Title>Time to Grind 💪</Title>
-        <SettingMenu />
-      </HeaderContainer>
+      <Header
+        title="Time to Grind 💪"
+        showBackButton={false}
+        rightHandSide={<SettingMenu />}
+      />
       <Title level={4}>Workouts 🏋</Title>
-      <Row gutter={6}>
-        {workoutCards.map((card) => (
-          <Col xs={24} sm={6} key={card.title}>
-            <WorkoutsCard
-              title={card.title}
-              image={card.image}
-              onClick={() => navigate(card.route)}
-            />
-          </Col>
-        ))}
-      </Row>
+      <HomeCards cardConfig={workoutCards} />
       <Title level={4}>Diet 🥑</Title>
-      <Row gutter={6}>
-        {dietCards.map((card) => (
-          <Col xs={24} sm={6} key={card.title}>
-            <WorkoutsCard
-              title={card.title}
-              image={card.image}
-              onClick={() => navigate(card.route)}
-            />
-          </Col>
-        ))}
-      </Row>
+      <HomeCards cardConfig={dietCards} />
     </>
   );
 };
