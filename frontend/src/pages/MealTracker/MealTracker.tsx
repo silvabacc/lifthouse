@@ -8,6 +8,7 @@ import AddEntry from "./AddEntry";
 import dayjs from "dayjs";
 import { useDatabase } from "@frontend/hooks/useDatabase";
 import Loading from "../common/Loading";
+import { MealTrackerContainer } from "./MealTrackerStyles";
 
 const MealTracker: React.FC = () => {
   const [activeTab, setActivetab] = useState("1");
@@ -59,14 +60,16 @@ const MealTracker: React.FC = () => {
   return (
     <>
       <Header title="Meal Tracker" />
-      <DateMover selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
-      <MacroNutrients calories={calories} protein={protein} />
-      <Tabs
-        activeKey={activeTab}
-        onChange={setActivetab}
-        centered
-        items={items}
-      />
+      <MealTrackerContainer>
+        <DateMover selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
+        <MacroNutrients calories={calories} protein={protein} />
+        <Tabs
+          activeKey={activeTab}
+          onChange={setActivetab}
+          centered
+          items={items}
+        />
+      </MealTrackerContainer>
     </>
   );
 };

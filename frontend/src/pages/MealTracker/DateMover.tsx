@@ -1,14 +1,12 @@
 import React from "react";
-import {
-  DateLeftArrowButton,
-  DateMoverContainer,
-  DateRightArrowButton,
-  DateSquare,
-} from "./DateMoverStyles";
+import { DateMoverContainer, DateSquare } from "./DateMoverStyles";
 import type { Dayjs } from "dayjs";
-import { Space, Typography } from "antd";
+import { Button, Typography } from "antd";
+import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
+
+const ARROW_MARGIN = 32;
 
 interface DateMoverProps {
   selectedDay: Dayjs;
@@ -24,9 +22,6 @@ const DateMover: React.FC<DateMoverProps> = ({
   };
 
   const onRightArrowClick = () => {
-    if (selectedDay.isToday()) {
-      return;
-    }
     setSelectedDay(selectedDay.add(1, "day"));
   };
 
@@ -40,18 +35,34 @@ const DateMover: React.FC<DateMoverProps> = ({
   }
 
   return (
-    <DateMoverContainer>
-      <Space>
-        <DateLeftArrowButton size={24} onClick={onLeftArrowClick} />
-        <DateSquare>{title}</DateSquare>
-        <DateRightArrowButton
-          style={{ visibility: selectedDay.isToday() ? "hidden" : "visible" }}
-          size={24}
-          onClick={onRightArrowClick}
+    <div style={{ textAlign: "center" }}>
+      <DateMoverContainer>
+        <Button
+          style={{ margin: ARROW_MARGIN }}
+          shape="circle"
+          onClick={onLeftArrowClick}
+          icon={<ArrowLeftOutlined />}
         />
-      </Space>
+        <DateSquare>
+          <Title
+            level={4}
+            style={{ color: "white", margin: 0, whiteSpace: "nowrap" }}
+          >
+            {title}
+          </Title>
+        </DateSquare>
+        <Button
+          style={{
+            margin: ARROW_MARGIN,
+            visibility: selectedDay.isToday() ? "hidden" : "visible",
+          }}
+          shape="circle"
+          onClick={onRightArrowClick}
+          icon={<ArrowRightOutlined />}
+        />
+      </DateMoverContainer>
       <Title level={5}>{selectedDay.format("DD/MM/YYYY")}</Title>
-    </DateMoverContainer>
+    </div>
   );
 };
 

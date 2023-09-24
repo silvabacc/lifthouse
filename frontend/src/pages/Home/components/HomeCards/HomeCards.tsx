@@ -14,7 +14,7 @@ export const HomeCards: React.FC<HomeCardsProps> = ({ cardConfig }) => {
   const navigate = useNavigate();
 
   return (
-    <Row gutter={6}>
+    <Row gutter={6} style={{ marginBottom: 16 }}>
       {cardConfig.map((card) => (
         <Col xs={24} sm={6} key={card.title}>
           <Card
