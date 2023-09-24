@@ -95,6 +95,7 @@ const AddEntry: React.FC<AddEntryProps> = ({ goToMealTab }) => {
             <td style={{ paddingBottom: 16 }}>
               <NutrientLabelInput
                 precision={1}
+                value={grams}
                 onChange={(e) => setGrams(e as number)}
               />
             </td>
