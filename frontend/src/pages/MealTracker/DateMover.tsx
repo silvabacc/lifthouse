@@ -1,7 +1,7 @@
 import React from "react";
 import { DateMoverContainer, DateSquare } from "./DateMoverStyles";
 import type { Dayjs } from "dayjs";
-import { Button, Typography } from "antd";
+import { Button, Calendar, Tooltip, Typography } from "antd";
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
@@ -17,13 +17,9 @@ const DateMover: React.FC<DateMoverProps> = ({
   selectedDay,
   setSelectedDay,
 }) => {
-  const onLeftArrowClick = () => {
-    setSelectedDay(selectedDay.subtract(1, "day"));
-  };
-
-  const onRightArrowClick = () => {
-    setSelectedDay(selectedDay.add(1, "day"));
-  };
+  const onLeftArrowClick = () => setSelectedDay(selectedDay.subtract(1, "day"));
+  const onRightArrowClick = () => setSelectedDay(selectedDay.add(1, "day"));
+  const onSelect = (date: Dayjs) => setSelectedDay(date);
 
   let title = selectedDay.format("dddd");
 
@@ -34,6 +30,10 @@ const DateMover: React.FC<DateMoverProps> = ({
     title = "Yesterday";
   }
 
+  const ToolTipCalendar = (
+    <Calendar value={selectedDay} fullscreen={false} onSelect={onSelect} />
+  );
+
   return (
     <div style={{ textAlign: "center" }}>
       <DateMoverContainer>
@@ -43,14 +43,20 @@ const DateMover: React.FC<DateMoverProps> = ({
           onClick={onLeftArrowClick}
           icon={<ArrowLeftOutlined />}
         />
-        <DateSquare>
-          <Title
-            level={4}
-            style={{ color: "white", margin: 0, whiteSpace: "nowrap" }}
-          >
-            {title}
-          </Title>
-        </DateSquare>
+        <Tooltip
+          overlayInnerStyle={{ width: 300 }}
+          color="white"
+          title={ToolTipCalendar}
+        >
+          <DateSquare>
+            <Title
+              level={4}
+              style={{ color: "white", margin: 0, whiteSpace: "nowrap" }}
+            >
+              {title}
+            </Title>
+          </DateSquare>
+        </Tooltip>
         <Button
           style={{
             margin: ARROW_MARGIN,
