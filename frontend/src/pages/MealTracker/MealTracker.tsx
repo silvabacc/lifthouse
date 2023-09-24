@@ -29,21 +29,21 @@ const MealTracker: React.FC = () => {
     refetch();
   };
 
+  const Cards = () => {
+    return data?.map((meal) => (
+      <MealTrackerCard
+        key={meal.id}
+        data={meal}
+        onDeleteCard={() => onDeleteCard(meal.id)}
+      />
+    ));
+  };
+
   const items: TabsProps["items"] = [
     {
       key: "1",
       label: `Meals`,
-      children: data?.length ? (
-        data.map((meal) => (
-          <MealTrackerCard
-            key={meal.id}
-            data={meal}
-            onDeleteCard={() => onDeleteCard(meal.id)}
-          />
-        ))
-      ) : (
-        <p style={{ textAlign: "center" }}>No meals recorded today</p>
-      ),
+      children: Cards(),
     },
     {
       key: "2",
@@ -64,6 +64,7 @@ const MealTracker: React.FC = () => {
         <DateMover selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
         <MacroNutrients calories={calories} protein={protein} />
         <Tabs
+          style={{ width: "100%" }}
           activeKey={activeTab}
           onChange={setActivetab}
           centered

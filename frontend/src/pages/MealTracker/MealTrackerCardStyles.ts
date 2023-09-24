@@ -10,7 +10,6 @@ export const EditNameButton = styled(FiEdit)`
 export const DeleteButton = styled(MdDeleteOutline)``;
 
 export const CardContainers = styled(Space)`
-  margin-top: 24px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   width: 100%;
 `;

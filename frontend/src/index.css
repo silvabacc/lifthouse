@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
 
+html {
+  height: 100vh;
+}
+
 #root {
   height: 100vh;
 }
@@ -13,6 +17,7 @@ body {
   font-size: 3vw;
   padding: 16px;
   overflow-x: hidden;
+  height: 100vh;
 }
 
 /* Ant Design */

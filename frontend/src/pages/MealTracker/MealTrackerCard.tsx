@@ -1,7 +1,7 @@
-import { Card, Input } from "antd";
-import React, { useState } from "react";
+import { Card } from "antd";
+import React from "react";
 import colors from "@frontend/theme/colors";
-import { CardContainers, DeleteButton } from "./MealTrackerCardStyles";
+import { DeleteButton } from "./MealTrackerCardStyles";
 import { NutrientContainer, NutrientText } from "./MealTrackerStyles";
 import { Meal } from "@backend/types";
 import MealTrackerNumberText from "./MealTrackerNumberText";
@@ -16,22 +16,21 @@ const MealTrackerCard: React.FC<MealTrackerCardProps> = ({
   onDeleteCard,
 }) => {
   return (
-    <CardContainers direction="vertical">
-      <Card
-        type="inner"
-        extra={<DeleteButton onClick={onDeleteCard} color={colors.primary} />}
-        title={data.mealName}
-      >
-        <NutrientContainer>
-          <NutrientText>Calories</NutrientText>
-          <MealTrackerNumberText value={data.calories} />
-        </NutrientContainer>
-        <NutrientContainer>
-          <NutrientText>Protein</NutrientText>
-          <MealTrackerNumberText value={data.protein} />
-        </NutrientContainer>
-      </Card>
-    </CardContainers>
+    <Card
+      style={{ maxWidth: 500, margin: "auto", marginBottom: 16 }}
+      type="inner"
+      extra={<DeleteButton onClick={onDeleteCard} color={colors.primary} />}
+      title={data.mealName}
+    >
+      <NutrientContainer>
+        <NutrientText>Calories</NutrientText>
+        <MealTrackerNumberText value={data.calories} />
+      </NutrientContainer>
+      <NutrientContainer>
+        <NutrientText>Protein</NutrientText>
+        <MealTrackerNumberText value={data.protein} />
+      </NutrientContainer>
+    </Card>
   );
 };
 

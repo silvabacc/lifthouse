@@ -1,5 +1,5 @@
 import colors from "@frontend/theme/colors";
-import { Button, Input, InputNumber, Space } from "antd";
+import { Button, InputNumber, Space } from "antd";
 import styled from "styled-components";
 
 export const NutrientText = styled.div`
