@@ -25,7 +25,6 @@ export const HomeCards: React.FC<HomeCardsProps> = ({ cardConfig }) => {
                 style={{ height: 230, objectFit: "cover" }}
                 alt="example"
                 src={card.image}
-                onClick={() => navigate(card.route)}
               />
             }
             onClick={() => navigate(card.route)}
