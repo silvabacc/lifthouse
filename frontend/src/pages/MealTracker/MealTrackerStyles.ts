@@ -26,8 +26,8 @@ export const NutrientLabelText = styled.td`
   text-align: center;
 `;
 
-export const NutrientContainer = styled(Space)`
-  width: 100%;
+export const NutrientContainer = styled.div`
+  display: flex;
   justify-content: space-between;
 `;
 

@@ -19,7 +19,13 @@ const MealTrackerCard: React.FC<MealTrackerCardProps> = ({
     <Card
       style={{ maxWidth: 500, margin: "auto", marginBottom: 16 }}
       type="inner"
-      extra={<DeleteButton onClick={onDeleteCard} color={colors.primary} />}
+      extra={
+        <DeleteButton
+          style={{ cursor: "pointer" }}
+          onClick={onDeleteCard}
+          color={colors.primary}
+        />
+      }
       title={data.mealName}
     >
       <NutrientContainer>

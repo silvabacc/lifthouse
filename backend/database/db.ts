@@ -242,7 +242,8 @@ class LiftHouseDatabase {
       .lte(
         DailyWeighInColumns.date,
         new Date(year, month + 1, 0).toDateString()
-      );
+      )
+      .order(DailyWeighInColumns.date, { ascending: true });
 
     if (data === null) {
       throw new Error("No data returned for daily weigh ins");

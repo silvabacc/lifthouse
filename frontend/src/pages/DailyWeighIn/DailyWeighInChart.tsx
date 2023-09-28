@@ -12,13 +12,18 @@ interface DailyWeighInChartProps {
 const { Title } = Typography;
 
 const DailyWeighInChart: React.FC<DailyWeighInChartProps> = ({ title }) => {
-  const { dailyWeightInData, isLoading } = useDailyWeightInContext();
+  const { dailyWeightInData, isLoading, monthSelected } =
+    useDailyWeightInContext();
 
   if (isLoading) {
     return <Loading />;
   }
 
-  const labels = dailyWeightInData.map((weighIn) => weighIn.date.format("Do"));
+  const monthData = dailyWeightInData.filter(
+    (weighIn) => weighIn.date.month() === monthSelected
+  );
+
+  const labels = monthData.map((weighIn) => weighIn.date.format("Do"));
 
   const linechartData: ChartData<"line"> = {
     labels,
@@ -26,7 +31,7 @@ const DailyWeighInChart: React.FC<DailyWeighInChartProps> = ({ title }) => {
       {
         showLine: true,
         label: title,
-        data: dailyWeightInData.map((weighIn) => weighIn.weight),
+        data: monthData.map((weighIn) => weighIn.weight),
       },
     ],
   };
