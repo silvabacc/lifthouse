@@ -5,24 +5,22 @@ import { Tabs, TabsProps } from "antd";
 import MealTrackerCard from "./components/MealTrackerCard/MealTrackerCard";
 import MacroNutrients from "./components/MacroNutrients/MacroNutrients";
 import dayjs from "dayjs";
-import { useDatabase } from "@frontend/hooks/useDatabase";
 import Loading from "../common/Loading";
 import { MealTrackerContainer } from "./MealTrackerStyles";
 import AddMealCard from "./components/AddMealCard/AddMealCard";
+import { useMealTracker } from "./useMealTracker";
 
 const MealTracker: React.FC = () => {
   const [activeTab, setActivetab] = useState("1");
   const [selectedDay, setSelectedDay] = useState(() => dayjs());
 
-  const { getMeals } = useDatabase();
+  const { deleteMeal, getMeals } = useMealTracker();
   const { isLoading, data, refetch } = getMeals(selectedDay.toDate());
 
   const goToMealTab = () => {
     refetch();
     setActivetab("1");
   };
-
-  const { deleteMeal } = useDatabase();
 
   const onDeleteCard = async (id: string) => {
     await deleteMeal(id);

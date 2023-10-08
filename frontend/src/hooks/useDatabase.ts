@@ -39,24 +39,6 @@ export const useDatabase = () => {
     return await dbService.logEntry(result, user.id);
   };
 
-  const addMeal = async (
-    mealName: string,
-    calories: number,
-    protein: number
-  ) => {
-    await dbService.addMeal(mealName, calories, protein, user.id);
-  };
-
-  const deleteMeal = async (mealId: string) => {
-    await dbService.deleteMeal(mealId);
-  };
-
-  const getMeals = (date: Date) => {
-    return useQuery(["getMeals", date], async () => {
-      return await dbService.getMeals(date, user.id);
-    });
-  };
-
   const getExerciseHistory = (exerciseId: string, limit?: number) => {
     return useQuery(
       ["getExerciseHistory", exerciseId, user.id, limit],
@@ -103,10 +85,7 @@ export const useDatabase = () => {
     updateRoutine,
     logEntry,
     getExerciseHistory,
-    addMeal,
-    deleteMeal,
     updateLogEntries,
-    getMeals,
     deleteLogEntry,
   };
 };

@@ -1,12 +1,12 @@
 import { Alert, Button, Card, Input } from "antd";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { NutrientText } from "../../MealTrackerStyles";
-import { useDatabase } from "@frontend/hooks/useDatabase";
 import {
   AddLabelText,
   AddMealLabelInput,
   AddMealTableData,
 } from "./AddMealCardStyles";
+import { useMealTracker } from "../../useMealTracker";
 
 interface AddEntryProps {
   goToMealTab: () => void;
@@ -20,7 +20,7 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
   const [proteinPer, setProteinPer] = useState(0);
   const [proteinTotal, setProteinTotal] = useState(0);
   const [error, setError] = useState(false);
-  const { addMeal } = useDatabase();
+  const { addMeal } = useMealTracker();
 
   const handleMealTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMealTitle(e.target.value);
