@@ -1,5 +1,5 @@
 import React from "react";
-import { DateMoverContainer, DateSquare } from "./DateMoverStyles";
+import { DateMoverContainer } from "./DateMoverStyles";
 import type { Dayjs } from "dayjs";
 import { Button, Calendar, Tooltip, Typography } from "antd";
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
@@ -48,14 +48,14 @@ const DateMover: React.FC<DateMoverProps> = ({
           color="white"
           title={ToolTipCalendar}
         >
-          <DateSquare>
+          <Button style={{ width: 200, height: 50 }} type="primary">
             <Title
               level={4}
               style={{ color: "white", margin: 0, whiteSpace: "nowrap" }}
             >
               {title}
             </Title>
-          </DateSquare>
+          </Button>
         </Tooltip>
         <Button
           style={{

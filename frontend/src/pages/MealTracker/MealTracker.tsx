@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Header from "../common/Header";
 import DateMover from "./components/DateMover/DateMover";
 import { Tabs, TabsProps } from "antd";
-import MealTrackerCard from "./MealTrackerCard";
+import MealTrackerCard from "./components/MealTrackerCard/MealTrackerCard";
 import MacroNutrients from "./components/MacroNutrients/MacroNutrients";
 import AddEntry from "./AddEntry";
 import dayjs from "dayjs";

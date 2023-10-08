@@ -1,4 +1,3 @@
-import colors from "@frontend/theme/colors";
 import React from "react";
 
 interface MealTrackerNumberTextProps {

@@ -1,10 +1,10 @@
-import { Card } from "antd";
+import { Button, Card } from "antd";
 import React from "react";
 import colors from "@frontend/theme/colors";
-import { DeleteButton } from "./MealTrackerCardStyles";
-import { NutrientContainer, NutrientText } from "./MealTrackerStyles";
+import { NutrientContainer, NutrientText } from "../../MealTrackerStyles";
 import { Meal } from "@backend/types";
-import MealTrackerNumberText from "./MealTrackerNumberText";
+import MealTrackerNumberText from "../../MealTrackerNumberText";
+import { DeleteOutlined } from "@ant-design/icons";
 
 interface MealTrackerCardProps {
   data: Meal;
@@ -20,10 +20,14 @@ const MealTrackerCard: React.FC<MealTrackerCardProps> = ({
       style={{ maxWidth: 500, margin: "auto", marginBottom: 16 }}
       type="inner"
       extra={
-        <DeleteButton
-          style={{ cursor: "pointer" }}
-          onClick={onDeleteCard}
-          color={colors.primary}
+        <Button
+          type="ghost"
+          icon={
+            <DeleteOutlined
+              style={{ color: colors.delete, width: 0 }}
+              onClick={onDeleteCard}
+            />
+          }
         />
       }
       title={data.mealName}
