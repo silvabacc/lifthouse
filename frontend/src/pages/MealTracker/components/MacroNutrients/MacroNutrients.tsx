@@ -1,6 +1,6 @@
 import { Typography } from "antd";
 import React from "react";
-import MealTrackerNumberText from "../../MealTrackerNumberText";
+import MealTrackerNumberText from "../MealTrackerNumberText";
 import { MacroNutrientsContainer } from "./MacroNutrientsStyles";
 
 const { Title } = Typography;

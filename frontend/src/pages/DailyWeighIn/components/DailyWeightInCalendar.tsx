@@ -1,12 +1,12 @@
 import { Button, Calendar, InputNumber, Tooltip, Typography } from "antd";
 import dayjs from "dayjs";
 import React, { useState } from "react";
-import Loading from "../common/Loading";
+import Loading from "../../common/Loading";
 import type { Dayjs } from "dayjs";
 import { CellRenderInfo } from "rc-picker/lib/interface";
 import colors from "@frontend/theme/colors";
-import { useDailyWeightInContext } from "./DailyWeightInContext";
-import { useDailyWeighIn } from "./useDailyweighIn";
+import { useDailyWeightInContext } from "../DailyWeightInContext";
+import { useDailyWeighIn } from "../useDailyweighIn";
 
 const { Text } = Typography;
 

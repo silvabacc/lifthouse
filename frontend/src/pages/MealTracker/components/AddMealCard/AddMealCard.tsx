@@ -1,20 +1,18 @@
-import { Card, Input, Space } from "antd";
+import { Alert, Button, Card, Input } from "antd";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import {
-  AddEntryButton,
-  Errortext,
-  NutrientLabelInput,
-  NutrientLabelText,
-  NutrientText,
-  NutritionTableData,
-} from "./MealTrackerStyles";
+import { NutrientText } from "../../MealTrackerStyles";
 import { useDatabase } from "@frontend/hooks/useDatabase";
+import {
+  AddLabelText,
+  AddMealLabelInput,
+  AddMealTableData,
+} from "./AddMealCardStyles";
 
 interface AddEntryProps {
   goToMealTab: () => void;
 }
 
-const AddEntry: React.FC<AddEntryProps> = ({ goToMealTab }) => {
+const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
   const [mealTitle, setMealTitle] = useState("");
   const [caloriesPer, setCaloriesPer] = useState(0);
   const [grams, setGrams] = useState(0);
@@ -77,6 +75,7 @@ const AddEntry: React.FC<AddEntryProps> = ({ goToMealTab }) => {
 
   return (
     <Card
+      style={{ maxWidth: 500, margin: "auto", marginBottom: 16 }}
       type="inner"
       title={
         <Input
@@ -93,7 +92,7 @@ const AddEntry: React.FC<AddEntryProps> = ({ goToMealTab }) => {
               <NutrientText>Grams of food</NutrientText>
             </td>
             <td style={{ paddingBottom: 16 }}>
-              <NutrientLabelInput
+              <AddMealLabelInput
                 precision={1}
                 value={grams}
                 onChange={(e) => setGrams(e as number)}
@@ -102,59 +101,70 @@ const AddEntry: React.FC<AddEntryProps> = ({ goToMealTab }) => {
           </tr>
           <tr>
             <div />
-            <NutrientLabelText>per 100g</NutrientLabelText>
-            <NutrientLabelText>Total</NutrientLabelText>
+            <AddLabelText>per 100g</AddLabelText>
+            <AddLabelText>Total</AddLabelText>
           </tr>
           <tr>
             <td>
               <NutrientText>Calories</NutrientText>
             </td>
             {caloriesRow.map((item, index) => (
-              <NutritionTableData key={index}>
-                <NutrientLabelInput
+              <AddMealTableData key={index}>
+                <AddMealLabelInput
                   precision={1}
                   value={item.state}
                   onChange={(e) => handleNutritionInput(e as number, item.set)}
                 />
-              </NutritionTableData>
+              </AddMealTableData>
             ))}
-            <NutritionTableData>
-              <NutrientLabelInput
+            <AddMealTableData>
+              <AddMealLabelInput
                 precision={1}
                 value={caloriesTotal}
                 onChange={(e) => handleCalorieTotalChange(e as number)}
               />
-            </NutritionTableData>
+            </AddMealTableData>
           </tr>
           <tr>
             <td>
               <NutrientText>Protein</NutrientText>
             </td>
             {proteinRow.map((item, index) => (
-              <NutritionTableData key={index}>
-                <NutrientLabelInput
+              <AddMealTableData key={index}>
+                <AddMealLabelInput
                   precision={1}
                   value={item.state}
                   onChange={(e) => handleNutritionInput(e as number, item.set)}
                 />
-              </NutritionTableData>
+              </AddMealTableData>
             ))}
-            <NutritionTableData>
-              <NutrientLabelInput
+            <AddMealTableData>
+              <AddMealLabelInput
                 precision={1}
                 value={proteinTotal}
                 onChange={(e) => handleProteinTotalChange(e as number)}
               />
-            </NutritionTableData>
+            </AddMealTableData>
           </tr>
         </tbody>
       </table>
-      {error && <Errortext>Please make sure to have added a title</Errortext>}
-      <AddEntryButton onClick={handleAdd} type="primary">
+      {error && (
+        <Alert
+          style={{ marginTop: 16 }}
+          message="Please add a title"
+          type="error"
+          showIcon
+        />
+      )}
+      <Button
+        style={{ width: "100%", marginTop: 16 }}
+        onClick={handleAdd}
+        type="primary"
+      >
         Add
-      </AddEntryButton>
+      </Button>
     </Card>
   );
 };
 
-export default AddEntry;
+export default AddMealCard;

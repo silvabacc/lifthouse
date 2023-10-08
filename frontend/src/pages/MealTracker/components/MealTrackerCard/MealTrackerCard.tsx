@@ -1,10 +1,11 @@
 import { Button, Card } from "antd";
 import React from "react";
 import colors from "@frontend/theme/colors";
-import { NutrientContainer, NutrientText } from "../../MealTrackerStyles";
+import { NutrientText } from "../../MealTrackerStyles";
 import { Meal } from "@backend/types";
-import MealTrackerNumberText from "../../MealTrackerNumberText";
+import MealTrackerNumberText from "../MealTrackerNumberText";
 import { DeleteOutlined } from "@ant-design/icons";
+import { NutrientContainer } from "./MealTrackerCardStyles";
 
 interface MealTrackerCardProps {
   data: Meal;

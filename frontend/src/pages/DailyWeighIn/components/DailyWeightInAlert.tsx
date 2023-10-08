@@ -1,6 +1,6 @@
 import { Alert } from "antd";
 import React from "react";
-import { useDailyWeightInContext } from "./DailyWeightInContext";
+import { useDailyWeightInContext } from "../DailyWeightInContext";
 import dayjs from "dayjs";
 
 const DailyWeightInAlert: React.FC = () => {

@@ -1,9 +1,9 @@
 import { Divider } from "antd";
 import React from "react";
-import DailyWeighInChart from "./DailyWeighInChart";
+import DailyWeighInChart from "./components/DailyWeighInChart";
 import Header from "../common/Header";
-import DailyWeightInAlert from "./DailyWeightInAlert";
-import DailyWeightInCalendar from "./DailyWeightInCalendar";
+import DailyWeightInAlert from "./components/DailyWeightInAlert";
+import DailyWeightInCalendar from "./components/DailyWeightInCalendar";
 import { useDailyWeightInContext } from "./DailyWeightInContext";
 
 const DailyWeighInContent: React.FC = () => {

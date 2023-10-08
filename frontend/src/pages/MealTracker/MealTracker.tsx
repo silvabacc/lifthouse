@@ -4,11 +4,11 @@ import DateMover from "./components/DateMover/DateMover";
 import { Tabs, TabsProps } from "antd";
 import MealTrackerCard from "./components/MealTrackerCard/MealTrackerCard";
 import MacroNutrients from "./components/MacroNutrients/MacroNutrients";
-import AddEntry from "./AddEntry";
 import dayjs from "dayjs";
 import { useDatabase } from "@frontend/hooks/useDatabase";
 import Loading from "../common/Loading";
 import { MealTrackerContainer } from "./MealTrackerStyles";
+import AddMealCard from "./components/AddMealCard/AddMealCard";
 
 const MealTracker: React.FC = () => {
   const [activeTab, setActivetab] = useState("1");
@@ -48,7 +48,7 @@ const MealTracker: React.FC = () => {
     {
       key: "2",
       label: `Add Entry`,
-      children: <AddEntry goToMealTab={goToMealTab} />,
+      children: <AddMealCard goToMealTab={goToMealTab} />,
     },
   ];
 
