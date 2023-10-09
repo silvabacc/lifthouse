@@ -70,6 +70,8 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
     }
   }, [JSON.stringify(temporaryStorage)]);
 
+  console.log(placeHolderInfo);
+
   return (
     <Space style={{ width: "100%" }} direction="vertical">
       <Steps
@@ -79,7 +81,7 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
         items={stepItems}
       />
       <TextArea
-        placeholder="Notes..."
+        placeholder={placeHolderInfo ? placeHolderInfo?.[0]?.notes : "Notes..."}
         value={notes}
         onChange={handleOnChangeNotes}
         autoSize={{ minRows: 3, maxRows: 5 }}
