@@ -66,6 +66,29 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
     updateLogEntries(updatedEntries);
   };
 
+  const onNotesChange = (notes: string, entryId: string | undefined) => {
+    if (!notes) {
+      return;
+    }
+
+    const newExerciseHistory = exerciseHistory
+      .slice()
+      .filter((i) => i.logEntryId !== entryId);
+    const entryToUpdate = exerciseHistory.find((i) => i.logEntryId === entryId);
+    const index = exerciseHistory.findIndex((i) => i.logEntryId === entryId);
+
+    if (!entryToUpdate) {
+      return;
+    }
+
+    entryToUpdate.notes = notes;
+
+    setUpdatedEntries((prev) => [...prev, entryToUpdate]);
+
+    newExerciseHistory.splice(index, 0, entryToUpdate);
+    setExerciseHistory(newExerciseHistory);
+  };
+
   const onChange = (
     entryId: string | undefined,
     set: number,
@@ -174,8 +197,11 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
                 >
                   <Title level={5}>Notes</Title>
                   <TextArea
-                    value={entry.notes}
+                    defaultValue={entry.notes}
                     readOnly={!isEditing}
+                    onChange={(e) =>
+                      onNotesChange(e.target.value, entry.logEntryId)
+                    }
                     autoSize={{ minRows: 3, maxRows: 5 }}
                   />
                 </div>
