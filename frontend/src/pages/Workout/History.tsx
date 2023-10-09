@@ -8,7 +8,12 @@ import {
   Steps,
   Typography,
 } from "antd";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PlusSquareOutlined,
+  MinusCircleOutlined,
+} from "@ant-design/icons";
 import Slider from "react-slick";
 import React, { useEffect, useState } from "react";
 import {
@@ -20,6 +25,7 @@ import {
 import Loading from "../common/Loading";
 import dayjs from "dayjs";
 import { LogEntry } from "@backend/types";
+import colors from "@frontend/theme/colors";
 
 interface HistoryProps {
   exerciseId: string;
@@ -33,7 +39,7 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
     useDatabase();
   const [exerciseHistory, setExerciseHistory] = useState<LogEntry[]>([]);
   const [updatedEntries, setUpdatedEntries] = useState<LogEntry[]>([]);
-  const { data, refetch } = getExerciseHistory(exerciseId);
+  const { isLoading, data } = getExerciseHistory(exerciseId);
   const [isEditing, setEditing] = useState(false);
 
   const onDeleteEntry = async (logEntryId?: string) => {
@@ -43,15 +49,20 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
 
     const isSuccess = await deleteLogEntry(logEntryId);
     if (isSuccess) {
-      refetch();
+      const newExerciseHistory = exerciseHistory.slice();
+      const index = exerciseHistory.findIndex(
+        (i) => i.logEntryId === logEntryId
+      );
+      newExerciseHistory.splice(index, 1);
+      setExerciseHistory(newExerciseHistory);
     }
   };
 
   useEffect(() => {
-    if (data) {
+    if (!isLoading && data) {
       setExerciseHistory(data);
     }
-  }, [data]);
+  }, [isLoading]);
 
   if (exerciseHistory === undefined) {
     return <Loading />;
@@ -83,9 +94,68 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
 
     entryToUpdate.notes = notes;
 
-    setUpdatedEntries((prev) => [...prev, entryToUpdate]);
+    setUpdatedEntries((prev) => [
+      ...prev.filter((prev) => prev.logEntryId !== entryId),
+      entryToUpdate,
+    ]);
 
     newExerciseHistory.splice(index, 0, entryToUpdate);
+    setExerciseHistory(newExerciseHistory);
+  };
+
+  const onAddSet = (entryId: string | undefined) => {
+    const newExerciseHistory = exerciseHistory
+      .slice()
+      .filter((i) => i.logEntryId !== entryId);
+    const entryToUpdate = exerciseHistory.find((i) => i.logEntryId === entryId);
+    const index = exerciseHistory.findIndex((i) => i.logEntryId === entryId);
+
+    if (!entryToUpdate) {
+      return;
+    }
+
+    entryToUpdate.info.push({
+      set: entryToUpdate.info.length + 1,
+      weight: 0,
+      reps: 0,
+    });
+
+    setUpdatedEntries((prev) => [
+      ...prev.filter((prev) => prev.logEntryId !== entryId),
+      entryToUpdate,
+    ]);
+
+    newExerciseHistory.splice(index, 0, entryToUpdate);
+    setExerciseHistory(newExerciseHistory);
+  };
+
+  const onDeleteSet = (set: number, entryId: string | undefined) => {
+    const newExerciseHistory = exerciseHistory
+      .slice()
+      .filter((i) => i.logEntryId !== entryId);
+
+    const entryToUpdate = exerciseHistory.find((i) => i.logEntryId === entryId);
+    const entryIndex = exerciseHistory.findIndex(
+      (i) => i.logEntryId === entryId
+    );
+    const setIndex = entryToUpdate?.info.findIndex((i) => i.set === set);
+
+    if (!entryToUpdate || setIndex === undefined) {
+      return;
+    }
+
+    entryToUpdate.info.splice(setIndex, 1);
+
+    entryToUpdate.info.forEach((i, index) => {
+      i.set = index + 1;
+    });
+
+    setUpdatedEntries((prev) => [
+      ...prev.filter((prev) => prev.logEntryId !== entryId),
+      entryToUpdate,
+    ]);
+
+    newExerciseHistory.splice(entryIndex, 0, entryToUpdate);
     setExerciseHistory(newExerciseHistory);
   };
 
@@ -113,7 +183,10 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
 
     type === "weight" ? (entry.weight = value) : (entry.reps = value);
 
-    setUpdatedEntries((prev) => [...prev, entryToUpdate]);
+    setUpdatedEntries((prev) => [
+      ...prev.filter((prev) => prev.logEntryId !== entryId),
+      entryToUpdate,
+    ]);
 
     newExerciseHistory.splice(index, 0, entryToUpdate);
     setExerciseHistory(newExerciseHistory);
@@ -138,7 +211,7 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
                   <InputNumber
                     readOnly={!isEditing}
                     prefix="kg"
-                    defaultValue={i.weight}
+                    value={i.weight}
                     onChange={(value) =>
                       onChange(entry.logEntryId, i.set, value, "weight")
                     }
@@ -146,11 +219,19 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
                   <InputNumber
                     readOnly={!isEditing}
                     prefix="reps"
-                    defaultValue={i.reps}
+                    value={i.reps}
                     onChange={(value) =>
                       onChange(entry.logEntryId, i.set, value, "reps")
                     }
                   />
+                  {isEditing && (
+                    <Button
+                      type="ghost"
+                      onClick={() => onDeleteSet(i.set, entry.logEntryId)}
+                      style={{ color: colors.delete }}
+                      icon={<MinusCircleOutlined />}
+                    />
+                  )}
                 </Space>
               ),
             };
@@ -191,11 +272,22 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
                 <div
                   style={{
                     marginTop: 16,
-                    width: "100%",
-                    visibility: entry.notes ? "visible" : "hidden",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                   }}
                 >
-                  <Title level={5}>Notes</Title>
+                  {isEditing && (
+                    <Button
+                      type="ghost"
+                      style={{ color: colors.primary }}
+                      onClick={() => onAddSet(entry.logEntryId)}
+                      icon={<PlusSquareOutlined style={{ fontSize: 18 }} />}
+                    />
+                  )}
+                  <Title level={5} style={{ width: "100%" }}>
+                    Notes
+                  </Title>
                   <TextArea
                     defaultValue={entry.notes}
                     readOnly={!isEditing}

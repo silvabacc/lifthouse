@@ -34,7 +34,7 @@ const Workout: React.FC<WorkoutProps> = ({ routine }) => {
     setEdit((prev) => !prev);
 
     if (data) {
-      await updateRoutine(data?.routine.routineId, currentExercises);
+      await updateRoutine(data.routine.routineId, currentExercises);
       refetch();
     }
   };
