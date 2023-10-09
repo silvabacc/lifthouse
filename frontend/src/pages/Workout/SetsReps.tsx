@@ -84,15 +84,17 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
         onChange={handleOnChangeNotes}
         autoSize={{ minRows: 3, maxRows: 5 }}
       />
-      <WorkoutButton
-        onClick={() => {
-          removeSetFromExercise(exercise.exerciseId, current);
-          setCurrent((prev) => prev - 1);
-        }}
-        disabled={current === 0}
-      >
-        Previous Set
-      </WorkoutButton>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <WorkoutButton
+          onClick={() => {
+            removeSetFromExercise(exercise.exerciseId, current);
+            setCurrent((prev) => prev - 1);
+          }}
+          disabled={current === 0}
+        >
+          Previous Set
+        </WorkoutButton>
+      </div>
     </Space>
   );
 };
