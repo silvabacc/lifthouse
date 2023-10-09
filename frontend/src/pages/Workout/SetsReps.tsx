@@ -26,10 +26,11 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
   useEffect(() => {
     const fetchTemporaryStorage = async () => {
       setTemporaryStorage(await tempData);
+      setNotes((await tempData)?.notes || "");
     };
 
     fetchTemporaryStorage();
-  }, [JSON.stringify(tempData)]);
+  }, []);
 
   const handleOnChangeNotes = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNotes(e.target.value);
@@ -52,7 +53,7 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
           placeHolderInfo={placeHolderInfo?.[0]}
           exercise={exercise}
           overrideReps={info?.reps}
-          overrideWeights={info?.reps}
+          overrideWeights={info?.weight}
           next={setCurrent}
           disabled={i !== current}
         />
