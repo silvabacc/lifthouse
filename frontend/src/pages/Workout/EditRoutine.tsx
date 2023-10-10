@@ -1,5 +1,4 @@
 import React from "react";
-import { useDatabase } from "../../hooks/useDatabase";
 import { IntensityRepRange, VolumeRepRange } from "../../../../backend/data";
 import { Col, Collapse, Row } from "antd";
 import SelectExercise from "./components/SelectExercise";
@@ -13,6 +12,7 @@ import {
   RoutineType,
 } from "@backend/types";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
+import { useWorkout } from "./useWorkout";
 
 const { Panel } = Collapse;
 
@@ -37,7 +37,7 @@ const EditRoutine: React.FC<EditRoutineProps> = ({
   currentExercises,
   setCurrentExercises,
 }) => {
-  const { queryExercises } = useDatabase();
+  const { queryExercises } = useWorkout();
   const { clearTemporaryStorageForExercise } = useTemporaryStorage();
   const { data: allExercises = [] } = queryExercises();
 
@@ -82,74 +82,72 @@ const EditRoutine: React.FC<EditRoutineProps> = ({
   };
 
   return (
-    <Container direction="vertical">
-      <Row gutter={[6, 6]}>
-        {currentExercises.map((exercise, index) => {
-          const exerciseInfo = allExercises.find(
+    <Row gutter={[6, 6]}>
+      {currentExercises.map((exercise, index) => {
+        const exerciseInfo = allExercises.find(
+          (exerciseFromList) =>
+            exerciseFromList.exerciseId === exercise.exerciseId
+        );
+
+        const exercisesWithType = allExercises
+          //Filters exercises by type e.g. Vertical Push, Horizontal Push, etc
+          .filter(
             (exerciseFromList) =>
-              exerciseFromList.exerciseId === exercise.exerciseId
-          );
+              exerciseInfo?.exerciseType === exerciseFromList.exerciseType
+          )
+          //Removes any duplicated exercises from the list if already in the routine
+          .filter(
+            (exerciseFromList) =>
+              !currentExercises
+                .map((i) => i.exerciseId)
+                .includes(exerciseFromList.exerciseId)
+          )
+          //Maps the exercises to the format required by the Select component
+          .map((exerciseFromList) => ({
+            value: exerciseFromList.exerciseId,
+            label: exerciseFromList.exerciseName,
+          }))
+          //Sorts the exercises alphabetically
+          .sort((a, b) => a.label.localeCompare(b.label));
 
-          const exercisesWithType = allExercises
-            //Filters exercises by type e.g. Vertical Push, Horizontal Push, etc
-            .filter(
-              (exerciseFromList) =>
-                exerciseInfo?.exerciseType === exerciseFromList.exerciseType
-            )
-            //Removes any duplicated exercises from the list if already in the routine
-            .filter(
-              (exerciseFromList) =>
-                !currentExercises
-                  .map((i) => i.exerciseId)
-                  .includes(exerciseFromList.exerciseId)
-            )
-            //Maps the exercises to the format required by the Select component
-            .map((exerciseFromList) => ({
-              value: exerciseFromList.exerciseId,
-              label: exerciseFromList.exerciseName,
-            }))
-            //Sorts the exercises alphabetically
-            .sort((a, b) => a.label.localeCompare(b.label));
-
-          return (
-            <Col xs={24} sm={8} key={index}>
-              <Collapse collapsible="disabled" size="large">
-                <Panel
-                  key={exercise.exerciseId}
-                  header={
-                    <Container direction="vertical">
-                      <SelectExercise
-                        bordered={false}
-                        filterOption={(input, option) =>
-                          option?.label
-                            .toLocaleLowerCase()
-                            .indexOf(input.toLocaleLowerCase()) >= 0
-                        }
+        return (
+          <Col xs={24} sm={8} key={index}>
+            <Collapse collapsible="disabled" size="large">
+              <Panel
+                key={exercise.exerciseId}
+                header={
+                  <Container direction="vertical">
+                    <SelectExercise
+                      bordered={false}
+                      filterOption={(input, option) =>
+                        option?.label
+                          .toLocaleLowerCase()
+                          .indexOf(input.toLocaleLowerCase()) >= 0
+                      }
+                      onChange={(value) =>
+                        onExerciseChange(value as string, index)
+                      }
+                      showSearch
+                      value={exerciseInfo?.exerciseName}
+                      options={exercisesWithType}
+                    />
+                    <RepContainer>
+                      <SelectRepRange
+                        options={repRangeOptions}
+                        defaultValue={`${exercise.sets} x ${exercise.reps}`}
                         onChange={(value) =>
-                          onExerciseChange(value as string, index)
+                          onRepRangeChange(value as string, index)
                         }
-                        showSearch
-                        value={exerciseInfo?.exerciseName}
-                        options={exercisesWithType}
                       />
-                      <RepContainer>
-                        <SelectRepRange
-                          options={repRangeOptions}
-                          defaultValue={`${exercise.sets} x ${exercise.reps}`}
-                          onChange={(value) =>
-                            onRepRangeChange(value as string, index)
-                          }
-                        />
-                      </RepContainer>
-                    </Container>
-                  }
-                />
-              </Collapse>
-            </Col>
-          );
-        })}
-      </Row>
-    </Container>
+                    </RepContainer>
+                  </Container>
+                }
+              />
+            </Collapse>
+          </Col>
+        );
+      })}
+    </Row>
   );
 };
 

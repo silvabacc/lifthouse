@@ -4,11 +4,11 @@ import WorkoutButton from "./components/WorkoutButton";
 import { FinishWorkoutFooter } from "./WorkoutStyles";
 import { Exercise, Routine } from "@backend/types";
 import { useNavigate } from "react-router-dom";
-import { useDatabase } from "@frontend/hooks/useDatabase";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 import History from "./History";
 import { useState } from "react";
 import React from "react";
+import { useWorkout } from "./useWorkout";
 
 interface ExercisesProps {
   data: {
@@ -24,7 +24,7 @@ const { Content, Footer } = Layout;
 const Exercises: React.FC<ExercisesProps> = ({ data }) => {
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
-  const { logEntry } = useDatabase();
+  const { logEntry } = useWorkout();
   const { clearTemporaryStorage } = useTemporaryStorage();
 
   const finishWorkout = async () => {

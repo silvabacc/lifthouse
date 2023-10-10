@@ -1,4 +1,3 @@
-import { useDatabase } from "@frontend/hooks/useDatabase";
 import {
   Button,
   Input,
@@ -26,6 +25,7 @@ import Loading from "../common/Loading";
 import dayjs from "dayjs";
 import { LogEntry } from "@backend/types";
 import colors from "@frontend/theme/colors";
+import { useWorkout } from "./useWorkout";
 
 interface HistoryProps {
   exerciseId: string;
@@ -35,8 +35,7 @@ const { TextArea } = Input;
 const { Text, Title } = Typography;
 
 const History: React.FC<HistoryProps> = ({ exerciseId }) => {
-  const { getExerciseHistory, deleteLogEntry, updateLogEntries } =
-    useDatabase();
+  const { getExerciseHistory, deleteLogEntry, updateLogEntries } = useWorkout();
   const [exerciseHistory, setExerciseHistory] = useState<LogEntry[]>([]);
   const [updatedEntries, setUpdatedEntries] = useState<LogEntry[]>([]);
   const { isLoading, data } = getExerciseHistory(exerciseId);

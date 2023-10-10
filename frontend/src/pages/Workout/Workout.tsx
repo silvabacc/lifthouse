@@ -3,13 +3,13 @@ import React, { useEffect, useState } from "react";
 import "../../../../backend/dexie";
 import { pageTitleMapping } from "./constants";
 import { Container } from "./WorkoutStyles";
-import { useDatabase } from "@frontend/hooks/useDatabase";
 import Exercises from "./Exercises";
 import { RoutineExercise, RoutineType } from "@backend/types";
 import EditRoutine from "./EditRoutine";
 import Loading from "../common/Loading";
 import Header from "../common/Header";
 import { Button } from "antd";
+import { useWorkout } from "./useWorkout";
 
 interface WorkoutProps {
   routine: RoutineType;
@@ -19,7 +19,7 @@ const Workout: React.FC<WorkoutProps> = ({ routine }) => {
   const [currentExercises, setCurrentExercises] = useState<RoutineExercise[]>(
     []
   );
-  const { queryRoutine, updateRoutine } = useDatabase();
+  const { queryRoutine, updateRoutine } = useWorkout();
   const { data, isLoading, refetch } = queryRoutine(routine);
 
   const [edit, setEdit] = useState(false);

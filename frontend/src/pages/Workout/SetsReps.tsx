@@ -4,7 +4,7 @@ import SetsRepsRow from "./SetsRepsRow";
 import WorkoutButton from "./components/WorkoutButton";
 import { Exercise, LogEntry } from "@backend/types";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
-import { useDatabase } from "@frontend/hooks/useDatabase";
+import { useWorkout } from "./useWorkout";
 
 interface SetsRepsProps {
   exercise: Exercise;
@@ -17,7 +17,7 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
   const [current, setCurrent] = useState(0);
   const { getTemporaryStorage, removeSetFromExercise, writeTemporaryStorage } =
     useTemporaryStorage();
-  const { getExerciseHistory } = useDatabase();
+  const { getExerciseHistory } = useWorkout();
   const { data: placeHolderInfo } = getExerciseHistory(exercise.exerciseId, 1);
   const tempData = getTemporaryStorage(exercise.exerciseId);
   const [temporaryStorage, setTemporaryStorage] = useState<LogEntry>();
