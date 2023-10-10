@@ -72,13 +72,13 @@ const Exercises: React.FC<ExercisesProps> = ({ data }) => {
                   <Panel
                     key={exercise.exerciseName}
                     header={
-                      <Space direction="vertical">
+                      <>
                         <Text strong>{exercise.exerciseName}</Text>
-                        <Space>
+                        <div>
                           <Text keyboard>{exerciseFromRoutine.sets}</Text>x
                           <Text keyboard>{exerciseFromRoutine.reps}</Text>
-                        </Space>
-                      </Space>
+                        </div>
+                      </>
                     }
                   >
                     <Tabs items={items} />

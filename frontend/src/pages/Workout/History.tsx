@@ -36,13 +36,17 @@ const { Text, Title } = Typography;
 
 const History: React.FC<HistoryProps> = ({ exerciseId }) => {
   const { getExerciseHistory, deleteLogEntry, updateLogEntries } = useWorkout();
-  const [exerciseHistory, setExerciseHistory] = useState<LogEntry[]>([]);
+  const [exerciseHistory, setExerciseHistory] = useState<LogEntry[]>();
   const [updatedEntries, setUpdatedEntries] = useState<LogEntry[]>([]);
   const { isLoading, data } = getExerciseHistory(exerciseId);
   const [isEditing, setEditing] = useState(false);
 
   const onDeleteEntry = async (logEntryId?: string) => {
     if (!logEntryId) {
+      return;
+    }
+
+    if (!exerciseHistory) {
       return;
     }
 
@@ -198,117 +202,117 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
     speed: 100,
   };
 
-  return (
-    <>
-      <Slider {...settings}>
-        {exerciseHistory.map((entry, index) => {
-          const stepItems: StepProps[] = entry.info.map((i) => {
-            return {
-              title: `Set ${i.set}`,
-              description: (
-                <Space>
-                  <InputNumber
-                    readOnly={!isEditing}
-                    prefix="kg"
-                    value={i.weight}
-                    onChange={(value) =>
-                      onChange(entry.logEntryId, i.set, value, "weight")
-                    }
-                  />
-                  <InputNumber
-                    readOnly={!isEditing}
-                    prefix="reps"
-                    value={i.reps}
-                    onChange={(value) =>
-                      onChange(entry.logEntryId, i.set, value, "reps")
-                    }
-                  />
-                  {isEditing && (
-                    <Button
-                      type="ghost"
-                      onClick={() => onDeleteSet(i.set, entry.logEntryId)}
-                      style={{ color: colors.delete }}
-                      icon={<MinusCircleOutlined />}
-                    />
-                  )}
-                </Space>
-              ),
-            };
-          });
+  if (isLoading) {
+    return <Loading />;
+  }
 
-          return (
-            <div key={index}>
-              <CarouselContainer direction="vertical" key={entry.exerciseId}>
-                <div>
-                  <HistoryTitleContainer>
-                    <Title level={5}>
-                      {dayjs(entry.date).format("Do MMMM YYYY")}
-                    </Title>
-                    {!isEditing && (
-                      <Space>
-                        <EditButton
-                          onClick={() => setEditing((prev) => !prev)}
-                          type="ghost"
-                          icon={<EditOutlined />}
-                        />
-                        <DeleteButton
-                          type="ghost"
-                          icon={<DeleteOutlined />}
-                          onClick={() => onDeleteEntry(entry.logEntryId)}
-                        />
-                      </Space>
-                    )}
-                  </HistoryTitleContainer>
-                  <Steps
-                    style={{ alignItems: "center" }}
-                    direction="vertical"
-                    items={stepItems}
-                  />
-                  {entry.info.length === 0 && (
-                    <Text>No sets were recorded for this entry</Text>
-                  )}
-                </div>
-                <div
-                  style={{
-                    marginTop: 16,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  {isEditing && (
-                    <Button
-                      type="ghost"
-                      style={{ color: colors.primary }}
-                      onClick={() => onAddSet(entry.logEntryId)}
-                      icon={<PlusSquareOutlined style={{ fontSize: 18 }} />}
-                    />
-                  )}
-                  <Title level={5} style={{ width: "100%" }}>
-                    Notes
-                  </Title>
-                  <TextArea
-                    defaultValue={entry.notes}
-                    readOnly={!isEditing}
-                    onChange={(e) =>
-                      onNotesChange(e.target.value, entry.logEntryId)
-                    }
-                    autoSize={{ minRows: 3, maxRows: 5 }}
-                  />
-                </div>
+  return (
+    <Slider {...settings}>
+      {exerciseHistory.map((entry) => {
+        const stepItems: StepProps[] = entry.info.map((i) => {
+          return {
+            title: `Set ${i.set}`,
+            description: (
+              <Space>
+                <InputNumber
+                  readOnly={!isEditing}
+                  prefix="kg"
+                  value={i.weight}
+                  onChange={(value) =>
+                    onChange(entry.logEntryId, i.set, value, "weight")
+                  }
+                />
+                <InputNumber
+                  readOnly={!isEditing}
+                  prefix="reps"
+                  value={i.reps}
+                  onChange={(value) =>
+                    onChange(entry.logEntryId, i.set, value, "reps")
+                  }
+                />
                 {isEditing && (
-                  <div style={{ display: "flex", justifyContent: "center" }}>
-                    <Button type="primary" onClick={onSave}>
-                      Save
-                    </Button>
-                  </div>
+                  <Button
+                    type="ghost"
+                    onClick={() => onDeleteSet(i.set, entry.logEntryId)}
+                    style={{ color: colors.delete }}
+                    icon={<MinusCircleOutlined />}
+                  />
                 )}
-              </CarouselContainer>
+              </Space>
+            ),
+          };
+        });
+
+        return (
+          <CarouselContainer direction="vertical" key={entry.exerciseId}>
+            <div>
+              <HistoryTitleContainer>
+                <Title level={5}>
+                  {dayjs(entry.date).format("Do MMMM YYYY")}
+                </Title>
+                {!isEditing && (
+                  <Space>
+                    <EditButton
+                      onClick={() => setEditing((prev) => !prev)}
+                      type="ghost"
+                      icon={<EditOutlined />}
+                    />
+                    <DeleteButton
+                      type="ghost"
+                      icon={<DeleteOutlined />}
+                      onClick={() => onDeleteEntry(entry.logEntryId)}
+                    />
+                  </Space>
+                )}
+              </HistoryTitleContainer>
+              <Steps
+                style={{ alignItems: "center" }}
+                direction="vertical"
+                items={stepItems}
+              />
+              {entry.info.length === 0 && (
+                <Text>No sets were recorded for this entry</Text>
+              )}
             </div>
-          );
-        })}
-      </Slider>
-    </>
+            <div
+              style={{
+                marginTop: 16,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              {isEditing && (
+                <Button
+                  type="ghost"
+                  style={{ color: colors.primary }}
+                  onClick={() => onAddSet(entry.logEntryId)}
+                  icon={<PlusSquareOutlined style={{ fontSize: 18 }} />}
+                />
+              )}
+              <Title level={5} style={{ width: "100%" }}>
+                Notes
+              </Title>
+              <TextArea
+                defaultValue={entry.notes}
+                readOnly={!isEditing}
+                onChange={(e) =>
+                  onNotesChange(e.target.value, entry.logEntryId)
+                }
+                autoSize={{ minRows: 3, maxRows: 5 }}
+              />
+            </div>
+            {isEditing && (
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <Button type="primary" onClick={onSave}>
+                  Save
+                </Button>
+              </div>
+            )}
+          </CarouselContainer>
+        );
+      })}
+    </Slider>
   );
 };
 

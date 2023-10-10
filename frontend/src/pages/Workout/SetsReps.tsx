@@ -70,10 +70,8 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
     }
   }, [JSON.stringify(temporaryStorage)]);
 
-  console.log(placeHolderInfo);
-
   return (
-    <Space style={{ width: "100%" }} direction="vertical">
+    <div>
       <Steps
         style={{ alignItems: "center" }}
         direction="vertical"
@@ -97,7 +95,7 @@ const SetsReps: React.FC<SetsRepsProps> = ({ exercise, sets }) => {
           Previous Set
         </WorkoutButton>
       </div>
-    </Space>
+    </div>
   );
 };
 
