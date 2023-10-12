@@ -216,6 +216,7 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
               <Space>
                 <InputNumber
                   readOnly={!isEditing}
+                  inputMode="decimal"
                   prefix="kg"
                   value={i.weight}
                   onChange={(value) =>
@@ -224,6 +225,7 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
                 />
                 <InputNumber
                   readOnly={!isEditing}
+                  inputMode="decimal"
                   prefix="reps"
                   value={i.reps}
                   onChange={(value) =>

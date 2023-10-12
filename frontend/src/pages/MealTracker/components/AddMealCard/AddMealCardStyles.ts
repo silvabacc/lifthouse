@@ -5,7 +5,7 @@ export const AddMealTableData = styled.td`
   padding: 6px;
 `;
 
-export const AddMealLabelInput = styled(InputNumber)`
+export const AddMealInput = styled(InputNumber)`
   width: 100%;
 `;
 

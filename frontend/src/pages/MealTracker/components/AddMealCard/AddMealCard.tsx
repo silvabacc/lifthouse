@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { NutrientText } from "../../MealTrackerStyles";
 import {
   AddLabelText,
-  AddMealLabelInput,
+  AddMealInput,
   AddMealTableData,
 } from "./AddMealCardStyles";
 import { useMealTracker } from "../../useMealTracker";
@@ -79,6 +79,7 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
       type="inner"
       title={
         <Input
+          type="text"
           onChange={handleMealTitle}
           placeholder="Meal Title..."
           value={mealTitle}
@@ -92,7 +93,8 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
               <NutrientText>Grams of food</NutrientText>
             </td>
             <td style={{ paddingBottom: 16 }}>
-              <AddMealLabelInput
+              <AddMealInput
+                inputMode="decimal"
                 precision={1}
                 value={grams}
                 onChange={(e) => setGrams(e as number)}
@@ -110,7 +112,8 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
             </td>
             {caloriesRow.map((item, index) => (
               <AddMealTableData key={index}>
-                <AddMealLabelInput
+                <AddMealInput
+                  inputMode="decimal"
                   precision={1}
                   value={item.state}
                   onChange={(e) => handleNutritionInput(e as number, item.set)}
@@ -118,7 +121,8 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
               </AddMealTableData>
             ))}
             <AddMealTableData>
-              <AddMealLabelInput
+              <AddMealInput
+                inputMode="decimal"
                 precision={1}
                 value={caloriesTotal}
                 onChange={(e) => handleCalorieTotalChange(e as number)}
@@ -131,7 +135,8 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
             </td>
             {proteinRow.map((item, index) => (
               <AddMealTableData key={index}>
-                <AddMealLabelInput
+                <AddMealInput
+                  inputMode="decimal"
                   precision={1}
                   value={item.state}
                   onChange={(e) => handleNutritionInput(e as number, item.set)}
@@ -139,7 +144,8 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
               </AddMealTableData>
             ))}
             <AddMealTableData>
-              <AddMealLabelInput
+              <AddMealInput
+                inputMode="decimal"
                 precision={1}
                 value={proteinTotal}
                 onChange={(e) => handleProteinTotalChange(e as number)}

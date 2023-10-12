@@ -52,6 +52,7 @@ const DailyWeightInCalendar: React.FC = () => {
       <div style={{ display: "flex", padding: 16, alignItems: "center" }}>
         <Text style={{ marginRight: 6 }}>Weight:</Text>
         <InputNumber
+          inputMode="decimal"
           style={{ marginRight: 6 }}
           min={0}
           value={weight}

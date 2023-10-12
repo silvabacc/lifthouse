@@ -36,6 +36,7 @@ const SetsRepsRow: React.FC<SetsRepsRowProps> = ({
   return (
     <Space direction="horizontal">
       <InputNumber
+        inputMode="decimal"
         prefix="kg"
         disabled={disabled}
         placeholder={placeHolderInfo?.info?.[set - 1]?.weight?.toString()}
@@ -43,6 +44,7 @@ const SetsRepsRow: React.FC<SetsRepsRowProps> = ({
         onChange={(value) => value && setWeight(value)}
       />
       <InputNumber
+        inputMode="decimal"
         prefix="reps"
         disabled={disabled}
         placeholder={placeHolderInfo?.info?.[set - 1]?.reps?.toString()}
