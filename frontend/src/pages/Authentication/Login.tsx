@@ -3,9 +3,8 @@ import AuthPageHeader from "./components/AuthPageHeader";
 
 import { Alert, Button, Divider, Form, Input, Typography, message } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
-import { LockOutlined } from "@ant-design/icons";
+import { LockOutlined, GoogleOutlined } from "@ant-design/icons";
 import useAuthentication from "@frontend/hooks/useAuthentication";
-import { GoogleOutlined } from "@ant-design/icons";
 import { AuthenticationContainer } from "./AuthenticationStyles";
 import { EmailField, FormButton, FormWrapper } from "./components/Form";
 

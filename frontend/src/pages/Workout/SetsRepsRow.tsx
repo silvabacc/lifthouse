@@ -1,6 +1,6 @@
 import React, { Dispatch, useEffect, useState } from "react";
 import { Button, InputNumber, Space } from "antd";
-import { BsCheckSquareFill } from "react-icons/bs";
+import { CheckSquareOutlined } from "@ant-design/icons";
 import colors from "../../theme/colors";
 import { Exercise, LogEntry } from "@backend/types";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
@@ -52,6 +52,7 @@ const SetsRepsRow: React.FC<SetsRepsRowProps> = ({
       <Button
         type="ghost"
         disabled={disabled}
+        style={{ color: disabled ? colors.grey : colors.primary }}
         onClick={() => {
           writeTemporaryStorage(exercise.exerciseId, {
             set,
@@ -60,12 +61,7 @@ const SetsRepsRow: React.FC<SetsRepsRowProps> = ({
           });
           next && next((current) => (current += 1));
         }}
-        icon={
-          <BsCheckSquareFill
-            color={disabled ? colors.grey : colors.primary}
-            size={24}
-          />
-        }
+        icon={<CheckSquareOutlined size={24} />}
       />
     </Space>
   );
