@@ -41,6 +41,8 @@ const EditRoutine: React.FC<EditRoutineProps> = ({
   const { clearTemporaryStorageForExercise } = useTemporaryStorage();
   const { data: allExercises = [] } = queryExercises();
 
+  if (!data) return null;
+
   const routineType = data.routine.routinesType;
 
   const repRangeOptions = RepRangeMapping[routineType].map(
