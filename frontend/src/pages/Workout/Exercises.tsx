@@ -9,7 +9,6 @@ import History from "./History";
 import { useState } from "react";
 import React from "react";
 import { useWorkout } from "./useWorkout";
-import SkeletonPanel from "./Skeletons/SkeletonPanel";
 
 interface ExercisesProps {
   data?: {
@@ -47,7 +46,6 @@ const Exercises: React.FC<ExercisesProps> = ({ data, isLoading }) => {
     <Layout style={{ backgroundColor: "white" }}>
       <Content>
         <Row gutter={[6, 6]}>
-          <SkeletonPanel loading={isLoading} />
           {data?.routine.exercises.map((exerciseFromRoutine, index) => {
             const exercise =
               data.exercises.find(

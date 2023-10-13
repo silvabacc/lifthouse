@@ -1,7 +1,7 @@
 import { RoutineType } from "@backend/types";
 import { Navigate, createBrowserRouter, useLocation } from "react-router-dom";
 import Home from "./pages/Home/Home";
-import Workout from "./pages/Workout/Workout";
+import WorkoutTwo from "./pages/WorkoutTwo/Workout";
 import Login from "./pages/Authentication/Login";
 import SignUp from "./pages/Authentication/SignUp";
 import ForgotPassword from "./pages/Authentication/ForgotPassword";
@@ -9,17 +9,32 @@ import MealTracker from "./pages/MealTracker/MealTracker";
 import UpdatePassword from "./pages/Authentication/UpdatePassword";
 import { useEffect } from "react";
 import DailyWeightIn from "./pages/DailyWeighIn/DailyWeightIn";
+import Header from "./pages/common/Header";
+import SettingMenu from "./common/SettingMenu";
+
+export const pageTitleMapping = {
+  [RoutineType.UPPER_INTENSITY]: "Upper Intensity",
+  [RoutineType.UPPER_VOLUME]: "Upper Volume",
+  [RoutineType.LOWER_INTENSITY]: "Lower Intensity",
+  [RoutineType.LOWER_VOLUME]: "Lower Volume",
+};
 
 //Redirects user to login if not authenticated
 const guardRoutes = (
   element: JSX.Element,
   isAuthenticated: boolean,
-  navigateTo?: string
+  title?: string,
+  showBackButton = true
 ) => {
   return (
     <>
       <ScrollToTop />
-      {isAuthenticated ? element : <Navigate to={navigateTo || "/login"} />}
+      <Header
+        title={title || ""}
+        showBackButton={showBackButton}
+        rightHandSide={<SettingMenu />}
+      />
+      {isAuthenticated ? element : <Navigate to={"/login"} />}
     </>
   );
 };
@@ -29,23 +44,41 @@ export const createRoutes = (isAuthenticated: boolean) => {
   const routes = [
     {
       path: "/",
-      element: guardRoutes(<Home />, isAuthenticated),
-    },
-    {
-      path: "/update-password",
-      element: guardRoutes(<UpdatePassword />, isAuthenticated),
+      element: guardRoutes(
+        <Home />,
+        isAuthenticated,
+        "Time to Grind 💪",
+        false
+      ),
     },
     {
       path: "/home",
-      element: guardRoutes(<Home />, isAuthenticated),
+      element: guardRoutes(
+        <Home />,
+        isAuthenticated,
+        "Time to Grind 💪",
+        false
+      ),
+    },
+    {
+      path: "/update-password",
+      element: guardRoutes(
+        <UpdatePassword />,
+        isAuthenticated,
+        "Update Password 🔒"
+      ),
     },
     {
       path: "/weigh-in",
-      element: guardRoutes(<DailyWeightIn />, isAuthenticated),
+      element: guardRoutes(
+        <DailyWeightIn />,
+        isAuthenticated,
+        "Daily Weigh In ⚖️"
+      ),
     },
     {
       path: "/meal-tracker",
-      element: guardRoutes(<MealTracker />, isAuthenticated),
+      element: guardRoutes(<MealTracker />, isAuthenticated, "Meal Tracker 🥑"),
     },
     {
       path: "/recovery",
@@ -68,7 +101,11 @@ export const createRoutes = (isAuthenticated: boolean) => {
     { routeSegment: "lower_volume", prop: RoutineType.LOWER_VOLUME },
   ].map((route) => ({
     path: `/routine/${route.routeSegment}`,
-    element: guardRoutes(<Workout routine={route.prop} />, isAuthenticated),
+    element: guardRoutes(
+      <WorkoutTwo routine={route.prop} />,
+      isAuthenticated,
+      pageTitleMapping[route.prop]
+    ),
   }));
 
   return createBrowserRouter([...routes, ...workoutRoutes]);
