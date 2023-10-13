@@ -17,7 +17,7 @@ import { useWorkout } from "./useWorkout";
 const { Panel } = Collapse;
 
 interface EditRoutineProps {
-  data: {
+  data?: {
     routine: Routine;
     exercises: Exercise[];
   };
