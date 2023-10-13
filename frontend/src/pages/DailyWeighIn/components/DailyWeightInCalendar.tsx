@@ -1,4 +1,11 @@
-import { Button, Calendar, InputNumber, Tooltip, Typography } from "antd";
+import {
+  Button,
+  Calendar,
+  InputNumber,
+  Skeleton,
+  Tooltip,
+  Typography,
+} from "antd";
 import dayjs from "dayjs";
 import React, { useState } from "react";
 import Loading from "../../common/Loading";
@@ -44,10 +51,6 @@ const DailyWeightInCalendar: React.FC = () => {
   };
 
   const fullCellRender = (date: Dayjs, info: CellRenderInfo<Dayjs>) => {
-    if (isLoading) {
-      return <Loading />;
-    }
-
     const tooltipElement = (
       <div style={{ display: "flex", padding: 16, alignItems: "center" }}>
         <Text style={{ marginRight: 6 }}>Weight:</Text>
@@ -88,13 +91,21 @@ const DailyWeightInCalendar: React.FC = () => {
   };
 
   return (
-    <Calendar
-      disabledDate={(date) => date.year() > dayjs().year()}
-      fullscreen={false}
-      onPanelChange={onPanelChange}
-      onSelect={(date) => setSelectedValue(date)}
-      fullCellRender={fullCellRender}
-    />
+    <>
+      {isLoading ? (
+        <Skeleton.Node style={{ width: "100%" }} active>
+          <></>
+        </Skeleton.Node>
+      ) : (
+        <Calendar
+          disabledDate={(date) => date.year() > dayjs().year()}
+          fullscreen={false}
+          onPanelChange={onPanelChange}
+          onSelect={(date) => setSelectedValue(date)}
+          fullCellRender={fullCellRender}
+        />
+      )}
+    </>
   );
 };
 

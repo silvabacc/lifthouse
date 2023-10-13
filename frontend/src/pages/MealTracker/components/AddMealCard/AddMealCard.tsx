@@ -102,7 +102,6 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
             </td>
           </tr>
           <tr>
-            <div />
             <AddLabelText>per 100g</AddLabelText>
             <AddLabelText>Total</AddLabelText>
           </tr>

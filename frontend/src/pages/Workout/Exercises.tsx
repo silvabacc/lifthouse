@@ -1,4 +1,4 @@
-import { Col, Collapse, Layout, Row, Space, Tabs, Typography } from "antd";
+import { Col, Collapse, Layout, Row, Tabs, Typography } from "antd";
 import SetsReps from "./SetsReps";
 import WorkoutButton from "./components/WorkoutButton";
 import { FinishWorkoutFooter } from "./WorkoutStyles";
@@ -9,25 +9,31 @@ import History from "./History";
 import { useState } from "react";
 import React from "react";
 import { useWorkout } from "./useWorkout";
+import SkeletonPanel from "./Skeletons/SkeletonPanel";
 
 interface ExercisesProps {
-  data: {
+  data?: {
     routine: Routine;
     exercises: Exercise[];
   };
+  isLoading: boolean;
 }
 
 const { Panel } = Collapse;
 const { Text } = Typography;
 const { Content, Footer } = Layout;
 
-const Exercises: React.FC<ExercisesProps> = ({ data }) => {
+const Exercises: React.FC<ExercisesProps> = ({ data, isLoading }) => {
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
   const { logEntry } = useWorkout();
   const { clearTemporaryStorage } = useTemporaryStorage();
 
   const finishWorkout = async () => {
+    if (!data) {
+      return;
+    }
+
     setSaving(true);
     const saved = await logEntry(data.exercises);
     if (saved) {
@@ -41,7 +47,8 @@ const Exercises: React.FC<ExercisesProps> = ({ data }) => {
     <Layout style={{ backgroundColor: "white" }}>
       <Content>
         <Row gutter={[6, 6]}>
-          {data.routine.exercises.map((exerciseFromRoutine, index) => {
+          <SkeletonPanel loading={isLoading} />
+          {data?.routine.exercises.map((exerciseFromRoutine, index) => {
             const exercise =
               data.exercises.find(
                 (exercise) =>

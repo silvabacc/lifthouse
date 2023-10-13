@@ -1,10 +1,14 @@
-import { Alert } from "antd";
+import { Alert, Skeleton } from "antd";
 import React from "react";
 import { useDailyWeightInContext } from "../DailyWeightInContext";
 import dayjs from "dayjs";
 
 const DailyWeightInAlert: React.FC = () => {
-  const { dailyWeightInData } = useDailyWeightInContext();
+  const { dailyWeightInData, isLoading } = useDailyWeightInContext();
+
+  if (isLoading) {
+    return <Skeleton active />;
+  }
 
   const mondayOfCurrentWeek = dayjs().weekday(0);
 

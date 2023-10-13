@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Header from "../common/Header";
 import DateMover from "./components/DateMover/DateMover";
-import { Tabs, TabsProps } from "antd";
+import { Skeleton, Tabs, TabsProps } from "antd";
 import MealTrackerCard from "./components/MealTrackerCard/MealTrackerCard";
 import MacroNutrients from "./components/MacroNutrients/MacroNutrients";
 import dayjs from "dayjs";
@@ -9,13 +9,14 @@ import Loading from "../common/Loading";
 import { MealTrackerContainer } from "./MealTrackerStyles";
 import AddMealCard from "./components/AddMealCard/AddMealCard";
 import { useMealTracker } from "./useMealTracker";
+import SkeletonPanel from "../Workout/Skeletons/SkeletonPanel";
 
 const MealTracker: React.FC = () => {
   const [activeTab, setActivetab] = useState("1");
   const [selectedDay, setSelectedDay] = useState(() => dayjs());
 
   const { deleteMeal, getMeals } = useMealTracker();
-  const { isLoading, data, refetch } = getMeals(selectedDay.toDate());
+  const { data, refetch, isLoading } = getMeals(selectedDay.toDate());
 
   const goToMealTab = () => {
     refetch();
@@ -28,13 +29,18 @@ const MealTracker: React.FC = () => {
   };
 
   const Cards = () => {
-    return data?.map((meal) => (
-      <MealTrackerCard
-        key={meal.id}
-        data={meal}
-        onDeleteCard={() => onDeleteCard(meal.id)}
-      />
-    ));
+    return (
+      <>
+        <SkeletonPanel loading={isLoading} />
+        {data?.map((meal) => (
+          <MealTrackerCard
+            key={meal.id}
+            data={meal}
+            onDeleteCard={() => onDeleteCard(meal.id)}
+          />
+        ))}
+      </>
+    );
   };
 
   const items: TabsProps["items"] = [
@@ -52,8 +58,6 @@ const MealTracker: React.FC = () => {
 
   const calories = data?.reduce((acc, curr) => acc + curr.calories, 0) || 0;
   const protein = data?.reduce((acc, curr) => acc + curr.protein, 0) || 0;
-
-  if (isLoading) return <Loading />;
 
   return (
     <>

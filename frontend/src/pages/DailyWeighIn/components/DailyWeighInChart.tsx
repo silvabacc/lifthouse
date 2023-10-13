@@ -1,7 +1,7 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
 import Loading from "../../common/Loading";
-import { Typography } from "antd";
+import { Skeleton, Typography } from "antd";
 import { ChartData, ChartOptions } from "chart.js";
 import { useDailyWeightInContext } from "../DailyWeightInContext";
 
@@ -16,7 +16,11 @@ const DailyWeighInChart: React.FC<DailyWeighInChartProps> = ({ title }) => {
     useDailyWeightInContext();
 
   if (isLoading) {
-    return <Loading />;
+    return (
+      <Skeleton.Node style={{ width: "100%", height: 300 }} active>
+        <></>
+      </Skeleton.Node>
+    );
   }
 
   const monthData = dailyWeightInData.filter(

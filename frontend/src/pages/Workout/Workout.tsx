@@ -8,7 +8,7 @@ import { RoutineExercise, RoutineType } from "@backend/types";
 import EditRoutine from "./EditRoutine";
 import Loading from "../common/Loading";
 import Header from "../common/Header";
-import { Button } from "antd";
+import { Button, Skeleton } from "antd";
 import { useWorkout } from "./useWorkout";
 
 interface WorkoutProps {
@@ -39,10 +39,6 @@ const Workout: React.FC<WorkoutProps> = ({ routine }) => {
     }
   };
 
-  if (isLoading || data === undefined) {
-    return <Loading />;
-  }
-
   return (
     <Container direction="vertical">
       <Header
@@ -60,7 +56,7 @@ const Workout: React.FC<WorkoutProps> = ({ routine }) => {
           setCurrentExercises={setCurrentExercises}
         />
       ) : (
-        <Exercises data={data} />
+        <Exercises data={data} isLoading={isLoading} />
       )}
     </Container>
   );

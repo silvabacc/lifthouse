@@ -1,7 +1,9 @@
-import { Typography } from "antd";
+import { Skeleton, Typography } from "antd";
 import React from "react";
 import MealTrackerNumberText from "../MealTrackerNumberText";
 import { MacroNutrientsContainer } from "./MacroNutrientsStyles";
+import { useDailyWeighIn } from "@frontend/pages/DailyWeighIn/useDailyweighIn";
+import { useDailyWeightInContext } from "@frontend/pages/DailyWeighIn/DailyWeightInContext";
 
 const { Title } = Typography;
 
@@ -14,6 +16,12 @@ const MacroNutrients: React.FC<MacroNutrientsProps> = ({
   calories,
   protein,
 }) => {
+  const { isLoading } = useDailyWeightInContext();
+
+  if (isLoading) {
+    return <Skeleton active />;
+  }
+
   return (
     <MacroNutrientsContainer>
       <div>
