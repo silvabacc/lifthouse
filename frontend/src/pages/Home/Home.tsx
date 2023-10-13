@@ -22,9 +22,9 @@ const Home: React.FC = () => {
   return (
     <>
       {contextHolder}
-      <Title level={2}>Workouts 🏋</Title>
+      <Title level={4}>Workouts 🏋</Title>
       <HomeCards cardConfig={workoutCards} />
-      <Title level={2}>Diet 🥑</Title>
+      <Title level={4}>Diet 🥑</Title>
       <HomeCards cardConfig={dietCards} />
     </>
   );

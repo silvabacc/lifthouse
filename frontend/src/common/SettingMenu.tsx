@@ -52,7 +52,7 @@ const SettingMenu: React.FC = () => {
 
   return (
     <Dropdown menu={menuProps}>
-      <Button type="ghost">
+      <Button shape="circle" size="large">
         <SettingOutlined style={{ fontSize: iconSizes.md }} />
       </Button>
     </Dropdown>

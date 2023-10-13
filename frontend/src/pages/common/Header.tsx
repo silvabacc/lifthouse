@@ -1,4 +1,4 @@
-import { Typography } from "antd";
+import { Button, Typography } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
@@ -27,13 +27,15 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   const IconElement = isMobile ? (
-    <ArrowLeftOutlined
-      style={{ fontSize: iconSizes.md, marginRight: 12 }}
+    <Button
+      size="large"
+      shape="circle"
+      style={{ marginRight: 16 }}
       onClick={onClickBack}
-    />
-  ) : (
-    <>{LifthouseIcon}</>
-  );
+    >
+      <ArrowLeftOutlined />
+    </Button>
+  ) : null;
 
   return (
     <>
@@ -42,7 +44,7 @@ const Header: React.FC<HeaderProps> = ({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: 24,
+          marginBottom: 16,
         }}
       >
         <div
@@ -51,8 +53,10 @@ const Header: React.FC<HeaderProps> = ({
             alignItems: "center",
           }}
         >
-          {IconElement}
-          <Title style={{ margin: 0 }}>{title}</Title>
+          {showBackButton && IconElement}
+          <Title level={2} style={{ margin: 0 }}>
+            {title}
+          </Title>
         </div>
 
         {rightHandSide}
