@@ -1,10 +1,20 @@
-import { Button, InputNumber, Skeleton, Space, StepProps, Steps } from "antd";
+import {
+  Button,
+  Input,
+  InputNumber,
+  Skeleton,
+  Space,
+  StepProps,
+  Steps,
+} from "antd";
 import React, { useEffect, useState } from "react";
-import { Info, RoutineExercise } from "@backend/types";
+import { Info, LogEntry, RoutineExercise } from "@backend/types";
 import { CheckSquareOutlined } from "@ant-design/icons";
 import colors from "@frontend/theme/colors";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 import { useWorkout } from "../useWorkout";
+
+const { TextArea } = Input;
 
 interface SetsRepsStepsProps {
   exercise: RoutineExercise;
@@ -12,6 +22,20 @@ interface SetsRepsStepsProps {
 
 export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({ exercise }) => {
   const [currentSet, setCurrentSet] = useState(0);
+  const { getExerciseHistory } = useWorkout();
+  const { getTemporaryStorage } = useTemporaryStorage();
+  const { data } = getExerciseHistory(exercise.exerciseId, 0, 0);
+  const fetchTempData = getTemporaryStorage(exercise.exerciseId);
+  const [temporaryData, setTemporaryData] = useState<LogEntry>();
+
+  useEffect(() => {
+    const fetchTemporaryStorage = async () => {
+      const temporaryStorage = await fetchTempData;
+      setTemporaryData(temporaryStorage);
+    };
+
+    fetchTemporaryStorage();
+  }, []);
 
   const onChange = (value: number) => {
     setCurrentSet(value);
@@ -28,6 +52,8 @@ export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({ exercise }) => {
       description: (
         <StepRow
           exerciseId={exercise.exerciseId}
+          temporaryData={temporaryData}
+          history={data?.[0]}
           step={i}
           disabled={currentSet !== i}
           onClick={onClick}
@@ -44,12 +70,19 @@ export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({ exercise }) => {
         direction="vertical"
         items={items}
       />
+      <Notes
+        exerciseId={exercise.exerciseId}
+        value={temporaryData?.notes}
+        placeHolder={data?.[0]?.notes}
+      />
     </>
   );
 };
 
 interface StepsRowProps {
   exerciseId: string;
+  temporaryData?: LogEntry;
+  history?: LogEntry;
   step: number;
   disabled: boolean;
   placeHolderInfo?: Info;
@@ -58,36 +91,18 @@ interface StepsRowProps {
 
 const StepRow: React.FC<StepsRowProps> = ({
   exerciseId,
+  temporaryData,
+  history,
   step,
   disabled,
   onClick,
 }) => {
-  const { writeTemporaryStorage, getTemporaryStorage } = useTemporaryStorage();
-  const tempData = getTemporaryStorage(exerciseId);
+  const { writeTemporaryStorage } = useTemporaryStorage();
 
-  const { getExerciseHistory } = useWorkout();
-
-  const { data, isLoading } = getExerciseHistory(exerciseId, 0, 0);
-
-  const placeHolderInfo = data
-    ?.find((entry) => parseInt(entry.exerciseId) === parseInt(exerciseId))
-    ?.info.find((info) => info.set === step + 1);
-
-  console.log(step, placeHolderInfo);
+  const placeHolderInfo = history?.info?.[step];
 
   const [weight, setWeight] = useState<number>();
   const [reps, setReps] = useState<number>();
-
-  useEffect(() => {
-    const fetchTemporaryStorage = async () => {
-      const temporaryStorage = await tempData;
-      const info = temporaryStorage?.info.find((info) => info.set === step + 1);
-      setWeight(info?.weight);
-      setReps(info?.reps);
-    };
-
-    fetchTemporaryStorage();
-  }, []);
 
   useEffect(() => {
     writeTemporaryStorage(exerciseId, {
@@ -96,6 +111,14 @@ const StepRow: React.FC<StepsRowProps> = ({
       weight: weight || 0,
     });
   }, [reps, weight]);
+
+  useEffect(() => {
+    if (temporaryData) {
+      const info = temporaryData.info.find((i) => i.set === step + 1);
+      setWeight(info?.weight);
+      setReps(info?.reps);
+    }
+  }, [temporaryData]);
 
   const handleOnChangeWeight = (value: number | null) => {
     if (value || value === 0) {
@@ -111,7 +134,6 @@ const StepRow: React.FC<StepsRowProps> = ({
 
   return (
     <>
-      {isLoading && <SkeletonSteps />}
       <Space>
         <InputNumber
           disabled={disabled}
@@ -141,6 +163,31 @@ const StepRow: React.FC<StepsRowProps> = ({
   );
 };
 
-const SkeletonSteps = () => {
-  return <Skeleton paragraph={{ rows: 4 }} />;
+interface NotesProps {
+  exerciseId: string;
+  value?: string;
+  placeHolder?: string;
+}
+const Notes: React.FC<NotesProps> = ({ exerciseId, value, placeHolder }) => {
+  const [notes, setNotes] = useState<string>();
+  const { writeTemporaryStorage } = useTemporaryStorage();
+
+  useEffect(() => {
+    if (notes) {
+      writeTemporaryStorage(exerciseId, undefined, notes);
+    }
+  }, [notes]);
+
+  useEffect(() => {
+    setNotes(value);
+  }, [value]);
+
+  return (
+    <TextArea
+      value={notes}
+      placeholder={placeHolder}
+      onChange={(e) => setNotes(e.target.value)}
+      autoSize={{ minRows: 3, maxRows: 5 }}
+    />
+  );
 };

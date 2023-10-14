@@ -50,7 +50,9 @@ const FullContent: React.FC = () => {
             key={`${exercise.exerciseId}-${idx}`}
           >
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <SetsRepsSteps exercise={exercise} />
+              <div>
+                <SetsRepsSteps exercise={exercise} />
+              </div>
               <Divider style={{ height: 200 }} type="vertical" />
               <History exerciseId={exercise.exerciseId} />
             </div>
@@ -78,7 +80,7 @@ export const SkeletonFullContent: React.FC = () => {
             margin: 16,
           }}
         >
-          <Skeleton active paragraph={{ rows: 6 }} />
+          <Skeleton active paragraph={{ rows: 8 }} />
         </div>
       ))}
     </>
