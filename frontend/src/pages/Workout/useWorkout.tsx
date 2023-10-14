@@ -2,12 +2,18 @@ import LiftHouseDatabase from "@backend/database/db";
 import {
   Exercise,
   LogEntry,
+  Routine,
   RoutineExercise,
   RoutineType,
 } from "@backend/types";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 import { useQuery } from "react-query";
+
+export interface RoutineData {
+  routine: Routine;
+  exercises: Exercise[];
+}
 
 export const useWorkout = () => {
   const dbService = new LiftHouseDatabase();
@@ -36,7 +42,7 @@ export const useWorkout = () => {
         (exercise) => exercise.exerciseId
       );
       const exercises = await dbService.getExercises(exerciseIds);
-      return { routine, exercises };
+      return { routine, exercises } as RoutineData;
     });
   };
 

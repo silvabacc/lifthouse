@@ -2,9 +2,7 @@ import { Button, Typography } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { iconSizes } from "@frontend/theme/sizes";
 import { useScreen } from "@frontend/hooks/useScreen";
-import LifthouseIcon from "@frontend/assets/lifthouse_icon.svg";
 
 const { Title } = Typography;
 
