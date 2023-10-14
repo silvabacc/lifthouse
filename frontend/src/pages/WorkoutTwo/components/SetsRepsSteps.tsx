@@ -1,18 +1,16 @@
-import { Button, InputNumber, Space, StepProps, Steps } from "antd";
+import { Button, InputNumber, Skeleton, Space, StepProps, Steps } from "antd";
 import React, { useEffect, useState } from "react";
-import { useWorkoutContext } from "../WorkoutContext";
-import { LogEntry, RoutineExercise } from "@backend/types";
+import { Info, RoutineExercise } from "@backend/types";
 import { CheckSquareOutlined } from "@ant-design/icons";
 import colors from "@frontend/theme/colors";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
+import { useWorkout } from "../useWorkout";
 
 interface SetsRepsStepsProps {
   exercise: RoutineExercise;
 }
 
 export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({ exercise }) => {
-  const { workoutData } = useWorkoutContext();
-
   const [currentSet, setCurrentSet] = useState(0);
 
   const onChange = (value: number) => {
@@ -39,12 +37,14 @@ export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({ exercise }) => {
   }
 
   return (
-    <Steps
-      current={currentSet}
-      onChange={onChange}
-      direction="vertical"
-      items={items}
-    />
+    <>
+      <Steps
+        current={currentSet}
+        onChange={onChange}
+        direction="vertical"
+        items={items}
+      />
+    </>
   );
 };
 
@@ -52,6 +52,7 @@ interface StepsRowProps {
   exerciseId: string;
   step: number;
   disabled: boolean;
+  placeHolderInfo?: Info;
   onClick: () => void;
 }
 
@@ -64,15 +65,25 @@ const StepRow: React.FC<StepsRowProps> = ({
   const { writeTemporaryStorage, getTemporaryStorage } = useTemporaryStorage();
   const tempData = getTemporaryStorage(exerciseId);
 
-  const [weight, setWeight] = useState<number>(0);
-  const [reps, setReps] = useState<number>(0);
+  const { getExerciseHistory } = useWorkout();
+
+  const { data, isLoading } = getExerciseHistory(exerciseId, 0, 0);
+
+  const placeHolderInfo = data
+    ?.find((entry) => parseInt(entry.exerciseId) === parseInt(exerciseId))
+    ?.info.find((info) => info.set === step + 1);
+
+  console.log(step, placeHolderInfo);
+
+  const [weight, setWeight] = useState<number>();
+  const [reps, setReps] = useState<number>();
 
   useEffect(() => {
     const fetchTemporaryStorage = async () => {
       const temporaryStorage = await tempData;
       const info = temporaryStorage?.info.find((info) => info.set === step + 1);
-      setWeight(info?.weight || 0);
-      setReps(info?.reps || 0);
+      setWeight(info?.weight);
+      setReps(info?.reps);
     };
 
     fetchTemporaryStorage();
@@ -99,28 +110,37 @@ const StepRow: React.FC<StepsRowProps> = ({
   };
 
   return (
-    <Space>
-      <InputNumber
-        disabled={disabled}
-        onChange={handleOnChangeWeight}
-        value={weight}
-        inputMode="decimal"
-        prefix="kg"
-      />
-      <InputNumber
-        disabled={disabled}
-        value={reps}
-        onChange={handleOnChangeReps}
-        inputMode="decimal"
-        prefix="reps"
-      />
-      <Button
-        disabled={disabled}
-        style={{ color: disabled ? colors.grey : colors.primary }}
-        type="ghost"
-        onClick={onClick}
-        icon={<CheckSquareOutlined size={24} />}
-      />
-    </Space>
+    <>
+      {isLoading && <SkeletonSteps />}
+      <Space>
+        <InputNumber
+          disabled={disabled}
+          inputMode="decimal"
+          onChange={handleOnChangeWeight}
+          value={weight}
+          placeholder={placeHolderInfo?.weight.toString()}
+          prefix="kg"
+        />
+        <InputNumber
+          disabled={disabled}
+          inputMode="decimal"
+          value={reps}
+          onChange={handleOnChangeReps}
+          placeholder={placeHolderInfo?.reps.toString()}
+          prefix="reps"
+        />
+        <Button
+          disabled={disabled}
+          style={{ color: disabled ? colors.grey : colors.primary }}
+          type="ghost"
+          onClick={onClick}
+          icon={<CheckSquareOutlined size={24} />}
+        />
+      </Space>
+    </>
   );
+};
+
+const SkeletonSteps = () => {
+  return <Skeleton paragraph={{ rows: 4 }} />;
 };

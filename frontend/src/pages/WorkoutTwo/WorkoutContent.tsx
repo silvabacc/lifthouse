@@ -1,7 +1,7 @@
 import React from "react";
 import { useWorkoutContext } from "./WorkoutContext";
 import { Button } from "antd";
-import { ExerciseCard } from "./components/ExerciseCard/ExerciseCard";
+import { ExerciseCard } from "./components/ExerciseCard";
 import { EditOutlined, SaveOutlined } from "@ant-design/icons";
 
 const WorkoutContent: React.FC = () => {

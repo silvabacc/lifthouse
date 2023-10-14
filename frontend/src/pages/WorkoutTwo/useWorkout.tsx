@@ -62,11 +62,20 @@ export const useWorkout = () => {
     return await dbService.logEntry(result, user.id);
   };
 
-  const getExerciseHistory = (exerciseId: string, limit?: number) => {
+  const getExerciseHistory = (
+    exerciseId: string,
+    offset: number,
+    limit: number
+  ) => {
     return useQuery(
-      ["getExerciseHistory", exerciseId, user.id, limit],
+      ["getExerciseHistory", exerciseId, user.id, offset, limit],
       async () => {
-        return await dbService.getExerciseHistory(exerciseId, user.id, limit);
+        return await dbService.getExerciseHistory(
+          exerciseId,
+          user.id,
+          offset,
+          limit
+        );
       }
     );
   };

@@ -21,7 +21,6 @@ import {
   EditButton,
   HistoryTitleContainer,
 } from "./HistoryStyles";
-import Loading from "../common/Loading";
 import dayjs from "dayjs";
 import { LogEntry } from "@backend/types";
 import colors from "@frontend/theme/colors";

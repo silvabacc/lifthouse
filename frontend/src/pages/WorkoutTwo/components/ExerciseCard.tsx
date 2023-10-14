@@ -1,14 +1,13 @@
-import { Exercise, RoutineExercise } from "@backend/types";
+import { RoutineExercise } from "@backend/types";
 import { Card, Divider, Typography } from "antd";
 import React from "react";
-import { useWorkout } from "../../useWorkout";
 import { Skeleton } from "antd";
 import { useScreen } from "@frontend/hooks/useScreen";
-import { useWorkoutContext } from "../../WorkoutContext";
-import colors from "@frontend/theme/colors";
-import { SetsRepsSteps } from "../SetsRepsSteps";
+import { useWorkoutContext } from "../WorkoutContext";
+import { SetsRepsSteps } from "./SetsRepsSteps";
+import History from "./History";
 
-const { Text, Title: AntDTitle } = Typography;
+const { Text } = Typography;
 
 export const ExerciseCard: React.FC = () => {
   const { isMobile } = useScreen();
@@ -50,7 +49,11 @@ const FullContent: React.FC = () => {
             title={Title(exercise)}
             key={`${exercise.exerciseId}-${idx}`}
           >
-            <SetsRepsSteps exercise={exercise} />
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <SetsRepsSteps exercise={exercise} />
+              <Divider style={{ height: 200 }} type="vertical" />
+              <History exerciseId={exercise.exerciseId} />
+            </div>
           </Card>
         );
       })}
@@ -75,7 +78,7 @@ export const SkeletonFullContent: React.FC = () => {
             margin: 16,
           }}
         >
-          <Skeleton active />
+          <Skeleton active paragraph={{ rows: 6 }} />
         </div>
       ))}
     </>

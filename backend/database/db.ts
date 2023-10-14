@@ -80,7 +80,12 @@ class LiftHouseDatabase {
         date: new Date(),
         notes: entry?.notes,
       }))
-      .filter((entry) => entry.exercise_id !== undefined);
+      .filter(
+        (entry) =>
+          entry.exercise_id !== undefined &&
+          entry.info?.length !== 0 &&
+          entry.notes !== undefined
+      );
 
     const { error } = await this.supabase
       .from(TableNames.log_entries)
@@ -100,18 +105,16 @@ class LiftHouseDatabase {
   async getExerciseHistory(
     exerciseId: string,
     userId: string,
-    limit?: number
+    offset: number,
+    limit: number
   ): Promise<LogEntry[]> {
     const query = this.supabase
       .from(TableNames.log_entries)
       .select("*")
       .eq(LogEntriesColumns.exercise_id, exerciseId)
       .eq(LogEntriesColumns.user_id, userId)
+      .range(offset, limit)
       .order(LogEntriesColumns.date, { ascending: false });
-
-    if (limit) {
-      query.limit(limit);
-    }
 
     const { data } = await query;
 
