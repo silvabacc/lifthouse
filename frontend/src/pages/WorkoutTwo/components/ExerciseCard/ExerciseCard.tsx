@@ -6,7 +6,7 @@ import { Skeleton } from "antd";
 import { useScreen } from "@frontend/hooks/useScreen";
 import { useWorkoutContext } from "../../WorkoutContext";
 import colors from "@frontend/theme/colors";
-import SetsRepsSteps from "../SetsRepsSteps";
+import { SetsRepsSteps } from "../SetsRepsSteps";
 
 const { Text, Title: AntDTitle } = Typography;
 
@@ -19,7 +19,7 @@ export const ExerciseCard: React.FC = () => {
 };
 
 const FullContent: React.FC = () => {
-  const { workoutData } = useWorkoutContext();
+  const { workoutData, isLoading } = useWorkoutContext();
 
   const Title = (exercise: RoutineExercise) => {
     const title = workoutData.exercises.find(
@@ -42,6 +42,7 @@ const FullContent: React.FC = () => {
 
   return (
     <>
+      {isLoading && <SkeletonFullContent />}
       {workoutData.routine.exercises.map((exercise, idx) => {
         return (
           <Card
@@ -61,7 +62,7 @@ const PanelContent: React.FC = () => {
   return <></>;
 };
 
-export const SkeletonExerciseCard: React.FC = () => {
+export const SkeletonFullContent: React.FC = () => {
   return (
     <>
       {Array.from(Array(12)).map((_, idx) => (

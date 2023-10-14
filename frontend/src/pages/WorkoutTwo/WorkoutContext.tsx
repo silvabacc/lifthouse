@@ -1,7 +1,7 @@
 import { RoutineExercise, Exercise, RoutineType } from "@backend/types";
 import { createContext, useContext, useEffect, useState } from "react";
 import { WorkoutData, useWorkout } from "../Workout/useWorkout";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 interface WorkoutcontextType {
   isEditing: boolean;

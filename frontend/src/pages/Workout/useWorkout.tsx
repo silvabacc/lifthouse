@@ -37,7 +37,11 @@ export const useWorkout = () => {
 
   const queryRoutine = (routineType?: RoutineType) => {
     return useQuery(["queryRoutine", routineType, user.id], async () => {
-      if (routineType === undefined) return {} as WorkoutData;
+      if (routineType === undefined)
+        return {
+          exercises: [] as Exercise[],
+          routine: { exercises: [] as RoutineExercise[] },
+        } as WorkoutData;
 
       const routine = await dbService.getRoutines(routineType, user.id);
       const exerciseIds = routine.exercises.map(

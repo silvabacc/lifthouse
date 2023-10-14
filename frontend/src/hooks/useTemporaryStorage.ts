@@ -21,6 +21,11 @@ export const useTemporaryStorage = () => {
     info?: Info,
     notes?: string
   ) => {
+    if (info?.reps === 0 || info?.weight === 0) {
+      dexie.clearTemporaryStorageForExercise(exerciseId);
+      return;
+    }
+
     dexie.writeTemporaryStorage(exerciseId, info, notes);
   };
 
