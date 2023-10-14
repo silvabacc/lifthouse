@@ -6,9 +6,8 @@ import { Container } from "./WorkoutStyles";
 import Exercises from "./Exercises";
 import { RoutineExercise, RoutineType } from "@backend/types";
 import EditRoutine from "./EditRoutine";
-import Loading from "../common/Loading";
 import Header from "../common/Header";
-import { Button, Skeleton } from "antd";
+import { Button } from "antd";
 import { useWorkout } from "./useWorkout";
 
 interface WorkoutProps {
@@ -19,6 +18,7 @@ const Workout: React.FC<WorkoutProps> = ({ routine }) => {
   const [currentExercises, setCurrentExercises] = useState<RoutineExercise[]>(
     []
   );
+
   const { queryRoutine, updateRoutine } = useWorkout();
   const { data, isLoading, refetch } = queryRoutine(routine);
 

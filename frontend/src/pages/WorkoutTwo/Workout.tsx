@@ -1,42 +1,17 @@
-import { Exercise, RoutineType } from "@backend/types";
-import React, { useEffect, useState } from "react";
-import { gridGutter } from "./constants";
-import { useWorkoutContext } from "./WorkoutContext";
-import { Col, Row } from "antd";
-import { RoutineData, useWorkout } from "../Workout/useWorkout";
-import ExerciseCard from "./components/ExerciseCard";
-import SkeletonExerciseCard from "./components/Skeleton/SkeletonExerciseCard";
+import { RoutineType } from "@backend/types";
+import React from "react";
+import { WorkoutContextProvider } from "./WorkoutContext";
+import WorkoutContent from "./WorkoutContent";
 
 interface WorkoutProps {
-  routine: RoutineType;
+  routineType: RoutineType;
 }
 
-const Workout: React.FC<WorkoutProps> = ({ routine }) => {
-  const { isEditing, setEditing } = useWorkoutContext();
-  const { queryRoutine } = useWorkout();
-  const { data, isLoading } = queryRoutine(routine);
-  const [routineData, setRoutineData] = useState<RoutineData>({
-    routine: {},
-    exercises: [] as Exercise[],
-  } as RoutineData);
-
-  useEffect(() => {
-    if (!isLoading && data) {
-      setRoutineData(data);
-    }
-  }, [isLoading, data]);
-
-  const onEdit = () => {
-    setEditing(!isEditing);
-  };
-
+const Workout: React.FC<WorkoutProps> = ({ routineType }) => {
   return (
-    <>
-      {isLoading && <SkeletonExerciseCard />}
-      {routineData.exercises.map((exercise) => (
-        <ExerciseCard exercise={exercise} />
-      ))}
-    </>
+    <WorkoutContextProvider>
+      <WorkoutContent routine={routineType} />
+    </WorkoutContextProvider>
   );
 };
 

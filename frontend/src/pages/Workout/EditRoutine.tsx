@@ -56,9 +56,10 @@ const EditRoutine: React.FC<EditRoutineProps> = ({
   const onRepRangeChange = (value: string, index: number) => {
     const exercises = currentExercises.slice();
     const updatedExercise = exercises[index];
+
     const [sets, reps] = value.split(" x ");
     exercises[index] = {
-      ...exercises[index],
+      ...updatedExercise,
       sets: parseInt(sets),
       reps: reps,
     };
@@ -75,7 +76,7 @@ const EditRoutine: React.FC<EditRoutineProps> = ({
     );
     if (exerciseToUpdate) {
       exercises[index] = {
-        ...exercises[index],
+        ...updatedExercise,
         exerciseId: exerciseToUpdate.exerciseId,
       };
     }

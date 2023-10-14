@@ -11,7 +11,6 @@ const useWorkoutContext = () => useContext(WorkoutContext);
 
 const WorkoutContextProvider = ({ children }: any) => {
   const [isEditing, setEditing] = useState(false);
-  const [] = useState(false);
 
   return (
     <WorkoutContext.Provider

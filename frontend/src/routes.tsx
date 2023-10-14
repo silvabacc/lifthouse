@@ -102,7 +102,7 @@ export const createRoutes = (isAuthenticated: boolean) => {
   ].map((route) => ({
     path: `/routine/${route.routeSegment}`,
     element: guardRoutes(
-      <WorkoutTwo routine={route.prop} />,
+      <WorkoutTwo routineType={route.prop} />,
       isAuthenticated,
       pageTitleMapping[route.prop]
     ),
