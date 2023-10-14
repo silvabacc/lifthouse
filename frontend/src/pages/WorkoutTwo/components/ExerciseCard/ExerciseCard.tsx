@@ -1,33 +1,24 @@
-import { Exercise } from "@backend/types";
+import { Exercise, RoutineExercise } from "@backend/types";
 import { Card } from "antd";
 import React from "react";
 import { useWorkout } from "../../useWorkout";
 import { Skeleton } from "antd";
 import { useScreen } from "@frontend/hooks/useScreen";
-import ExerciseContentFull from "./ExerciseContentFull";
-import ExerciseContentPanel from "./ExerciseContentPanel";
 
-interface ExerciseCardProps {
-  exercise: Exercise;
-}
-export const ExerciseCard: React.FC<ExerciseCardProps> = ({ exercise }) => {
+export const ExerciseCard: React.FC = () => {
   const { isMobile } = useScreen();
 
-  const CardTitle = (
-    <div style={{ display: "flex", justifyContent: "space-between" }}>
-      {exercise.exerciseName}
-    </div>
-  );
+  const ExerciseCardContent = isMobile ? PanelContent : FullContent;
 
-  const ExerciseCardContent = isMobile
-    ? ExerciseContentPanel
-    : ExerciseContentFull;
+  return <ExerciseCardContent />;
+};
 
-  return (
-    <Card style={{ margin: 16 }} title={CardTitle}>
-      <ExerciseCardContent />
-    </Card>
-  );
+const FullContent: React.FC = () => {
+  return <></>;
+};
+
+const PanelContent: React.FC = () => {
+  return <></>;
 };
 
 export const SkeletonExerciseCard: React.FC = () => {

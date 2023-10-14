@@ -10,7 +10,7 @@ import useAuthentication from "@frontend/hooks/useAuthentication";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 import { useQuery } from "react-query";
 
-export interface RoutineData {
+export interface WorkoutData {
   routine: Routine;
   exercises: Exercise[];
 }
@@ -35,14 +35,16 @@ export const useWorkout = () => {
     await dbService.updateRoutine(routineId, exercises);
   };
 
-  const queryRoutine = (routineType: RoutineType) => {
+  const queryRoutine = (routineType?: RoutineType) => {
     return useQuery(["queryRoutine", routineType, user.id], async () => {
+      if (routineType === undefined) return {} as WorkoutData;
+
       const routine = await dbService.getRoutines(routineType, user.id);
       const exerciseIds = routine.exercises.map(
         (exercise) => exercise.exerciseId
       );
       const exercises = await dbService.getExercises(exerciseIds);
-      return { routine, exercises } as RoutineData;
+      return { routine, exercises } as WorkoutData;
     });
   };
 

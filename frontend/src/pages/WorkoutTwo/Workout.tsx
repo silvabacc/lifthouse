@@ -3,14 +3,10 @@ import React from "react";
 import { WorkoutContextProvider } from "./WorkoutContext";
 import WorkoutContent from "./WorkoutContent";
 
-interface WorkoutProps {
-  routineType: RoutineType;
-}
-
-const Workout: React.FC<WorkoutProps> = ({ routineType }) => {
+const Workout: React.FC = () => {
   return (
     <WorkoutContextProvider>
-      <WorkoutContent routine={routineType} />
+      <WorkoutContent />
     </WorkoutContextProvider>
   );
 };
