@@ -103,7 +103,7 @@ class LiftHouseDatabase {
    * @param exercisesIds returns exercises with the given ids. If empty, returns all exercises
    */
   async getExerciseHistory(
-    exerciseId: string,
+    exerciseId: string[],
     userId: string,
     offset: number,
     limit: number
@@ -111,7 +111,7 @@ class LiftHouseDatabase {
     const query = this.supabase
       .from(TableNames.log_entries)
       .select("*")
-      .eq(LogEntriesColumns.exercise_id, exerciseId)
+      .in(LogEntriesColumns.exercise_id, exerciseId)
       .eq(LogEntriesColumns.user_id, userId)
       .range(offset, limit)
       .order(LogEntriesColumns.date, { ascending: false });

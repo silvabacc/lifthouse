@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { useWorkout } from "../useWorkout";
+import { LogEntry } from "@backend/types";
 
 interface HistoryProps {
-  exerciseId: string;
+  history?: LogEntry;
 }
 
-export const History: React.FC<HistoryProps> = ({ exerciseId }) => {
-  const { getExerciseHistory, deleteLogEntry, updateLogEntries } = useWorkout();
-  const [offset, setOffset] = useState(0);
-
-  const { isLoading, data } = getExerciseHistory(exerciseId, offset, 10);
+export const History: React.FC<HistoryProps> = ({ history }) => {
+  console.log("history", history);
 
   return <div>History</div>;
 };

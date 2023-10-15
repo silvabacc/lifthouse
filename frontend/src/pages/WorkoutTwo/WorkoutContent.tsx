@@ -1,7 +1,7 @@
 import React from "react";
 import { useWorkoutContext } from "./WorkoutContext";
 import { Button } from "antd";
-import { ExerciseCard } from "./components/ExerciseCard";
+import { Exercises } from "./Exercises";
 import { EditOutlined, SaveOutlined } from "@ant-design/icons";
 
 const WorkoutContent: React.FC = () => {
@@ -22,7 +22,7 @@ const WorkoutContent: React.FC = () => {
           {isEditing ? "Save" : "Edit"}
         </Button>
       </div>
-      <ExerciseCard />
+      {isEditing ? <>Editing</> : <Exercises />}
     </>
   );
 };

@@ -7,6 +7,7 @@ import {
 } from "@backend/types";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
 export const useWorkout = () => {
@@ -63,7 +64,7 @@ export const useWorkout = () => {
   };
 
   const getExerciseHistory = (
-    exerciseId: string,
+    exerciseId: string[],
     offset: number,
     limit: number
   ) => {

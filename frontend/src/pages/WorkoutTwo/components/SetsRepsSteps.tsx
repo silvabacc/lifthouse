@@ -1,12 +1,4 @@
-import {
-  Button,
-  Input,
-  InputNumber,
-  Skeleton,
-  Space,
-  StepProps,
-  Steps,
-} from "antd";
+import { Button, Input, InputNumber, Space, StepProps, Steps } from "antd";
 import React, { useEffect, useState } from "react";
 import { Info, LogEntry, RoutineExercise } from "@backend/types";
 import { CheckSquareOutlined } from "@ant-design/icons";
@@ -18,13 +10,15 @@ const { TextArea } = Input;
 
 interface SetsRepsStepsProps {
   exercise: RoutineExercise;
+  exerciseHistory?: LogEntry;
 }
 
-export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({ exercise }) => {
+export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({
+  exercise,
+  exerciseHistory,
+}) => {
   const [currentSet, setCurrentSet] = useState(0);
-  const { getExerciseHistory } = useWorkout();
   const { getTemporaryStorage } = useTemporaryStorage();
-  const { data } = getExerciseHistory(exercise.exerciseId, 0, 0);
   const fetchTempData = getTemporaryStorage(exercise.exerciseId);
   const [temporaryData, setTemporaryData] = useState<LogEntry>();
 
@@ -53,7 +47,7 @@ export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({ exercise }) => {
         <StepRow
           exerciseId={exercise.exerciseId}
           temporaryData={temporaryData}
-          history={data?.[0]}
+          history={exerciseHistory}
           step={i}
           disabled={currentSet !== i}
           onClick={onClick}
@@ -73,7 +67,7 @@ export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({ exercise }) => {
       <Notes
         exerciseId={exercise.exerciseId}
         value={temporaryData?.notes}
-        placeHolder={data?.[0]?.notes}
+        placeHolder={exerciseHistory?.notes}
       />
     </>
   );
