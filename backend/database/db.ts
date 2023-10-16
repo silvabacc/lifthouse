@@ -145,12 +145,12 @@ class LiftHouseDatabase {
       .eq(RoutinesColumns.user_id, userId)
       .eq(RoutinesColumns.routine_type, routine);
 
-    if (data?.length === 0 || data === null) {
+    if (data?.length === 0) {
       await this.createDefaultRoutine(routine, userId);
       return this.getRoutines(routine, userId);
     }
 
-    const routineORM = data[0] as RoutineORM;
+    const routineORM = data?.[0] as RoutineORM;
     const parsedExercises = routineORM.exercises.map((exercise) => ({
       exerciseId: exercise.exercise_id,
       sets: exercise.sets,
