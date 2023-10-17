@@ -1,6 +1,14 @@
 import { Exercise, RoutineExercise } from "@backend/types";
-import { Card, Collapse, Divider, MenuProps, Select, Typography } from "antd";
-import React from "react";
+import {
+  Card,
+  Collapse,
+  Divider,
+  MenuProps,
+  Select,
+  Tabs,
+  Typography,
+} from "antd";
+import React, { useState } from "react";
 import { Skeleton } from "antd";
 import { useScreen } from "@frontend/hooks/useScreen";
 import { useWorkoutContext } from "./WorkoutContext";
@@ -22,20 +30,19 @@ export const Exercises: React.FC = () => {
 const FullContent: React.FC = () => {
   const { workoutData, isLoading } = useWorkoutContext();
   const { getExerciseHistory } = useWorkout();
+  const [page, setPage] = useState(0);
 
   const exerciseIds = workoutData.routine.exercises.map((e) => e.exerciseId);
-  const { data: historyData } = getExerciseHistory(exerciseIds, 0, 10);
-
-  console.log("historyData", historyData);
+  const { data: historyData } = getExerciseHistory(exerciseIds, page, 10);
 
   return (
     <>
       {isLoading && <SkeletonFullContent />}
       {workoutData.routine.exercises.map((routineExercise, idx) => {
-        const history = historyData?.find(
+        const history = historyData?.filter(
           (entry) =>
             parseInt(entry.exerciseId) === parseInt(routineExercise.exerciseId)
-        );
+        )[0];
 
         return (
           <Card
@@ -53,7 +60,11 @@ const FullContent: React.FC = () => {
                 />
               </div>
               <Divider style={{ height: 200 }} type="vertical" />
-              <History history={history} />
+              <History
+                page={page}
+                onPageChange={setPage}
+                history={history ? [history] : []}
+              />
             </div>
           </Card>
         );
@@ -64,15 +75,45 @@ const FullContent: React.FC = () => {
 
 const PanelContent: React.FC = () => {
   const { workoutData } = useWorkoutContext();
+  const [page, setPage] = useState(0);
 
   return (
     <>
       {workoutData.routine.exercises.map((routineExercise, idx) => {
-        <Collapse>
-          <Panel header={<ExerciseTitle routineExercise={routineExercise} />}>
-            <div></div>
-          </Panel>
-        </Collapse>;
+        const items = [
+          {
+            label: "Sets",
+            key: "1",
+            children: <SetsRepsSteps exercise={routineExercise} />,
+          },
+          {
+            label: "History",
+            key: "2",
+            children: (
+              <History
+                page={page}
+                onPageChange={setPage}
+                exerciseId={routineExercise.exerciseId}
+              />
+            ),
+          },
+          {
+            label: "Charts",
+            key: "3",
+            children: "Not Implemented Yet",
+          },
+        ];
+
+        return (
+          <Collapse style={{ margin: 16 }}>
+            <Panel
+              key={`${routineExercise.exerciseId}-${idx}`}
+              header={<ExerciseTitle routineExercise={routineExercise} />}
+            >
+              <Tabs items={items} />
+            </Panel>
+          </Collapse>
+        );
       })}
     </>
   );

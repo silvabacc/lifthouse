@@ -5,6 +5,7 @@ import { CheckSquareOutlined } from "@ant-design/icons";
 import colors from "@frontend/theme/colors";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 import { useWorkout } from "../useWorkout";
+import { useScreen } from "@frontend/hooks/useScreen";
 
 const { TextArea } = Input;
 
@@ -21,6 +22,16 @@ export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({
   const { getTemporaryStorage } = useTemporaryStorage();
   const fetchTempData = getTemporaryStorage(exercise.exerciseId);
   const [temporaryData, setTemporaryData] = useState<LogEntry>();
+
+  const { getExerciseHistory } = useWorkout();
+  const { isMobile } = useScreen();
+
+  if (isMobile) {
+    const exerciseIds = exercise.exerciseId;
+    const { data: historyData } = getExerciseHistory([exerciseIds], 0, 0);
+    const history = historyData?.[0];
+    exerciseHistory = history;
+  }
 
   useEffect(() => {
     const fetchTemporaryStorage = async () => {

@@ -30,8 +30,6 @@ class Authentication {
   async signUp(email: string, password: string) {
     const signUpResult = await this.supabase.auth.signUp({ email, password });
 
-    console.log("result!!", signUpResult);
-
     return signUpResult.error
       ? { user: null, session: null, message: signUpResult.error.message }
       : {
