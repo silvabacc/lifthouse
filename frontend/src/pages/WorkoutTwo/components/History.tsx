@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useWorkout } from "../useWorkout";
 import { LogEntry } from "@backend/types";
 import Slider, { Settings } from "react-slick";
@@ -54,7 +54,7 @@ export const History: React.FC<HistoryProps> = ({
   const [messageApi, contextHolder] = message.useMessage();
   const [updatedEntries, setUpdatedEntries] = useState<LogEntry[]>([]);
   const [exerciseHistory, setExerciseHistory] = useState<LogEntry[]>([]);
-  const { isMobile } = useScreen();
+  const slickRef = useRef<Slider>(null);
 
   useEffect(() => {
     if (exerciseId) {
@@ -224,16 +224,8 @@ export const History: React.FC<HistoryProps> = ({
 
   const settings: Settings = {
     dots: true,
-    nextArrow: <Button shape="circle" icon={<LeftCircleOutlined />} />,
-    prevArrow: (
-      <Button
-        style={{ backgroundColor: "red" }}
-        icon={<RightCircleOutlined />}
-      />
-    ),
     adaptiveHeight: true,
     infinite: false,
-    slidesToShow: 1,
     speed: 100,
   };
 
@@ -241,7 +233,23 @@ export const History: React.FC<HistoryProps> = ({
     <div style={{ flex: 1, width: "50%", marginBottom: 16 }}>
       {contextHolder}
       {historyLoading && <SkeletonHistory />}
-      <Slider {...settings}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: 16,
+        }}
+      >
+        <Button
+          icon={<LeftCircleOutlined />}
+          onClick={() => slickRef.current?.slickPrev()}
+        />
+        <Button
+          icon={<RightCircleOutlined />}
+          onClick={() => slickRef.current?.slickNext()}
+        />
+      </div>
+      <Slider ref={slickRef} {...settings}>
         {exerciseHistory.map((entry, idx) => {
           const items: StepProps[] = entry.info.map((i) => ({
             title: `Set ${i.set}`,
