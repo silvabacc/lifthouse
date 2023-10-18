@@ -22,7 +22,7 @@ const WorkoutContent: React.FC = () => {
           {isEditing ? "Save" : "Edit"}
         </Button>
       </div>
-      {isEditing ? <>Editing</> : <Exercises />}
+      <Exercises />
     </>
   );
 };

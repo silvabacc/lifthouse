@@ -63,26 +63,28 @@ export const useWorkout = () => {
     return await dbService.logEntry(result, user.id);
   };
 
-  const getExerciseHistory = (
+  const getExerciseHistory = async (
     exerciseId: string[],
     offset: number,
     limit: number
   ) => {
-    return useQuery(
-      ["getExerciseHistory", exerciseId, user.id, offset, limit],
-      async () => {
-        return await dbService.getExerciseHistory(
-          exerciseId,
-          user.id,
-          offset,
-          limit
-        );
-      }
+    let isLoading = true;
+    const result = await dbService.getExerciseHistory(
+      exerciseId,
+      user.id,
+      offset,
+      limit
     );
+    isLoading = false;
+
+    return { data: result, isLoading };
   };
 
   const updateLogEntries = async (logEntries: LogEntry[]) => {
-    logEntries.forEach((logEntry) => dbService.updateExerciseHistory(logEntry));
+    const promises = logEntries.map((logEntry) =>
+      dbService.updateExerciseHistory(logEntry)
+    );
+    return Promise.all(promises);
   };
 
   const deleteLogEntry = (logEntryId: string) => {

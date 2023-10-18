@@ -283,9 +283,6 @@ const History: React.FC<HistoryProps> = ({ exerciseId }) => {
                     icon={<PlusSquareOutlined style={{ fontSize: 18 }} />}
                   />
                 )}
-                <Title level={5} style={{ width: "100%" }}>
-                  Notes
-                </Title>
                 <TextArea
                   defaultValue={entry.notes}
                   readOnly={!isEditing}

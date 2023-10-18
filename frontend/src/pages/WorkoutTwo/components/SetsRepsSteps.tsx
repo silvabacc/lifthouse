@@ -1,4 +1,12 @@
-import { Button, Input, InputNumber, Space, StepProps, Steps } from "antd";
+import {
+  Button,
+  Input,
+  InputNumber,
+  Space,
+  StepProps,
+  Steps,
+  Typography,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { Info, LogEntry, RoutineExercise } from "@backend/types";
 import { CheckSquareOutlined } from "@ant-design/icons";
@@ -7,6 +15,7 @@ import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 import { useWorkout } from "../useWorkout";
 import { useScreen } from "@frontend/hooks/useScreen";
 
+const { Title } = Typography;
 const { TextArea } = Input;
 
 interface SetsRepsStepsProps {
@@ -22,16 +31,32 @@ export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({
   const { getTemporaryStorage } = useTemporaryStorage();
   const fetchTempData = getTemporaryStorage(exercise.exerciseId);
   const [temporaryData, setTemporaryData] = useState<LogEntry>();
+  const [lastEntryData, setLastEntryData] = useState<LogEntry>();
 
   const { getExerciseHistory } = useWorkout();
   const { isMobile } = useScreen();
 
-  if (isMobile) {
-    const exerciseIds = exercise.exerciseId;
-    const { data: historyData } = getExerciseHistory([exerciseIds], 0, 0);
-    const history = historyData?.[0];
-    exerciseHistory = history;
-  }
+  useEffect(() => {
+    if (isMobile) {
+      const fetch = async () => {
+        const exerciseIds = exercise.exerciseId;
+        const { data: historyData } = await getExerciseHistory(
+          [exerciseIds],
+          0,
+          0
+        );
+        setLastEntryData(historyData?.[0]);
+      };
+
+      fetch();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (exerciseHistory) {
+      setLastEntryData(exerciseHistory);
+    }
+  }, [exerciseHistory]);
 
   useEffect(() => {
     const fetchTemporaryStorage = async () => {
@@ -58,7 +83,7 @@ export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({
         <StepRow
           exerciseId={exercise.exerciseId}
           temporaryData={temporaryData}
-          history={exerciseHistory}
+          history={lastEntryData}
           step={i}
           disabled={currentSet !== i}
           onClick={onClick}
@@ -68,19 +93,20 @@ export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({
   }
 
   return (
-    <>
+    <div style={{ flex: 1 }}>
       <Steps
         current={currentSet}
         onChange={onChange}
         direction="vertical"
         items={items}
       />
+      <Title level={5}>Notes</Title>
       <Notes
         exerciseId={exercise.exerciseId}
         value={temporaryData?.notes}
-        placeHolder={exerciseHistory?.notes}
+        placeHolder={lastEntryData?.notes}
       />
-    </>
+    </div>
   );
 };
 

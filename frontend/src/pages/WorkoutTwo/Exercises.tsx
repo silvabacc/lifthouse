@@ -1,14 +1,6 @@
-import { Exercise, RoutineExercise } from "@backend/types";
-import {
-  Card,
-  Collapse,
-  Divider,
-  MenuProps,
-  Select,
-  Tabs,
-  Typography,
-} from "antd";
-import React, { useState } from "react";
+import { LogEntry, RoutineExercise } from "@backend/types";
+import { Card, Collapse, Divider, Tabs, Typography } from "antd";
+import React, { useEffect, useState } from "react";
 import { Skeleton } from "antd";
 import { useScreen } from "@frontend/hooks/useScreen";
 import { useWorkoutContext } from "./WorkoutContext";
@@ -30,16 +22,27 @@ export const Exercises: React.FC = () => {
 const FullContent: React.FC = () => {
   const { workoutData, isLoading } = useWorkoutContext();
   const { getExerciseHistory } = useWorkout();
+  const [historyData, setHistoryData] = useState<LogEntry[]>([]);
   const [page, setPage] = useState(0);
 
-  const exerciseIds = workoutData.routine.exercises.map((e) => e.exerciseId);
-  const { data: historyData } = getExerciseHistory(exerciseIds, page, 10);
+  useEffect(() => {
+    if (workoutData) {
+      const fetch = async () => {
+        const exerciseIds = workoutData.routine.exercises.map(
+          (e) => e.exerciseId
+        );
+        const { data } = await getExerciseHistory(exerciseIds, page, 10);
+        setHistoryData(data);
+      };
+      fetch();
+    }
+  }, [workoutData]);
 
   return (
     <>
-      {isLoading && <SkeletonFullContent />}
+      {isLoading && <SkeletonContent />}
       {workoutData.routine.exercises.map((routineExercise, idx) => {
-        const history = historyData?.filter(
+        const history = historyData.filter(
           (entry) =>
             parseInt(entry.exerciseId) === parseInt(routineExercise.exerciseId)
         )[0];
@@ -50,22 +53,19 @@ const FullContent: React.FC = () => {
             title={<ExerciseTitle routineExercise={routineExercise} />}
             key={`${routineExercise.exerciseId}-${idx}`}
           >
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <div>
-                {/* If on mobile, fetch all exercise history in routine, otherwise singular*/}
-                {/* Fetch the data on the parent */}
-                <SetsRepsSteps
-                  exercise={routineExercise}
-                  exerciseHistory={history}
-                />
-              </div>
-              <Divider style={{ height: 200 }} type="vertical" />
+            <div style={{ display: "flex" }}>
+              <SetsRepsSteps
+                exercise={routineExercise}
+                exerciseHistory={history}
+              />
+              <Divider style={{ margin: 16, height: 300 }} type="vertical" />
               <History
                 page={page}
                 onPageChange={setPage}
-                history={history ? [history] : []}
+                history={historyData}
               />
             </div>
+            <div style={{ flex: 1 }}>Charts</div>
           </Card>
         );
       })}
@@ -74,11 +74,12 @@ const FullContent: React.FC = () => {
 };
 
 const PanelContent: React.FC = () => {
-  const { workoutData } = useWorkoutContext();
+  const { workoutData, isLoading } = useWorkoutContext();
   const [page, setPage] = useState(0);
 
   return (
     <>
+      {isLoading && <SkeletonContent rows={1} />}
       {workoutData.routine.exercises.map((routineExercise, idx) => {
         const items = [
           {
@@ -105,7 +106,10 @@ const PanelContent: React.FC = () => {
         ];
 
         return (
-          <Collapse style={{ margin: 16 }}>
+          <Collapse
+            key={`${routineExercise.exerciseId}-${idx}`}
+            style={{ margin: 16 }}
+          >
             <Panel
               key={`${routineExercise.exerciseId}-${idx}`}
               header={<ExerciseTitle routineExercise={routineExercise} />}
@@ -133,7 +137,9 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
     <div
       style={{ display: "flex", alignItems: "center", fontWeight: "normal" }}
     >
-      <Text strong>{title}</Text>
+      <Text style={{ flex: 1 }} strong>
+        {title}
+      </Text>
       <Divider type="vertical" style={{ height: 30 }} />
       <div>
         <Text keyboard>{routineExercise.sets}</Text> x{" "}
@@ -143,7 +149,12 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
   );
 };
 
-export const SkeletonFullContent: React.FC = () => {
+type SkeletonContentProps = {
+  rows?: number;
+};
+export const SkeletonContent: React.FC<SkeletonContentProps> = ({
+  rows = 8,
+}) => {
   return (
     <>
       {Array.from(Array(12)).map((_, idx) => (
@@ -156,7 +167,7 @@ export const SkeletonFullContent: React.FC = () => {
             margin: 16,
           }}
         >
-          <Skeleton active paragraph={{ rows: 8 }} />
+          <Skeleton active paragraph={{ rows }} />
         </div>
       ))}
     </>
