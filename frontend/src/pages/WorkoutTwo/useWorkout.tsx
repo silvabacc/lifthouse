@@ -65,15 +65,15 @@ export const useWorkout = () => {
 
   const getExerciseHistory = async (
     exerciseId: string[],
-    offset: number,
-    limit: number
+    from: number,
+    to: number
   ) => {
     let isLoading = true;
     const result = await dbService.getExerciseHistory(
       exerciseId,
       user.id,
-      offset,
-      limit
+      from,
+      to
     );
     isLoading = false;
 

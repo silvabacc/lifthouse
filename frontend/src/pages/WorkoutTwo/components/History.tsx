@@ -46,6 +46,7 @@ export const History: React.FC<HistoryProps> = ({
   exerciseId,
   history = [],
   page,
+  onPageChange,
 }) => {
   const { getExerciseHistory, updateLogEntries, deleteLogEntry } = useWorkout();
   const [editHistory, setEditHistory] = useState(false);
@@ -242,11 +243,19 @@ export const History: React.FC<HistoryProps> = ({
       >
         <Button
           icon={<LeftCircleOutlined />}
-          onClick={() => slickRef.current?.slickPrev()}
+          onClick={() => {
+            slickRef.current?.slickPrev();
+            if (page > 0) {
+              onPageChange(page - 1);
+            }
+          }}
         />
         <Button
           icon={<RightCircleOutlined />}
-          onClick={() => slickRef.current?.slickNext()}
+          onClick={() => {
+            slickRef.current?.slickNext();
+            onPageChange(page + 1);
+          }}
         />
       </div>
       <Slider ref={slickRef} {...settings}>

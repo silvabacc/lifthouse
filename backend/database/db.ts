@@ -105,15 +105,15 @@ class LiftHouseDatabase {
   async getExerciseHistory(
     exerciseId: string[],
     userId: string,
-    offset: number,
-    limit: number
+    from: number,
+    to: number
   ): Promise<LogEntry[]> {
     const query = this.supabase
       .from(TableNames.log_entries)
       .select("*")
       .in(LogEntriesColumns.exercise_id, exerciseId)
       .eq(LogEntriesColumns.user_id, userId)
-      .range(offset, limit)
+      .range(from, to)
       .order(LogEntriesColumns.date, { ascending: false });
 
     const { data } = await query;

@@ -26,12 +26,25 @@ const FullContent: React.FC = () => {
   const [page, setPage] = useState(0);
 
   useEffect(() => {
+    if (page % 2 === 0) {
+      const fetch = async () => {
+        const exerciseIds = workoutData.routine.exercises.map(
+          (e) => e.exerciseId
+        );
+        const { data } = await getExerciseHistory(exerciseIds, page, 2);
+        setHistoryData((prev) => [...prev, ...data]);
+      };
+      fetch();
+    }
+  }, [page]);
+
+  useEffect(() => {
     if (workoutData) {
       const fetch = async () => {
         const exerciseIds = workoutData.routine.exercises.map(
           (e) => e.exerciseId
         );
-        const { data } = await getExerciseHistory(exerciseIds, page, 10);
+        const { data } = await getExerciseHistory(exerciseIds, page, 2);
         setHistoryData(data);
       };
       fetch();
