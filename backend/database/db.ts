@@ -100,8 +100,9 @@ class LiftHouseDatabase {
 
   /**
    *
-   * @param exercisesIds returns exercises with the given ids. If empty, returns all exercises
+   * @param exercisesIds returns exercises with the given ids
    */
+  //Limit 5 entries for each exercise passed in
   async getExerciseHistory(
     exerciseId: string[],
     userId: string,
@@ -113,7 +114,6 @@ class LiftHouseDatabase {
       .select("*")
       .in(LogEntriesColumns.exercise_id, exerciseId)
       .eq(LogEntriesColumns.user_id, userId)
-      .range(from, to)
       .order(LogEntriesColumns.date, { ascending: false });
 
     const { data } = await query;

@@ -49,6 +49,7 @@ export const History: React.FC<HistoryProps> = ({
   onPageChange,
 }) => {
   const { getExerciseHistory, updateLogEntries, deleteLogEntry } = useWorkout();
+  const { isMobile } = useScreen();
   const [editHistory, setEditHistory] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -231,7 +232,9 @@ export const History: React.FC<HistoryProps> = ({
   };
 
   return (
-    <div style={{ flex: 1, width: "50%", marginBottom: 16 }}>
+    <div
+      style={{ flex: 1, width: isMobile ? "100%" : "50%", marginBottom: 16 }}
+    >
       {contextHolder}
       {historyLoading && <SkeletonHistory />}
       <div

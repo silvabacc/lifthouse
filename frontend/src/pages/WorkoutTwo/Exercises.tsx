@@ -26,19 +26,6 @@ const FullContent: React.FC = () => {
   const [page, setPage] = useState(0);
 
   useEffect(() => {
-    if (page % 2 === 0) {
-      const fetch = async () => {
-        const exerciseIds = workoutData.routine.exercises.map(
-          (e) => e.exerciseId
-        );
-        const { data } = await getExerciseHistory(exerciseIds, page, 2);
-        setHistoryData((prev) => [...prev, ...data]);
-      };
-      fetch();
-    }
-  }, [page]);
-
-  useEffect(() => {
     if (workoutData) {
       const fetch = async () => {
         const exerciseIds = workoutData.routine.exercises.map(
@@ -58,7 +45,9 @@ const FullContent: React.FC = () => {
         const history = historyData.filter(
           (entry) =>
             parseInt(entry.exerciseId) === parseInt(routineExercise.exerciseId)
-        )[0];
+        );
+
+        console.log("history", historyData, history);
 
         return (
           <Card
@@ -69,14 +58,10 @@ const FullContent: React.FC = () => {
             <div style={{ display: "flex" }}>
               <SetsRepsSteps
                 exercise={routineExercise}
-                exerciseHistory={history}
+                exerciseHistory={history[0]}
               />
               <Divider style={{ margin: 16, height: 300 }} type="vertical" />
-              <History
-                page={page}
-                onPageChange={setPage}
-                history={historyData}
-              />
+              <History page={page} onPageChange={setPage} history={history} />
             </div>
             <div style={{ flex: 1 }}>Charts</div>
           </Card>
