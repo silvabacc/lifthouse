@@ -13,7 +13,6 @@ import {
   Typography,
   message,
 } from "antd";
-import { useWorkoutContext } from "../WorkoutContext";
 import colors from "@frontend/theme/colors";
 import {
   MinusCircleOutlined,
@@ -26,8 +25,10 @@ import {
 import dayjs from "dayjs";
 import { useScreen } from "@frontend/hooks/useScreen";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { TextArea } = Input;
+
+const LIMIT_OFFSET = 7;
 
 /**
  * @param exerciseId - pass this to fetch data its own data
@@ -36,52 +37,40 @@ const { TextArea } = Input;
  */
 
 interface HistoryProps {
-  page: number;
-  onPageChange: (page: number) => void;
-  exerciseId?: string;
-  history?: LogEntry[];
+  exerciseId: string;
 }
 
-export const History: React.FC<HistoryProps> = ({
-  exerciseId,
-  history = [],
-  page,
-  onPageChange,
-}) => {
+export const History: React.FC<HistoryProps> = ({ exerciseId }) => {
   const { getExerciseHistory, updateLogEntries, deleteLogEntry } = useWorkout();
   const { isMobile } = useScreen();
   const [editHistory, setEditHistory] = useState(false);
-  const [historyLoading, setHistoryLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const [updatedEntries, setUpdatedEntries] = useState<LogEntry[]>([]);
-  const [exerciseHistory, setExerciseHistory] = useState<LogEntry[]>([]);
+  const [exerciseHistory, setExerciseHistory] = useState<LogEntry[]>([]); //might remove this
   const slickRef = useRef<Slider>(null);
+  const [limit, setLimit] = useState(LIMIT_OFFSET);
+  const { data, isLoading, refetch } = getExerciseHistory([exerciseId], limit);
+  const [page, setPage] = useState(1);
+  const [disableButton, setDisableButton] = useState(false);
 
   useEffect(() => {
-    if (exerciseId) {
-      setHistoryLoading(true);
-      const fetch = async () => {
-        const exerciseIds = exerciseId;
-        const { data, isLoading } = await getExerciseHistory(
-          [exerciseIds],
-          page,
-          10
-        );
-
-        setHistoryLoading(isLoading);
-        setExerciseHistory(data || []);
-      };
-
-      fetch();
+    if (data) {
+      if (page === data.length && data.length < limit) {
+        setDisableButton(true);
+      } else {
+        setDisableButton(false);
+      }
+      setExerciseHistory(data);
     }
-  }, [exerciseId]);
+  }, [data, page]);
 
   useEffect(() => {
-    if (history.length > 0) {
-      setExerciseHistory(history);
+    if (page === limit) {
+      setLimit((prev) => prev + LIMIT_OFFSET);
+      refetch();
     }
-  }, [history]);
+  }, [page]);
 
   const onChange = (
     entryId: string | undefined,
@@ -224,11 +213,18 @@ export const History: React.FC<HistoryProps> = ({
     setSaving(false);
   };
 
+  const onSwipe = (direction: "left" | "right") => {
+    direction === "left"
+      ? setPage((prev) => prev + 1)
+      : setPage((prev) => prev - 1);
+  };
+
   const settings: Settings = {
     dots: true,
     adaptiveHeight: true,
     infinite: false,
     speed: 100,
+    swipe: isMobile,
   };
 
   return (
@@ -236,7 +232,6 @@ export const History: React.FC<HistoryProps> = ({
       style={{ flex: 1, width: isMobile ? "100%" : "50%", marginBottom: 16 }}
     >
       {contextHolder}
-      {historyLoading && <SkeletonHistory />}
       <div
         style={{
           display: "flex",
@@ -245,23 +240,33 @@ export const History: React.FC<HistoryProps> = ({
         }}
       >
         <Button
+          disabled={page === 1}
           icon={<LeftCircleOutlined />}
           onClick={() => {
-            slickRef.current?.slickPrev();
-            if (page > 0) {
-              onPageChange(page - 1);
+            if (page === 1) {
+              return;
             }
+            setPage((prev) => prev - 1);
+            slickRef.current?.slickPrev();
           }}
         />
         <Button
+          disabled={disableButton}
           icon={<RightCircleOutlined />}
           onClick={() => {
+            if (page === exerciseHistory.length) {
+              return;
+            }
+            setPage((prev) => prev + 1);
             slickRef.current?.slickNext();
-            onPageChange(page + 1);
           }}
         />
       </div>
-      <Slider ref={slickRef} {...settings}>
+      {isLoading && <SkeletonHistory />}
+      {!isLoading && exerciseHistory.length === 0 && (
+        <Text>No history found 😢</Text>
+      )}
+      <Slider ref={slickRef} {...settings} onSwipe={onSwipe}>
         {exerciseHistory.map((entry, idx) => {
           const items: StepProps[] = entry.info.map((i) => ({
             title: `Set ${i.set}`,

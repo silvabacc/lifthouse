@@ -7,6 +7,7 @@ import {
 } from "@backend/types";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
+import { isObject } from "chart.js/dist/helpers/helpers.core";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
@@ -63,21 +64,10 @@ export const useWorkout = () => {
     return await dbService.logEntry(result, user.id);
   };
 
-  const getExerciseHistory = async (
-    exerciseId: string[],
-    from: number,
-    to: number
-  ) => {
-    let isLoading = true;
-    const result = await dbService.getExerciseHistory(
-      exerciseId,
-      user.id,
-      from,
-      to
-    );
-    isLoading = false;
-
-    return { data: result, isLoading };
+  const getExerciseHistory = (exerciseId: string[], limit: number) => {
+    return useQuery(["getExerciseHistory", exerciseId, user.id, limit], () => {
+      return dbService.getExerciseHistory(exerciseId, user.id, limit);
+    });
   };
 
   const updateLogEntries = async (logEntries: LogEntry[]) => {

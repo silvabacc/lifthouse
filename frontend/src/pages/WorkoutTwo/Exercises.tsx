@@ -21,34 +21,11 @@ export const Exercises: React.FC = () => {
 
 const FullContent: React.FC = () => {
   const { workoutData, isLoading } = useWorkoutContext();
-  const { getExerciseHistory } = useWorkout();
-  const [historyData, setHistoryData] = useState<LogEntry[]>([]);
-  const [page, setPage] = useState(0);
-
-  useEffect(() => {
-    if (workoutData) {
-      const fetch = async () => {
-        const exerciseIds = workoutData.routine.exercises.map(
-          (e) => e.exerciseId
-        );
-        const { data } = await getExerciseHistory(exerciseIds, page, 2);
-        setHistoryData(data);
-      };
-      fetch();
-    }
-  }, [workoutData]);
 
   return (
     <>
       {isLoading && <SkeletonContent />}
       {workoutData.routine.exercises.map((routineExercise, idx) => {
-        const history = historyData.filter(
-          (entry) =>
-            parseInt(entry.exerciseId) === parseInt(routineExercise.exerciseId)
-        );
-
-        console.log("history", historyData, history);
-
         return (
           <Card
             style={{ margin: 16 }}
@@ -56,12 +33,9 @@ const FullContent: React.FC = () => {
             key={`${routineExercise.exerciseId}-${idx}`}
           >
             <div style={{ display: "flex" }}>
-              <SetsRepsSteps
-                exercise={routineExercise}
-                exerciseHistory={history[0]}
-              />
+              <SetsRepsSteps exercise={routineExercise} />
               <Divider style={{ margin: 16, height: 300 }} type="vertical" />
-              <History page={page} onPageChange={setPage} history={history} />
+              <History exerciseId={routineExercise.exerciseId} />
             </div>
             <div style={{ flex: 1 }}>Charts</div>
           </Card>
@@ -73,7 +47,7 @@ const FullContent: React.FC = () => {
 
 const PanelContent: React.FC = () => {
   const { workoutData, isLoading } = useWorkoutContext();
-  const [page, setPage] = useState(0);
+  const [limit, setLimit] = useState(1);
 
   return (
     <>
@@ -90,8 +64,8 @@ const PanelContent: React.FC = () => {
             key: "2",
             children: (
               <History
-                page={page}
-                onPageChange={setPage}
+                limit={limit}
+                onLimitChange={setLimit}
                 exerciseId={routineExercise.exerciseId}
               />
             ),

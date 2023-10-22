@@ -14,19 +14,16 @@ import colors from "@frontend/theme/colors";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 import { useWorkout } from "../useWorkout";
 import { useScreen } from "@frontend/hooks/useScreen";
+import { get } from "http";
 
 const { Title } = Typography;
 const { TextArea } = Input;
 
 interface SetsRepsStepsProps {
   exercise: RoutineExercise;
-  exerciseHistory?: LogEntry;
 }
 
-export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({
-  exercise,
-  exerciseHistory,
-}) => {
+export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({ exercise }) => {
   const [currentSet, setCurrentSet] = useState(0);
   const { getTemporaryStorage } = useTemporaryStorage();
   const fetchTempData = getTemporaryStorage(exercise.exerciseId);
@@ -34,29 +31,14 @@ export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({
   const [lastEntryData, setLastEntryData] = useState<LogEntry>();
 
   const { getExerciseHistory } = useWorkout();
-  const { isMobile } = useScreen();
+
+  const { data } = getExerciseHistory([exercise.exerciseId], 1);
 
   useEffect(() => {
-    if (isMobile) {
-      const fetch = async () => {
-        const exerciseIds = exercise.exerciseId;
-        const { data: historyData } = await getExerciseHistory(
-          [exerciseIds],
-          0,
-          0
-        );
-        setLastEntryData(historyData?.[0]);
-      };
-
-      fetch();
+    if (data) {
+      setLastEntryData(data[0]);
     }
-  }, []);
-
-  useEffect(() => {
-    if (exerciseHistory) {
-      setLastEntryData(exerciseHistory);
-    }
-  }, [exerciseHistory]);
+  }, [data]);
 
   useEffect(() => {
     const fetchTemporaryStorage = async () => {

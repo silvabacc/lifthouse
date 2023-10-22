@@ -106,23 +106,19 @@ class LiftHouseDatabase {
   async getExerciseHistory(
     exerciseId: string[],
     userId: string,
-    from: number,
-    to: number
+    limit: number
   ): Promise<LogEntry[]> {
-    const query = this.supabase
-      .from(TableNames.log_entries)
-      .select("*")
-      .in(LogEntriesColumns.exercise_id, exerciseId)
-      .eq(LogEntriesColumns.user_id, userId)
-      .order(LogEntriesColumns.date, { ascending: false });
-
-    const { data } = await query;
+    const { data, error } = await this.supabase.rpc("get_exercise_history", {
+      exercise_ids: exerciseId,
+      history_user_id: userId,
+      _limit: limit,
+    });
 
     if (data === null) {
       throw new Error("No data returned for exercise history");
     }
 
-    return data.map((entry) => ({
+    return (data as any[]).map((entry) => ({
       logEntryId: entry.log_entry_id,
       exerciseId: entry.exercise_id,
       info: entry.info,
