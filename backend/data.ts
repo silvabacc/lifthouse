@@ -10,6 +10,7 @@ export const IntensityRepRange = [
   { sets: 5, reps: "1" },
   { sets: 3, reps: "6-8" },
   { sets: 3, reps: "6-10" },
+  { sets: 3, reps: "30s-60s" },
 ];
 
 export const VolumeRepRange = [
@@ -25,6 +26,7 @@ export const VolumeRepRange = [
   { sets: 6, reps: "6" },
   { sets: 6, reps: "8" },
   { sets: 10, reps: "10" },
+  { sets: 3, reps: "30s-60s" },
 ];
 
 // export const IntensityRepRange = {
@@ -83,6 +85,7 @@ export const routineSetup = {
     ExerciseType.ACCESSORY_LEGS,
     ExerciseType.ACCESSORY_LEGS,
     ExerciseType.VERTICAL_PULL,
+    ExerciseType.ABS,
   ],
   [RoutineType.LOWER_VOLUME]: [
     ExerciseType.LEGS_SQUAT,
@@ -90,6 +93,7 @@ export const routineSetup = {
     ExerciseType.ACCESSORY_LEGS,
     ExerciseType.ACCESSORY_LEGS,
     ExerciseType.VERTICAL_PULL,
+    ExerciseType.ABS,
   ],
 };
 
