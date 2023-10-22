@@ -73,8 +73,3 @@ export interface Meal {
   protein: number;
   date: Date;
 }
-
-export interface ExerciseHistory {
-  logEntries: LogEntry[];
-  count: number;
-}

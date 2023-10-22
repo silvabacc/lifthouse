@@ -102,7 +102,6 @@ class LiftHouseDatabase {
    *
    * @param exercisesIds returns exercises with the given ids
    */
-  //Limit 5 entries for each exercise passed in
   async getExerciseHistory(
     exerciseId: string[],
     userId: string,
@@ -117,6 +116,36 @@ class LiftHouseDatabase {
     if (data === null) {
       throw new Error("No data returned for exercise history");
     }
+
+    return (data as any[]).map((entry) => ({
+      logEntryId: entry.log_entry_id,
+      exerciseId: entry.exercise_id,
+      info: entry.info,
+      date: new Date(entry.date),
+      notes: entry.notes,
+    }));
+  }
+
+  async getExercisePerformance(
+    exerciseId: string,
+    userId: string,
+    month: number,
+    year: number
+  ): Promise<LogEntry[]> {
+    const { data } = await this.supabase
+      .from(TableNames.log_entries)
+      .select("*")
+      .eq(LogEntriesColumns.user_id, userId)
+      .eq(LogEntriesColumns.exercise_id, exerciseId)
+      .gte(
+        DailyWeighInColumns.date,
+        new Date(year, month - 1, 1).toDateString()
+      )
+      .lte(
+        DailyWeighInColumns.date,
+        new Date(year, month + 1, 0).toDateString()
+      )
+      .order(DailyWeighInColumns.date, { ascending: true });
 
     return (data as any[]).map((entry) => ({
       logEntryId: entry.log_entry_id,

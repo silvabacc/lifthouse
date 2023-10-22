@@ -64,6 +64,24 @@ export const useWorkout = () => {
     return await dbService.logEntry(result, user.id);
   };
 
+  const getExercisePerformance = (
+    exerciseId: string,
+    month: number,
+    yearSelected: number
+  ) => {
+    return useQuery(
+      ["getExercisePerformance", exerciseId, user.id, yearSelected],
+      () => {
+        return dbService.getExercisePerformance(
+          exerciseId,
+          user.id,
+          month,
+          yearSelected
+        );
+      }
+    );
+  };
+
   const getExerciseHistory = (exerciseId: string[], limit: number) => {
     return useQuery(["getExerciseHistory", exerciseId, user.id, limit], () => {
       return dbService.getExerciseHistory(exerciseId, user.id, limit);
@@ -89,5 +107,6 @@ export const useWorkout = () => {
     getExerciseHistory,
     updateLogEntries,
     deleteLogEntry,
+    getExercisePerformance,
   };
 };

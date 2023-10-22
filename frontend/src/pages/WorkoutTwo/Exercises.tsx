@@ -7,6 +7,7 @@ import { useWorkoutContext } from "./WorkoutContext";
 import { SetsRepsSteps } from "./components/SetsRepsSteps";
 import History from "./components/History";
 import { useWorkout } from "./useWorkout";
+import PerformanceChart from "./components/PerformanceChart";
 
 const { Text } = Typography;
 const { Panel } = Collapse;
@@ -37,7 +38,7 @@ const FullContent: React.FC = () => {
               <Divider style={{ margin: 16, height: 300 }} type="vertical" />
               <History exerciseId={routineExercise.exerciseId} />
             </div>
-            <div style={{ flex: 1 }}>Charts</div>
+            {/* <PerformanceChart exerciseId={routineExercise.exerciseId} /> */}
           </Card>
         );
       })}
@@ -47,7 +48,6 @@ const FullContent: React.FC = () => {
 
 const PanelContent: React.FC = () => {
   const { workoutData, isLoading } = useWorkoutContext();
-  const [limit, setLimit] = useState(1);
 
   return (
     <>
@@ -62,18 +62,15 @@ const PanelContent: React.FC = () => {
           {
             label: "History",
             key: "2",
-            children: (
-              <History
-                limit={limit}
-                onLimitChange={setLimit}
-                exerciseId={routineExercise.exerciseId}
-              />
-            ),
+            children: <History exerciseId={routineExercise.exerciseId} />,
           },
           {
             label: "Charts",
             key: "3",
             children: "Not Implemented Yet",
+            // children: (
+            //   <PerformanceChart exerciseId={routineExercise.exerciseId} />
+            // ),
           },
         ];
 
