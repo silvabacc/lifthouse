@@ -30,14 +30,18 @@ export const useWorkout = () => {
   };
 
   const queryRoutine = (routineType: RoutineType) => {
-    return useQuery(["queryRoutine", routineType, user.id], async () => {
-      const routine = await dbService.getRoutines(routineType, user.id);
-      const exerciseIds = routine.exercises.map(
-        (exercise) => exercise.exerciseId
-      );
-      const exercises = await dbService.getExercises(exerciseIds);
-      return { routine, exercises };
-    });
+    return useQuery(
+      ["queryRoutine", routineType, user.id],
+      async () => {
+        const routine = await dbService.getRoutines(routineType, user.id);
+        const exerciseIds = routine.exercises.map(
+          (exercise) => exercise.exerciseId
+        );
+        const exercises = await dbService.getExercises(exerciseIds);
+        return { routine, exercises };
+      },
+      { refetchOnWindowFocus: false, keepPreviousData: true }
+    );
   };
 
   /**
@@ -46,10 +50,14 @@ export const useWorkout = () => {
    * @returns Exercises
    */
   const queryExercises = (exerciseIds?: string[]) => {
-    return useQuery(["queryExercises", exerciseIds], async () => {
-      const exercises = await dbService.getExercises(exerciseIds);
-      return exercises;
-    });
+    return useQuery(
+      ["queryExercises", exerciseIds],
+      async () => {
+        const exercises = await dbService.getExercises(exerciseIds);
+        return exercises;
+      },
+      { refetchOnWindowFocus: false, keepPreviousData: true }
+    );
   };
 
   const logEntry = async (exercises: Exercise[]) => {
@@ -67,7 +75,8 @@ export const useWorkout = () => {
       ["getExerciseHistory", exerciseId, user.id, limit],
       async () => {
         return await dbService.getExerciseHistory(exerciseId, user.id, limit);
-      }
+      },
+      { refetchOnWindowFocus: false, keepPreviousData: true }
     );
   };
 
