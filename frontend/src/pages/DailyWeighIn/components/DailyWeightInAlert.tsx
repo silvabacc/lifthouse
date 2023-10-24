@@ -14,7 +14,9 @@ const DailyWeightInAlert: React.FC = () => {
 
   const weeklyGoal =
     dailyWeightInData?.find(
-      (weighIn) => weighIn.date.date() === mondayOfCurrentWeek.date()
+      (weighIn) =>
+        weighIn.date.date() === mondayOfCurrentWeek.date() &&
+        weighIn.date.month() === mondayOfCurrentWeek.month()
     )?.weight || 0;
 
   return (
