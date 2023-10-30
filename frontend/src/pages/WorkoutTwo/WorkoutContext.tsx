@@ -9,6 +9,7 @@ interface WorkoutcontextType {
   workoutData: WorkoutData;
   setWorkoutData: (workoutData: WorkoutData) => void;
   isLoading: boolean;
+  routineType?: RoutineType;
 }
 
 const WorkoutContext = createContext<WorkoutcontextType>({} as any);
@@ -46,6 +47,7 @@ const WorkoutContextProvider = ({ children }: any) => {
         workoutData,
         setWorkoutData,
         isLoading: isLoading,
+        routineType: routineType,
       }}
     >
       {children}

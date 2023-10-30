@@ -1,4 +1,9 @@
-import { Exercise, ExerciseType, RoutineExercise } from "@backend/types";
+import {
+  ExerciseType,
+  RepRange,
+  RoutineExercise,
+  RoutineType,
+} from "@backend/types";
 import {
   Card,
   Collapse,
@@ -21,10 +26,18 @@ import { useNavigate } from "react-router";
 import { useWorkout } from "./useWorkout";
 import styled from "styled-components";
 import colors from "@frontend/theme/colors";
+import { IntensityRepRange, VolumeRepRange } from "@backend/data";
 
 const { Text } = Typography;
 const { Panel } = Collapse;
 const { Content, Footer } = Layout;
+
+const RepRangeMapping = {
+  [RoutineType.UPPER_INTENSITY]: IntensityRepRange,
+  [RoutineType.LOWER_INTENSITY]: IntensityRepRange,
+  [RoutineType.UPPER_VOLUME]: VolumeRepRange,
+  [RoutineType.LOWER_VOLUME]: VolumeRepRange,
+};
 
 export const Exercises: React.FC = () => {
   const { isMobile } = useScreen();
@@ -156,7 +169,8 @@ interface ExerciseTitleProps {
 }
 
 const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
-  const { workoutData, setWorkoutData, isEditing } = useWorkoutContext();
+  const { workoutData, setWorkoutData, isEditing, routineType } =
+    useWorkoutContext();
   const { queryExercises } = useWorkout();
   const { data: allExercises = [], refetch: fetchQueryExercises } =
     queryExercises();
@@ -171,6 +185,26 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
       fetchQueryExercises();
     }
   }, [isEditing]);
+
+  const onRepRangeChange = (value: string) => {
+    const [sets, reps] = value.split(" x ");
+    const exerciseIndex = workoutData.exercises.findIndex((e) => {
+      return e.exerciseId === routineExercise.exerciseId;
+    });
+
+    const exercises = workoutData.routine.exercises.slice();
+    exercises[exerciseIndex] = {
+      ...exercises[exerciseIndex],
+      sets: parseInt(sets),
+      reps: reps,
+    };
+
+    clearTemporaryStorageForExercise(routineExercise.exerciseId);
+    setWorkoutData({
+      routine: { ...workoutData.routine, exercises },
+      exercises: workoutData.exercises,
+    });
+  };
 
   const onExerciseChange = (exerciseId: string) => {
     const updatedExercise = allExercises.find(
@@ -199,9 +233,9 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
     });
   };
 
-  const additionalExercises = (options: SelectProps[]) => {
+  const additionalExercises = (options: SelectProps["options"]) => {
     const exerciseType = allExercises.find(
-      (exercise) => exercise.exerciseId === options[0]?.value
+      (exercise) => exercise.exerciseId === options?.[0].value
     )?.exerciseType;
 
     if (!exerciseType) return options;
@@ -273,10 +307,18 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
 
   const exerciseOptions = additionalExercises(exercisesWithType);
 
+  const repRangeOptions = RepRangeMapping[routineType].map(
+    (setRepRange: RepRange) => {
+      return {
+        value: `${setRepRange.sets} x ${setRepRange.reps}`,
+      };
+    }
+  );
+
   const TitleContent = isEditing ? (
     <>
       <Select
-        bordered={false}
+        style={{ flex: 1 }}
         filterOption={(input, option) =>
           option
             ? option?.label
@@ -288,6 +330,12 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
         showSearch
         value={exerciseInfo?.exerciseName}
         options={exerciseOptions}
+      />
+      <Divider type="vertical" style={{ height: 30 }} />
+      <Select
+        options={repRangeOptions}
+        defaultValue={`${routineExercise.sets} x ${routineExercise.reps}`}
+        onChange={(value) => onRepRangeChange(value as string)}
       />
     </>
   ) : (
