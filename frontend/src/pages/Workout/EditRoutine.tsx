@@ -1,11 +1,12 @@
 import React from "react";
 import { IntensityRepRange, VolumeRepRange } from "../../../../backend/data";
-import { Col, Collapse, Row } from "antd";
+import { Col, Collapse, Row, SelectProps } from "antd";
 import SelectExercise from "./components/SelectExercise";
 import { Container, RepContainer } from "./WorkoutStyles";
 import SelectRepRange from "./components/SelectRepRange";
 import {
   Exercise,
+  ExerciseType,
   RepRange,
   Routine,
   RoutineExercise,
@@ -83,6 +84,50 @@ const EditRoutine: React.FC<EditRoutineProps> = ({
     setCurrentExercises(exercises);
   };
 
+  const additionalExercises = (options: SelectProps[]) => {
+    const exerciseType = allExercises.find(
+      (exercise) => exercise.exerciseId === options[0]?.value
+    )?.exerciseType;
+
+    if (ExerciseType.BICEPS === exerciseType) {
+      return [
+        {
+          label: "Biceps",
+          options,
+        },
+        {
+          label: "Forearms",
+          options: allExercises
+            .filter((e) => e.exerciseType === ExerciseType.FOREARMS)
+            .map((exercise) => ({
+              label: exercise.exerciseName,
+              value: exercise.exerciseId,
+            })),
+        },
+      ];
+    }
+
+    if (ExerciseType.FOREARMS === exerciseType) {
+      return [
+        {
+          label: "Forearms",
+          options,
+        },
+        {
+          label: "Biceps",
+          options: allExercises
+            .filter((e) => e.exerciseType === ExerciseType.BICEPS)
+            .map((exercise) => ({
+              label: exercise.exerciseName,
+              value: exercise.exerciseId,
+            })),
+        },
+      ];
+    }
+
+    return options;
+  };
+
   return (
     <Row gutter={[6, 6]}>
       {currentExercises.map((exercise, index) => {
@@ -112,6 +157,8 @@ const EditRoutine: React.FC<EditRoutineProps> = ({
           //Sorts the exercises alphabetically
           .sort((a, b) => a.label.localeCompare(b.label));
 
+        const exerciseOptions = additionalExercises(exercisesWithType);
+
         return (
           <Col xs={24} sm={8} key={index}>
             <Collapse collapsible="disabled" size="large">
@@ -131,7 +178,7 @@ const EditRoutine: React.FC<EditRoutineProps> = ({
                       }
                       showSearch
                       value={exerciseInfo?.exerciseName}
-                      options={exercisesWithType}
+                      options={exerciseOptions}
                     />
                     <RepContainer>
                       <SelectRepRange
