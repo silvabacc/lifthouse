@@ -11,6 +11,7 @@ import {
   Layout,
   Select,
   SelectProps,
+  Space,
   Tabs,
   Typography,
 } from "antd";
@@ -119,7 +120,7 @@ const FullContent: React.FC = () => {
 };
 
 const PanelContent: React.FC = () => {
-  const { workoutData, isLoading } = useWorkoutContext();
+  const { workoutData, isLoading, isEditing } = useWorkoutContext();
 
   return (
     <>
@@ -147,7 +148,8 @@ const PanelContent: React.FC = () => {
         ];
 
         return (
-          <Collapse
+          <CollapseExercise
+            collapsible={isEditing ? "disabled" : "header"}
             key={`${routineExercise.exerciseId}-${idx}`}
             style={{ margin: 16 }}
           >
@@ -157,7 +159,7 @@ const PanelContent: React.FC = () => {
             >
               <Tabs items={items} />
             </Panel>
-          </Collapse>
+          </CollapseExercise>
         );
       })}
     </>
@@ -318,7 +320,16 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
   const TitleContent = isEditing ? (
     <>
       <Select
-        style={{ flex: 1 }}
+        style={{ flex: 1, width: "50%" }}
+        dropdownRender={(menu) => (
+          <>
+            <Space style={{ paddingLeft: 8, paddingBottom: 8 }}>
+              <Text strong>{exerciseInfo?.exerciseName}</Text>
+            </Space>
+            <Divider style={{ margin: "0px 8px" }} />
+            {menu}
+          </>
+        )}
         filterOption={(input, option) =>
           option
             ? option?.label
@@ -353,7 +364,11 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
 
   return (
     <div
-      style={{ display: "flex", alignItems: "center", fontWeight: "normal" }}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        fontWeight: "normal",
+      }}
     >
       {TitleContent}
     </div>
@@ -392,4 +407,10 @@ export const FinishWorkoutFooter = styled.div`
   position: fixed;
   right: 0;
   bottom: 0;
+`;
+
+const CollapseExercise = styled(Collapse)`
+  .ant-collapse-header-text {
+    width: 95%;
+  }
 `;
