@@ -1,13 +1,5 @@
 import { LocalStorageDb } from "@backend/dexie";
 import { Info } from "@backend/types";
-import { useQuery } from "react-query";
-
-interface TemporaryStorage {
-  set?: number;
-  reps?: number;
-  weight?: number;
-  notes?: string;
-}
 
 export const useTemporaryStorage = () => {
   const dexie = new LocalStorageDb();

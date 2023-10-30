@@ -38,7 +38,8 @@ export const useDailyWeighIn = () => {
           ...weighIn,
           date: dayjs(weighIn.date),
         })) as DailyWeighInMonth[];
-      }
+      },
+      { refetchOnWindowFocus: false, keepPreviousData: true }
     );
   };
 

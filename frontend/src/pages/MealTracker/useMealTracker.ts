@@ -13,9 +13,13 @@ export const useMealTracker = () => {
   };
 
   const getMeals = (date: Date) => {
-    return useQuery(["getMeals", date], async () => {
-      return await dbService.getMeals(date, user.id);
-    });
+    return useQuery(
+      ["getMeals", date],
+      async () => {
+        return await dbService.getMeals(date, user.id);
+      },
+      { refetchOnWindowFocus: false, keepPreviousData: true }
+    );
   };
 
   const addMeal = async (
