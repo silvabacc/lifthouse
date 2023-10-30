@@ -1,10 +1,11 @@
-import { Exercise, RoutineExercise } from "@backend/types";
+import { Exercise, ExerciseType, RoutineExercise } from "@backend/types";
 import {
   Card,
   Collapse,
   Divider,
   Layout,
   Select,
+  SelectProps,
   Tabs,
   Typography,
 } from "antd";
@@ -198,6 +199,52 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
     });
   };
 
+  const additionalExercises = (options: SelectProps[]) => {
+    const exerciseType = allExercises.find(
+      (exercise) => exercise.exerciseId === options[0]?.value
+    )?.exerciseType;
+
+    if (!exerciseType) return options;
+
+    if (ExerciseType.BICEPS === exerciseType) {
+      return [
+        {
+          label: "Biceps",
+          options,
+        },
+        {
+          label: "Forearms",
+          options: allExercises
+            .filter((e) => e.exerciseType === ExerciseType.FOREARMS)
+            .map((exercise) => ({
+              label: exercise.exerciseName,
+              value: exercise.exerciseId,
+            })),
+        },
+      ];
+    }
+
+    if (ExerciseType.FOREARMS === exerciseType) {
+      return [
+        {
+          label: "Forearms",
+          options,
+        },
+        {
+          label: "Biceps",
+          options: allExercises
+            .filter((e) => e.exerciseType === ExerciseType.BICEPS)
+            .map((exercise) => ({
+              label: exercise.exerciseName,
+              value: exercise.exerciseId,
+            })),
+        },
+      ];
+    }
+
+    return options;
+  };
+
   const exerciseInfo = allExercises.find(
     (exerciseFromList) =>
       exerciseFromList.exerciseId === routineExercise.exerciseId
@@ -224,6 +271,8 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
     //Sorts the exercises alphabetically
     .sort((a, b) => a.label.localeCompare(b.label));
 
+  const exerciseOptions = additionalExercises(exercisesWithType);
+
   const TitleContent = isEditing ? (
     <>
       <Select
@@ -238,7 +287,7 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
         onChange={(value) => onExerciseChange(value as string)}
         showSearch
         value={exerciseInfo?.exerciseName}
-        options={exercisesWithType}
+        options={exerciseOptions}
       />
     </>
   ) : (
