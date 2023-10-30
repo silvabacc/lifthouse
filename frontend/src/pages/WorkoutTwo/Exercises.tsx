@@ -1,23 +1,73 @@
-import { LogEntry, RoutineExercise } from "@backend/types";
-import { Card, Collapse, Divider, Tabs, Typography } from "antd";
-import React, { useEffect, useState } from "react";
+import { RoutineExercise } from "@backend/types";
+import { Card, Collapse, Divider, Layout, Tabs, Typography } from "antd";
+import React, { useState } from "react";
 import { Skeleton } from "antd";
 import { useScreen } from "@frontend/hooks/useScreen";
 import { useWorkoutContext } from "./WorkoutContext";
 import { SetsRepsSteps } from "./components/SetsRepsSteps";
 import History from "./components/History";
+import WorkoutButton from "./components/WorkoutButton";
+import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
+import { useNavigate } from "react-router";
 import { useWorkout } from "./useWorkout";
-import PerformanceChart from "./components/PerformanceChart";
+import styled from "styled-components";
+import colors from "@frontend/theme/colors";
 
 const { Text } = Typography;
 const { Panel } = Collapse;
+const { Content, Footer } = Layout;
 
 export const Exercises: React.FC = () => {
   const { isMobile } = useScreen();
+  const [saving, setSaving] = useState(false);
+  const { clearTemporaryStorage } = useTemporaryStorage();
+  const navigate = useNavigate();
+  const { logEntry } = useWorkout();
+  const { workoutData } = useWorkoutContext();
+
+  const finishWorkout = async () => {
+    setSaving(true);
+    const saved = await logEntry(workoutData.exercises);
+    if (saved) {
+      clearTemporaryStorage();
+      navigate("/");
+      setSaving(false);
+    }
+  };
 
   const ExerciseCardContent = isMobile ? PanelContent : FullContent;
 
-  return <ExerciseCardContent />;
+  return (
+    <Layout style={{ backgroundColor: "white" }}>
+      <Content>
+        <ExerciseCardContent />
+      </Content>
+      <Footer>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: isMobile ? "center" : "flex-end",
+            background: "white",
+            position: "fixed",
+            right: 0,
+            bottom: 0,
+            borderTop: `0.1px solid ${colors.grey}`,
+            paddingRight: 16,
+            width: "100%",
+          }}
+        >
+          <WorkoutButton
+            type={saving ? "default" : "primary"}
+            onClick={() => {
+              finishWorkout();
+            }}
+          >
+            {saving ? "Saving..." : "Finish Workout"}
+          </WorkoutButton>
+        </div>
+      </Footer>
+    </Layout>
+  );
 };
 
 const FullContent: React.FC = () => {
@@ -142,3 +192,12 @@ export const SkeletonContent: React.FC<SkeletonContentProps> = ({
     </>
   );
 };
+
+export const FinishWorkoutFooter = styled.div`
+  border-top: 0.1px solid ${colors.grey};
+  background: white;
+  width: 100%;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+`;

@@ -325,7 +325,11 @@ export const History: React.FC<HistoryProps> = ({ exerciseId }) => {
                   </Space>
                 )}
               </div>
-              <Steps direction="vertical" items={items}></Steps>
+              {items.length > 0 ? (
+                <Steps direction="vertical" items={items} />
+              ) : (
+                <Text>No sets recorded 😢</Text>
+              )}
               <div
                 style={{
                   marginTop: 16,

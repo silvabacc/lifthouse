@@ -80,12 +80,7 @@ class LiftHouseDatabase {
         date: new Date(),
         notes: entry?.notes,
       }))
-      .filter(
-        (entry) =>
-          entry.exercise_id !== undefined &&
-          entry.info?.length !== 0 &&
-          entry.notes !== undefined
-      );
+      .filter((entry) => entry.exercise_id !== undefined);
 
     const { error } = await this.supabase
       .from(TableNames.log_entries)
