@@ -3,12 +3,15 @@ import { useWorkoutContext } from "./WorkoutContext";
 import { Button } from "antd";
 import { Exercises } from "./Exercises";
 import { EditOutlined, SaveOutlined } from "@ant-design/icons";
+import { useWorkout } from "./useWorkout";
 
 const WorkoutContent: React.FC = () => {
-  const { isEditing, setEditing } = useWorkoutContext();
+  const { isEditing, setEditing, workoutData } = useWorkoutContext();
+  const { updateRoutine } = useWorkout();
 
   const onEdit = () => {
     setEditing(!isEditing);
+    updateRoutine(workoutData.routine);
   };
 
   return (

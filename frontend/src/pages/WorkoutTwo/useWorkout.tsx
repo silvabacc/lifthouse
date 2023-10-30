@@ -2,14 +2,18 @@ import LiftHouseDatabase from "@backend/database/db";
 import {
   Exercise,
   LogEntry,
+  Routine,
   RoutineExercise,
   RoutineType,
 } from "@backend/types";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
-import { isObject } from "chart.js/dist/helpers/helpers.core";
-import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
+
+export interface WorkoutData {
+  routine: Routine;
+  exercises: Exercise[];
+}
 
 export const useWorkout = () => {
   const dbService = new LiftHouseDatabase();
@@ -24,23 +28,33 @@ export const useWorkout = () => {
    * @param exercises list of exercies to save for the routine
    * @returns
    */
-  const updateRoutine = async (
-    routineId: string,
-    exercises: RoutineExercise[]
-  ) => {
-    await dbService.updateRoutine(routineId, exercises);
+  const updateRoutine = async (routine: Routine) => {
+    await dbService.updateRoutine(routine.routineId, routine.exercises);
   };
 
-  const queryRoutine = (routineType: RoutineType) => {
+  const queryRoutine = (routineType?: RoutineType) => {
     return useQuery(
       ["queryRoutine", routineType, user.id],
       async () => {
+        if (routineType === undefined)
+          return {
+            exercises: [] as Exercise[],
+            routine: { exercises: [] as RoutineExercise[] },
+          } as WorkoutData;
+
         const routine = await dbService.getRoutines(routineType, user.id);
         const exerciseIds = routine.exercises.map(
           (exercise) => exercise.exerciseId
         );
         const exercises = await dbService.getExercises(exerciseIds);
-        return { routine, exercises };
+
+        const orderedExercises = routine.exercises.map((routineExercise) => {
+          return exercises.find(
+            (exercise) => exercise.exerciseId === routineExercise.exerciseId
+          ) as Exercise;
+        });
+
+        return { exercises: orderedExercises, routine };
       },
       { refetchOnWindowFocus: false, keepPreviousData: true }
     );
@@ -58,7 +72,7 @@ export const useWorkout = () => {
         const exercises = await dbService.getExercises(exerciseIds);
         return exercises;
       },
-      { refetchOnWindowFocus: false, keepPreviousData: true }
+      { enabled: false, refetchOnWindowFocus: false, keepPreviousData: true }
     );
   };
 

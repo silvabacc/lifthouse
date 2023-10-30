@@ -1,6 +1,14 @@
-import { RoutineExercise } from "@backend/types";
-import { Card, Collapse, Divider, Layout, Tabs, Typography } from "antd";
-import React, { useState } from "react";
+import { Exercise, RoutineExercise } from "@backend/types";
+import {
+  Card,
+  Collapse,
+  Divider,
+  Layout,
+  Select,
+  Tabs,
+  Typography,
+} from "antd";
+import React, { useEffect, useState } from "react";
 import { Skeleton } from "antd";
 import { useScreen } from "@frontend/hooks/useScreen";
 import { useWorkoutContext } from "./WorkoutContext";
@@ -147,15 +155,94 @@ interface ExerciseTitleProps {
 }
 
 const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
-  const { workoutData } = useWorkoutContext();
+  const { workoutData, setWorkoutData, isEditing } = useWorkoutContext();
+  const { queryExercises } = useWorkout();
+  const { data: allExercises = [], refetch: fetchQueryExercises } =
+    queryExercises();
+  const { clearTemporaryStorageForExercise } = useTemporaryStorage();
+
   const title = workoutData.exercises.find(
     (e) => e.exerciseId === routineExercise.exerciseId
   )?.exerciseName;
 
-  return (
-    <div
-      style={{ display: "flex", alignItems: "center", fontWeight: "normal" }}
-    >
+  useEffect(() => {
+    if (isEditing) {
+      fetchQueryExercises();
+    }
+  }, [isEditing]);
+
+  const onExerciseChange = (exerciseId: string) => {
+    const updatedExercise = allExercises.find(
+      (e) => e.exerciseId === exerciseId
+    );
+
+    if (!updatedExercise) return;
+
+    const exerciseIndex = workoutData.exercises.findIndex((e) => {
+      return e.exerciseId === routineExercise.exerciseId;
+    });
+
+    const exercises = workoutData.exercises.slice();
+    exercises[exerciseIndex] = updatedExercise;
+
+    const exerciseIds = exercises.map((e) => ({
+      sets: routineExercise.sets,
+      reps: routineExercise.reps,
+      exerciseId: e.exerciseId,
+    }));
+
+    clearTemporaryStorageForExercise(routineExercise.exerciseId);
+    setWorkoutData({
+      routine: { ...workoutData.routine, exercises: exerciseIds },
+      exercises,
+    });
+  };
+
+  const exerciseInfo = allExercises.find(
+    (exerciseFromList) =>
+      exerciseFromList.exerciseId === routineExercise.exerciseId
+  );
+
+  const exercisesWithType = allExercises
+    //Filters exercises by type e.g. Vertical Push, Horizontal Push, etc
+    .filter(
+      (exerciseFromList) =>
+        exerciseInfo?.exerciseType === exerciseFromList.exerciseType
+    )
+    //Removes any duplicated exercises from the list if already in the routine
+    .filter(
+      (exerciseFromList) =>
+        !workoutData.exercises
+          .map((i) => i.exerciseId)
+          .includes(exerciseFromList.exerciseId)
+    )
+    //Maps the exercises to the format required by the Select component
+    .map((exerciseFromList) => ({
+      value: exerciseFromList.exerciseId,
+      label: exerciseFromList.exerciseName,
+    }))
+    //Sorts the exercises alphabetically
+    .sort((a, b) => a.label.localeCompare(b.label));
+
+  const TitleContent = isEditing ? (
+    <>
+      <Select
+        bordered={false}
+        filterOption={(input, option) =>
+          option
+            ? option?.label
+                .toLocaleLowerCase()
+                .indexOf(input.toLocaleLowerCase()) >= 0
+            : false
+        }
+        onChange={(value) => onExerciseChange(value as string)}
+        showSearch
+        value={exerciseInfo?.exerciseName}
+        options={exercisesWithType}
+      />
+    </>
+  ) : (
+    <>
       <Text style={{ flex: 1 }} strong>
         {title}
       </Text>
@@ -164,6 +251,14 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
         <Text keyboard>{routineExercise.sets}</Text> x{" "}
         <Text keyboard>{routineExercise.reps}</Text>
       </div>
+    </>
+  );
+
+  return (
+    <div
+      style={{ display: "flex", alignItems: "center", fontWeight: "normal" }}
+    >
+      {TitleContent}
     </div>
   );
 };
