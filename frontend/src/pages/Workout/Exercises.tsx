@@ -417,8 +417,8 @@ export const SkeletonContent: React.FC<SkeletonContentProps> = ({
           style={{
             borderStyle: "solid",
             borderColor: "#f0f0f0",
-            padding: 16,
-            margin: 16,
+            padding: 8,
+            margin: 8,
           }}
         >
           <Skeleton active paragraph={{ rows }} />
