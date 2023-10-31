@@ -30,7 +30,6 @@ import styled from "styled-components";
 import colors from "@frontend/theme/colors";
 import { IntensityRepRange, VolumeRepRange } from "@backend/data";
 import { CheckCircleOutlined } from "@ant-design/icons";
-import { get } from "http";
 
 const { Text } = Typography;
 const { Panel } = Collapse;
@@ -156,6 +155,7 @@ const PanelContent: React.FC = () => {
 
         return (
           <CollapseExercise
+            size="large"
             collapsible={isEditing ? "disabled" : "header"}
             key={`${routineExercise.exerciseId}-${idx}`}
             style={{ margin: 16 }}
