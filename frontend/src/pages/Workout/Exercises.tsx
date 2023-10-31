@@ -9,6 +9,7 @@ import {
   Card,
   Collapse,
   Divider,
+  Input,
   Layout,
   Select,
   SelectProps,
@@ -34,6 +35,7 @@ import { CheckCircleOutlined } from "@ant-design/icons";
 const { Text } = Typography;
 const { Panel } = Collapse;
 const { Content, Footer } = Layout;
+const { Search } = Input;
 
 const DoneIcon = <CheckCircleOutlined style={{ color: colors.success }} />;
 
@@ -183,6 +185,7 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
   const { data: allExercises = [], refetch: fetchQueryExercises } =
     queryExercises();
   const { clearTemporaryStorageForExercise } = useTemporaryStorage();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const title = workoutData.exercises.find(
     (e) => e.exerciseId === routineExercise.exerciseId
@@ -243,7 +246,7 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
 
   const additionalExercises = (options: SelectProps["options"]) => {
     const exerciseType = allExercises.find(
-      (exercise) => exercise.exerciseId === options?.[0].value
+      (exercise) => exercise.exerciseId === options?.[0]?.value
     )?.exerciseType;
 
     if (!exerciseType) return options;
@@ -311,7 +314,11 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
       label: exerciseFromList.exerciseName,
     }))
     //Sorts the exercises alphabetically
-    .sort((a, b) => a.label.localeCompare(b.label));
+    .sort((a, b) => a.label.localeCompare(b.label))
+    //Search query
+    .filter((exercise) =>
+      exercise.label.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   const exerciseOptions = additionalExercises(exercisesWithType);
 
@@ -323,28 +330,28 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
     }
   );
 
-  const filterOption = (
-    input: string,
-    option?: { label: string; value: string }
-  ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+  const SearchBar = (menu: React.ReactElement) => {
+    return (
+      <>
+        <Search
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{ padding: "4px 0px" }}
+        />
+        <Divider style={{ margin: "0px 12px" }} />
+        {menu}
+      </>
+    );
+  };
 
   const TitleContent = isEditing ? (
     <EditingTitleContainer>
       <SelectExerciseContainer>
         <Select
+          dropdownMatchSelectWidth={false}
+          dropdownStyle={{ width: 300 }}
           bordered={false}
-          dropdownRender={(menu) => (
-            <>
-              <Space style={{ paddingLeft: 8, paddingBottom: 8 }}>
-                <Text strong>{exerciseInfo?.exerciseName}</Text>
-              </Space>
-              <Divider style={{ margin: "0px 8px" }} />
-              {menu}
-            </>
-          )}
-          filterOption={filterOption}
+          dropdownRender={SearchBar}
           onChange={(value) => onExerciseChange(value as string)}
-          showSearch
           value={exerciseInfo?.exerciseName}
           options={exerciseOptions as { label: string; value: string }[]}
         />
@@ -353,17 +360,6 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
       <Select
         style={{ width: 130 }}
         options={repRangeOptions}
-        dropdownRender={(menu) => (
-          <>
-            <Space style={{ paddingLeft: 8, paddingBottom: 8 }}>
-              <Text strong>
-                {routineExercise.sets} x {routineExercise.reps}
-              </Text>
-            </Space>
-            <Divider style={{ margin: "0px 8px" }} />
-            {menu}
-          </>
-        )}
         defaultValue={`${routineExercise.sets} x ${routineExercise.reps}`}
         onChange={(value) => onRepRangeChange(value as string)}
       />
