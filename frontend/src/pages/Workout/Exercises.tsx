@@ -51,7 +51,7 @@ export const Exercises: React.FC = () => {
   const { clearTemporaryStorage } = useTemporaryStorage();
   const navigate = useNavigate();
   const { logEntry } = useWorkout();
-  const { workoutData } = useWorkoutContext();
+  const { workoutData, isEditing } = useWorkoutContext();
 
   const finishWorkout = async () => {
     setSaving(true);
@@ -70,30 +70,32 @@ export const Exercises: React.FC = () => {
       <Content>
         <ExerciseCardContent />
       </Content>
-      <Footer>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: isMobile ? "center" : "flex-end",
-            background: "white",
-            position: "fixed",
-            right: 0,
-            bottom: 0,
-            borderTop: `0.1px solid ${colors.grey}`,
-            paddingRight: 16,
-            width: "100%",
-          }}
-        >
-          <WorkoutButton
-            type={saving ? "default" : "primary"}
-            onClick={() => {
-              finishWorkout();
+      {!isEditing && (
+        <Footer>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: isMobile ? "center" : "flex-end",
+              background: "white",
+              position: "fixed",
+              right: 0,
+              bottom: 0,
+              borderTop: `0.1px solid ${colors.grey}`,
+              paddingRight: 16,
+              width: "100%",
             }}
           >
-            {saving ? "Saving..." : "Finish Workout"}
-          </WorkoutButton>
-        </div>
-      </Footer>
+            <WorkoutButton
+              type={saving ? "default" : "primary"}
+              onClick={() => {
+                finishWorkout();
+              }}
+            >
+              {saving ? "Saving..." : "Finish Workout"}
+            </WorkoutButton>
+          </div>
+        </Footer>
+      )}
     </Layout>
   );
 };
