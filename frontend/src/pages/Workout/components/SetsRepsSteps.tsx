@@ -108,7 +108,6 @@ const StepRow: React.FC<StepsRowProps> = ({
   history,
   step,
   disabled,
-  onClick,
 }) => {
   const { writeTemporaryStorage } = useTemporaryStorage();
 
@@ -163,13 +162,6 @@ const StepRow: React.FC<StepsRowProps> = ({
           onChange={handleOnChangeReps}
           placeholder={placeHolderInfo?.reps.toString()}
           prefix="reps"
-        />
-        <Button
-          disabled={disabled}
-          style={{ color: disabled ? colors.grey : colors.primary }}
-          type="ghost"
-          onClick={onClick}
-          icon={<CheckSquareOutlined size={24} />}
         />
       </Space>
     </>
