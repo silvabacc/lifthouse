@@ -95,31 +95,54 @@ class LiftHouseDatabase {
 
   /**
    *
-   * @param exercisesIds returns exercises with the given ids. If empty, returns all exercises
+   * @param exercisesIds returns exercises with the given ids
    */
   async getExerciseHistory(
-    exerciseId: string,
+    exerciseId: string[],
     userId: string,
-    limit?: number
+    limit: number
   ): Promise<LogEntry[]> {
-    const query = this.supabase
-      .from(TableNames.log_entries)
-      .select("*")
-      .eq(LogEntriesColumns.exercise_id, exerciseId)
-      .eq(LogEntriesColumns.user_id, userId)
-      .order(LogEntriesColumns.date, { ascending: false });
-
-    if (limit) {
-      query.limit(limit);
-    }
-
-    const { data } = await query;
+    const { data, error } = await this.supabase.rpc("get_exercise_history", {
+      exercise_ids: exerciseId,
+      history_user_id: userId,
+      _limit: limit,
+    });
 
     if (data === null) {
       throw new Error("No data returned for exercise history");
     }
 
-    return data.map((entry) => ({
+    return (data as any[]).map((entry) => ({
+      logEntryId: entry.log_entry_id,
+      exerciseId: entry.exercise_id,
+      info: entry.info,
+      date: new Date(entry.date),
+      notes: entry.notes,
+    }));
+  }
+
+  async getExercisePerformance(
+    exerciseId: string,
+    userId: string,
+    month: number,
+    year: number
+  ): Promise<LogEntry[]> {
+    const { data } = await this.supabase
+      .from(TableNames.log_entries)
+      .select("*")
+      .eq(LogEntriesColumns.user_id, userId)
+      .eq(LogEntriesColumns.exercise_id, exerciseId)
+      .gte(
+        DailyWeighInColumns.date,
+        new Date(year, month - 1, 1).toDateString()
+      )
+      .lte(
+        DailyWeighInColumns.date,
+        new Date(year, month + 1, 0).toDateString()
+      )
+      .order(DailyWeighInColumns.date, { ascending: true });
+
+    return (data as any[]).map((entry) => ({
       logEntryId: entry.log_entry_id,
       exerciseId: entry.exercise_id,
       info: entry.info,
@@ -129,13 +152,18 @@ class LiftHouseDatabase {
   }
 
   async updateExerciseHistory(entry: LogEntry) {
-    await this.supabase
+    const { error } = await this.supabase
       .from(TableNames.log_entries)
       .update({
         info: entry.info,
         notes: entry.notes,
       })
       .eq(LogEntriesColumns.log_entry_id, entry.logEntryId);
+
+    if (error) {
+      return false;
+    }
+    return true;
   }
 
   async getRoutines(routine: RoutineType, userId: string): Promise<Routine> {

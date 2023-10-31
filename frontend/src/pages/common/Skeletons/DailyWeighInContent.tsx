@@ -11,7 +11,6 @@ const DailyWeighInContent: React.FC = () => {
 
   return (
     <div style={{ height: "100%", overflow: "hidden" }}>
-      <Header title="Daily Weigh In" />
       <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
         <DailyWeighInChart
           title={`Monthly progress for ${selectedValue.format("MMMM YYYY")}`}

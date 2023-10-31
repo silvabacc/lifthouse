@@ -38,11 +38,15 @@ export class LocalStorageDb extends Dexie {
       return;
     }
 
-    await this.logEntryStorage.add({
-      exerciseId,
-      info: info ? [info] : [],
-      notes: notes,
-    });
+    try {
+      await this.logEntryStorage.add({
+        exerciseId,
+        info: info ? [info] : [],
+        notes: notes,
+      });
+    } catch (e) {
+      /* empty */
+    }
   }
 
   async removeSetFromExercise(exerciseId: string, set: number) {

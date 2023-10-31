@@ -8,6 +8,7 @@ import { Button, Dropdown, MenuProps } from "antd";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { useNavigate } from "react-router-dom";
 import colors from "@frontend/theme/colors";
+import { iconSizes } from "@frontend/theme/sizes";
 
 const SettingMenu: React.FC = () => {
   const { signOut, auth } = useAuthentication();
@@ -51,8 +52,8 @@ const SettingMenu: React.FC = () => {
 
   return (
     <Dropdown menu={menuProps}>
-      <Button type="ghost">
-        <SettingOutlined style={{ fontSize: 20 }} />
+      <Button shape="circle" size="large">
+        <SettingOutlined style={{ fontSize: iconSizes.md }} />
       </Button>
     </Dropdown>
   );

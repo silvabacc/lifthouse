@@ -3,6 +3,7 @@ const colors = {
   formBackgroundColor: "#f7f6fa",
   caption: "#808080",
   delete: "#C70000",
+  success: "#50C878",
   //Need to rework below colors
   grey: "#808080",
   medium_grey: "#d3d3d3",
