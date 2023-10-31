@@ -1,7 +1,7 @@
 import { RoutineType } from "@backend/types";
 import { Navigate, createBrowserRouter, useLocation } from "react-router-dom";
 import Home from "./pages/Home/Home";
-import WorkoutTwo from "./pages/WorkoutTwo/Workout";
+import WorkoutTwo from "./pages/Workout/Workout";
 import Login from "./pages/Authentication/Login";
 import SignUp from "./pages/Authentication/SignUp";
 import ForgotPassword from "./pages/Authentication/ForgotPassword";

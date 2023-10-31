@@ -5,11 +5,9 @@ import { Skeleton, Tabs, TabsProps } from "antd";
 import MealTrackerCard from "./components/MealTrackerCard/MealTrackerCard";
 import MacroNutrients from "./components/MacroNutrients/MacroNutrients";
 import dayjs from "dayjs";
-import Loading from "../common/Loading";
 import { MealTrackerContainer } from "./MealTrackerStyles";
 import AddMealCard from "./components/AddMealCard/AddMealCard";
 import { useMealTracker } from "./useMealTracker";
-import SkeletonPanel from "../Workout/Skeletons/SkeletonPanel";
 
 const MealTracker: React.FC = () => {
   const [activeTab, setActivetab] = useState("1");
@@ -31,7 +29,7 @@ const MealTracker: React.FC = () => {
   const Cards = () => {
     return (
       <>
-        <SkeletonPanel loading={isLoading} />
+        <Skeleton loading={isLoading} />
         {data?.map((meal) => (
           <MealTrackerCard
             key={meal.id}
@@ -61,7 +59,6 @@ const MealTracker: React.FC = () => {
 
   return (
     <>
-      <Header title="Meal Tracker" />
       <MealTrackerContainer>
         <DateMover selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
         <MacroNutrients calories={calories} protein={protein} />

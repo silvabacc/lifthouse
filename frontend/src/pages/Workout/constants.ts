@@ -6,3 +6,5 @@ export const pageTitleMapping = {
   [RoutineType.LOWER_INTENSITY]: "Lower Intensity",
   [RoutineType.LOWER_VOLUME]: "Lower Volume",
 };
+
+export const gridGutter = 6;
