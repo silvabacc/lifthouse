@@ -108,7 +108,7 @@ const FullContent: React.FC = () => {
     <>
       {isLoading ||
         (workoutData.routine.exercises.length === 0 && (
-          <SkeletonContent rows={1} />
+          <SkeletonContent rows={3} />
         ))}
       {workoutData.routine.exercises.map((routineExercise, idx) => {
         return (
@@ -138,7 +138,7 @@ const PanelContent: React.FC = () => {
     <>
       {isLoading ||
         (workoutData.routine.exercises.length === 0 && (
-          <SkeletonContent rows={1} />
+          <SkeletonContent rows={3} />
         ))}
       {workoutData.routine.exercises.map((routineExercise, idx) => {
         const items = [
