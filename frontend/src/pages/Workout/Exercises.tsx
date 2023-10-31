@@ -327,7 +327,7 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
   const TitleContent = isEditing ? (
     <>
       <SelectExercise
-        style={{ flex: 5, width: "60%" }}
+        style={{ flex: 5, width: "50%" }}
         dropdownRender={(menu) => (
           <>
             <Space style={{ paddingLeft: 8, paddingBottom: 8 }}>
@@ -351,7 +351,7 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
       />
       <Divider type="vertical" style={{ height: 30 }} />
       <Select
-        style={{ flex: 1, width: "30%" }}
+        style={{ flex: 1, width: "50%" }}
         options={repRangeOptions}
         dropdownRender={(menu) => (
           <>
