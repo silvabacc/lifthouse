@@ -346,7 +346,7 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
           onChange={(value) => onExerciseChange(value as string)}
           showSearch
           value={exerciseInfo?.exerciseName}
-          options={exerciseOptions}
+          options={exerciseOptions as { label: string; value: string }[]}
         />
       </SelectExerciseContainer>
       <Divider type="vertical" style={{ height: 30 }} />
