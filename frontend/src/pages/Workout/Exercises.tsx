@@ -106,7 +106,10 @@ const FullContent: React.FC = () => {
 
   return (
     <>
-      {isLoading && <SkeletonContent />}
+      {isLoading ||
+        (workoutData.routine.exercises.length === 0 && (
+          <SkeletonContent rows={1} />
+        ))}
       {workoutData.routine.exercises.map((routineExercise, idx) => {
         return (
           <Card
@@ -129,10 +132,14 @@ const FullContent: React.FC = () => {
 
 const PanelContent: React.FC = () => {
   const { workoutData, isLoading, isEditing } = useWorkoutContext();
+  console.log(isLoading);
 
   return (
     <>
-      {isLoading && <SkeletonContent rows={1} />}
+      {isLoading ||
+        (workoutData.routine.exercises.length === 0 && (
+          <SkeletonContent rows={1} />
+        ))}
       {workoutData.routine.exercises.map((routineExercise, idx) => {
         const items = [
           {
