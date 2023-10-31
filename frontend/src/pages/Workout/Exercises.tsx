@@ -157,7 +157,7 @@ const PanelContent: React.FC = () => {
           <CollapseExercise
             collapsible={isEditing ? "disabled" : "header"}
             key={`${routineExercise.exerciseId}-${idx}`}
-            style={{ margin: 16 }}
+            style={{ margin: "8px 0px", minWidth: 320 }}
           >
             <Panel
               key={`${routineExercise.exerciseId}-${idx}`}
@@ -323,34 +323,35 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
     }
   );
 
+  const filterOption = (
+    input: string,
+    option?: { label: string; value: string }
+  ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+
   const TitleContent = isEditing ? (
-    <>
-      <SelectExercise
-        style={{ flex: 5, width: "50%" }}
-        dropdownRender={(menu) => (
-          <>
-            <Space style={{ paddingLeft: 8, paddingBottom: 8 }}>
-              <Text strong>{exerciseInfo?.exerciseName}</Text>
-            </Space>
-            <Divider style={{ margin: "0px 8px" }} />
-            {menu}
-          </>
-        )}
-        filterOption={(input, option) =>
-          option
-            ? option?.label
-                .toLocaleLowerCase()
-                .indexOf(input.toLocaleLowerCase()) >= 0
-            : false
-        }
-        onChange={(value) => onExerciseChange(value as string)}
-        showSearch
-        value={exerciseInfo?.exerciseName}
-        options={exerciseOptions}
-      />
+    <EditingTitleContainer>
+      <SelectExerciseContainer>
+        <Select
+          bordered={false}
+          dropdownRender={(menu) => (
+            <>
+              <Space style={{ paddingLeft: 8, paddingBottom: 8 }}>
+                <Text strong>{exerciseInfo?.exerciseName}</Text>
+              </Space>
+              <Divider style={{ margin: "0px 8px" }} />
+              {menu}
+            </>
+          )}
+          filterOption={filterOption}
+          onChange={(value) => onExerciseChange(value as string)}
+          showSearch
+          value={exerciseInfo?.exerciseName}
+          options={exerciseOptions}
+        />
+      </SelectExerciseContainer>
       <Divider type="vertical" style={{ height: 30 }} />
       <Select
-        style={{ flex: 1, width: "50%" }}
+        style={{ width: 130 }}
         options={repRangeOptions}
         dropdownRender={(menu) => (
           <>
@@ -366,26 +367,24 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
         defaultValue={`${routineExercise.sets} x ${routineExercise.reps}`}
         onChange={(value) => onRepRangeChange(value as string)}
       />
-    </>
+    </EditingTitleContainer>
   ) : (
     <>
-      <Text style={{ flex: 2 }} strong>
+      <Text style={{ flex: 1 }} strong>
         {title}
       </Text>
+      <Divider type="vertical" style={{ height: 30 }} />
       <div
         style={{
           display: "flex",
           justifyContent: "flex-end",
-          textAlign: "start",
-          flex: 1,
+          textAlign: "end",
+          width: 110,
         }}
       >
-        <Divider type="vertical" style={{ height: 30 }} />
         <Text keyboard>{routineExercise.sets}</Text>
-        <Text style={{ textAlign: "center" }}>x</Text>
-        <Text keyboard style={{ maxWidth: 80, minWidth: 35 }}>
-          {routineExercise.reps}
-        </Text>
+        <Text>x</Text>
+        <Text keyboard>{routineExercise.reps}</Text>
       </div>
     </>
   );
@@ -394,8 +393,6 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
     <div
       style={{
         display: "flex",
-        alignItems: "center",
-        fontWeight: "normal",
       }}
     >
       {TitleContent}
@@ -431,9 +428,44 @@ export const SkeletonContent: React.FC<SkeletonContentProps> = ({
 const CollapseExercise = styled(Collapse)`
   .ant-collapse-header-text {
     width: 95%;
+    height: 85px;
   }
 `;
 
-const SelectExercise = styled(Select)`
+const SelectExerciseContainer = styled.div`
+  flex: 1;
+
+  .ant-select-selector {
+    padding: 0px !important;
+  }
+
+  .ant-select-selection-item {
+    line-height: 1.5 !important;
+    margin-right: 8px !important;
+  }
+
+  .ant-select-arrow {
+    color: #000;
+    padding-bottom: 8px;
+  }
+`;
+
+const EditingTitleContainer = styled.div`
   width: 100%;
+  display: flex;
+
+  .ant-select {
+    width: 100%;
+  }
+
+  .ant-select-selection-item {
+    white-space: normal;
+    word-break: break-word;
+    height: 85px;
+    font-weight: 600;
+  }
+
+  .ant-select-arrow {
+    color: #000;
+  }
 `;

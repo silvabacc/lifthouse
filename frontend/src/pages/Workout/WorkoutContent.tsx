@@ -16,7 +16,7 @@ const WorkoutContent: React.FC = () => {
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "right" }}>
+      <div style={{ display: "flex", minWidth: 300 }}>
         <Button
           style={{ marginLeft: "auto", marginRight: 0 }}
           onClick={onEdit}

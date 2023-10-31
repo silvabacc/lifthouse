@@ -43,6 +43,8 @@ const Header: React.FC<HeaderProps> = ({
           justifyContent: "space-between",
           alignItems: "center",
           marginBottom: 16,
+          paddingRight: 8,
+          minWidth: 320,
         }}
       >
         <div
