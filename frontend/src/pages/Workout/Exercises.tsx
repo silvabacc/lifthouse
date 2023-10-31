@@ -155,7 +155,6 @@ const PanelContent: React.FC = () => {
 
         return (
           <CollapseExercise
-            size="large"
             collapsible={isEditing ? "disabled" : "header"}
             key={`${routineExercise.exerciseId}-${idx}`}
             style={{ margin: 16 }}
