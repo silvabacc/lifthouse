@@ -316,7 +316,7 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
 
   const exerciseOptions = additionalExercises(exercisesWithType);
 
-  const repRangeOptions = RepRangeMapping[routineType].map(
+  const repRangeOptions = RepRangeMapping[routineType!].map(
     (setRepRange: RepRange) => {
       return {
         value: `${setRepRange.sets} x ${setRepRange.reps}`,
@@ -326,8 +326,8 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
 
   const TitleContent = isEditing ? (
     <>
-      <Select
-        style={{ flex: 2, width: "50%" }}
+      <SelectExercise
+        style={{ flex: 5, width: "60%" }}
         dropdownRender={(menu) => (
           <>
             <Space style={{ paddingLeft: 8, paddingBottom: 8 }}>
@@ -351,8 +351,19 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
       />
       <Divider type="vertical" style={{ height: 30 }} />
       <Select
-        style={{ flex: 1, width: "50%" }}
+        style={{ flex: 1, width: "30%" }}
         options={repRangeOptions}
+        dropdownRender={(menu) => (
+          <>
+            <Space style={{ paddingLeft: 8, paddingBottom: 8 }}>
+              <Text strong>
+                {routineExercise.sets} x {routineExercise.reps}
+              </Text>
+            </Space>
+            <Divider style={{ margin: "0px 8px" }} />
+            {menu}
+          </>
+        )}
         defaultValue={`${routineExercise.sets} x ${routineExercise.reps}`}
         onChange={(value) => onRepRangeChange(value as string)}
       />
@@ -362,10 +373,20 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
       <Text style={{ flex: 2 }} strong>
         {title}
       </Text>
-      <Divider type="vertical" style={{ height: 30 }} />
-      <div style={{ flex: 1 }}>
-        <Text keyboard>{routineExercise.sets}</Text> x{" "}
-        <Text keyboard>{routineExercise.reps}</Text>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          textAlign: "start",
+          flex: 1,
+        }}
+      >
+        <Divider type="vertical" style={{ height: 30 }} />
+        <Text keyboard>{routineExercise.sets}</Text>
+        <Text style={{ textAlign: "center" }}>x</Text>
+        <Text keyboard style={{ maxWidth: 80, minWidth: 35 }}>
+          {routineExercise.reps}
+        </Text>
       </div>
     </>
   );
@@ -408,17 +429,12 @@ export const SkeletonContent: React.FC<SkeletonContentProps> = ({
   );
 };
 
-export const FinishWorkoutFooter = styled.div`
-  border-top: 0.1px solid ${colors.grey};
-  background: white;
-  width: 100%;
-  position: fixed;
-  right: 0;
-  bottom: 0;
-`;
-
 const CollapseExercise = styled(Collapse)`
   .ant-collapse-header-text {
     width: 95%;
   }
+`;
+
+const SelectExercise = styled(Select)`
+  width: 100%;
 `;
