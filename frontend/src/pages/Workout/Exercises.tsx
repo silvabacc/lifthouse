@@ -191,7 +191,7 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
   const { queryExercises } = useWorkout();
   const { data: allExercises = [], refetch: fetchQueryExercises } =
     queryExercises();
-  const { clearTemporaryStorageForExercise } = useTemporaryStorage();
+  // const { clearTemporaryStorageForExercise } = useTemporaryStorage();
   const [searchQuery, setSearchQuery] = useState("");
 
   const title = workoutData.exercises.find(
@@ -217,7 +217,7 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
       reps: reps,
     };
 
-    clearTemporaryStorageForExercise(routineExercise.exerciseId);
+    // clearTemporaryStorageForExercise(routineExercise.exerciseId);
     setWorkoutData({
       routine: { ...workoutData.routine, exercises },
       exercises: workoutData.exercises,
@@ -244,7 +244,7 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
       exerciseId: e.exerciseId,
     }));
 
-    clearTemporaryStorageForExercise(routineExercise.exerciseId);
+    // clearTemporaryStorageForExercise(routineExercise.exerciseId);
     setWorkoutData({
       routine: { ...workoutData.routine, exercises: exerciseIds },
       exercises,
