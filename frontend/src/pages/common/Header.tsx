@@ -3,6 +3,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useScreen } from "@frontend/hooks/useScreen";
+import { motion } from "framer-motion";
+import Transition from "./Transition";
 
 const { Title } = Typography;
 
@@ -37,31 +39,33 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 16,
-          marginTop: 8,
-          paddingRight: 8,
-          minWidth: 320,
-        }}
-      >
+      <Transition>
         <div
           style={{
             display: "flex",
+            justifyContent: "space-between",
             alignItems: "center",
+            marginBottom: 16,
+            marginTop: 8,
+            paddingRight: 8,
+            minWidth: 320,
           }}
         >
-          {showBackButton && IconElement}
-          <Title level={2} style={{ margin: 0 }}>
-            {title}
-          </Title>
-        </div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            {showBackButton && IconElement}
+            <Title level={2} style={{ margin: 0 }}>
+              {title}
+            </Title>
+          </div>
 
-        {rightHandSide}
-      </div>
+          {rightHandSide}
+        </div>
+      </Transition>
     </>
   );
 };
