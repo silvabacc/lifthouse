@@ -61,7 +61,9 @@ const DailyWeighInChart: React.FC<DailyWeighInChartProps> = ({ title }) => {
   return (
     <div style={{ height: "20%" }}>
       <Title level={5}>{title}</Title>
-      <Line data={linechartData} options={options} />
+      <div>
+        <Line data={linechartData} options={options} />
+      </div>
     </div>
   );
 };
