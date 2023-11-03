@@ -39,7 +39,7 @@ const DateMover: React.FC<DateMoverProps> = ({
       <DateMoverContainer>
         <Button
           style={{ margin: ARROW_MARGIN }}
-          shape="circle"
+          type="primary"
           onClick={onLeftArrowClick}
           icon={<ArrowLeftOutlined />}
         />
@@ -62,7 +62,7 @@ const DateMover: React.FC<DateMoverProps> = ({
             margin: ARROW_MARGIN,
             visibility: selectedDay.isToday() ? "hidden" : "visible",
           }}
-          shape="circle"
+          type="primary"
           onClick={onRightArrowClick}
           icon={<ArrowRightOutlined />}
         />

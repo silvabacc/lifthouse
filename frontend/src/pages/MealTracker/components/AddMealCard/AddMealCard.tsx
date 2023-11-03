@@ -1,5 +1,11 @@
 import { Alert, Button, Card, Input } from "antd";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { NutrientText } from "../../MealTrackerStyles";
 import {
   AddLabelText,
@@ -21,6 +27,7 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
   const [proteinTotal, setProteinTotal] = useState<number>();
   const [error, setError] = useState(false);
   const { addMeal } = useMealTracker();
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMealTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMealTitle(e.target.value);
@@ -75,13 +82,21 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
     setProteinTotal(0);
   };
 
+  const onInputFocus = () => {
+    if (cardRef.current) {
+      cardRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <Card
+      ref={cardRef}
       style={{ maxWidth: 500, margin: "auto", marginBottom: 16 }}
       type="inner"
       title={
         <Input
           type="text"
+          onFocus={onInputFocus}
           onChange={handleMealTitle}
           placeholder="Meal Title..."
           value={mealTitle}
@@ -96,6 +111,8 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
             </td>
             <td style={{ paddingBottom: 16 }}>
               <AddMealInput
+                onFocus={onInputFocus}
+                placeholder="0"
                 inputMode="decimal"
                 precision={1}
                 value={grams}
@@ -115,6 +132,7 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
             {caloriesRow.map((item, index) => (
               <AddMealTableData key={index}>
                 <AddMealInput
+                  placeholder="0"
                   inputMode="decimal"
                   precision={1}
                   value={item.state}
@@ -124,6 +142,7 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
             ))}
             <AddMealTableData>
               <AddMealInput
+                placeholder="0"
                 inputMode="decimal"
                 precision={1}
                 value={caloriesTotal}
@@ -138,6 +157,7 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
             {proteinRow.map((item, index) => (
               <AddMealTableData key={index}>
                 <AddMealInput
+                  placeholder="0"
                   inputMode="decimal"
                   precision={1}
                   value={item.state}
@@ -147,6 +167,7 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
             ))}
             <AddMealTableData>
               <AddMealInput
+                placeholder="0"
                 inputMode="decimal"
                 precision={1}
                 value={proteinTotal}
