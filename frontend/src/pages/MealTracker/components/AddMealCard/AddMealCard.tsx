@@ -14,11 +14,11 @@ interface AddEntryProps {
 
 const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
   const [mealTitle, setMealTitle] = useState("");
-  const [caloriesPer, setCaloriesPer] = useState(0);
-  const [grams, setGrams] = useState(0);
-  const [caloriesTotal, setCaloriesTotal] = useState(0);
-  const [proteinPer, setProteinPer] = useState(0);
-  const [proteinTotal, setProteinTotal] = useState(0);
+  const [caloriesPer, setCaloriesPer] = useState<number>();
+  const [grams, setGrams] = useState<number>();
+  const [caloriesTotal, setCaloriesTotal] = useState<number>();
+  const [proteinPer, setProteinPer] = useState<number>();
+  const [proteinTotal, setProteinTotal] = useState<number>();
   const [error, setError] = useState(false);
   const { addMeal } = useMealTracker();
 
@@ -28,7 +28,7 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
 
   const handleNutritionInput = (
     value: number,
-    setFn: Dispatch<SetStateAction<number>>
+    setFn: Dispatch<SetStateAction<number | undefined>>
   ) => setFn(value);
 
   const caloriesRow = [{ state: caloriesPer, set: setCaloriesPer }];
@@ -36,10 +36,12 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
   const proteinRow = [{ state: proteinPer, set: setProteinPer }];
 
   useEffect(() => {
+    if (!grams || !caloriesPer) return;
     setCaloriesTotal(caloriesPer * (grams / 100));
   }, [caloriesPer, grams]);
 
   useEffect(() => {
+    if (!grams || !proteinPer) return;
     setProteinTotal(grams * (proteinPer / 100));
   }, [proteinPer, grams]);
 
@@ -57,7 +59,7 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
     if (mealTitle.length === 0) {
       setError(true);
     } else {
-      await addMeal(mealTitle, caloriesTotal, proteinTotal);
+      await addMeal(mealTitle, caloriesTotal || 0, proteinTotal || 0);
       goToMealTab();
       clearAll();
       setError(false);
@@ -102,6 +104,7 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
             </td>
           </tr>
           <tr>
+            <td />
             <AddLabelText>per 100g</AddLabelText>
             <AddLabelText>Total</AddLabelText>
           </tr>
