@@ -13,6 +13,7 @@ import App from "./app";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AppContextProvider } from "./context/AppContext";
 import { ConfigProvider } from "./theme/configProvider";
+import { BrowserRouter } from "react-router-dom";
 
 dayjs.extend(WeekDayPlugin);
 dayjs.extend(updateLocale);
@@ -28,7 +29,9 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <QueryClientProvider client={queryClient}>
     <AppContextProvider>
       <ConfigProvider>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </ConfigProvider>
     </AppContextProvider>
   </QueryClientProvider>

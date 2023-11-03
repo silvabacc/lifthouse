@@ -43,6 +43,12 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
   const proteinRow = [{ state: proteinPer, set: setProteinPer }];
 
   useEffect(() => {
+    window.addEventListener("resize", () => {
+      scrollToCard();
+    });
+  }, []);
+
+  useEffect(() => {
     if (!grams || !caloriesPer) return;
     setCaloriesTotal(caloriesPer * (grams / 100));
   }, [caloriesPer, grams]);
@@ -82,7 +88,7 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
     setProteinTotal(0);
   };
 
-  const onInputFocus = () => {
+  const scrollToCard = () => {
     if (cardRef.current) {
       cardRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -96,7 +102,6 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
       title={
         <Input
           type="text"
-          onFocus={onInputFocus}
           onChange={handleMealTitle}
           placeholder="Meal Title..."
           value={mealTitle}
@@ -111,7 +116,6 @@ const AddMealCard: React.FC<AddEntryProps> = ({ goToMealTab }) => {
             </td>
             <td style={{ paddingBottom: 16 }}>
               <AddMealInput
-                onFocus={onInputFocus}
                 placeholder="0"
                 inputMode="decimal"
                 precision={1}

@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import DailyWeightIn from "./pages/DailyWeighIn/DailyWeightIn";
 import Header from "./pages/common/Header";
 import SettingMenu from "./common/SettingMenu";
+import Transition from "./pages/common/Transition";
 
 export const pageTitleMapping = {
   [RoutineType.UPPER_INTENSITY]: "Upper Intensity",
@@ -34,7 +35,9 @@ const guardRoutes = (
         showBackButton={showBackButton}
         rightHandSide={<SettingMenu />}
       />
-      {isAuthenticated ? element : <Navigate to={"/login"} />}
+      <Transition>
+        {isAuthenticated ? element : <Navigate to={"/login"} />}
+      </Transition>
     </>
   );
 };
@@ -108,7 +111,7 @@ export const createRoutes = (isAuthenticated: boolean) => {
     ),
   }));
 
-  return createBrowserRouter([...routes, ...workoutRoutes]);
+  return [...routes, ...workoutRoutes];
 };
 
 export default function ScrollToTop() {

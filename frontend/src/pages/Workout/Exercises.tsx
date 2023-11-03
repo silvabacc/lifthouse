@@ -1,6 +1,5 @@
 import {
   ExerciseType,
-  LogEntry,
   RepRange,
   RoutineExercise,
   RoutineType,
@@ -13,7 +12,6 @@ import {
   Layout,
   Select,
   SelectProps,
-  Space,
   Tabs,
   Typography,
 } from "antd";
@@ -31,6 +29,7 @@ import styled from "styled-components";
 import colors from "@frontend/theme/colors";
 import { IntensityRepRange, VolumeRepRange } from "@backend/data";
 import { CheckCircleOutlined } from "@ant-design/icons";
+import { motion } from "framer-motion";
 
 const { Text } = Typography;
 const { Panel } = Collapse;
@@ -73,7 +72,10 @@ export const Exercises: React.FC = () => {
       </Content>
       {!isEditing && (
         <Footer>
-          <div
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
             style={{
               display: "flex",
               justifyContent: isMobile ? "center" : "flex-end",
@@ -94,7 +96,7 @@ export const Exercises: React.FC = () => {
             >
               {saving ? "Saving..." : "Finish Workout"}
             </WorkoutButton>
-          </div>
+          </motion.div>
         </Footer>
       )}
     </Layout>
@@ -132,7 +134,6 @@ const FullContent: React.FC = () => {
 
 const PanelContent: React.FC = () => {
   const { workoutData, isLoading, isEditing } = useWorkoutContext();
-  console.log(isLoading);
 
   return (
     <>
