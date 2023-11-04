@@ -374,12 +374,12 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
     );
   };
 
-  const loadingExercises = !exerciseInfo?.exerciseName;
+  const loadingExercises = true;
 
   const TitleContent = isEditing ? (
     <EditingTitleContainer>
       {loadingExercises ? (
-        <Skeleton />
+        <Skeleton title={false} />
       ) : (
         <>
           <SelectExerciseContainer>
