@@ -374,27 +374,34 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
     );
   };
 
+  const loadingExercises = !exerciseInfo?.exerciseName;
+
   const TitleContent = isEditing ? (
     <EditingTitleContainer>
-      <SelectExerciseContainer>
-        {!exerciseInfo?.exerciseName && <Skeleton title={false} />}
-        <Select
-          dropdownMatchSelectWidth={false}
-          dropdownStyle={{ width: 300 }}
-          bordered={false}
-          dropdownRender={SearchBar}
-          onChange={(value) => onExerciseChange(value as string)}
-          value={exerciseInfo?.exerciseName}
-          options={exerciseOptions as { label: string; value: string }[]}
-        />
-      </SelectExerciseContainer>
-      <Divider type="vertical" style={{ height: 30 }} />
-      <Select
-        style={{ width: 130 }}
-        options={repRangeOptions}
-        defaultValue={`${routineExercise.sets} x ${routineExercise.reps}`}
-        onChange={(value) => onRepRangeChange(value as string)}
-      />
+      {loadingExercises ? (
+        <Skeleton />
+      ) : (
+        <>
+          <SelectExerciseContainer>
+            <Select
+              dropdownMatchSelectWidth={false}
+              dropdownStyle={{ width: 300 }}
+              bordered={false}
+              dropdownRender={SearchBar}
+              onChange={(value) => onExerciseChange(value as string)}
+              value={exerciseInfo?.exerciseName}
+              options={exerciseOptions as { label: string; value: string }[]}
+            />
+          </SelectExerciseContainer>
+          <Divider type="vertical" style={{ height: 30 }} />
+          <Select
+            style={{ width: 130 }}
+            options={repRangeOptions}
+            defaultValue={`${routineExercise.sets} x ${routineExercise.reps}`}
+            onChange={(value) => onRepRangeChange(value as string)}
+          />
+        </>
+      )}
     </EditingTitleContainer>
   ) : (
     <>
