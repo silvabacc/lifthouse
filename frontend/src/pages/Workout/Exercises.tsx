@@ -1,5 +1,6 @@
 import {
   ExerciseType,
+  LogEntry,
   RepRange,
   RoutineExercise,
   RoutineType,
@@ -36,7 +37,11 @@ const { Panel } = Collapse;
 const { Content, Footer } = Layout;
 const { Search } = Input;
 
-const DoneIcon = <CheckCircleOutlined style={{ color: colors.success }} />;
+const DoneIcon = (
+  <div>
+    <CheckCircleOutlined style={{ color: colors.success, paddingRight: 12 }} />
+  </div>
+);
 
 const RepRangeMapping = {
   [RoutineType.UPPER_INTENSITY]: IntensityRepRange,
@@ -187,13 +192,34 @@ interface ExerciseTitleProps {
 }
 
 const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
-  const { workoutData, setWorkoutData, isEditing, routineType } =
-    useWorkoutContext();
+  const {
+    workoutData,
+    setWorkoutData,
+    isEditing,
+    routineType,
+    exercisesFinished,
+    setExercisesFinished,
+  } = useWorkoutContext();
   const { queryExercises } = useWorkout();
   const { data: allExercises = [], refetch: fetchQueryExercises } =
     queryExercises();
-  // const { clearTemporaryStorageForExercise } = useTemporaryStorage();
   const [searchQuery, setSearchQuery] = useState("");
+  const { getTemporaryStorage } = useTemporaryStorage();
+
+  useEffect(() => {
+    const fetch = async () => {
+      const tempStorage = await getTemporaryStorage(routineExercise.exerciseId);
+      const exerciseFinished =
+        routineExercise.sets ===
+        tempStorage?.info[tempStorage?.info.length - 1].set;
+
+      if (exerciseFinished) {
+        setExercisesFinished((prev) => [...prev, routineExercise.exerciseId]);
+      }
+    };
+
+    fetch();
+  }, []);
 
   const title = workoutData.exercises.find(
     (e) => e.exerciseId === routineExercise.exerciseId
@@ -218,7 +244,6 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
       reps: reps,
     };
 
-    // clearTemporaryStorageForExercise(routineExercise.exerciseId);
     setWorkoutData({
       routine: { ...workoutData.routine, exercises },
       exercises: workoutData.exercises,
@@ -245,7 +270,6 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
       exerciseId: e.exerciseId,
     }));
 
-    // clearTemporaryStorageForExercise(routineExercise.exerciseId);
     setWorkoutData({
       routine: { ...workoutData.routine, exercises: exerciseIds },
       exercises,
@@ -374,16 +398,17 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
     </EditingTitleContainer>
   ) : (
     <>
-      <Text style={{ flex: 1 }} strong>
-        {title}
-      </Text>
+      {exercisesFinished.includes(routineExercise.exerciseId) && DoneIcon}
+      <div style={{ flex: 1 }}>
+        <Text strong>{title}</Text>
+      </div>
       <Divider type="vertical" style={{ height: 30 }} />
       <div
         style={{
           display: "flex",
           justifyContent: "flex-end",
           textAlign: "end",
-          width: 110,
+          width: 120,
         }}
       >
         <Text keyboard>{routineExercise.sets}</Text>

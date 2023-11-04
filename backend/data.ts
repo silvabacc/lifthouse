@@ -8,9 +8,20 @@ export const IntensityRepRange = [
   { sets: 5, reps: "3" },
   { sets: 5, reps: "2" },
   { sets: 5, reps: "1" },
+  { sets: 1, reps: "1RM" },
+  { sets: 1, reps: "3RM" },
+  { sets: 1, reps: "5RM" },
+  { sets: 3, reps: "1-5RM+2-3" },
+  { sets: 3, reps: "1 @90%" },
+  { sets: 4, reps: "1 @90%" },
+  { sets: 5, reps: "1 @90%" },
+  { sets: 1, reps: "3 @85%" },
+  { sets: 2, reps: "3 @85%" },
+  { sets: 1, reps: "5 @85%" },
+  { sets: 2, reps: "5 @85%" },
   { sets: 3, reps: "6-8" },
   { sets: 3, reps: "6-10" },
-  { sets: 3, reps: "30s-60s" },
+  { sets: 3, reps: "15s" },
 ];
 
 export const VolumeRepRange = [

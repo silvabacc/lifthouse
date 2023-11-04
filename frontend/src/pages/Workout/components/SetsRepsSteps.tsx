@@ -9,12 +9,10 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { Info, LogEntry, RoutineExercise } from "@backend/types";
-import { CheckSquareOutlined } from "@ant-design/icons";
-import colors from "@frontend/theme/colors";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 import { useWorkout } from "../useWorkout";
-import { useScreen } from "@frontend/hooks/useScreen";
-import { get } from "http";
+import { useWorkoutContext } from "../WorkoutContext";
+import { CheckCircleOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -31,6 +29,7 @@ export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({ exercise }) => {
   const [lastEntryData, setLastEntryData] = useState<LogEntry>();
 
   const { getExerciseHistory } = useWorkout();
+  const { setExercisesFinished } = useWorkoutContext();
 
   const { data } = getExerciseHistory([exercise.exerciseId], 1);
 
@@ -43,6 +42,10 @@ export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({ exercise }) => {
   useEffect(() => {
     const fetchTemporaryStorage = async () => {
       const temporaryStorage = await fetchTempData;
+
+      setCurrentSet(
+        temporaryStorage?.info[temporaryStorage.info?.length - 1].set || 0
+      );
       setTemporaryData(temporaryStorage);
     };
 
@@ -56,6 +59,20 @@ export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({ exercise }) => {
   const onClick = () => {
     setCurrentSet(currentSet + 1);
   };
+
+  const onComplete = () => {
+    setCurrentSet(exercise.sets + 1);
+  };
+
+  useEffect(() => {
+    if (currentSet >= exercise.sets) {
+      setExercisesFinished((prev) => [...prev, exercise.exerciseId]);
+    } else if (currentSet !== 0) {
+      setExercisesFinished((prev) =>
+        prev.filter((id) => id !== exercise.exerciseId)
+      );
+    }
+  }, [currentSet]);
 
   const items: StepProps[] = [];
   for (let i = 0; i < exercise.sets; i++) {
@@ -82,6 +99,17 @@ export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({ exercise }) => {
         direction="vertical"
         items={items}
       />
+      <div style={{ display: "flex", justifyContent: "center", marginTop: 16 }}>
+        {currentSet === exercise.sets - 1 && (
+          <Button
+            type="primary"
+            icon={<CheckCircleOutlined />}
+            onClick={onComplete}
+          >
+            Complete
+          </Button>
+        )}
+      </div>
       <Title level={5}>Notes</Title>
       <Notes
         exerciseId={exercise.exerciseId}

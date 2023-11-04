@@ -10,6 +10,8 @@ interface WorkoutcontextType {
   setWorkoutData: (workoutData: WorkoutData) => void;
   isLoading: boolean;
   routineType?: RoutineType;
+  exercisesFinished: string[];
+  setExercisesFinished: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const WorkoutContext = createContext<WorkoutcontextType>({} as any);
@@ -24,6 +26,7 @@ const WorkoutContextProvider = ({ children }: any) => {
   } as WorkoutData);
   const { pathname } = useLocation();
   const [routineType, setRoutinetype] = useState<RoutineType>();
+  const [exercisesFinished, setExercisesFinished] = useState<string[]>([]);
 
   useEffect(() => {
     const routineType = pathname.split("/")[2];
@@ -48,6 +51,8 @@ const WorkoutContextProvider = ({ children }: any) => {
         setWorkoutData,
         isLoading: isLoading,
         routineType: routineType,
+        exercisesFinished,
+        setExercisesFinished,
       }}
     >
       {children}
