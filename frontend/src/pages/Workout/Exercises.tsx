@@ -30,6 +30,7 @@ import colors from "@frontend/theme/colors";
 import { IntensityRepRange, VolumeRepRange } from "@backend/data";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { motion } from "framer-motion";
+import PerformanceChart from "./components/PerformanceChart";
 
 const { Text } = Typography;
 const { Panel } = Collapse;
@@ -128,7 +129,7 @@ const FullContent: React.FC = () => {
               <Divider style={{ margin: 16, height: 300 }} type="vertical" />
               <History exerciseId={routineExercise.exerciseId} />
             </div>
-            {/* <PerformanceChart exerciseId={routineExercise.exerciseId} /> */}
+            <PerformanceChart exerciseId={routineExercise.exerciseId} />
           </Card>
         );
       })}
@@ -374,7 +375,7 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
     );
   };
 
-  const loadingExercises = true;
+  const loadingExercises = !exerciseInfo?.exerciseName;
 
   const TitleContent = isEditing ? (
     <EditingTitleContainer>
