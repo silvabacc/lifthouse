@@ -1,6 +1,5 @@
 import {
   ExerciseType,
-  LogEntry,
   RepRange,
   RoutineExercise,
   RoutineType,
@@ -172,7 +171,7 @@ const PanelContent: React.FC = () => {
           <CollapseExercise
             collapsible={isEditing ? "disabled" : "header"}
             key={`${routineExercise.exerciseId}-${idx}`}
-            style={{ margin: "8px 0px", minWidth: 320 }}
+            style={{ marginTop: 8, marginBottom: 18, minWidth: 320 }}
           >
             <Panel
               key={`${routineExercise.exerciseId}-${idx}`}
