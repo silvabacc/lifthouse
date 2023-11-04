@@ -377,6 +377,7 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
   const TitleContent = isEditing ? (
     <EditingTitleContainer>
       <SelectExerciseContainer>
+        {!exerciseInfo?.exerciseName && <Skeleton title={false} />}
         <Select
           dropdownMatchSelectWidth={false}
           dropdownStyle={{ width: 300 }}
