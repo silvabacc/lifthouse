@@ -4,7 +4,6 @@ import { Line } from "react-chartjs-2";
 import dayjs from "dayjs";
 import { useWorkout } from "../useWorkout";
 import { Alert, DatePicker, Select, Skeleton, Space } from "antd";
-import Loading from "@frontend/pages/common/Loading";
 
 interface PerformanceChartProps {
   exerciseId: string;
