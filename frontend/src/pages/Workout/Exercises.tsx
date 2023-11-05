@@ -161,10 +161,9 @@ const PanelContent: React.FC = () => {
           {
             label: "Charts",
             key: "3",
-            children: "Not Implemented Yet",
-            // children: (
-            //   <PerformanceChart exerciseId={routineExercise.exerciseId} />
-            // ),
+            children: (
+              <PerformanceChart exerciseId={routineExercise.exerciseId} />
+            ),
           },
         ];
 

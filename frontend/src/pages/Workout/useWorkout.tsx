@@ -8,11 +8,16 @@ import {
 } from "@backend/types";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
+import dayjs from "dayjs";
 import { useQuery } from "react-query";
 
 export interface WorkoutData {
   routine: Routine;
   exercises: Exercise[];
+}
+
+export interface ExercisePerformance extends LogEntry {
+  date: Date;
 }
 
 export const useWorkout = () => {
@@ -89,17 +94,19 @@ export const useWorkout = () => {
   const getExercisePerformance = (
     exerciseId: string,
     month: number,
-    yearSelected: number
+    year: number
   ) => {
     return useQuery(
-      ["getExercisePerformance", exerciseId, user.id, yearSelected],
-      () => {
-        return dbService.getExercisePerformance(
+      ["getExercisePerformance", exerciseId, user.id, month, year],
+      async () => {
+        const result = await dbService.getExercisePerformance(
           exerciseId,
           user.id,
           month,
-          yearSelected
+          year
         );
+
+        return result.map((item) => ({ ...item, date: dayjs(item.date) }));
       },
       { refetchOnWindowFocus: false, keepPreviousData: true }
     );
