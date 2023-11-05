@@ -90,12 +90,7 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ exerciseId }) => {
         />
       </Space>
       {!isLoading && data?.length === 0 ? (
-        <Alert
-          message="No entries for this month"
-          description=" "
-          type="info"
-          showIcon
-        />
+        <Alert message="No entries for this month" type="info" showIcon />
       ) : (
         <div>
           <Line data={linechartData} options={options} />
