@@ -132,10 +132,7 @@ class LiftHouseDatabase {
       .select("*")
       .eq(LogEntriesColumns.user_id, userId)
       .eq(LogEntriesColumns.exercise_id, exerciseId)
-      .gte(
-        DailyWeighInColumns.date,
-        new Date(year, month - 1, 1).toDateString()
-      )
+      .gte(DailyWeighInColumns.date, new Date(year, month, 1).toDateString())
       .lte(
         DailyWeighInColumns.date,
         new Date(year, month + 1, 0).toDateString()

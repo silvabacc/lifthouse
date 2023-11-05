@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { Line } from "react-chartjs-2";
 import dayjs from "dayjs";
 import { useWorkout } from "../useWorkout";
-import { DatePicker, Select, Space } from "antd";
+import { Alert, DatePicker, Select, Skeleton, Space } from "antd";
+import Loading from "@frontend/pages/common/Loading";
 
 interface PerformanceChartProps {
   exerciseId: string;
@@ -20,11 +21,13 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ exerciseId }) => {
   const [mode, setMode] = useState(Mode.Weight);
   const { getExercisePerformance } = useWorkout();
 
-  const { data } = getExercisePerformance(
+  const { isLoading, data } = getExercisePerformance(
     exerciseId,
     monthSelected,
     yearSelected
   );
+
+  console.log(data);
 
   const labels = data?.map((entry) => entry.date.format("Do"));
 
@@ -62,12 +65,16 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ exerciseId }) => {
     },
   };
 
+  if (isLoading) return <Skeleton />;
+
   //may need to overflow this in the future, for now it's ok
   return (
     <div style={{ marginTop: 8 }}>
       <Space style={{ marginBottom: 16 }}>
         <DatePicker
           inputReadOnly
+          format={"MMM YYYY"}
+          defaultValue={dayjs()}
           onChange={(value) => {
             if (value) {
               setMonthSelected(value.month());
@@ -85,9 +92,18 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ exerciseId }) => {
           ]}
         />
       </Space>
-      <div>
-        <Line data={linechartData} options={options} />
-      </div>
+      {!isLoading && data?.length === 0 ? (
+        <Alert
+          message="No entries for this month"
+          description=" "
+          type="info"
+          showIcon
+        />
+      ) : (
+        <div>
+          <Line data={linechartData} options={options} />
+        </div>
+      )}
     </div>
   );
 };
