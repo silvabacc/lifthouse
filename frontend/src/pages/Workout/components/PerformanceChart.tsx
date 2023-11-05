@@ -27,8 +27,6 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ exerciseId }) => {
     yearSelected
   );
 
-  console.log(data);
-
   const labels = data?.map((entry) => entry.date.format("Do"));
 
   const sets = new Set(
