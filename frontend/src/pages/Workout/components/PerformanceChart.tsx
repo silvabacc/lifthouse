@@ -67,6 +67,7 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ exerciseId }) => {
     <div style={{ marginTop: 8 }}>
       <Space style={{ marginBottom: 16 }}>
         <DatePicker
+          inputReadOnly
           onChange={(value) => {
             if (value) {
               setMonthSelected(value.month());
