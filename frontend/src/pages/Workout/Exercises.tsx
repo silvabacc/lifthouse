@@ -32,7 +32,6 @@ import { IntensityRepRange, VolumeRepRange } from "@backend/data";
 import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import { motion } from "framer-motion";
 import PerformanceChart from "./components/PerformanceChart";
-import { iconSizes } from "@frontend/theme/sizes";
 
 const { Text } = Typography;
 const { Panel } = Collapse;
