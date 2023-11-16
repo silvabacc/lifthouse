@@ -57,7 +57,7 @@ const useAuthentication = () => {
 
       return session;
     },
-    { enabled: false, refetchOnWindowFocus: false, keepPreviousData: true }
+    { enabled: false, refetchOnWindowFocus: false }
   );
 
   return {

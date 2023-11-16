@@ -28,7 +28,7 @@ import { useWorkout } from "./useWorkout";
 import styled from "styled-components";
 import colors from "@frontend/theme/colors";
 import { IntensityRepRange, VolumeRepRange } from "@backend/data";
-import { CheckCircleOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import { motion } from "framer-motion";
 import PerformanceChart from "./components/PerformanceChart";
 
@@ -40,6 +40,12 @@ const { Search } = Input;
 const DoneIcon = (
   <div>
     <CheckCircleOutlined style={{ color: colors.success, paddingRight: 12 }} />
+  </div>
+);
+
+const WarningIcon = (
+  <div>
+    <WarningOutlined style={{ color: colors.warning, paddingRight: 12 }} />
   </div>
 );
 
@@ -197,28 +203,27 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
     isEditing,
     routineType,
     exercisesFinished,
-    setExercisesFinished,
   } = useWorkoutContext();
   const { queryExercises } = useWorkout();
   const { data: allExercises = [], refetch: fetchQueryExercises } =
     queryExercises();
   const [searchQuery, setSearchQuery] = useState("");
-  const { getTemporaryStorage } = useTemporaryStorage();
+  const { subscribeToTemporaryStorage } = useTemporaryStorage();
 
-  useEffect(() => {
-    const fetch = async () => {
-      const tempStorage = await getTemporaryStorage(routineExercise.exerciseId);
-      const exerciseFinished =
-        routineExercise.sets ===
-        tempStorage?.info[tempStorage?.info.length - 1].set;
+  const tempStorage = subscribeToTemporaryStorage(routineExercise.exerciseId);
 
-      if (exerciseFinished) {
-        setExercisesFinished((prev) => [...prev, routineExercise.exerciseId]);
+  let TitleIcon;
+
+  if (exercisesFinished.includes(routineExercise.exerciseId)) {
+    const containsZeroReps = tempStorage?.info.reduce((prev, curr) => {
+      if (!curr.reps) {
+        prev = true;
       }
-    };
+      return prev;
+    }, false);
 
-    fetch();
-  }, []);
+    TitleIcon = containsZeroReps ? WarningIcon : DoneIcon;
+  }
 
   const title = workoutData.exercises.find(
     (e) => e.exerciseId === routineExercise.exerciseId
@@ -405,7 +410,7 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
     </EditingTitleContainer>
   ) : (
     <>
-      {exercisesFinished.includes(routineExercise.exerciseId) && DoneIcon}
+      {exercisesFinished.includes(routineExercise.exerciseId) && TitleIcon}
       <div style={{ flex: 1 }}>
         <Text strong>{title}</Text>
       </div>

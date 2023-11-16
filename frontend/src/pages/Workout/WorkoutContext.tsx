@@ -2,6 +2,7 @@ import { RoutineExercise, Exercise, RoutineType } from "@backend/types";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { WorkoutData, useWorkout } from "./useWorkout";
+import { useTemporaryStorage } from "@frontend/hooks/useTemporaryStorage";
 
 interface WorkoutcontextType {
   isEditing: boolean;
@@ -27,6 +28,7 @@ const WorkoutContextProvider = ({ children }: any) => {
   const { pathname } = useLocation();
   const [routineType, setRoutinetype] = useState<RoutineType>();
   const [exercisesFinished, setExercisesFinished] = useState<string[]>([]);
+  const { getTemporaryStorage } = useTemporaryStorage();
 
   useEffect(() => {
     const routineType = pathname.split("/")[2];
@@ -41,6 +43,23 @@ const WorkoutContextProvider = ({ children }: any) => {
       setWorkoutData(data);
     }
   }, [isLoading, data]);
+
+  useEffect(() => {
+    if (workoutData) {
+      workoutData.routine.exercises.forEach(async (routineExercise) => {
+        const tempStorage = await getTemporaryStorage(
+          routineExercise.exerciseId
+        );
+        const info = tempStorage?.info;
+        const exerciseFinished =
+          routineExercise.sets === info?.[info.length - 1].set;
+
+        if (exerciseFinished) {
+          setExercisesFinished((prev) => [...prev, routineExercise.exerciseId]);
+        }
+      });
+    }
+  }, [workoutData]);
 
   return (
     <WorkoutContext.Provider
