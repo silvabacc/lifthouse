@@ -13,6 +13,7 @@ import {
   Select,
   SelectProps,
   Tabs,
+  Tooltip,
   Typography,
 } from "antd";
 import React, { useEffect, useState } from "react";
@@ -31,22 +32,30 @@ import { IntensityRepRange, VolumeRepRange } from "@backend/data";
 import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import { motion } from "framer-motion";
 import PerformanceChart from "./components/PerformanceChart";
+import { iconSizes } from "@frontend/theme/sizes";
 
 const { Text } = Typography;
 const { Panel } = Collapse;
 const { Content, Footer } = Layout;
 const { Search } = Input;
 
+const ICON_SIZE = 18;
+
 const DoneIcon = (
   <div>
-    <CheckCircleOutlined style={{ color: colors.success, paddingRight: 12 }} />
+    <CheckCircleOutlined
+      style={{ color: colors.success, fontSize: ICON_SIZE }}
+    />
   </div>
 );
 
-const WarningIcon = (
-  <div>
-    <WarningOutlined style={{ color: colors.warning, paddingRight: 12 }} />
-  </div>
+type WarningIconProps = {
+  message: string;
+};
+const WarningIcon = ({ message }: WarningIconProps) => (
+  <Tooltip title={message} placement="left">
+    <WarningOutlined style={{ color: colors.warning, fontSize: ICON_SIZE }} />
+  </Tooltip>
 );
 
 const RepRangeMapping = {
@@ -144,7 +153,9 @@ const FullContent: React.FC = () => {
 };
 
 const PanelContent: React.FC = () => {
-  const { workoutData, isLoading, isEditing } = useWorkoutContext();
+  const { workoutData, isLoading, isEditing, exercisesFinished } =
+    useWorkoutContext();
+  const { subscribeToTemporaryStorage } = useTemporaryStorage();
 
   return (
     <>
@@ -173,6 +184,34 @@ const PanelContent: React.FC = () => {
           },
         ];
 
+        const tempStorage = subscribeToTemporaryStorage(
+          routineExercise.exerciseId
+        );
+
+        let TitleIcon = <></>;
+
+        if (exercisesFinished.includes(routineExercise.exerciseId)) {
+          const setsContainingZeroReps =
+            tempStorage?.info.filter((i) => !i.reps) || [];
+
+          const alertMessage =
+            setsContainingZeroReps.length > 0
+              ? `Set ${setsContainingZeroReps
+                  .map((s) => s.set)
+                  .join(", ")} is missing reps`
+              : "";
+
+          TitleIcon = (
+            <div style={{ position: "absolute", bottom: 12, right: 8 }}>
+              {setsContainingZeroReps.length > 0 ? (
+                <WarningIcon message={alertMessage} />
+              ) : (
+                DoneIcon
+              )}
+            </div>
+          );
+        }
+
         return (
           <CollapseExercise
             collapsible={isEditing ? "disabled" : "header"}
@@ -182,6 +221,7 @@ const PanelContent: React.FC = () => {
             <Panel
               key={`${routineExercise.exerciseId}-${idx}`}
               header={<ExerciseTitle routineExercise={routineExercise} />}
+              extra={TitleIcon}
             >
               <Tabs items={items} />
             </Panel>
@@ -197,33 +237,12 @@ interface ExerciseTitleProps {
 }
 
 const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
-  const {
-    workoutData,
-    setWorkoutData,
-    isEditing,
-    routineType,
-    exercisesFinished,
-  } = useWorkoutContext();
+  const { workoutData, setWorkoutData, isEditing, routineType } =
+    useWorkoutContext();
   const { queryExercises } = useWorkout();
   const { data: allExercises = [], refetch: fetchQueryExercises } =
     queryExercises();
   const [searchQuery, setSearchQuery] = useState("");
-  const { subscribeToTemporaryStorage } = useTemporaryStorage();
-
-  const tempStorage = subscribeToTemporaryStorage(routineExercise.exerciseId);
-
-  let TitleIcon;
-
-  if (exercisesFinished.includes(routineExercise.exerciseId)) {
-    const containsZeroReps = tempStorage?.info.reduce((prev, curr) => {
-      if (!curr.reps) {
-        prev = true;
-      }
-      return prev;
-    }, false);
-
-    TitleIcon = containsZeroReps ? WarningIcon : DoneIcon;
-  }
 
   const title = workoutData.exercises.find(
     (e) => e.exerciseId === routineExercise.exerciseId
@@ -400,7 +419,7 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
           </SelectExerciseContainer>
           <Divider type="vertical" style={{ height: 30 }} />
           <Select
-            style={{ width: 130 }}
+            style={{ width: 160 }}
             options={repRangeOptions}
             defaultValue={`${routineExercise.sets} x ${routineExercise.reps}`}
             onChange={(value) => onRepRangeChange(value as string)}
@@ -410,7 +429,6 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
     </EditingTitleContainer>
   ) : (
     <>
-      {exercisesFinished.includes(routineExercise.exerciseId) && TitleIcon}
       <div style={{ flex: 1 }}>
         <Text strong>{title}</Text>
       </div>
