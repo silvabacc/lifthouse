@@ -52,7 +52,7 @@ type WarningIconProps = {
   message: string;
 };
 const WarningIcon = ({ message }: WarningIconProps) => (
-  <Tooltip title={message} placement="left">
+  <Tooltip color="orange" title={message} placement="left">
     <WarningOutlined style={{ color: colors.warning, fontSize: ICON_SIZE }} />
   </Tooltip>
 );
@@ -201,7 +201,7 @@ const PanelContent: React.FC = () => {
               : "";
 
           TitleIcon = (
-            <div style={{ position: "absolute", bottom: 12, right: 8 }}>
+            <div style={{ position: "absolute", bottom: 12, right: 12 }}>
               {setsContainingZeroReps.length > 0 ? (
                 <WarningIcon message={alertMessage} />
               ) : (
