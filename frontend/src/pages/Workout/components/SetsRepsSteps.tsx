@@ -161,15 +161,11 @@ const StepRow: React.FC<StepsRowProps> = ({
   }, [temporaryData]);
 
   const handleOnChangeWeight = (value: number | null) => {
-    if (value || value === 0) {
-      setWeight(value);
-    }
+    setWeight(value || 0);
   };
 
   const handleOnChangeReps = (value: number | null) => {
-    if (value || value === 0) {
-      setReps(value);
-    }
+    setReps(value || 0);
   };
 
   return (
@@ -180,6 +176,7 @@ const StepRow: React.FC<StepsRowProps> = ({
           inputMode="decimal"
           onChange={handleOnChangeWeight}
           value={weight}
+          min={0}
           placeholder={placeHolderInfo?.weight.toString()}
           prefix="kg"
         />
@@ -187,6 +184,7 @@ const StepRow: React.FC<StepsRowProps> = ({
           disabled={disabled}
           inputMode="decimal"
           value={reps}
+          min={0}
           onChange={handleOnChangeReps}
           placeholder={placeHolderInfo?.reps.toString()}
           prefix="reps"
