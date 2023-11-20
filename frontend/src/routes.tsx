@@ -12,6 +12,7 @@ import DailyWeightIn from "./pages/DailyWeighIn/DailyWeightIn";
 import Header from "./pages/common/Header";
 import SettingMenu from "./common/SettingMenu";
 import Transition from "./pages/common/Transition";
+import AllExercises from "./pages/AllExercises/AllExercises";
 
 export const pageTitleMapping = {
   [RoutineType.UPPER_INTENSITY]: "Upper Intensity",
@@ -82,6 +83,10 @@ export const createRoutes = (isAuthenticated: boolean) => {
     {
       path: "/meal-tracker",
       element: guardRoutes(<MealTracker />, isAuthenticated, "Meal Tracker 🥑"),
+    },
+    {
+      path: "/exercises",
+      element: guardRoutes(<AllExercises />, isAuthenticated, "Exercises ⛰️"),
     },
     {
       path: "/recovery",

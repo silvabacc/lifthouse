@@ -5,13 +5,13 @@ import {
   RoutineType,
 } from "@backend/types";
 import {
-  Card,
   Collapse,
   Divider,
   Input,
   Layout,
   Select,
   SelectProps,
+  Space,
   Tabs,
   Tooltip,
   Typography,
@@ -107,14 +107,16 @@ export const Exercises: React.FC = () => {
               width: "100%",
             }}
           >
-            <WorkoutButton
-              type={saving ? "default" : "primary"}
-              onClick={() => {
-                finishWorkout();
-              }}
-            >
-              {saving ? "Saving..." : "Finish Workout"}
-            </WorkoutButton>
+            {isMobile && (
+              <WorkoutButton
+                type={saving ? "default" : "primary"}
+                onClick={() => {
+                  finishWorkout();
+                }}
+              >
+                {saving ? "Saving..." : "Finish Workout"}
+              </WorkoutButton>
+            )}
           </motion.div>
         </Footer>
       )}
@@ -131,22 +133,33 @@ const FullContent: React.FC = () => {
         (workoutData.routine.exercises.length === 0 && (
           <SkeletonContent rows={3} />
         ))}
-      {workoutData.routine.exercises.map((routineExercise, idx) => {
-        return (
-          <Card
-            style={{ margin: 16 }}
-            title={<ExerciseTitle routineExercise={routineExercise} />}
-            key={`${routineExercise.exerciseId}-${idx}`}
-          >
-            <div style={{ display: "flex" }}>
-              <SetsRepsSteps exercise={routineExercise} />
-              <Divider style={{ margin: 16, height: 300 }} type="vertical" />
-              <History exerciseId={routineExercise.exerciseId} />
-            </div>
-            <PerformanceChart exerciseId={routineExercise.exerciseId} />
-          </Card>
-        );
-      })}
+      <CollapseExercise
+        activeKey={[...Array(workoutData.exercises.length).keys()]}
+        style={{ margin: 16 }}
+      >
+        {workoutData.routine.exercises.map((routineExercise, idx) => {
+          return (
+            <Panel
+              key={idx}
+              showArrow={false}
+              header={<ExerciseTitle routineExercise={routineExercise} />}
+            >
+              <div style={{ display: "flex" }}>
+                <div
+                  style={{
+                    width: "50%",
+                  }}
+                >
+                  <History exerciseId={routineExercise.exerciseId} />
+                </div>
+                <div style={{ width: "50%" }}>
+                  <PerformanceChart exerciseId={routineExercise.exerciseId} />
+                </div>
+              </div>
+            </Panel>
+          );
+        })}
+      </CollapseExercise>
     </>
   );
 };
@@ -214,13 +227,12 @@ const PanelContent: React.FC = () => {
         return (
           <CollapseExercise
             collapsible={isEditing ? "disabled" : "header"}
-            key={`${routineExercise.exerciseId}-${idx}`}
             style={{ marginTop: 8, marginBottom: 18, minWidth: 320 }}
           >
             <Panel
               key={`${routineExercise.exerciseId}-${idx}`}
               header={<ExerciseTitle routineExercise={routineExercise} />}
-              extra={TitleIcon}
+              extra={!isEditing && TitleIcon}
             >
               <Tabs items={items} />
             </Panel>
@@ -404,7 +416,13 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
       {loadingExercises ? (
         <Skeleton title={false} />
       ) : (
-        <>
+        <Space
+          style={{
+            width: "100%",
+            justifyContent: "space-between",
+          }}
+          direction="vertical"
+        >
           <SelectExerciseContainer>
             <Select
               dropdownMatchSelectWidth={false}
@@ -416,35 +434,25 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
               options={exerciseOptions as { label: string; value: string }[]}
             />
           </SelectExerciseContainer>
-          <Divider type="vertical" style={{ height: 30 }} />
           <Select
-            style={{ width: 160 }}
             options={repRangeOptions}
+            style={{ paddingTop: 8 }}
             defaultValue={`${routineExercise.sets} x ${routineExercise.reps}`}
             onChange={(value) => onRepRangeChange(value as string)}
           />
-        </>
+        </Space>
       )}
     </EditingTitleContainer>
   ) : (
-    <>
-      <div style={{ flex: 1 }}>
-        <Text strong>{title}</Text>
-      </div>
-      <Divider type="vertical" style={{ height: 30 }} />
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          textAlign: "end",
-          width: 120,
-        }}
-      >
+    <Space style={{ width: "100%" }} direction="vertical">
+      <Text strong>{title}</Text>
+      <Divider style={{ margin: 0 }} />
+      <div>
         <Text keyboard>{routineExercise.sets}</Text>
         <Text>x</Text>
         <Text keyboard>{routineExercise.reps}</Text>
       </div>
-    </>
+    </Space>
   );
 
   return (

@@ -4,6 +4,7 @@ import EddieImage from "./images/eddie_hall.png";
 import TomPlatzImage from "./images/tom_platz.png";
 import GrizzlyImage from "./images/grizzly.png";
 import MealTrackerImage from "./images/meal_tracker.png";
+import MiloImage from "./images/milo.png";
 import { RoutineType } from "@backend/types";
 
 const ROUTE = "/routine";
@@ -35,6 +36,7 @@ export const workoutCards = [
     image: TomPlatzImage,
     route: `${ROUTE}/${RoutineType.LOWER_VOLUME}`,
   },
+  { title: "All Exercises", image: MiloImage, route: "/exercises" },
 ];
 
 export const dietCards = [

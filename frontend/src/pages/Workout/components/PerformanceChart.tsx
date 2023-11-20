@@ -45,7 +45,6 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ exerciseId }) => {
   };
 
   const options: ChartOptions<"line"> = {
-    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "bottom",
@@ -67,7 +66,9 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ exerciseId }) => {
   //may need to overflow this in the future, for now it's ok
   return (
     <div style={{ marginTop: 8 }}>
-      <Space style={{ marginBottom: 16 }}>
+      <Space
+        style={{ marginBottom: 16, width: "100%", justifyContent: "flex-end" }}
+      >
         <DatePicker
           inputReadOnly
           format={"MMM YYYY"}
@@ -92,9 +93,7 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ exerciseId }) => {
       {!isLoading && data?.length === 0 ? (
         <Alert message="No entries for this month" type="info" showIcon />
       ) : (
-        <div>
-          <Line data={linechartData} options={options} />
-        </div>
+        <Line data={linechartData} options={options} />
       )}
     </div>
   );

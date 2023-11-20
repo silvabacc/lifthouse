@@ -228,9 +228,7 @@ export const History: React.FC<HistoryProps> = ({ exerciseId }) => {
   };
 
   return (
-    <div
-      style={{ flex: 1, width: isMobile ? "100%" : "50%", marginBottom: 16 }}
-    >
+    <div style={{ margin: "8px 8px 32px 8px" }}>
       {contextHolder}
       <div
         style={{
