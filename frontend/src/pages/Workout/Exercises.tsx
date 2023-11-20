@@ -286,14 +286,14 @@ const ExerciseTitle: React.FC<ExerciseTitleProps> = ({ routineExercise }) => {
     const exercises = workoutData.exercises.slice();
     exercises[exerciseIndex] = updatedExercise;
 
-    const exerciseIds = exercises.map((e) => ({
-      sets: routineExercise.sets,
-      reps: routineExercise.reps,
-      exerciseId: e.exerciseId,
-    }));
+    const routineExercises = workoutData.routine.exercises.slice();
+    routineExercises[exerciseIndex] = {
+      ...routineExercises[exerciseIndex],
+      exerciseId: exerciseId,
+    };
 
     setWorkoutData({
-      routine: { ...workoutData.routine, exercises: exerciseIds },
+      routine: { ...workoutData.routine, exercises: routineExercises },
       exercises,
     });
   };
