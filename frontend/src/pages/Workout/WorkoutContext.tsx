@@ -59,7 +59,7 @@ const WorkoutContextProvider = ({ children }: any) => {
         }
       });
     }
-  }, [workoutData]);
+  }, [JSON.stringify(workoutData)]);
 
   return (
     <WorkoutContext.Provider
