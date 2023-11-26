@@ -1,5 +1,6 @@
 import {
   ExerciseType,
+  LogEntry,
   RepRange,
   RoutineExercise,
   RoutineType,
@@ -169,66 +170,70 @@ const PanelContent: React.FC = () => {
     useWorkoutContext();
   const { subscribeToTemporaryStorage } = useTemporaryStorage();
 
+  const tempStorage = subscribeToTemporaryStorage(
+    workoutData.exercises.map((e) => e.exerciseId)
+  );
+
   return (
     <>
       {isLoading ||
         (workoutData.routine.exercises.length === 0 && (
           <SkeletonContent rows={3} />
         ))}
-      {workoutData.routine.exercises.map((routineExercise, idx) => {
-        const items = [
-          {
-            label: "Sets",
-            key: "1",
-            children: <SetsRepsSteps exercise={routineExercise} />,
-          },
-          {
-            label: "History",
-            key: "2",
-            children: <History exerciseId={routineExercise.exerciseId} />,
-          },
-          {
-            label: "Charts",
-            key: "3",
-            children: (
-              <PerformanceChart exerciseId={routineExercise.exerciseId} />
-            ),
-          },
-        ];
+      <CollapseExercise
+        collapsible={isEditing ? "disabled" : "header"}
+        style={{ marginTop: 8, marginBottom: 18, minWidth: 320 }}
+      >
+        {workoutData.routine.exercises.map((routineExercise, idx) => {
+          const items = [
+            {
+              label: "Sets",
+              key: "1",
+              children: <SetsRepsSteps exercise={routineExercise} />,
+            },
+            {
+              label: "History",
+              key: "2",
+              children: <History exerciseId={routineExercise.exerciseId} />,
+            },
+            {
+              label: "Charts",
+              key: "3",
+              children: (
+                <PerformanceChart exerciseId={routineExercise.exerciseId} />
+              ),
+            },
+          ];
 
-        const tempStorage = subscribeToTemporaryStorage(
-          routineExercise.exerciseId
-        );
-
-        let TitleIcon = <></>;
-
-        if (exercisesFinished.includes(routineExercise.exerciseId)) {
-          const setsContainingZeroReps =
-            tempStorage?.info.filter((i) => !i.reps) || [];
-
-          const alertMessage =
-            setsContainingZeroReps.length > 0
-              ? `Set ${setsContainingZeroReps
-                  .map((s) => s.set)
-                  .join(", ")} is missing reps`
-              : "";
-
-          TitleIcon = (
-            <div style={{ position: "absolute", bottom: 12, right: 12 }}>
-              {setsContainingZeroReps.length > 0 ? (
-                <WarningIcon message={alertMessage} />
-              ) : (
-                DoneIcon
-              )}
-            </div>
+          const tempEntry = (tempStorage as LogEntry[]).find(
+            (entry) => entry?.exerciseId === routineExercise.exerciseId
           );
-        }
 
-        return (
-          <CollapseExercise
-            collapsible={isEditing ? "disabled" : "header"}
-            style={{ marginTop: 8, marginBottom: 18, minWidth: 320 }}
-          >
+          let TitleIcon = <></>;
+
+          if (exercisesFinished.includes(routineExercise.exerciseId)) {
+            const setsContainingZeroReps =
+              tempEntry?.info.filter((i) => !i.reps) || [];
+
+            const alertMessage =
+              setsContainingZeroReps.length > 0
+                ? `Set ${setsContainingZeroReps
+                    .map((s) => s.set)
+                    .join(", ")} is missing reps`
+                : "";
+
+            TitleIcon = (
+              <div style={{ position: "absolute", bottom: 12, right: 12 }}>
+                {setsContainingZeroReps.length > 0 ? (
+                  <WarningIcon message={alertMessage} />
+                ) : (
+                  DoneIcon
+                )}
+              </div>
+            );
+          }
+
+          return (
             <Panel
               key={`${routineExercise.exerciseId}-${idx}`}
               header={<ExerciseTitle routineExercise={routineExercise} />}
@@ -236,9 +241,9 @@ const PanelContent: React.FC = () => {
             >
               <Tabs items={items} />
             </Panel>
-          </CollapseExercise>
-        );
-      })}
+          );
+        })}
+      </CollapseExercise>
     </>
   );
 };

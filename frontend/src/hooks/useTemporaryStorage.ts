@@ -1,6 +1,7 @@
 import { LocalStorageDb } from "@backend/dexie";
 import { Info } from "@backend/types";
 import { useLiveQuery } from "dexie-react-hooks";
+import { json } from "react-router-dom";
 
 export const useTemporaryStorage = () => {
   const dexie = new LocalStorageDb();
@@ -9,8 +10,11 @@ export const useTemporaryStorage = () => {
     return dexie.getTemporaryStorage(exerciseId);
   };
 
-  const subscribeToTemporaryStorage = (exerciseId: string) => {
-    return useLiveQuery(() => dexie.getTemporaryStorage(exerciseId));
+  const subscribeToTemporaryStorage = (exerciseId: string | string[]) => {
+    return useLiveQuery(
+      () => dexie.getTemporaryStorage(exerciseId),
+      [JSON.stringify(exerciseId)]
+    );
   };
 
   const writeTemporaryStorage = (

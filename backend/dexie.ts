@@ -11,7 +11,11 @@ export class LocalStorageDb extends Dexie {
     });
   }
 
-  async getTemporaryStorage(exerciseId: string) {
+  async getTemporaryStorage(exerciseId: string | string[]) {
+    if (exerciseId instanceof Array) {
+      return await this.logEntryStorage.bulkGet(exerciseId);
+    }
+
     return await this.logEntryStorage.get(exerciseId);
   }
 
