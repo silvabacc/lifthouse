@@ -205,7 +205,7 @@ const PanelContent: React.FC = () => {
             },
           ];
 
-          const tempEntry = (tempStorage as LogEntry[]).find(
+          const tempEntry = (tempStorage as LogEntry[])?.find(
             (entry) => entry?.exerciseId === routineExercise.exerciseId
           );
 
