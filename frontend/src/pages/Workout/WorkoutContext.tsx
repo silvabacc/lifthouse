@@ -1,4 +1,9 @@
-import { RoutineExercise, Exercise, RoutineType } from "@backend/types";
+import {
+  RoutineExercise,
+  Exercise,
+  RoutineType,
+  LogEntry,
+} from "@backend/types";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { WorkoutData, useWorkout } from "./useWorkout";
@@ -47,9 +52,9 @@ const WorkoutContextProvider = ({ children }: any) => {
   useEffect(() => {
     if (workoutData) {
       workoutData.routine.exercises.forEach(async (routineExercise) => {
-        const tempStorage = await getTemporaryStorage(
+        const tempStorage = (await getTemporaryStorage(
           routineExercise.exerciseId
-        );
+        )) as LogEntry;
         const info = tempStorage?.info;
         const exerciseFinished =
           routineExercise.sets === info?.[info.length - 1].set;

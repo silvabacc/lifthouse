@@ -83,7 +83,7 @@ export const useWorkout = () => {
 
   const logEntry = async (exercises: Exercise[]) => {
     const temporaryStorage = exercises.map((exercise) => {
-      return getTemporaryStorage(exercise.exerciseId);
+      return getTemporaryStorage(exercise.exerciseId) as Promise<LogEntry>;
     });
 
     const result = await Promise.all(temporaryStorage);

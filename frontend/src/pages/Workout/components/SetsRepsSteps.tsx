@@ -41,7 +41,7 @@ export const SetsRepsSteps: React.FC<SetsRepsStepsProps> = ({ exercise }) => {
 
   useEffect(() => {
     const fetchTemporaryStorage = async () => {
-      const temporaryStorage = await fetchTempData;
+      const temporaryStorage = (await fetchTempData) as LogEntry;
 
       setCurrentSet(
         temporaryStorage?.info[temporaryStorage.info?.length - 1].set || 0
