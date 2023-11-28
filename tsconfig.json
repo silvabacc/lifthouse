@@ -21,6 +21,6 @@
       "@frontend/*": ["frontend/src/*"]
     }
   },
-  "include": ["frontend/src", "backend/config.ts"],
+  "include": ["frontend/src", "config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

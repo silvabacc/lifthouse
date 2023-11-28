@@ -1,5 +1,5 @@
 import { SupabaseClient, createClient } from "@supabase/supabase-js";
-import getConfig from "./config";
+import getConfig from "../config";
 
 const { SUPABASE_URL, ANON_PUBLIC_KEY } = getConfig();
 

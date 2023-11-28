@@ -1,5 +1,5 @@
 import { SupabaseClient, User, createClient } from "@supabase/supabase-js";
-import getConfig from "../config";
+import getConfig from "../../config";
 import { routineSetup } from "../data";
 import {
   DailyWeighInColumns,
@@ -188,6 +188,24 @@ class LiftHouseDatabase {
       exercises: parsedExercises,
       userId: routineORM.user_id,
     };
+  }
+
+  async getAllExercises(page: number, limit: number): Promise<Exercise[]> {
+    const { data } = await this.supabase
+      .from(TableNames.exercises)
+      .select("*")
+      .order(ExerciseColumns.exercise_id, { ascending: true })
+      .range((page - 1) * limit, page * limit - 1);
+
+    if (data === null) {
+      throw new Error("No data returned for exercises");
+    }
+
+    return data.map((exercise) => ({
+      exerciseId: exercise.exercise_id,
+      exerciseName: exercise.exercise_name,
+      exerciseType: exercise.exercise_type,
+    }));
   }
 
   /**
