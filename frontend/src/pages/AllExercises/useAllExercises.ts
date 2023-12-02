@@ -6,11 +6,11 @@ export const useAllExercises = () => {
   const dbService = new LiftHouseDatabase();
   const bucket = new Bucket();
 
-  const fetchAllExercises = (page: number) => {
+  const fetchAllExercises = () => {
     return useQuery(
-      ["allExercise", page],
+      ["allExercise"],
       async () => {
-        const data = await dbService.getAllExercises(page, 25);
+        const data = await dbService.getAllExercises();
         return data;
       },
       { refetchOnWindowFocus: false, keepPreviousData: true }

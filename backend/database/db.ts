@@ -190,7 +190,33 @@ class LiftHouseDatabase {
     };
   }
 
-  async getAllExercises(page: number, limit: number): Promise<Exercise[]> {
+  async getAllExercises(): Promise<Exercise[]> {
+    const { data } = await this.supabase
+      .from(TableNames.exercises)
+      .select("*")
+      .order(ExerciseColumns.exercise_id, { ascending: true });
+
+    if (data === null) {
+      throw new Error("No data returned for exercises");
+    }
+
+    return data.map((exercise) => ({
+      exerciseId: exercise.exercise_id,
+      exerciseName: exercise.exercise_name,
+      exerciseType: exercise.exercise_type,
+    }));
+  }
+
+  /**
+   * May not need this anymore
+   * @param page page to get the exercises for
+   * @param limit number of exercises to get
+   * @returns Exercises
+   */
+  async getExercisesPagination(
+    page: number,
+    limit: number
+  ): Promise<Exercise[]> {
     const { data } = await this.supabase
       .from(TableNames.exercises)
       .select("*")
