@@ -133,12 +133,24 @@ export const useWorkout = () => {
     return dbService.deleteLogEntry(logEntryId);
   };
 
+  const fetchAllExercises = () => {
+    return useQuery(
+      ["allExercise"],
+      async () => {
+        const data = await dbService.getAllExercises();
+        return data;
+      },
+      { refetchOnWindowFocus: false, keepPreviousData: true }
+    );
+  };
+
   return {
     updateRoutine,
     queryRoutine,
     queryExercises,
     logEntry,
     getExerciseHistory,
+    fetchAllExercises,
     updateLogEntries,
     deleteLogEntry,
     getExercisePerformance,

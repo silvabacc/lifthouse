@@ -1,8 +1,11 @@
-import { Card, Col, Divider, Row, Typography, Input } from "antd";
+import { Card, Col, Divider, Row, Typography, Input, Modal, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import { Exercise, ExerciseType } from "@backend/types";
-import { useAllExercises } from "./useAllExercises";
 import { AllExerciseContainer } from "./AllExercises.style";
+import History from "../History";
+import { useWorkout } from "../../useWorkout";
+import PerformanceChart from "../PerformanceChart";
+import { useScreen } from "@frontend/hooks/useScreen";
 
 const { Meta } = Card;
 const { Title, Text } = Typography;
@@ -26,10 +29,13 @@ const ExerciseTitleMapping = {
 };
 
 const AllExercises: React.FC = () => {
-  const { fetchAllExercises } = useAllExercises();
+  const { fetchAllExercises } = useWorkout();
   const { data } = fetchAllExercises();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [search, setSearch] = useState<string>("");
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [selectedExercise, setSelectedExercise] = useState("");
+  const { isMobile } = useScreen();
 
   useEffect(() => {
     if (data) {
@@ -39,6 +45,11 @@ const AllExercises: React.FC = () => {
 
   const onSearch = (value: string) => {
     setSearch(value);
+  };
+
+  const onExerciseSelect = (exerciseId: string) => {
+    setSelectedExercise(exerciseId);
+    setShowModal(true);
   };
 
   const Exercises = (type: ExerciseType) => {
@@ -57,7 +68,10 @@ const AllExercises: React.FC = () => {
         {exercisesType.map((exercise, idx) => {
           return (
             <Col key={`${idx}-${exercise.exerciseName}`} span={12}>
-              <Card style={{ height: "100%" }}>
+              <Card
+                style={{ height: "100%", cursor: "pointer" }}
+                onClick={() => onExerciseSelect(exercise.exerciseId)}
+              >
                 <Meta title={exercise.exerciseName} />
               </Card>
             </Col>
@@ -84,8 +98,59 @@ const AllExercises: React.FC = () => {
           </div>
         );
       })}
-      <Title level={4}>Upper Intensity</Title>
+      <Modal
+        open={showModal}
+        width={"100%"}
+        onCancel={() => {
+          setSelectedExercise("");
+          setShowModal(false);
+        }}
+        footer={false}
+      >
+        {isMobile ? (
+          <TabbedView exerciseId={selectedExercise} />
+        ) : (
+          <FullView exerciseId={selectedExercise} />
+        )}
+      </Modal>
     </AllExerciseContainer>
+  );
+};
+
+interface Props {
+  exerciseId: string;
+}
+const TabbedView: React.FC<Props> = ({ exerciseId }) => {
+  const items = [
+    {
+      label: "History",
+      key: "1",
+      children: <History exerciseId={exerciseId} />,
+    },
+    {
+      label: "Charts",
+      key: "2",
+      children: <PerformanceChart exerciseId={exerciseId} />,
+    },
+  ];
+
+  return <Tabs items={items} />;
+};
+
+const FullView: React.FC<Props> = ({ exerciseId }) => {
+  return (
+    <div style={{ display: "flex", marginTop: 16 }}>
+      <div
+        style={{
+          width: "50%",
+        }}
+      >
+        <History exerciseId={exerciseId} />
+      </div>
+      <div style={{ width: "50%" }}>
+        <PerformanceChart exerciseId={exerciseId} />
+      </div>
+    </div>
   );
 };
 

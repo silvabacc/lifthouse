@@ -12,7 +12,7 @@ import DailyWeightIn from "./pages/DailyWeighIn/DailyWeightIn";
 import Header from "./pages/common/Header";
 import SettingMenu from "./common/SettingMenu";
 import Transition from "./pages/common/Transition";
-import AllExercises from "./pages/AllExercises/AllExercises";
+import AllExercises from "./pages/Workout/components/AllExercises/AllExercises";
 
 export const pageTitleMapping = {
   [RoutineType.UPPER_INTENSITY]: "Upper Intensity",

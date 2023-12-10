@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useWorkout } from "../useWorkout";
 import { LogEntry } from "@backend/types";
 import Slider, { Settings } from "react-slick";
@@ -261,9 +261,6 @@ export const History: React.FC<HistoryProps> = ({ exerciseId }) => {
         />
       </div>
       {isLoading && <SkeletonHistory />}
-      {!isLoading && exerciseHistory.length === 0 && (
-        <Text>No history found 😢</Text>
-      )}
       <Slider ref={slickRef} {...settings} onSwipe={onSwipe}>
         {exerciseHistory.map((entry, idx) => {
           const items: StepProps[] = entry.info.map((i) => ({
@@ -368,6 +365,7 @@ export const History: React.FC<HistoryProps> = ({ exerciseId }) => {
             </div>
           );
         })}
+        {<Text>Can't find anymore 😢</Text>}
       </Slider>
     </div>
   );
