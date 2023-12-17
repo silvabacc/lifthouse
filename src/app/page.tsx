@@ -33,7 +33,7 @@ export default function Auth() {
         <Divider style={{ borderColor: "black" }}>
           <span>Or Log in With</span>
         </Divider>
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div className={styles.providers_container}>
           <Button icon={<GoogleOutlined />} onClick={signInWithGoogleOClick}>
             Google
           </Button>

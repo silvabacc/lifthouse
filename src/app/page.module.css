@@ -11,3 +11,8 @@
   color: var(--caption-color);
   font-size: 14px;
 }
+
+.providers_container {
+  display: flex;
+  justify-content: center;
+}
