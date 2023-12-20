@@ -63,13 +63,12 @@ export default function App() {
         }}
         className={styles.container}
       >
-        <div>
-          <div
-            style={{
-              width: !isSmallScreen ? "50%" : undefined,
-            }}
-            className={styles.header}
-          >
+        <div
+          style={{
+            width: !isSmallScreen ? "50%" : undefined,
+          }}
+        >
+          <div style={{}} className={styles.header}>
             <h1>LiftHouse 🏋</h1>
             <p className={styles.caption}>{quote}</p>
             <p className={styles.caption}>- {author}</p>
