@@ -64,8 +64,10 @@ export default function App() {
         >
           <div style={{}} className={styles.header}>
             <h1>LiftHouse 🏋</h1>
+            <Divider />
             <p className={styles.caption}>{quote}</p>
             <p className={styles.caption}>- {author}</p>
+            <Divider />
             <Space>
               <Button onClick={() => router.push("/account/login")}>
                 Log in
