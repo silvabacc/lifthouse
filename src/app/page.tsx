@@ -3,8 +3,10 @@
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import { useEffect, useState } from "react";
-import { Button, Space } from "antd";
+import { Button, Divider, Space } from "antd";
+import Image from "next/image";
 import SelfMade from "./assets/selfmade.png";
+import Banner from "./assets/gorilla.jpeg";
 
 const COMPACT_SCREEN = 850;
 
@@ -44,30 +46,45 @@ export default function App() {
   }, []);
 
   return (
-    <div
-      style={{
-        backgroundImage: !isSmallScreen ? `url(${SelfMade.src})` : undefined,
-      }}
-      className={styles.container}
-    >
-      <div>
-        <div
-          style={{ width: !isSmallScreen ? "50%" : undefined }}
-          className={styles.header}
-        >
-          <h1>Enjoy the journey, not the destination</h1>
-          <p className={styles.caption}>{quote}</p>
-          <p className={styles.caption}>- {author}</p>
-          <Space>
-            <Button onClick={() => router.push("/account/login")}>
-              Log in
-            </Button>
-            <Button onClick={() => router.push("/account/signup")}>
-              New here? Sign up!
-            </Button>
-          </Space>
+    <>
+      {isSmallScreen && (
+        <>
+          <Image
+            src={Banner}
+            alt=""
+            style={{ width: "100%", height: "auto" }}
+          />
+        </>
+      )}
+      <div
+        style={{
+          backgroundImage: !isSmallScreen ? `url(${SelfMade.src})` : undefined,
+          backgroundPosition: !isSmallScreen ? `right` : "left",
+          alignItems: !isSmallScreen ? "center" : undefined,
+        }}
+        className={styles.container}
+      >
+        <div>
+          <div
+            style={{
+              width: !isSmallScreen ? "50%" : undefined,
+            }}
+            className={styles.header}
+          >
+            <h1>LiftHouse 🏋</h1>
+            <p className={styles.caption}>{quote}</p>
+            <p className={styles.caption}>- {author}</p>
+            <Space>
+              <Button onClick={() => router.push("/account/login")}>
+                Log in
+              </Button>
+              <Button onClick={() => router.push("/account/signup")}>
+                New here? Sign up!
+              </Button>
+            </Space>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
