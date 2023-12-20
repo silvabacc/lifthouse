@@ -1,32 +1,29 @@
 "use client";
 
-import LifthouseLogo from "./assets/Lifthouse_logo_black.png";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
-import { Button, Space, Spin } from "antd";
+import { Button, Space } from "antd";
+import SelfMade from "./assets/selfmade.png";
 
-const SMALL_SCREEN_WIDTH = 850;
+const COMPACT_SCREEN = 850;
 
 export default function App() {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [quote, setQuote] = useState("");
+  const [author, setAuthor] = useState("");
   const router = useRouter();
 
   useEffect(() => {
     const fetchQuote = async () => {
-      setLoading(true);
       const quoteReponse = await fetch("https://stoic-quotes.com/api/quote");
       const quote = (await quoteReponse.json()) as {
         text: string;
         author: string;
       };
 
-      setQuote(`${quote.text} - ${quote.author}`);
-      setLoading(false);
+      setQuote(quote.text);
+      setAuthor(quote.author);
     };
 
     fetchQuote();
@@ -34,7 +31,7 @@ export default function App() {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsSmallScreen(window.innerWidth < SMALL_SCREEN_WIDTH);
+      setIsSmallScreen(window.innerWidth < COMPACT_SCREEN);
     };
 
     handleResize();
@@ -46,40 +43,26 @@ export default function App() {
     };
   }, []);
 
-  const borderOptions = isSmallScreen
-    ? {
-        borderColor: "black",
-        border: "2px",
-        borderStyle: "solid",
-      }
-    : {};
-
   return (
-    <div className={styles.container}>
-      <div className={styles.bar}>
-        <Image
-          alt=""
-          style={{ backgroundColor: "white" }}
-          src={LifthouseLogo}
-          width={200}
-        />
-      </div>
-      <div className={styles.main}>
+    <div
+      style={{
+        backgroundImage: !isSmallScreen ? `url(${SelfMade.src})` : undefined,
+      }}
+      className={styles.container}
+    >
+      <div>
         <div
-          style={{ width: isSmallScreen ? undefined : "50%", ...borderOptions }}
+          style={{ width: !isSmallScreen ? "50%" : undefined }}
           className={styles.header}
         >
           <h1>Enjoy the journey, not the destination</h1>
-          <div className={styles.loading}>{loading && <Spin />}</div>
           <p className={styles.caption}>{quote}</p>
+          <p className={styles.caption}>- {author}</p>
           <Space>
             <Button onClick={() => router.push("/account/login")}>
               Log in
             </Button>
-            <Button
-              className={styles.button}
-              onClick={() => router.push("/account/signup")}
-            >
+            <Button onClick={() => router.push("/account/signup")}>
               New here? Sign up!
             </Button>
           </Space>
