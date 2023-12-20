@@ -12,7 +12,6 @@ import { Alert, Button, Divider, Form, message } from "antd";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useState } from "react";
 import Link from "next/link";
-import { useAppcontext } from "@/app/context";
 
 enum Provider {
   Google = "google",

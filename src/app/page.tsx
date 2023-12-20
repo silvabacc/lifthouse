@@ -10,7 +10,7 @@ import Banner from "./assets/banner.png";
 const COMPACT_SCREEN = 850;
 
 export default function App() {
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [isSmallScreen, setIsSmallScreen] = useState<boolean>();
   const [quote, setQuote] = useState("");
   const [author, setAuthor] = useState("");
   const router = useRouter();
@@ -43,6 +43,11 @@ export default function App() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  //Stops the screen from flickering
+  if (isSmallScreen === undefined) {
+    return <></>;
+  }
 
   return (
     <>
