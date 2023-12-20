@@ -8,7 +8,7 @@ interface FormWrapperProps extends FormProps {
   children: React.ReactNode;
 }
 
-export function FormContainer({ title, children, ...props }: FormWrapperProps) {
+export function FormWrapper({ title, children, ...props }: FormWrapperProps) {
   return (
     <>
       <h2>{title}</h2>

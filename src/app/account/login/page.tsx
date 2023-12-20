@@ -5,12 +5,12 @@ import { GoogleOutlined } from "@ant-design/icons";
 import {
   EmailField,
   FormButton,
-  FormContainer,
+  FormWrapper,
   PasswordField,
 } from "./components/form";
-import { Button, Divider, Form, message } from "antd";
+import { Alert, Button, Divider, Form, message } from "antd";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useAppcontext } from "@/app/context";
 
@@ -18,11 +18,21 @@ enum Provider {
   Google = "google",
 }
 
+/**
+ * Defined by the Form elements based on 'name' property
+ */
+type FieldType = {
+  email: string;
+  password: string;
+  required?: boolean;
+};
+
 export default function Login() {
-  const router = useRouter();
   const supabase = createClientComponentClient();
   const [messageApi, contextHolder] = message.useMessage();
-  const { user, setUser } = useAppcontext();
+  const [errorMessage, setErrorMessage] = useState<string>();
+  const [form] = Form.useForm();
+  const router = useRouter();
 
   const signInWithProvider = async (provider: Provider) => {
     messageApi.loading("Logging in...");
@@ -37,19 +47,42 @@ export default function Login() {
     }
   };
 
-  useEffect(() => {
-    supabase.auth.onAuthStateChange((_, session) => {
-      if (session) {
-        setUser(session.user);
-      }
+  const onFinish = async (info: FieldType) => {
+    setErrorMessage("");
+    const { email, password } = info;
+    messageApi.loading("Logging in...");
+
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
+
+    const response = await fetch(`${location.origin}/auth/login`, {
+      method: "POST",
+      body: formData,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+    if (response.status === 400) {
+      const data = await response.json();
+      setErrorMessage(data.error);
+      messageApi.destroy();
+    }
+
+    router.push("/");
+  };
 
   return (
     <div>
       {contextHolder}
-      <FormContainer>
+      <FormWrapper onFinish={onFinish}>
+        {errorMessage && (
+          <Alert
+            closable
+            onClose={() => setErrorMessage("")}
+            style={{ marginBottom: 12 }}
+            message={errorMessage}
+            type="error"
+          />
+        )}
         <EmailField />
         <Form.Item>
           <Link href="/account/signup">New User? Sign up here</Link>
@@ -70,7 +103,7 @@ export default function Login() {
             Google
           </Button>
         </div>
-      </FormContainer>
+      </FormWrapper>
     </div>
   );
 }
