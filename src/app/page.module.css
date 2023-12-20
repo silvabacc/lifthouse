@@ -1,0 +1,25 @@
+.container {
+  background-image: url("./assets/selfmade.png");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: right;
+  height: 100vh;
+}
+
+.header {
+  margin: 32px;
+  padding: 16px;
+  background-color: white;
+}
+
+.caption {
+  color: var(--caption-color);
+  font-style: italic;
+  font-size: 20px;
+  width: 100%;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+}
