@@ -3,6 +3,7 @@
 import React from "react";
 import { useServerInsertedHTML } from "next/navigation";
 import { StyleProvider, createCache, extractStyle } from "@ant-design/cssinjs";
+import { ConfigProvider, theme } from "antd";
 
 export default function AntdStyledComponentsRegistry({
   children,
@@ -19,5 +20,19 @@ export default function AntdStyledComponentsRegistry({
     ></style>
   ));
 
-  return <StyleProvider cache={cache}>{children}</StyleProvider>;
+  return (
+    <ConfigProvider
+      theme={{
+        components: {
+          Button: {
+            colorPrimary: "#000",
+            colorPrimaryActive: "#000",
+            colorPrimaryHover: "#000",
+          },
+        },
+      }}
+    >
+      <StyleProvider cache={cache}>{children}</StyleProvider>
+    </ConfigProvider>
+  );
 }

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Button, Divider, Space } from "antd";
 import Image from "next/image";
 import SelfMade from "./assets/selfmade.png";
-import Banner from "./assets/gorilla.jpeg";
+import Banner from "./assets/banner.png";
 
 const COMPACT_SCREEN = 850;
 
@@ -69,7 +69,10 @@ export default function App() {
             <p className={styles.caption}>- {author}</p>
             <Divider />
             <Space>
-              <Button onClick={() => router.push("/account/login")}>
+              <Button
+                type="primary"
+                onClick={() => router.push("/account/login")}
+              >
                 Log in
               </Button>
               <Button onClick={() => router.push("/account/signup")}>
