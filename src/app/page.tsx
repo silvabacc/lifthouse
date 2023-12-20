@@ -48,20 +48,14 @@ export default function App() {
   return (
     <>
       {isSmallScreen && (
-        <>
-          <Image
-            src={Banner}
-            alt=""
-            style={{ width: "100%", height: "auto" }}
-          />
-        </>
+        <Image src={Banner} alt="" style={{ width: "100%", height: "auto" }} />
       )}
       <div
+        className={styles.container}
         style={{
           backgroundImage: !isSmallScreen ? `url(${SelfMade.src})` : undefined,
-          alignItems: !isSmallScreen ? "center" : undefined,
+          alignItems: !isSmallScreen ? "center" : "flex-start",
         }}
-        className={styles.container}
       >
         <div
           style={{
