@@ -2,7 +2,6 @@
 
 import { Button, ButtonProps, Form, Input, Typography, FormProps } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import styles from "./Form.module.css";
 
 interface FormWrapperProps extends FormProps {
   title?: string;
@@ -13,7 +12,7 @@ export function FormContainer({ title, children, ...props }: FormWrapperProps) {
   return (
     <>
       <h2>{title}</h2>
-      <div className={styles.container}>
+      <div className="w-96 m-4 p-4 bg-gray-50 rounded-lg">
         <Form {...props}>{children}</Form>
       </div>
     </>
@@ -87,13 +86,7 @@ interface FormButtonProps extends ButtonProps {
 export function FormButton({ text, ...props }: FormButtonProps) {
   return (
     <Form.Item>
-      <Button
-        {...props}
-        style={{ marginTop: 8 }}
-        type="primary"
-        htmlType="submit"
-        block
-      >
+      <Button {...props} type="primary" htmlType="submit" block>
         {text}
       </Button>
     </Form.Item>

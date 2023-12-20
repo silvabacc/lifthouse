@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import styles from "./page.module.css";
 import { useEffect, useState } from "react";
 import { Button, Divider, Space } from "antd";
 import Image from "next/image";
@@ -47,26 +46,21 @@ export default function App() {
 
   return (
     <>
-      {isSmallScreen && (
-        <Image src={Banner} alt="" style={{ width: "100%", height: "auto" }} />
-      )}
+      {isSmallScreen && <Image src={Banner} alt="" className="w-full h-auto" />}
       <div
-        className={styles.container}
+        className={`flex h-full bg-no-repeat bg-right bg-fixed ${
+          !isSmallScreen ? "items-center" : "items-start"
+        }`}
         style={{
           backgroundImage: !isSmallScreen ? `url(${SelfMade.src})` : undefined,
-          alignItems: !isSmallScreen ? "center" : "flex-start",
         }}
       >
-        <div
-          style={{
-            width: !isSmallScreen ? "50%" : undefined,
-          }}
-        >
-          <div style={{}} className={styles.header}>
-            <h1>LiftHouse 🏋</h1>
+        <div className={`${!isSmallScreen ? "w-1/2" : ""}`}>
+          <div className="m-12">
+            <h1 className="text-5xl font-bold">LiftHouse 🏋</h1>
             <Divider />
-            <p className={styles.caption}>{quote}</p>
-            <p className={styles.caption}>- {author}</p>
+            <p className="text-xl text-gray-500 italic">{quote}</p>
+            <p className="text-right text-gray-500 ">- {author}</p>
             <Divider />
             <Space>
               <Button

@@ -7,9 +7,9 @@ export default function AccountLayout({
   children: React.ReactNode;
 }) {
   return (
-    <section className={styles.main}>
-      <h1>LiftHouse 🏋</h1>
-      <span className={styles.caption}>
+    <section className="flex flex-col justify-center items-center h-full w-full">
+      <h1 className="text-4xl font-bold">LiftHouse 🏋</h1>
+      <span className="text-gray-500 text-sm">
         Enjoy the journey, not the destination
       </span>
       <AppContextProvider>{children}</AppContextProvider>

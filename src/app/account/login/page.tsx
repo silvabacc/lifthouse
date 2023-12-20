@@ -1,6 +1,5 @@
 "use client";
 
-import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
 import { GoogleOutlined } from "@ant-design/icons";
 import {
@@ -48,7 +47,7 @@ export default function Login() {
   }, []);
 
   return (
-    <div className={styles.main}>
+    <div>
       {contextHolder}
       <FormContainer>
         <EmailField />
@@ -63,7 +62,7 @@ export default function Login() {
         <Divider style={{ borderColor: "black" }}>
           <span>Or Log in With</span>
         </Divider>
-        <div className={styles.providers_container}>
+        <div className="flex justify-center">
           <Button
             icon={<GoogleOutlined />}
             onClick={() => signInWithProvider(Provider.Google)}
