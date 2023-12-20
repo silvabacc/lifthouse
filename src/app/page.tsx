@@ -59,7 +59,6 @@ export default function App() {
       <div
         style={{
           backgroundImage: !isSmallScreen ? `url(${SelfMade.src})` : undefined,
-          backgroundPosition: !isSmallScreen ? `right` : "left",
           alignItems: !isSmallScreen ? "center" : undefined,
         }}
         className={styles.container}

@@ -1,6 +1,7 @@
 .container {
   background-repeat: no-repeat;
   background-attachment: fixed;
+  background-position: right;
   height: 100vh;
   display: flex;
 }
