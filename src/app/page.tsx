@@ -44,10 +44,12 @@ export default function App() {
     };
   }, []);
 
-  //Stops the screen from flickering
-  if (isSmallScreen === undefined) {
-    return <></>;
-  }
+  const backgroundImage =
+    isSmallScreen !== undefined
+      ? !isSmallScreen
+        ? `url(${SelfMade.src})`
+        : undefined
+      : undefined;
 
   return (
     <>
@@ -57,7 +59,7 @@ export default function App() {
           !isSmallScreen ? "items-center" : "items-start"
         }`}
         style={{
-          backgroundImage: !isSmallScreen ? `url(${SelfMade.src})` : undefined,
+          backgroundImage,
         }}
       >
         <div className={`${!isSmallScreen ? "w-1/2" : ""}`}>
