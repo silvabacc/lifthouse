@@ -11,7 +11,7 @@ interface FormWrapperProps extends FormProps {
 export function FormWrapper({ title, children, ...props }: FormWrapperProps) {
   return (
     <>
-      <h2>{title}</h2>
+      <h2 className="text-xl mt-4 font-bold text-center">{title}</h2>
       <div className="w-96 m-4 p-4 bg-gray-50 rounded-lg">
         <Form {...props}>{children}</Form>
       </div>
