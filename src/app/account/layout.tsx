@@ -1,5 +1,4 @@
 import { AppContextProvider } from "../context";
-import styles from "./layout.module.css";
 
 export default function AccountLayout({
   children,
