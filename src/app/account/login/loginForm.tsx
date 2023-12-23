@@ -11,7 +11,7 @@ import { Alert, Button, Divider, Form, message } from "antd";
 import { useState } from "react";
 import Link from "next/link";
 import { createSupabaseClient } from "@/lib/supabase/client";
-import { signInWithEmail } from "./action";
+import { signInWithEmail } from "./actions";
 import { useRouter } from "next/navigation";
 
 enum Provider {
