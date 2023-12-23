@@ -1,17 +1,20 @@
 "use server";
 
-import { createSupabaseClient } from "@/lib/supabase/client";
-import { headers } from "next/headers";
+import { createSupabaseServer } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 
-enum Provider {
-  Google = "google",
-}
+export async function signInWithEmail(email: string, password: string) {
+  const cookieStore = cookies();
+  const supabase = createSupabaseServer(cookieStore);
 
-export async function signInWithProvider(provider: Provider) {
-  const { data } = await supabase.auth.signInWithOAuth({
-    provider,
-    options: {
-      redirectTo: `${domain}/auth/callback`,
-    },
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
   });
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
 }
