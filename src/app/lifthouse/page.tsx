@@ -1,9 +1,9 @@
 "use client";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createSupabaseClient } from "@/lib/supabase/client";
 
 export default function Lifthouse() {
-  const supabase = createClientComponentClient();
+  const supabase = createSupabaseClient();
 
   return (
     <>

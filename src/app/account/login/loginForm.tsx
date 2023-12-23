@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { GoogleOutlined } from "@ant-design/icons";
 import {
   EmailField,
@@ -9,9 +8,11 @@ import {
   PasswordField,
 } from "../components/form";
 import { Alert, Button, Divider, Form, message } from "antd";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useState } from "react";
 import Link from "next/link";
+import { createSupabaseClient } from "@/lib/supabase/client";
+import { signInWithEmail } from "./action";
+import { useRouter } from "next/navigation";
 
 enum Provider {
   Google = "google",
@@ -27,17 +28,19 @@ type FieldType = {
 };
 
 export default function LoginForm() {
-  const supabase = createClientComponentClient();
   const [messageApi, contextHolder] = message.useMessage();
   const [errorMessage, setErrorMessage] = useState<string>();
   const router = useRouter();
 
-  const signInWithProvider = async (provider: Provider) => {
+  const onSignInWithProivderClick = async (provider: Provider) => {
     messageApi.loading("Logging in...");
 
+    const supabase = createSupabaseClient();
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: `${location.origin}/auth/callback` },
+      options: {
+        redirectTo: `${location.origin}/auth/callback/?next=lifthouse`,
+      },
     });
 
     if (error) {
@@ -50,23 +53,16 @@ export default function LoginForm() {
     const { email, password } = info;
     messageApi.loading("Logging in...");
 
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
+    const { error } = await signInWithEmail(email, password);
 
-    const response = await fetch(`${location.origin}/auth/login`, {
-      method: "POST",
-      body: formData,
-    });
-
-    if (response.status === 400) {
-      const data = await response.json();
-      setErrorMessage(data.error);
+    if (error) {
+      setErrorMessage(error);
       messageApi.destroy();
+    } else {
+      router.push("/lifthouse");
     }
-
-    router.push("/");
   };
+
   return (
     <>
       {contextHolder}
@@ -95,7 +91,7 @@ export default function LoginForm() {
         <div className="flex justify-center">
           <Button
             icon={<GoogleOutlined />}
-            onClick={() => signInWithProvider(Provider.Google)}
+            onClick={() => onSignInWithProivderClick(Provider.Google)}
           >
             Google
           </Button>
