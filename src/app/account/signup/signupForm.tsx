@@ -2,7 +2,6 @@
 
 import { PageStartAnimation } from "@/app/aniamtions/pageStartAnimation";
 import { Alert, message } from "antd";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
   ConfirmPasswordField,
   EmailField,
@@ -13,6 +12,7 @@ import {
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signUp } from "./actions";
 
 /**
  * Defined by the Form elements based on 'name' property
@@ -25,7 +25,6 @@ interface FieldType {
 }
 
 export default function SignupForm() {
-  const supabase = createClientComponentClient();
   const [messageApi, contextHolder] = message.useMessage();
   const [alert, setAlert] = useState<string>();
   const router = useRouter();
@@ -35,16 +34,11 @@ export default function SignupForm() {
     setAlert("");
     messageApi.loading("Creating account...");
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${location.origin}/auth/callback`,
-      },
-    });
+    const { error } = await signUp(email, password);
 
     if (error) {
-      setAlert(error.message);
+      messageApi.destroy();
+      setAlert(error);
     } else {
       messageApi.destroy();
       messageApi.success("Logging you in...");
