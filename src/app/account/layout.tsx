@@ -1,5 +1,3 @@
-import { AppContextProvider } from "../context";
-
 export default function AccountLayout({
   children,
 }: {
@@ -11,7 +9,7 @@ export default function AccountLayout({
       <span className="text-gray-500 text-sm">
         Enjoy the journey, not the destination
       </span>
-      <AppContextProvider>{children}</AppContextProvider>
+      {children}
     </section>
   );
 }
