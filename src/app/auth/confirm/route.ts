@@ -10,7 +10,6 @@ export async function GET(request: NextRequest) {
   const next = `/${searchParams.get("next")}` ?? "/";
   const redirectTo = request.nextUrl.clone();
   redirectTo.pathname = next;
-  console.log("here!!", type, token_hash);
 
   if (token_hash && type) {
     const cookieStore = cookies();

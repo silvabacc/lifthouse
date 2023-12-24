@@ -8,7 +8,7 @@ import {
   PasswordField,
 } from "../components/form";
 import { Alert, Button, Divider, Form, message } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { signInWithEmail } from "./actions";

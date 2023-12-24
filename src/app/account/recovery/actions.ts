@@ -8,8 +8,6 @@ export async function recoverPassword(email: string) {
   const supabase = createSupabaseServer(cookieStore);
   const origin = headers().get("origin");
 
-  console.log(`${origin}/auth/confirm`);
-
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${origin}/auth/confirm`,
   });

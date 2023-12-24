@@ -9,7 +9,6 @@ import { usePathname, useRouter } from "next/navigation";
 const { Sider } = Layout;
 
 export default function SiderNav() {
-  const { sideNavCollapsed } = useAppContext();
   const router = useRouter();
   const pathName = usePathname();
 
@@ -48,12 +47,7 @@ export default function SiderNav() {
     items.find((item) => pathName.startsWith(item.path))?.key || "1";
 
   return (
-    <Sider
-      theme="light"
-      trigger={null}
-      collapsible
-      collapsed={sideNavCollapsed}
-    >
+    <Sider breakpoint="sm" theme="light" trigger={null}>
       <Image className="p-2" src={LifthouseLogo} alt="" />
       <Menu theme="light" defaultSelectedKeys={[activeKey]} items={items} />
     </Sider>

@@ -1,27 +1,72 @@
 "use client";
 
-import { Button, Layout } from "antd";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { Button, Dropdown, Layout, MenuProps } from "antd";
+import { SettingOutlined } from "@ant-design/icons";
 import { useAppContext } from "@/app/context";
+import { useAuthentication } from "@/app/hooks/useAuthentication";
+import { UnlockOutlined, LogoutOutlined } from "@ant-design/icons";
+import { useRouter } from "next/navigation";
+import { createSupabaseClient } from "@/lib/supabase/client";
 
 const { Header: AntDHeader } = Layout;
 
 export default function Header() {
-  const { sideNavCollapsed, setSideNavCollapsed } = useAppContext();
+  const { user } = useAuthentication();
+  const router = useRouter();
+  const supabase = createSupabaseClient();
+
+  const items: MenuProps["items"] = [
+    {
+      label: user?.email,
+      key: "0",
+    },
+    {
+      label: "Update Password",
+      key: "1",
+      icon: <UnlockOutlined />,
+    },
+    {
+      label: "Logout",
+      key: "2",
+      icon: <LogoutOutlined />,
+    },
+  ];
+
+  const handleMenuClick: MenuProps["onClick"] = (e) => {
+    switch (e.key) {
+      case "1":
+        router.push("/update-password");
+        break;
+      case "2":
+        supabase.auth.signOut();
+        router.push("/");
+        break;
+    }
+  };
+
+  const menuProps = {
+    items,
+    onClick: handleMenuClick,
+  };
 
   return (
     //Tailwind doesn't apply to AntD components
-    <AntDHeader style={{ background: "white", padding: 0 }}>
-      <Button
-        type="text"
-        icon={sideNavCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        onClick={() => setSideNavCollapsed(!sideNavCollapsed)}
-        style={{
-          fontSize: "16px",
-          width: 64,
-          height: 64,
-        }}
-      />
+    <AntDHeader
+      style={{
+        background: "white",
+        padding: 16,
+        display: "flex",
+        alignItems: "center",
+        direction: "rtl",
+      }}
+    >
+      <Dropdown menu={menuProps}>
+        <Button shape="circle">
+          <div className="flex items-center justify-center text-md">
+            <SettingOutlined />
+          </div>
+        </Button>
+      </Dropdown>
     </AntDHeader>
   );
 }
