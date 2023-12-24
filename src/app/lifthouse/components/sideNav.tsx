@@ -47,8 +47,6 @@ export default function SiderNav() {
   const activeKey =
     items.find((item) => pathName.startsWith(item.path))?.key || "1";
 
-  console.log("activeKey", activeKey);
-
   return (
     <Sider
       theme="light"
