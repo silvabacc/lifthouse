@@ -1,16 +1,19 @@
 "use client";
 
-import { createSupabaseClient } from "@/lib/supabase/client";
-import { Layout } from "antd";
-import { PageStartAnimation } from "../aniamtions/pageStartAnimation";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Lifthouse() {
-  const supabase = createSupabaseClient();
+  const router = useRouter();
+  const pathName = usePathname();
 
-  return (
-    <PageStartAnimation>
-      <h1>Welcome to Lifthouse</h1>
-      <button onClick={() => supabase.auth.signOut()}>Sign out</button>
-    </PageStartAnimation>
-  );
+  //routes user to default path
+  useEffect(() => {
+    if (pathName === "/lifthouse") {
+      router.push("/lifthouse/workouts");
+    }
+  }, [router, pathName]);
+
+  return <></>;
 }
