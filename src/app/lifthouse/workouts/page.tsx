@@ -1,14 +1,15 @@
-"use client";
-
 import { PageStartAnimation } from "@/app/aniamtions/pageStartAnimation";
-import { PageInfoPortal } from "../components/pageInfo";
+import Workouts from "./workouts";
 
-export default function Workouts() {
+export async function getData() {
+  return [];
+}
+
+export default async function WorkoutsPage() {
+  const workouts = await getData();
   return (
     <PageStartAnimation>
-      <PageInfoPortal>
-        <h1>Hello!</h1>
-      </PageInfoPortal>
+      <Workouts workouts={[]} />
     </PageStartAnimation>
   );
 }
