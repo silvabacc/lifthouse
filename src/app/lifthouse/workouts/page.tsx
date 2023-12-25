@@ -1,11 +1,14 @@
 "use client";
 
 import { PageStartAnimation } from "@/app/aniamtions/pageStartAnimation";
+import { PageInfoPortal } from "../components/pageInfo";
 
 export default function Workouts() {
   return (
     <PageStartAnimation>
-      <h1>Workouts!</h1>
+      <PageInfoPortal>
+        <h1>Hello!</h1>
+      </PageInfoPortal>
     </PageStartAnimation>
   );
 }
