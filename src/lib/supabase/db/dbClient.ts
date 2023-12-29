@@ -21,6 +21,8 @@ export default class DatabaseClient {
       .select("*")
       .eq("user_id", userId);
 
+    console.log("data", data);
+
     if (error) {
       throw error;
     }

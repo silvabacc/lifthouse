@@ -3,7 +3,6 @@
 import { Button, Dropdown, Layout, MenuProps } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { useAppContext } from "@/app/context";
-import { useAuthentication } from "@/app/hooks/useAuthentication";
 import { UnlockOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase/client";
@@ -11,7 +10,7 @@ import { createSupabaseClient } from "@/lib/supabase/client";
 const { Header: AntDHeader } = Layout;
 
 export default function Header() {
-  const { user } = useAuthentication();
+  const { user } = useAppContext();
   const router = useRouter();
   const supabase = createSupabaseClient();
 

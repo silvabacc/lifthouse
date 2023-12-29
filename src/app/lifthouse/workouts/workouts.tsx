@@ -1,8 +1,9 @@
-import { Workout } from "@/lib/supabase/db/types";
+"use client";
 
-type Props = {
-  workouts: Workout[];
-};
-export default function Workouts({ workouts }: Props) {
+import { useWorkout } from "./useWorkout";
+
+export default function Workouts() {
+  const {} = useWorkout();
+
   return <></>;
 }
