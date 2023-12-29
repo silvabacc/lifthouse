@@ -1,5 +1,6 @@
 import { PageAnimation } from "@/app/aniamtions/pageAnimation";
+import Workouts from "./workouts";
 
 export default async function WorkoutsPage() {
-  return <PageAnimation>aaa{/* <Workouts /> */}</PageAnimation>;
+  return <PageAnimation>{<Workouts />}</PageAnimation>;
 }

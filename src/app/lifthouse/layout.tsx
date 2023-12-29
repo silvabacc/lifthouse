@@ -19,7 +19,9 @@ export default function LiftHouseLayout({
             <Header />
             <PageInfo />
             <Layout>
-              <div className="m-6 h-full rounded-lg">{children}</div>
+              <div className="m-6 h-full overflow-auto rounded-lg">
+                {children}
+              </div>
             </Layout>
           </Layout>
         </Layout>
