@@ -6,7 +6,7 @@ import { Button, Divider, Space } from "antd";
 import Image from "next/image";
 import SelfMade from "./assets/selfmade.png";
 import Banner from "./assets/banner.png";
-import { PageStartAnimation } from "./aniamtions/pageStartAnimation";
+import { LayoutAnimation } from "./aniamtions/layoutAnimation";
 
 const COMPACT_SCREEN = 850;
 
@@ -41,7 +41,7 @@ export default function LandingPage({ quote, author }: Props) {
       : undefined;
 
   return (
-    <PageStartAnimation className="h-full">
+    <LayoutAnimation className="h-full">
       {isSmallScreen && <Image src={Banner} alt="" className="w-full h-auto" />}
       <div
         className={`flex h-full bg-no-repeat bg-right bg-fixed ${
@@ -72,6 +72,6 @@ export default function LandingPage({ quote, author }: Props) {
           </div>
         </div>
       </div>
-    </PageStartAnimation>
+    </LayoutAnimation>
   );
 }

@@ -1,8 +1,9 @@
 import { Layout, Menu } from "antd";
 import SiderNav from "./components/sideNav";
 import Header from "./components/header";
-import { PageStartAnimation } from "../aniamtions/pageStartAnimation";
+import { LayoutAnimation } from "../aniamtions/layoutAnimation";
 import PageInfo from "./components/pageInfo";
+import { AppContextProvider } from "../context";
 
 export default function LiftHouseLayout({
   children,
@@ -10,19 +11,19 @@ export default function LiftHouseLayout({
   children: React.ReactNode;
 }) {
   return (
-    <PageStartAnimation className="h-full">
-      <Layout className="h-full">
-        <SiderNav />
+    <AppContextProvider>
+      <LayoutAnimation>
         <Layout className="h-full">
-          <Header />
-          <PageInfo />
-          <Layout>
-            <div className="m-6 bg-white h-full overflow rounded-lg">
-              {children}
-            </div>
+          <SiderNav />
+          <Layout className="h-full">
+            <Header />
+            <PageInfo />
+            <Layout>
+              <div className="m-6 h-full rounded-lg">{children}</div>
+            </Layout>
           </Layout>
         </Layout>
-      </Layout>
-    </PageStartAnimation>
+      </LayoutAnimation>
+    </AppContextProvider>
   );
 }

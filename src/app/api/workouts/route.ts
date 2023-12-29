@@ -1,4 +1,5 @@
 import DatabaseClient from "@/lib/supabase/db/dbClient";
+import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
   const dbClient = new DatabaseClient();

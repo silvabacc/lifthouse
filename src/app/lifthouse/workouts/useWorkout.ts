@@ -20,7 +20,8 @@ export function useWorkout() {
         body: JSON.stringify({ userId: user?.id }),
       });
 
-      const data = await response.json();
+      const data = (await response.json()) as Workout[];
+      setWorkouts(data);
       setLoading(false);
     };
 

@@ -1,11 +1,10 @@
-import { PageStartAnimation } from "@/app/aniamtions/pageStartAnimation";
-import { useState } from "react";
+import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 import RecoveryForm from "./recoveryForm";
 
 export default function Recovery() {
   return (
-    <PageStartAnimation>
+    <PageAnimation>
       <RecoveryForm />
-    </PageStartAnimation>
+    </PageAnimation>
   );
 }

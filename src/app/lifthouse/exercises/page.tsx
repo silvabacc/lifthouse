@@ -1,5 +1,5 @@
-import { PageStartAnimation } from "@/app/aniamtions/pageStartAnimation";
+import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 
 export default function Exercises() {
-  return <PageStartAnimation>Exercises!</PageStartAnimation>;
+  return <PageAnimation>Exercises!</PageAnimation>;
 }

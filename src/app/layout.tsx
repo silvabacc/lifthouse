@@ -21,7 +21,7 @@ export default function RootLayout({
       <body className={inter.className}>
         {
           <AntdStyledComponentsRegistry>
-            <AppContextProvider>{children}</AppContextProvider>
+            {children}
           </AntdStyledComponentsRegistry>
         }
       </body>

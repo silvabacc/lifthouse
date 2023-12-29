@@ -1,6 +1,5 @@
 "use client";
 
-import { PageStartAnimation } from "@/app/aniamtions/pageStartAnimation";
 import { Alert, message } from "antd";
 import {
   ConfirmPasswordField,
@@ -47,7 +46,7 @@ export default function SignupForm() {
   };
 
   return (
-    <PageStartAnimation>
+    <>
       {contextHolder}
       <FormWrapper onFinish={onFinish}>
         {alert && (
@@ -65,6 +64,6 @@ export default function SignupForm() {
         <FormButton text={"Sign Up"} />
         <Link href="/account/login">Already a user?</Link>
       </FormWrapper>
-    </PageStartAnimation>
+    </>
   );
 }

@@ -1,10 +1,10 @@
-import { PageStartAnimation } from "@/app/aniamtions/pageStartAnimation";
+import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 import LoginForm from "./loginForm";
 
 export default async function Login() {
   return (
-    <PageStartAnimation>
+    <PageAnimation>
       <LoginForm />
-    </PageStartAnimation>
+    </PageAnimation>
   );
 }

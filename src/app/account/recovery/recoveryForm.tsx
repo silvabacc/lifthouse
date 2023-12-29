@@ -1,6 +1,5 @@
 "use client";
 
-import { PageStartAnimation } from "@/app/aniamtions/pageStartAnimation";
 import { Alert, message } from "antd";
 import { EmailField, FormButton, FormWrapper } from "../components/form";
 import { useState } from "react";
@@ -36,7 +35,7 @@ export default function RecoveryForm() {
   };
 
   return (
-    <PageStartAnimation>
+    <>
       {contextHolder}
       <FormWrapper name="reset-password-form" onFinish={onFinish}>
         {alert && (
@@ -51,6 +50,6 @@ export default function RecoveryForm() {
         <EmailField />
         <FormButton text={"Send Recovery Email"} disabled={disabled} />
       </FormWrapper>
-    </PageStartAnimation>
+    </>
   );
 }

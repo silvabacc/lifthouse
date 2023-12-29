@@ -1,10 +1,10 @@
-import { PageStartAnimation } from "@/app/aniamtions/pageStartAnimation";
+import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 import SignupForm from "./signupForm";
 
 export default function Signup() {
   return (
-    <PageStartAnimation>
+    <PageAnimation>
       <SignupForm />
-    </PageStartAnimation>
+    </PageAnimation>
   );
 }

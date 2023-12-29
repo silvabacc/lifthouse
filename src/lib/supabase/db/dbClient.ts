@@ -1,5 +1,7 @@
-import { SupabaseClient, createClient } from "@supabase/supabase-js";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { createSupabaseServer } from "../server";
 import { Workout } from "./types";
+import { cookies } from "next/headers";
 
 export default class DatabaseClient {
   private supabase: SupabaseClient;
@@ -12,7 +14,9 @@ export default class DatabaseClient {
       throw new Error("Missing Supabase URL or key");
     }
 
-    this.supabase = createClient(supabaseUrl, supabaseKey);
+    const cookieStore = cookies();
+
+    this.supabase = createSupabaseServer(cookieStore);
   }
 
   async getWorkouts(userId: string): Promise<Workout[]> {
@@ -20,8 +24,6 @@ export default class DatabaseClient {
       .from("workouts")
       .select("*")
       .eq("user_id", userId);
-
-    console.log("data", data);
 
     if (error) {
       throw error;
