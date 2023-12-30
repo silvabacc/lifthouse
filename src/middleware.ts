@@ -106,10 +106,12 @@ export async function middleware(request: NextRequest) {
     next = await AuthMiddleware(request, next);
   }
 
-  if (!request.body) {
+  /**
+   * Requests with bodies are validated here
+   */
+  if (request.bodyUsed === false) {
     return next;
   }
-
   const body = await request.json();
 
   if (
@@ -120,7 +122,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (
-    request.nextUrl.pathname === "/api/workout/create" &&
+    request.nextUrl.pathname === "/api/workouts/create" &&
     request.method === "POST"
   ) {
     next = await validateWorkoutCreateBody(body, next);

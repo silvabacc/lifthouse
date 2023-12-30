@@ -56,4 +56,15 @@ export default class DatabaseClient {
       userId: data.user_id,
     }));
   }
+
+  async deleteWorkout(workoutId: string) {
+    const { error } = await this.supabase
+      .from("workouts")
+      .delete()
+      .match({ workout_id: workoutId });
+
+    if (error) {
+      throw error;
+    }
+  }
 }

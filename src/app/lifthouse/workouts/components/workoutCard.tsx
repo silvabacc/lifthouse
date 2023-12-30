@@ -1,13 +1,39 @@
-import { Button, Divider } from "antd";
+import { Button, Divider, Modal } from "antd";
 import { motion } from "framer-motion";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { ExclamationCircleFilled } from "@ant-design/icons";
+import { useWorkout } from "../useWorkout";
+import { useRouter } from "next/navigation";
+import { Workout } from "@/lib/supabase/db/types";
+
+const { confirm } = Modal;
 
 type WorkoutCardProps = {
   name: string;
   description: string;
   workoutId: number;
+  onDelete: (id: number) => void;
 };
-export default function WorkoutCard({ name, description }: WorkoutCardProps) {
+export default function WorkoutCard({
+  name,
+  description,
+  workoutId,
+  onDelete,
+}: WorkoutCardProps) {
+  const showDeleteConfirm = () => {
+    confirm({
+      title: "Are you sure delete this workout plan?",
+      icon: <ExclamationCircleFilled />,
+      okText: "Yes",
+      okType: "danger",
+      centered: true,
+      cancelText: "No",
+      async onOk() {
+        onDelete(workoutId);
+      },
+    });
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
@@ -25,7 +51,11 @@ export default function WorkoutCard({ name, description }: WorkoutCardProps) {
           Edit
         </Button>
         <Divider type="vertical" />
-        <Button className="flex-1 text-gray-400" type="link">
+        <Button
+          onClick={() => showDeleteConfirm()}
+          className="flex-1 text-gray-400"
+          type="link"
+        >
           Delete
         </Button>
       </div>

@@ -1,22 +1,50 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import AddWorkoutCard from "./components/addWorkoutCard";
 import WorkoutCard from "./components/workoutCard";
 import { useWorkout } from "./useWorkout";
+import { Workout } from "@/lib/supabase/db/types";
 
 export default function Workouts() {
-  const { isLoading, workouts } = useWorkout();
+  const { fetchWorkouts, deleteWorkoutPlan } = useWorkout();
+  const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const [isLoading, setLoading] = useState<boolean>();
+
+  useEffect(() => {
+    const fetch = async () => {
+      setLoading(true);
+      const workouts = await fetchWorkouts();
+      setWorkouts(workouts);
+      setLoading(false);
+    };
+
+    fetch();
+  }, []);
 
   if (isLoading) {
     return <>Workouts Skeleton Placeholder</>;
   }
 
+  const onDelete = async (workoutId: number) => {
+    await deleteWorkoutPlan(workoutId);
+    setWorkouts((workouts) =>
+      workouts.filter((w) => w.workoutId !== workoutId)
+    );
+  };
+
   return (
     <div className="grid lg:grid-cols-3 gap-4">
       {workouts?.map((workout) => {
-        return <WorkoutCard key={workout.workoutId} {...workout} />;
+        return (
+          <WorkoutCard
+            key={workout.workoutId}
+            {...workout}
+            onDelete={onDelete}
+          />
+        );
       })}
-      <AddWorkoutCard />
+      <AddWorkoutCard setWorkouts={setWorkouts} />
     </div>
   );
 }
