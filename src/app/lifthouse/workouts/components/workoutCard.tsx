@@ -1,6 +1,6 @@
 import { Button, Divider } from "antd";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 type WorkoutCardProps = {
   name: string;
@@ -16,16 +16,16 @@ export default function WorkoutCard({ name, description }: WorkoutCardProps) {
       transition={{ duration: 0.25 }}
       className="flex flex-col justify-between bg-white cursor-pointer"
     >
-      <div className="p-6">
+      <div className="relative p-6">
         <h1 className="text-base font-medium pb-2">{name}</h1>
         <Description text={description} />
       </div>
       <div className="flex items-center justify-between py-2 bg-gray-50">
-        <Button className="flex-1" type="link">
+        <Button className="flex-1 text-gray-400" type="link">
           Edit
         </Button>
         <Divider type="vertical" />
-        <Button className="flex-1" type="link">
+        <Button className="flex-1 text-gray-400" type="link">
           Delete
         </Button>
       </div>
@@ -40,18 +40,49 @@ type DescriptionProps = {
   text: string;
 };
 function Description({ text }: DescriptionProps) {
-  const maxLength = 100;
   const [expanded, setExpanded] = useState(false);
+  const [showButton, setShowButton] = useState(false);
+  const ref = useRef<HTMLParagraphElement>(null);
 
-  const truncatedText = expanded ? text : text.slice(0, maxLength);
+  //Adds the show button when the description is in overflow/line clamp
+  const handleResize = () => {
+    if (
+      ref.current &&
+      ref?.current?.offsetHeight < ref?.current?.scrollHeight
+    ) {
+      setShowButton(true);
+    } else {
+      setShowButton(false);
+    }
+  };
+
+  useEffect(() => {
+    // Add event listener on mount
+    window.addEventListener("resize", handleResize);
+    // Clean up the event listener on unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
-    <div>
-      <p className="text-sm text-gray-400">{`${truncatedText} ${
-        text.length > maxLength && !expanded ? "..." : ""
-      }`}</p>
+    <div
+      className={`${
+        expanded
+          ? "absolute p-4 mr-6 rounded-lg border-double border-2 border-stone-500"
+          : ""
+      } bg-white z-10`}
+    >
+      <p
+        ref={ref}
+        className={`text-sm leading-6 ${
+          !expanded ? "line-clamp-2" : ""
+        } text-gray-400`}
+      >
+        {text}
+      </p>
       <div className="flex justify-end">
-        {!expanded && text.length > maxLength && (
+        {!expanded && showButton && (
           <Button className="p-0" type="link" onClick={() => setExpanded(true)}>
             Show More
           </Button>

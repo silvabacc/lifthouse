@@ -12,7 +12,7 @@ export default function Workouts() {
   }
 
   return (
-    <div className="grid lg:grid-cols-4 gap-4">
+    <div className="grid lg:grid-cols-3 gap-4">
       {workouts?.map((workout) => {
         return <WorkoutCard key={workout.workoutId} {...workout} />;
       })}
