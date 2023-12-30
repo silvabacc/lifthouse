@@ -16,7 +16,7 @@ export default function WorkoutCard({ name, description }: WorkoutCardProps) {
       transition={{ duration: 0.25 }}
       className="flex flex-col justify-between bg-white cursor-pointer"
     >
-      <div className="relative p-6">
+      <div className="relative p-6 h-32">
         <h1 className="text-base font-medium pb-2">{name}</h1>
         <Description text={description} />
       </div>
@@ -44,7 +44,7 @@ function Description({ text }: DescriptionProps) {
   const [showButton, setShowButton] = useState(false);
   const ref = useRef<HTMLParagraphElement>(null);
 
-  //Adds the show button when the description is in overflow/line clamp
+  // Adds the show button when the description is in overflow/line clamp
   const handleResize = () => {
     if (
       ref.current &&
@@ -57,6 +57,7 @@ function Description({ text }: DescriptionProps) {
   };
 
   useEffect(() => {
+    handleResize();
     // Add event listener on mount
     window.addEventListener("resize", handleResize);
     // Clean up the event listener on unmount

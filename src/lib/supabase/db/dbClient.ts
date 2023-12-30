@@ -37,4 +37,23 @@ export default class DatabaseClient {
       userId: data.user_id,
     }));
   }
+
+  async createWorkout(userId: string, name: string, description?: string) {
+    const { data, error } = await this.supabase
+      .from("workouts")
+      .insert([{ name, description, exercises: [], user_id: userId }])
+      .select();
+
+    if (error) {
+      throw error;
+    }
+
+    return data.map((data) => ({
+      workoutId: data.workout_id,
+      name: data.name,
+      description: data.description,
+      exercises: data.exercises,
+      userId: data.user_id,
+    }));
+  }
 }

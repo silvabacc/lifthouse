@@ -61,3 +61,10 @@ function generateBreadcrumbs(pathname: string) {
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+/**
+ * Crumbs are created based on the path of the route.
+ * Some pages may want to override the last crumb with a custom one.
+ * e.g. page name
+ */
+function overridePathCrumb(value: string) {}

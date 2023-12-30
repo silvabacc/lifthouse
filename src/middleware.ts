@@ -65,15 +65,26 @@ async function AuthMiddleware(request: NextRequest, response: NextResponse) {
   return response;
 }
 
-async function validateWorkoutBody(
-  request: NextRequest,
-  response: NextResponse
-) {
+async function validateWorkoutBody(body: any, response: NextResponse) {
   try {
-    const body = await request.json();
-
     const schema = Joi.object({
       userId: Joi.string().uuid().required(),
+    });
+
+    await schema.validateAsync(body);
+  } catch (e: any) {
+    response = NextResponse.json({ error: e.message }, { status: 400 });
+  }
+
+  return response;
+}
+
+async function validateWorkoutCreateBody(body: any, response: NextResponse) {
+  try {
+    const schema = Joi.object({
+      userId: Joi.string().uuid().required(),
+      name: Joi.string().required(),
+      description: Joi.string().optional(),
     });
 
     await schema.validateAsync(body);
@@ -95,11 +106,24 @@ export async function middleware(request: NextRequest) {
     next = await AuthMiddleware(request, next);
   }
 
+  if (!request.body) {
+    return next;
+  }
+
+  const body = await request.json();
+
   if (
-    request.nextUrl.pathname.startsWith("/api/workouts") &&
+    request.nextUrl.pathname === "/api/workouts" &&
     request.method === "POST"
   ) {
-    next = await validateWorkoutBody(request, next);
+    next = await validateWorkoutBody(body, next);
+  }
+
+  if (
+    request.nextUrl.pathname === "/api/workout/create" &&
+    request.method === "POST"
+  ) {
+    next = await validateWorkoutCreateBody(body, next);
   }
 
   return next;
