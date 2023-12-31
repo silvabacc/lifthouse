@@ -41,7 +41,9 @@ export default class DatabaseClient {
   async createWorkout(userId: string, name: string, description?: string) {
     const { data, error } = await this.supabase
       .from("workouts")
-      .insert([{ name, description, exercises: [], user_id: userId }])
+      .insert([
+        { name, description, exercises: [], user_id: userId, type: "custom" },
+      ])
       .select();
 
     if (error) {
@@ -61,6 +63,23 @@ export default class DatabaseClient {
     const { error } = await this.supabase
       .from("workouts")
       .delete()
+      .match({ workout_id: workoutId });
+
+    if (error) {
+      throw error;
+    }
+  }
+
+  async updateWorkout(
+    name: string,
+    description: string,
+    exercises: number[],
+    workoutId: string
+  ) {
+    console.log(name, description, exercises, workoutId);
+    const { error } = await this.supabase
+      .from("workouts")
+      .update({ name, description, exercises })
       .match({ workout_id: workoutId });
 
     if (error) {

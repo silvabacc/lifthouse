@@ -1,11 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { SupabaseClient } from "@supabase/supabase-js";
-import Joi from "joi";
 import { NextResponse, type NextRequest } from "next/server";
-import {
-  validateWorkoutBody,
-  validateWorkoutCreateBody,
-} from "./lib/middlewareUtils/validators";
 
 async function AuthMiddleware(
   request: NextRequest,
@@ -25,34 +20,29 @@ async function AuthMiddleware(
     response = NextResponse.redirect(new URL("/", request.url));
   }
 
-  return response;
-}
+  // Checks if the user is requesting their own workout plan, and not someone else's
+  if (
+    user &&
+    /^\/lifthouse\/workouts\/(\d+)$/.test(request.nextUrl.pathname) &&
+    request.method === "GET"
+  ) {
+    console.log(request.nextUrl);
+    const workoutId = request.nextUrl.pathname.split("/").pop();
 
-/**
- * Checks if the user is requesting their own workout plan, and not someone else's
- */
-async function WorkoutMiddleware(
-  workoutId: number,
-  supabase: SupabaseClient,
-  request: NextRequest,
-  response: NextResponse
-) {
-  const { origin } = new URL(request.nextUrl);
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    if (workoutId) {
+      const { error } = await supabase
+        .from("workouts")
+        .select("*")
+        .eq("workout_id", workoutId)
+        .eq("user_id", user?.id)
+        .single();
 
-  const { data: workout, error } = await supabase
-    .from("workouts")
-    .select("*")
-    .eq("workout_id", workoutId)
-    .eq("user_id", user?.id)
-    .single();
-
-  if (error) {
-    response = NextResponse.redirect(
-      `${origin}/lifthouse/workouts/-1?name=...`
-    );
+      if (error) {
+        response = NextResponse.redirect(
+          `${request.nextUrl.origin}/lifthouse/workouts/-1?name=...`
+        );
+      }
+    }
   }
 
   return response;
@@ -113,44 +103,6 @@ export async function middleware(request: NextRequest) {
 
   if (request.nextUrl.pathname.startsWith("/lifthouse")) {
     next = await AuthMiddleware(request, next, supabase);
-  }
-
-  if (
-    /^\/lifthouse\/workouts\/(\d+)$/.test(request.nextUrl.pathname) &&
-    request.method === "GET"
-  ) {
-    const workoutId = request.nextUrl.pathname.split("/").pop();
-
-    if (workoutId) {
-      next = await WorkoutMiddleware(
-        parseInt(workoutId),
-        supabase,
-        request,
-        next
-      );
-    }
-  }
-
-  /**
-   * Requests with bodies are validated here
-   */
-  if (request.bodyUsed === false) {
-    return next;
-  }
-  const body = await request.json();
-
-  if (
-    request.nextUrl.pathname === "/api/workouts" &&
-    request.method === "POST"
-  ) {
-    next = await validateWorkoutBody(body, next);
-  }
-
-  if (
-    request.nextUrl.pathname === "/api/workouts/create" &&
-    request.method === "POST"
-  ) {
-    next = await validateWorkoutCreateBody(body, next);
   }
 
   return next;

@@ -4,6 +4,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useWorkout } from "../useWorkout";
 import { Workout } from "@/lib/supabase/db/types";
+import AddButton from "./addButton";
 
 const { TextArea } = Input;
 
@@ -30,17 +31,10 @@ export default function AddWorkoutCard({ setWorkouts }: AddWorkoutCardProps) {
 
   return (
     <>
-      <div
-        className="border-dotted border-2 border-sky-400 bg-white flex items-center cursor-pointer"
+      <AddButton
+        title="+ Add Workout Plan"
         onClick={() => setModalOpen(true)}
-      >
-        <Button
-          type="link"
-          className="flex text-sky-400 text-base w-full flex-col items-center justify-center"
-        >
-          + Add Workout Plan
-        </Button>
-      </div>
+      />
       <Modal
         title="Create a new workout plan"
         centered
