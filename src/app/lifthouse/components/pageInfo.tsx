@@ -1,22 +1,30 @@
 "use client";
 
 import { Breadcrumb } from "antd";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 export default function PageInfo() {
   const pathName = usePathname();
+  const searchParams = useSearchParams();
 
-  const breadcrumbs = generateBreadcrumbs(pathName);
+  const breadcrumbs = generateBreadcrumbs(
+    pathName,
+    searchParams.get("name") || ""
+  );
 
-  const items = breadcrumbs.map((breadcrumb) => {
+  const items = breadcrumbs.map((breadcrumb, index) => {
+    const isLast = index === breadcrumbs.length - 1;
+
     return {
-      title: (
+      title: !isLast ? (
         <Link href={breadcrumb.path}>
           {capitalizeFirstLetter(breadcrumb.title)}
         </Link>
+      ) : (
+        capitalizeFirstLetter(breadcrumb.title)
       ),
     };
   });
@@ -42,7 +50,7 @@ export function PageInfoPortal({ children }: Props) {
   return mounted && element ? createPortal(<>{children}</>, element) : null;
 }
 
-function generateBreadcrumbs(pathname: string) {
+function generateBreadcrumbs(pathname: string, name?: string) {
   const segments = pathname
     .split("/")
     .filter((segment) => segment.trim() !== ""); // Remove empty segments
@@ -55,16 +63,13 @@ function generateBreadcrumbs(pathname: string) {
     breadcrumbs.push({ title: segment, path: currentPath });
   }
 
+  if (name) {
+    breadcrumbs[breadcrumbs.length - 1].title = name;
+  }
+
   return breadcrumbs;
 }
 
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
-
-/**
- * Crumbs are created based on the path of the route.
- * Some pages may want to override the last crumb with a custom one.
- * e.g. page name
- */
-function overridePathCrumb(value: string) {}

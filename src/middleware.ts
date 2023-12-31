@@ -1,54 +1,17 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { SupabaseClient } from "@supabase/supabase-js";
 import Joi from "joi";
 import { NextResponse, type NextRequest } from "next/server";
+import {
+  validateWorkoutBody,
+  validateWorkoutCreateBody,
+} from "./lib/middlewareUtils/validators";
 
-async function AuthMiddleware(request: NextRequest, response: NextResponse) {
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value;
-        },
-        set(name: string, value: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value,
-            ...options,
-          });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-          });
-        },
-        remove(name: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value: "",
-            ...options,
-          });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          response.cookies.set({
-            name,
-            value: "",
-            ...options,
-          });
-        },
-      },
-    }
-  );
-
+async function AuthMiddleware(
+  request: NextRequest,
+  response: NextResponse,
+  supabase: SupabaseClient
+) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -65,31 +28,31 @@ async function AuthMiddleware(request: NextRequest, response: NextResponse) {
   return response;
 }
 
-async function validateWorkoutBody(body: any, response: NextResponse) {
-  try {
-    const schema = Joi.object({
-      userId: Joi.string().uuid().required(),
-    });
+/**
+ * Checks if the user is requesting their own workout plan, and not someone else's
+ */
+async function WorkoutMiddleware(
+  workoutId: number,
+  supabase: SupabaseClient,
+  request: NextRequest,
+  response: NextResponse
+) {
+  const { origin } = new URL(request.nextUrl);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-    await schema.validateAsync(body);
-  } catch (e: any) {
-    response = NextResponse.json({ error: e.message }, { status: 400 });
-  }
+  const { data: workout, error } = await supabase
+    .from("workouts")
+    .select("*")
+    .eq("workout_id", workoutId)
+    .eq("user_id", user?.id)
+    .single();
 
-  return response;
-}
-
-async function validateWorkoutCreateBody(body: any, response: NextResponse) {
-  try {
-    const schema = Joi.object({
-      userId: Joi.string().uuid().required(),
-      name: Joi.string().required(),
-      description: Joi.string().optional(),
-    });
-
-    await schema.validateAsync(body);
-  } catch (e: any) {
-    response = NextResponse.json({ error: e.message }, { status: 400 });
+  if (error) {
+    response = NextResponse.redirect(
+      `${origin}/lifthouse/workouts/-1?name=...`
+    );
   }
 
   return response;
@@ -102,8 +65,70 @@ export async function middleware(request: NextRequest) {
     },
   });
 
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return request.cookies.get(name)?.value;
+        },
+        set(name: string, value: string, options: CookieOptions) {
+          request.cookies.set({
+            name,
+            value,
+            ...options,
+          });
+          next = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          });
+          next.cookies.set({
+            name,
+            value,
+            ...options,
+          });
+        },
+        remove(name: string, options: CookieOptions) {
+          request.cookies.set({
+            name,
+            value: "",
+            ...options,
+          });
+          next = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          });
+          next.cookies.set({
+            name,
+            value: "",
+            ...options,
+          });
+        },
+      },
+    }
+  );
+
   if (request.nextUrl.pathname.startsWith("/lifthouse")) {
-    next = await AuthMiddleware(request, next);
+    next = await AuthMiddleware(request, next, supabase);
+  }
+
+  if (
+    /^\/lifthouse\/workouts\/(\d+)$/.test(request.nextUrl.pathname) &&
+    request.method === "GET"
+  ) {
+    const workoutId = request.nextUrl.pathname.split("/").pop();
+
+    if (workoutId) {
+      next = await WorkoutMiddleware(
+        parseInt(workoutId),
+        supabase,
+        request,
+        next
+      );
+    }
   }
 
   /**

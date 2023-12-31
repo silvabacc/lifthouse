@@ -20,6 +20,8 @@ export default function WorkoutCard({
   workoutId,
   onDelete,
 }: WorkoutCardProps) {
+  const router = useRouter();
+
   const showDeleteConfirm = () => {
     confirm({
       title: "Are you sure delete this workout plan?",
@@ -34,12 +36,17 @@ export default function WorkoutCard({
     });
   };
 
+  const onCardClick = () => {
+    router.push(`/lifthouse/workouts/${workoutId}?name=${name}`);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 15 }}
       transition={{ duration: 0.25 }}
+      onClick={onCardClick}
       className="flex flex-col justify-between bg-white cursor-pointer"
     >
       <div className="relative p-6 h-32">
