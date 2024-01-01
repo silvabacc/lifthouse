@@ -42,7 +42,8 @@ export default class DatabaseClient {
     const { data, error } = await this.supabase
       .from("workouts")
       .select("*")
-      .eq("user_id", userId);
+      .eq("user_id", userId)
+      .order("workout_id", { ascending: true });
 
     if (error) {
       throw error;

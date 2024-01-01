@@ -1,6 +1,7 @@
 "use client";
 
 import { useAppContext } from "@/app/context";
+import { useFetch } from "@/app/hooks/useFetch";
 import getConfig from "@/config";
 import { Workout } from "@/lib/supabase/db/types";
 import { useEffect, useState } from "react";
@@ -9,19 +10,19 @@ const { baseUrl } = getConfig();
 
 export function useWorkout() {
   const { user } = useAppContext();
+  const { fetch } = useFetch();
 
   const fetchWorkouts = async () => {
-    const response = await fetch(`${baseUrl}/api/workouts`, {
+    const response: Workout[] = await fetch(`/api/workouts`, {
       method: "POST",
       body: JSON.stringify({ userId: user?.id }),
     });
 
-    const data = (await response.json()) as Workout[];
-    return data;
+    return response;
   };
 
   const deleteWorkoutPlan = async (id: number) => {
-    await fetch(`${baseUrl}/api/workouts/${id}`, {
+    await fetch(`/api/workouts/${id}`, {
       method: "DELETE",
     });
   };
@@ -30,7 +31,7 @@ export function useWorkout() {
    * @returns The workout that was created
    */
   const createWorkoutPlan = async (name: string, description?: string) => {
-    const response = await fetch(`${baseUrl}/api/workouts/create`, {
+    const response: Workout[] = await fetch(`/api/workouts/create`, {
       method: "POST",
       body: JSON.stringify({
         userId: user?.id,
@@ -39,8 +40,7 @@ export function useWorkout() {
       }),
     });
 
-    const workout = ((await response.json()) as Workout[])[0];
-    return workout;
+    return response[0];
   };
 
   return {
