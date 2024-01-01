@@ -1,10 +1,8 @@
 import { Button, Divider, Modal } from "antd";
 import { motion } from "framer-motion";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ExclamationCircleFilled } from "@ant-design/icons";
-import { useWorkout } from "../useWorkout";
 import { useRouter } from "next/navigation";
-import { Workout } from "@/lib/supabase/db/types";
 
 const { confirm } = Modal;
 
