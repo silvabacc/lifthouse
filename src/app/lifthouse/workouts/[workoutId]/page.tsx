@@ -1,15 +1,18 @@
 "use client";
 
-import { Button, Radio, Space } from "antd";
+import { Button, Modal, Radio, Space } from "antd";
 import { PageInfoPortal } from "../../components/pageInfo";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import AddButton from "../components/addButton";
+import AddExerciseModal from "./components/addExerciseModal";
 
 export default function WorkoutPlanPage({
   params,
 }: {
   params: { workoutId: number };
 }) {
+  const [modalOpen, setModalOpen] = useState(false);
+
   const onAddExerciseClick = () => {};
 
   return (
@@ -17,7 +20,8 @@ export default function WorkoutPlanPage({
       <PageInfoPortal>
         <WorkoutPageInfo />
       </PageInfoPortal>
-      <AddButton title="+ Add Exercise" />
+      <AddExerciseModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      <AddButton title="+ Add Exercise" onClick={() => setModalOpen(true)} />
     </div>
   );
 }

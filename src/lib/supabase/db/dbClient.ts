@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { createSupabaseServer } from "../server";
-import { Workout } from "./types";
+import { Exercise, Workout } from "./types";
 import { cookies } from "next/headers";
 
 export default class DatabaseClient {
@@ -17,6 +17,25 @@ export default class DatabaseClient {
     const cookieStore = cookies();
 
     this.supabase = createSupabaseServer(cookieStore);
+  }
+
+  async getExercises(): Promise<Exercise[]> {
+    const { data, error } = await this.supabase
+      .from("exercises_two")
+      .select("*")
+      .order("exercise_name", { ascending: true });
+
+    if (error) {
+      throw error;
+    }
+
+    return data.map((data) => ({
+      exerciseId: data.exercise_id,
+      name: data.exercise_name,
+      notes: data.notes,
+      exerciseType: data.exercise_type,
+      primaryMuscleGroup: data.primary_muscle_group,
+    }));
   }
 
   async getWorkouts(userId: string): Promise<Workout[]> {
@@ -42,7 +61,13 @@ export default class DatabaseClient {
     const { data, error } = await this.supabase
       .from("workouts")
       .insert([
-        { name, description, exercises: [], user_id: userId, type: "custom" },
+        {
+          name,
+          description,
+          exercises: [],
+          user_id: userId,
+          template: "custom",
+        },
       ])
       .select();
 
