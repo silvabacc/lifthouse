@@ -1,5 +1,5 @@
 import getConfig from "@/config";
-import { Button, Form, Input, Modal, Space } from "antd";
+import { Button, Drawer, Form, Input, Modal, Space } from "antd";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useWorkout } from "../useWorkout";
@@ -18,7 +18,7 @@ type AddWorkoutCardProps = {
 };
 
 export default function AddWorkoutCard({ setWorkouts }: AddWorkoutCardProps) {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [drawOpen, setDrawOpen] = useState(false);
   const { createWorkoutPlan } = useWorkout();
   const router = useRouter();
 
@@ -26,20 +26,17 @@ export default function AddWorkoutCard({ setWorkouts }: AddWorkoutCardProps) {
     const response = await createWorkoutPlan(info.name, info.description);
 
     setWorkouts((prev) => [...prev, response]);
-    setModalOpen(false);
+    setDrawOpen(false);
   };
 
   return (
     <>
-      <AddButton
-        title="+ Add Workout Plan"
-        onClick={() => setModalOpen(true)}
-      />
-      <Modal
+      <AddButton title="+ Add Workout Plan" onClick={() => setDrawOpen(true)} />
+      <Drawer
         title="Create a new workout plan"
-        centered
-        onCancel={() => setModalOpen(false)}
-        open={modalOpen}
+        onClose={() => setDrawOpen(false)}
+        open={drawOpen}
+        width={500}
         footer={false}
       >
         <Form onFinish={onFinish}>
@@ -56,7 +53,7 @@ export default function AddWorkoutCard({ setWorkouts }: AddWorkoutCardProps) {
           </Form.Item>
           <Space className=" w-full justify-end">
             <Form.Item>
-              <Button onClick={() => setModalOpen(false)}>Cancel</Button>
+              <Button onClick={() => setDrawOpen(false)}>Cancel</Button>
             </Form.Item>
             <Form.Item>
               <Button type="primary" htmlType="submit">
@@ -65,7 +62,7 @@ export default function AddWorkoutCard({ setWorkouts }: AddWorkoutCardProps) {
             </Form.Item>
           </Space>
         </Form>
-      </Modal>
+      </Drawer>
     </>
   );
 }

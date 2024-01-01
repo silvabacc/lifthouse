@@ -4,14 +4,14 @@ import { Button, Modal, Radio, Space } from "antd";
 import { PageInfoPortal } from "../../components/pageInfo";
 import { useEffect, useState } from "react";
 import AddButton from "../components/addButton";
-import AddExerciseModal from "./components/addExerciseModal";
+import AddExerciseDrawer from "./components/addExerciseModal";
 
 export default function WorkoutPlanPage({
   params,
 }: {
   params: { workoutId: number };
 }) {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [drawOpen, setDrawOpen] = useState(false);
 
   const onAddExerciseClick = () => {};
 
@@ -20,8 +20,8 @@ export default function WorkoutPlanPage({
       <PageInfoPortal>
         <WorkoutPageInfo />
       </PageInfoPortal>
-      <AddExerciseModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
-      <AddButton title="+ Add Exercise" onClick={() => setModalOpen(true)} />
+      <AddExerciseDrawer drawOpen={drawOpen} setDrawOpen={setDrawOpen} />
+      <AddButton title="+ Add Exercise" onClick={() => setDrawOpen(true)} />
     </div>
   );
 }

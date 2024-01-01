@@ -1,17 +1,17 @@
-import { Modal } from "antd";
+import { Drawer, Modal } from "antd";
 type Props = {
-  modalOpen: boolean;
-  setModalOpen: (modalOpen: boolean) => void;
+  drawOpen: boolean;
+  setDrawOpen: (modalOpen: boolean) => void;
 };
-export default function AddExerciseModal({ modalOpen, setModalOpen }: Props) {
+export default function AddExerciseDrawer({ drawOpen, setDrawOpen }: Props) {
   return (
-    <Modal
-      title="Add exercise"
-      centered
-      onCancel={() => setModalOpen(false)}
-      open={modalOpen}
+    <Drawer
+      title={"Add an exercise"}
+      open={drawOpen}
+      onClose={() => setDrawOpen(false)}
+      width={500}
     >
       Hello
-    </Modal>
+    </Drawer>
   );
 }
