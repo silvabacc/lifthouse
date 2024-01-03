@@ -1,5 +1,9 @@
 import { useFetch } from "@/app/hooks/useFetch";
-import { Exercise, PrimaryMuscleGroup } from "@/lib/supabase/db/types";
+import {
+  Exercise,
+  PrimaryMuscleGroup,
+  WorkoutExercise,
+} from "@/lib/supabase/db/types";
 import { Button, Drawer, Input, Modal, Space } from "antd";
 import { useEffect, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
@@ -8,12 +12,14 @@ import { useWorkout } from "../../useWorkout";
 type Props = {
   drawOpen: boolean;
   setDrawOpen: (modalOpen: boolean) => void;
-  onClickMuscle: (exercise: Exercise) => void;
+  onClickMuscle: (exerciseId: number) => void;
+  filterOutExercisesIds?: number[];
 };
 export default function AddExerciseDrawer({
   drawOpen,
   setDrawOpen,
   onClickMuscle,
+  filterOutExercisesIds = [],
 }: Props) {
   const { fetch } = useFetch();
   const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -71,10 +77,11 @@ export default function AddExerciseDrawer({
             <Space direction="vertical">
               {filteredExercises
                 .filter((e) => e.primaryMuscleGroup === muscle)
+                .filter((e) => !filterOutExercisesIds.includes(e.exerciseId))
                 .map((e) => (
                   <div
                     key={e.exerciseId}
-                    onClick={() => onClickMuscle(e)}
+                    onClick={() => onClickMuscle(e.exerciseId)}
                     className="font-medium cursor-pointer hover:text-gray-500"
                   >
                     {e.name}

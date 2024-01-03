@@ -58,6 +58,25 @@ export default class DatabaseClient {
     }));
   }
 
+  async getWorkoutData(workoutId: string): Promise<Workout> {
+    const { data, error } = await this.supabase
+      .from("workouts")
+      .select("*")
+      .eq("workout_id", workoutId);
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      workoutId: data[0].workout_id,
+      name: data[0].name,
+      description: data[0].description,
+      exercises: data[0].exercises,
+      userId: data[0].user_id,
+    };
+  }
+
   async createWorkout(userId: string, name: string, description?: string) {
     const { data, error } = await this.supabase
       .from("workouts")

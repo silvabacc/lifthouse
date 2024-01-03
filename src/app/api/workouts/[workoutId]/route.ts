@@ -2,6 +2,15 @@ import DatabaseClient from "@/lib/supabase/db/dbClient";
 import Joi from "joi";
 import { NextResponse } from "next/server";
 
+export async function GET(
+  _request: Request,
+  { params }: { params: { workoutId: string } }
+) {
+  const dbClient = new DatabaseClient();
+  const workout = await dbClient.getWorkoutData(params.workoutId);
+  return NextResponse.json(workout);
+}
+
 export async function DELETE(
   _request: Request,
   { params }: { params: { workoutId: string } }
@@ -20,7 +29,15 @@ export async function PUT(
     const schema = Joi.object({
       name: Joi.string().optional(),
       description: Joi.string().optional(),
-      exercises: Joi.array().items(Joi.number()).optional(),
+      exercises: Joi.array()
+        .items(
+          Joi.object({
+            exerciseId: Joi.number().required(),
+            sets: Joi.number().required(),
+            reps: Joi.string().required(),
+          })
+        )
+        .optional(),
     });
 
     await schema.validateAsync(body);

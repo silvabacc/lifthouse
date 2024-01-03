@@ -2,9 +2,12 @@
 
 import { Button, Modal, Radio, Space } from "antd";
 import { PageInfoPortal } from "../../components/pageInfo";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import AddButton from "../components/addButton";
-import AddExerciseDrawer from "./components/addExerciseModal";
+import AddExerciseDrawer from "./components/addExerciseDrawer";
+import { useWorkout } from "../useWorkout";
+import { Exercise, Workout } from "@/lib/supabase/db/types";
+import { useRouter } from "next/navigation";
 
 export default function WorkoutPlanPage({
   params,
@@ -12,15 +15,50 @@ export default function WorkoutPlanPage({
   params: { workoutId: number };
 }) {
   const [drawOpen, setDrawOpen] = useState(false);
+  const { fetchWorkoutData, updateWorkoutPlan } = useWorkout();
+  const [workout, setWorkout] = useState<Workout>();
 
-  const onAddExerciseClick = () => {};
+  useEffect(() => {
+    const fetch = async () => {
+      const workout = await fetchWorkoutData(params.workoutId);
+      setWorkout(workout);
+    };
+    fetch();
+  }, []);
+
+  const onAddExerciseClick = async (exerciseId: number) => {
+    const defaultExerciseSetup = { exerciseId, sets: 3, reps: "8-12" };
+    await updateWorkoutPlan({
+      workoutId: params.workoutId,
+      exercises: [...(workout?.exercises || []), defaultExerciseSetup],
+    });
+
+    setWorkout((prev) => {
+      if (prev) {
+        return {
+          ...prev,
+          exercises: [...(prev?.exercises || []), defaultExerciseSetup],
+        };
+      }
+    });
+  };
 
   return (
     <div>
       <PageInfoPortal>
         <WorkoutPageInfo />
       </PageInfoPortal>
-      <AddExerciseDrawer drawOpen={drawOpen} setDrawOpen={setDrawOpen} />
+      <AddExerciseDrawer
+        drawOpen={drawOpen}
+        setDrawOpen={setDrawOpen}
+        onClickMuscle={onAddExerciseClick}
+        filterOutExercisesIds={
+          workout?.exercises.map((e) => e.exerciseId) || []
+        }
+      />
+      {workout?.exercises.map((e) => {
+        return <div>{e.exerciseId}</div>;
+      })}
       <AddButton title="+ Add Exercise" onClick={() => setDrawOpen(true)} />
     </div>
   );

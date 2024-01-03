@@ -2,11 +2,7 @@
 
 import { useAppContext } from "@/app/context";
 import { useFetch } from "@/app/hooks/useFetch";
-import getConfig from "@/config";
-import { Workout } from "@/lib/supabase/db/types";
-import { useEffect, useState } from "react";
-
-const { baseUrl } = getConfig();
+import { Workout, WorkoutExercise } from "@/lib/supabase/db/types";
 
 export function useWorkout() {
   const { user } = useAppContext();
@@ -25,6 +21,42 @@ export function useWorkout() {
     await fetch(`/api/workouts/${id}`, {
       method: "DELETE",
     });
+  };
+
+  const fetchWorkoutData = async (workoutId: number) => {
+    const response: Workout = await fetch(`/api/workouts/${workoutId}`);
+    return response;
+  };
+
+  type UpdateWorkoutPlanReturn = {
+    workoutId: number;
+    name?: string;
+    description?: string;
+    exercises?: WorkoutExercise[];
+  };
+  const updateWorkoutPlan = async ({
+    workoutId,
+    name,
+    description,
+    exercises,
+  }: UpdateWorkoutPlanReturn) => {
+    if (!name && !description && !exercises) {
+      return;
+    }
+
+    const response: { success: boolean } = await fetch(
+      `/api/workouts/${workoutId}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          name,
+          description,
+          exercises,
+        }),
+      }
+    );
+
+    return response;
   };
 
   /**
@@ -47,5 +79,7 @@ export function useWorkout() {
     deleteWorkoutPlan,
     createWorkoutPlan,
     fetchWorkouts,
+    fetchWorkoutData,
+    updateWorkoutPlan,
   };
 }
