@@ -3,12 +3,18 @@ import { Exercise, PrimaryMuscleGroup } from "@/lib/supabase/db/types";
 import { Button, Drawer, Input, Modal, Space } from "antd";
 import { useEffect, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
+import { useWorkout } from "../../useWorkout";
 
 type Props = {
   drawOpen: boolean;
   setDrawOpen: (modalOpen: boolean) => void;
+  onClickMuscle: (exercise: Exercise) => void;
 };
-export default function AddExerciseDrawer({ drawOpen, setDrawOpen }: Props) {
+export default function AddExerciseDrawer({
+  drawOpen,
+  setDrawOpen,
+  onClickMuscle,
+}: Props) {
   const { fetch } = useFetch();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [search, setSearch] = useState(false);
@@ -68,6 +74,7 @@ export default function AddExerciseDrawer({ drawOpen, setDrawOpen }: Props) {
                 .map((e) => (
                   <div
                     key={e.exerciseId}
+                    onClick={() => onClickMuscle(e)}
                     className="font-medium cursor-pointer hover:text-gray-500"
                   >
                     {e.name}
