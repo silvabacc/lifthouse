@@ -10,7 +10,15 @@ export type Workout = {
   description: string;
   exercises: WorkoutExercise[];
   userId: string;
+  template: WorkoutTemplate;
 };
+
+export enum WorkoutTemplate {
+  custom = "custom",
+  upper_lower_4 = "upper_lower_4",
+  push_pull_legs_5 = "push_pull_legs_5",
+  push_pull_legs_6 = "push_pull_legs_6",
+}
 
 export enum ExerciseType {
   ABS = "ABS",

@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { createSupabaseServer } from "../server";
-import { Exercise, Workout } from "./types";
+import { Exercise, Workout, WorkoutTemplate } from "./types";
 import { cookies } from "next/headers";
 
 export default class DatabaseClient {
@@ -55,6 +55,7 @@ export default class DatabaseClient {
       description: data.description,
       exercises: data.exercises,
       userId: data.user_id,
+      template: data[0].template,
     }));
   }
 
@@ -74,6 +75,7 @@ export default class DatabaseClient {
       description: data[0].description,
       exercises: data[0].exercises,
       userId: data[0].user_id,
+      template: data[0].template,
     };
   }
 
@@ -119,12 +121,13 @@ export default class DatabaseClient {
     name: string,
     description: string,
     exercises: number[],
-    workoutId: string
+    workoutId: string,
+    template: WorkoutTemplate
   ) {
     console.log(name, description, exercises, workoutId);
     const { error } = await this.supabase
       .from("workouts")
-      .update({ name, description, exercises })
+      .update({ name, description, exercises, template })
       .match({ workout_id: workoutId });
 
     if (error) {

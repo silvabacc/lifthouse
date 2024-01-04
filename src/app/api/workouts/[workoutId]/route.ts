@@ -1,4 +1,5 @@
 import DatabaseClient from "@/lib/supabase/db/dbClient";
+import { WorkoutTemplate } from "@/lib/supabase/db/types";
 import Joi from "joi";
 import { NextResponse } from "next/server";
 
@@ -38,6 +39,9 @@ export async function PUT(
           })
         )
         .optional(),
+      template: Joi.string()
+        .valid(...Object.values(WorkoutTemplate))
+        .optional(),
     });
 
     await schema.validateAsync(body);
@@ -46,7 +50,13 @@ export async function PUT(
   }
 
   const dbClient = new DatabaseClient();
-  const { name, description, exercises } = body;
-  await dbClient.updateWorkout(name, description, exercises, params.workoutId);
+  const { name, description, exercises, template } = body;
+  await dbClient.updateWorkout(
+    name,
+    description,
+    exercises,
+    params.workoutId,
+    template
+  );
   return NextResponse.json({ success: true });
 }

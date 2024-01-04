@@ -2,7 +2,11 @@
 
 import { useAppContext } from "@/app/context";
 import { useFetch } from "@/app/hooks/useFetch";
-import { Workout, WorkoutExercise } from "@/lib/supabase/db/types";
+import {
+  Workout,
+  WorkoutExercise,
+  WorkoutTemplate,
+} from "@/lib/supabase/db/types";
 
 export function useWorkout() {
   const { user } = useAppContext();
@@ -33,14 +37,16 @@ export function useWorkout() {
     name?: string;
     description?: string;
     exercises?: WorkoutExercise[];
+    template?: WorkoutTemplate;
   };
   const updateWorkoutPlan = async ({
     workoutId,
     name,
     description,
     exercises,
+    template,
   }: UpdateWorkoutPlanReturn) => {
-    if (!name && !description && !exercises) {
+    if (!name && !description && !exercises && !template) {
       return;
     }
 
@@ -52,6 +58,7 @@ export function useWorkout() {
           name,
           description,
           exercises,
+          template,
         }),
       }
     );
