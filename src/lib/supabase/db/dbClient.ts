@@ -55,7 +55,7 @@ export default class DatabaseClient {
       description: data.description,
       exercises: data.exercises,
       userId: data.user_id,
-      template: data[0].template,
+      template: data.template,
     }));
   }
 

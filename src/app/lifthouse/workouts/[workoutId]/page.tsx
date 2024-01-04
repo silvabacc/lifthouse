@@ -49,6 +49,7 @@ export default function WorkoutPlanPage({
       okText: "Yes",
       cancelText: "No",
       onOk: () => {
+        //Create default exercises for templates
         updateWorkoutPlan({ workoutId: params.workoutId, template: value });
         setWorkout((prev) => {
           if (prev) {
