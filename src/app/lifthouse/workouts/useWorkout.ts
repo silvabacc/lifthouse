@@ -74,7 +74,7 @@ export function useWorkout() {
       method: "PUT",
       body: JSON.stringify({
         template,
-        updateTemplate: true,
+        updateTemplate: template !== WorkoutTemplate.custom,
       }),
     });
 

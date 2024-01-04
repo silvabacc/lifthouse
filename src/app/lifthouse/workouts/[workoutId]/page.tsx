@@ -50,7 +50,7 @@ export default function WorkoutPlanPage({
   const onClickWorkoutType = (value: WorkoutTemplate) => {
     Modal.confirm({
       title: "Are you sure?",
-      content: "This will overwrite your current workout plan",
+      content: "This may overwrite your current workout plan",
       okText: "Yes",
       cancelText: "No",
       onOk: () => {
