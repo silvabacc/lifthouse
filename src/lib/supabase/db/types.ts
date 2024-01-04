@@ -13,27 +13,41 @@ export type Workout = {
   template: WorkoutTemplate;
 };
 
+export type TemplateSetup = {
+  setupId: number;
+  template: WorkoutTemplate;
+  exercises: WorkoutExercise[];
+};
+
 export enum WorkoutTemplate {
+  upper_intensity = "upper_intensity",
+  upper_volume = "upper_volume",
+  lower_intensity = "lower_intensity",
+  lower_volume = "lower_volume",
+
+  push = "push",
+  pull = "pull",
+  legs = "legs",
+
   custom = "custom",
-  upper_lower_4 = "upper_lower_4",
-  push_pull_legs_5 = "push_pull_legs_5",
-  push_pull_legs_6 = "push_pull_legs_6",
 }
 
 export enum ExerciseType {
   ABS = "ABS",
   ACCESSORY_CHEST = "ACCESSORY_CHEST",
-  ACCESSORY_SHOULDERS = "ACCESSORY_SHOULDERS",
+  ACCESSORY_SHOULDER = "ACCESSORY_SHOULDER",
   TRICEPS = "TRICEPS",
   BICEPS = "BICEPS",
   FOREARMS = "FOREARMS",
   UPPER_BACK = "UPPER_BACK",
   TRAPS = "TRAPS",
   LEGS_DV = "LEGS_DV",
+  LEGS_ACCESSORY = "LEGS_ACCESSORY",
   LEGS_SQUAT = "LEGS_SQUAT",
-  VERTICAL_PUSH = "VERTICAL_PUSH",
+  VERTICAL_PRESS = "VERTICAL_PRESS",
   VERTICAL_PULL = "VERTICAL_PULL",
-  HORIZONTAL_PUSH = "HORIZONTAL_PUSH",
+  HORIZONTAL_PRESS = "HORIZONTAL_PRESS",
+  HORIZONTAL_PULL = "HORIZONTAL_PULL",
   PUSH = "PUSH",
   PULL = "PULL",
   LEGS = "LEGS",

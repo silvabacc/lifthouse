@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { createSupabaseServer } from "../server";
-import { Exercise, Workout, WorkoutTemplate } from "./types";
+import { Exercise, TemplateSetup, Workout, WorkoutTemplate } from "./types";
 import { cookies } from "next/headers";
 
 export default class DatabaseClient {
@@ -133,5 +133,22 @@ export default class DatabaseClient {
     if (error) {
       throw error;
     }
+  }
+
+  async getTemplateSetup(template: WorkoutTemplate): Promise<TemplateSetup> {
+    const { data, error } = await this.supabase
+      .from("template_setups")
+      .select("*")
+      .eq("template", template);
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      setupId: data[0].id,
+      template: data[0].template,
+      exercises: data[0].exercises,
+    };
   }
 }

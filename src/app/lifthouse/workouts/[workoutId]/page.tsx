@@ -6,7 +6,9 @@ import { use, useEffect, useState } from "react";
 import AddButton from "../components/addButton";
 import AddExerciseDrawer from "./components/addExerciseDrawer";
 import { useWorkout } from "../useWorkout";
-import { Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
+import { Exercise, Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
+import { defaultExercisesForTemplates, templateName } from "./utils";
+import { useFetch } from "@/app/hooks/useFetch";
 
 export default function WorkoutPlanPage({
   params,
@@ -14,13 +16,16 @@ export default function WorkoutPlanPage({
   params: { workoutId: number };
 }) {
   const [drawOpen, setDrawOpen] = useState(false);
-  const { fetchWorkoutData, updateWorkoutPlan } = useWorkout();
+  const { fetchWorkoutData, updateWorkoutPlan, updateTemplate } = useWorkout();
+  const [loading, isLoading] = useState(false);
   const [workout, setWorkout] = useState<Workout>();
 
   useEffect(() => {
     const fetch = async () => {
+      isLoading(true);
       const workout = await fetchWorkoutData(params.workoutId);
       setWorkout(workout);
+      isLoading(false);
     };
     fetch();
   }, []);
@@ -49,8 +54,7 @@ export default function WorkoutPlanPage({
       okText: "Yes",
       cancelText: "No",
       onOk: () => {
-        //Create default exercises for templates
-        updateWorkoutPlan({ workoutId: params.workoutId, template: value });
+        const updatedData = updateTemplate(params.workoutId, value);
         setWorkout((prev) => {
           if (prev) {
             return { ...prev, template: value };
@@ -59,6 +63,8 @@ export default function WorkoutPlanPage({
       },
     });
   };
+
+  if (loading) return <div>Skeleton</div>;
 
   return (
     <div>
@@ -79,7 +85,9 @@ export default function WorkoutPlanPage({
       {workout?.exercises.map((e) => {
         return <div key={e.exerciseId}>{e.exerciseId}</div>;
       })}
-      <AddButton title="+ Add Exercise" onClick={() => setDrawOpen(true)} />
+      {workout?.template === WorkoutTemplate.custom && (
+        <AddButton title="+ Add Exercise" onClick={() => setDrawOpen(true)} />
+      )}
     </div>
   );
 }
@@ -106,16 +114,13 @@ function WorkoutPageInfo({
           onClickWorkoutType(value.target.value as WorkoutTemplate)
         }
       >
-        <Radio.Button value={WorkoutTemplate.upper_lower_4}>
-          Upper/Lower 4x week
-        </Radio.Button>
-        <Radio.Button value={WorkoutTemplate.push_pull_legs_5}>
-          Push Pull Legs 5x week
-        </Radio.Button>
-        <Radio.Button value={WorkoutTemplate.push_pull_legs_6}>
-          Push Pull Legs 6x week
-        </Radio.Button>
-        <Radio.Button value={WorkoutTemplate.custom}>Custom</Radio.Button>
+        {Object.values(WorkoutTemplate).map((template) => {
+          return (
+            <Radio.Button key={template} value={template}>
+              {templateName[template] || template}
+            </Radio.Button>
+          );
+        })}
       </Radio.Group>
     </Space>
   );

@@ -66,6 +66,21 @@ export function useWorkout() {
     return response;
   };
 
+  const updateTemplate = async (
+    workoutId: number,
+    template: WorkoutTemplate
+  ) => {
+    const response: Workout = await fetch(`/api/workouts/${workoutId}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        template,
+        updateTemplate: true,
+      }),
+    });
+
+    return response;
+  };
+
   /**
    * @returns The workout that was created
    */
@@ -88,5 +103,6 @@ export function useWorkout() {
     fetchWorkouts,
     fetchWorkoutData,
     updateWorkoutPlan,
+    updateTemplate,
   };
 }

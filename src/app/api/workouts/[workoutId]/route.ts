@@ -42,6 +42,7 @@ export async function PUT(
       template: Joi.string()
         .valid(...Object.values(WorkoutTemplate))
         .optional(),
+      updateTemplate: Joi.boolean().optional(),
     });
 
     await schema.validateAsync(body);
@@ -50,13 +51,26 @@ export async function PUT(
   }
 
   const dbClient = new DatabaseClient();
-  const { name, description, exercises, template } = body;
+  const { name, description, exercises, template, updateTemplate } = body;
+
+  let updatedExercises = exercises;
+  if (updateTemplate) {
+    const setup = await dbClient.getTemplateSetup(template);
+    updatedExercises = setup.exercises;
+  }
+
   await dbClient.updateWorkout(
     name,
     description,
-    exercises,
+    updatedExercises,
     params.workoutId,
     template
   );
-  return NextResponse.json({ success: true });
+
+  return NextResponse.json({
+    name,
+    description,
+    exercises: updatedExercises,
+    template,
+  });
 }
