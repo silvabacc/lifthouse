@@ -1,6 +1,6 @@
 "use client";
 
-import { Breadcrumb } from "antd";
+import { Breadcrumb, Button } from "antd";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -39,15 +39,34 @@ export default function PageInfo() {
 
 type Props = {
   children: JSX.Element;
+  title?: string;
 };
-export function PageInfoPortal({ children }: Props) {
+export function PageInfoPortal({ children, title }: Props) {
   const [mounted, setMounted] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   useEffect(() => setMounted(true), []);
 
   const element = document.getElementById("page-info");
 
-  return mounted && element ? createPortal(<>{children}</>, element) : null;
+  return mounted && element
+    ? createPortal(
+        <div className="pt-4 ">
+          <h1 className="text-2xl font-bold">{title}</h1>
+          <div className={`${showInfo ? "block" : "hidden"} sm:block`}>
+            {children}
+          </div>
+          <Button
+            onClick={() => setShowInfo(!showInfo)}
+            className="p-0 mt-2"
+            type="link"
+          >
+            {showInfo ? "Show less" : "Show More"}
+          </Button>
+        </div>,
+        element
+      )
+    : null;
 }
 
 function generateBreadcrumbs(pathname: string, name?: string) {

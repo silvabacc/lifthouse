@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Modal, Radio, Space } from "antd";
+import { Button, Layout, Modal, Radio, Space } from "antd";
 import { PageInfoPortal } from "../../components/pageInfo";
 import { use, useEffect, useState } from "react";
 import AddButton from "../components/addButton";
@@ -9,6 +9,8 @@ import { useWorkout } from "../useWorkout";
 import { Exercise, Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
 import { defaultExercisesForTemplates, templateName } from "./utils";
 import { useFetch } from "@/app/hooks/useFetch";
+
+const { Content, Footer } = Layout;
 
 export default function WorkoutPlanPage({
   params,
@@ -67,28 +69,45 @@ export default function WorkoutPlanPage({
   if (loading) return <div>Skeleton</div>;
 
   return (
-    <div>
-      <PageInfoPortal>
-        <WorkoutPageInfo
-          value={workout?.template}
-          onClickWorkoutType={onClickWorkoutType}
+    <Layout className="h-full">
+      <Content className="h-full bg-white rounded-sm">
+        <PageInfoPortal title="Workout templates">
+          <WorkoutPageInfo
+            value={workout?.template}
+            onClickWorkoutType={onClickWorkoutType}
+          />
+        </PageInfoPortal>
+        <AddExerciseDrawer
+          drawOpen={drawOpen}
+          setDrawOpen={setDrawOpen}
+          onClickMuscle={onAddExerciseClick}
+          filterOutExercisesIds={
+            workout?.exercises.map((e) => e.exerciseId) || []
+          }
         />
-      </PageInfoPortal>
-      <AddExerciseDrawer
-        drawOpen={drawOpen}
-        setDrawOpen={setDrawOpen}
-        onClickMuscle={onAddExerciseClick}
-        filterOutExercisesIds={
-          workout?.exercises.map((e) => e.exerciseId) || []
-        }
-      />
-      {workout?.exercises.map((e) => {
-        return <div key={e.exerciseId}>{e.exerciseId}</div>;
-      })}
-      {workout?.template === WorkoutTemplate.custom && (
-        <AddButton title="+ Add Exercise" onClick={() => setDrawOpen(true)} />
-      )}
-    </div>
+        {workout?.exercises.map((e) => {
+          return <div key={e.exerciseId}>{e.exerciseId}</div>;
+        })}
+        <div>a</div>
+        <div>a</div>
+        <div>a</div>
+        <div>a</div>
+        <div>a</div>
+        <div>a</div>
+        <div>a</div>
+        <div>a</div>
+        <div>a</div>
+        <div>a</div>
+        <div>a</div>
+        <div>a</div>
+        <div>a</div>
+      </Content>
+      <Footer className="p-0 mt-4">
+        {workout?.template === WorkoutTemplate.custom && (
+          <AddButton title="+ Add Exercise" onClick={() => setDrawOpen(true)} />
+        )}
+      </Footer>
+    </Layout>
   );
 }
 
@@ -100,8 +119,7 @@ function WorkoutPageInfo({
   onClickWorkoutType: (value: WorkoutTemplate) => void;
 }) {
   return (
-    <Space className="pt-4" direction="vertical">
-      <h1 className="text-2xl font-bold">Workout templates</h1>
+    <Space className="pt-2" direction="vertical">
       <p className="text-gray-500 pb-2">
         You can apply workout templates by clicking on the template buttons
         below. This will overwrite all of the exercises for this current workout
