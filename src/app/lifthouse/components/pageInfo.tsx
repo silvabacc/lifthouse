@@ -58,7 +58,7 @@ export function PageInfoPortal({ children, title }: Props) {
           </div>
           <Button
             onClick={() => setShowInfo(!showInfo)}
-            className="p-0 mt-2"
+            className={"block sm:hidden p-0 mt-2"}
             type="link"
           >
             {showInfo ? "Show less" : "Show More"}
