@@ -9,6 +9,7 @@ import { useWorkout } from "../useWorkout";
 import { Exercise, Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
 import { defaultExercisesForTemplates, templateName } from "./utils";
 import { useFetch } from "@/app/hooks/useFetch";
+import ExerciseCard from "./components/ExerciseCard";
 
 const { Content, Footer } = Layout;
 
@@ -85,22 +86,9 @@ export default function WorkoutPlanPage({
             workout?.exercises.map((e) => e.exerciseId) || []
           }
         />
-        {workout?.exercises.map((e) => {
-          return <div key={e.exerciseId}>{e.exerciseId}</div>;
-        })}
-        <div>a</div>
-        <div>a</div>
-        <div>a</div>
-        <div>a</div>
-        <div>a</div>
-        <div>a</div>
-        <div>a</div>
-        <div>a</div>
-        <div>a</div>
-        <div>a</div>
-        <div>a</div>
-        <div>a</div>
-        <div>a</div>
+        <ExerciseCard
+          exerciseIds={workout?.exercises.map((e) => e.exerciseId) || []}
+        />
       </Content>
       <Footer className="p-0 mt-4">
         {workout?.template === WorkoutTemplate.custom && (

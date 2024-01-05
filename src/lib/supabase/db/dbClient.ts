@@ -124,7 +124,6 @@ export default class DatabaseClient {
     workoutId: string,
     template: WorkoutTemplate
   ) {
-    console.log(name, description, exercises, workoutId);
     const { error } = await this.supabase
       .from("workouts")
       .update({ name, description, exercises, template })
@@ -150,5 +149,36 @@ export default class DatabaseClient {
       template: data[0].template,
       exercises: data[0].exercises,
     };
+  }
+
+  async getLogs(
+    userId: string,
+    exerciseIds: number[],
+    startFrom: number,
+    endOn: number
+  ) {
+    console.log(userId, exerciseIds, startFrom, endOn);
+    const { data, error } = await this.supabase
+      .from("log_entries")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("exercise_id", exerciseIds)
+      .gte("date", startFrom)
+      .lte("date", endOn);
+
+    if (error) {
+      throw error;
+    }
+
+    console.log("data!!!", data);
+
+    return data.map((data) => ({
+      logId: data.log_entry_id,
+      userId: data.user_id,
+      exerciseId: data.exercise_id,
+      info: data.info,
+      notes: data.notes,
+      date: data.date,
+    }));
   }
 }
