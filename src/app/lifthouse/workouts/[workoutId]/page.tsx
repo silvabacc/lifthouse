@@ -5,10 +5,9 @@ import { PageInfoPortal } from "../../components/pageInfo";
 import { use, useEffect, useState } from "react";
 import AddButton from "../components/addButton";
 import AddExerciseDrawer from "./components/addExerciseDrawer";
-import { useWorkout } from "../useWorkout";
-import { Exercise, Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
-import { defaultExercisesForTemplates, templateName } from "./utils";
-import { useFetch } from "@/app/hooks/useFetch";
+import { useWorkout } from "../hooks/useWorkout";
+import { Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
+import { templateName } from "./utils";
 import ExerciseCard from "./components/ExerciseCard";
 
 const { Content, Footer } = Layout;
@@ -67,7 +66,7 @@ export default function WorkoutPlanPage({
     });
   };
 
-  if (loading) return <div>Skeleton</div>;
+  if (loading || !workout) return <div>Skeleton</div>;
 
   return (
     <Layout className="h-full">
@@ -86,9 +85,7 @@ export default function WorkoutPlanPage({
             workout?.exercises.map((e) => e.exerciseId) || []
           }
         />
-        <ExerciseCard
-          exerciseIds={workout?.exercises.map((e) => e.exerciseId) || []}
-        />
+        <ExerciseCard workout={workout} />
       </Content>
       <Footer className="p-0 mt-4">
         {workout?.template === WorkoutTemplate.custom && (

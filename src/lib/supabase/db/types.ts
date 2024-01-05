@@ -9,7 +9,6 @@ export type Workout = {
   name: string;
   description: string;
   exercises: WorkoutExercise[];
-  userId: string;
   template: WorkoutTemplate;
 };
 
@@ -17,6 +16,20 @@ export type TemplateSetup = {
   setupId: number;
   template: WorkoutTemplate;
   exercises: WorkoutExercise[];
+};
+
+type LogInfo = {
+  set: number;
+  reps: string;
+  weight: number;
+};
+
+export type LogEntry = {
+  logId: number;
+  exerciseId: number;
+  info: LogInfo;
+  date: Date;
+  notes: string;
 };
 
 export enum WorkoutTemplate {

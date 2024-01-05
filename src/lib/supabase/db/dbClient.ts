@@ -161,8 +161,8 @@ export default class DatabaseClient {
     const { data, error } = await this.supabase
       .from("log_entries")
       .select("*")
+      .in("exercise_id", exerciseIds)
       .eq("user_id", userId)
-      .eq("exercise_id", exerciseIds)
       .gte("date", startFrom)
       .lte("date", endOn);
 

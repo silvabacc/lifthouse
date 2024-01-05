@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import AddWorkoutCard from "./components/addWorkoutCard";
 import WorkoutCard from "./components/workoutCard";
-import { useWorkout } from "./useWorkout";
+import { useWorkout } from "./hooks/useWorkout";
 import { Workout } from "@/lib/supabase/db/types";
 
 export default function Workouts() {

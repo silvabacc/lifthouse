@@ -1,13 +1,8 @@
-import { useFetch } from "@/app/hooks/useFetch";
-import {
-  Exercise,
-  PrimaryMuscleGroup,
-  WorkoutExercise,
-} from "@/lib/supabase/db/types";
+import { PrimaryMuscleGroup } from "@/lib/supabase/db/types";
 import { Button, Drawer, Input, Modal, Space } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { useWorkout } from "../../useWorkout";
+import { useExercises } from "../../hooks/useExercise";
 
 type Props = {
   drawOpen: boolean;
@@ -21,19 +16,9 @@ export default function AddExerciseDrawer({
   onClickMuscle,
   filterOutExercisesIds = [],
 }: Props) {
-  const { fetch } = useFetch();
-  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const { exercises } = useExercises();
   const [search, setSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
-  useEffect(() => {
-    const fetchExercises = async () => {
-      const exercisesResponse: Exercise[] = await fetch("/api/exercises");
-      setExercises(exercisesResponse);
-    };
-
-    fetchExercises();
-  }, []);
 
   const filteredExercises = exercises.filter((e) =>
     e.name.toLocaleLowerCase().includes(searchQuery.toLowerCase())
