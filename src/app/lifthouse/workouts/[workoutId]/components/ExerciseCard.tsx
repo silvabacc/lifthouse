@@ -4,6 +4,7 @@ import { Input, Select, Space } from "antd";
 import { useEffect, useState } from "react";
 import { useExercises } from "../../hooks/useExercise";
 import { IntensityRepRange, VolumeRepRange } from "../utils";
+import styles from "../page.module.css";
 
 type ExerciseCardProps = {
   workout: Workout;
@@ -66,24 +67,26 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
     <div className="flex flex-col w-full p-4">
       {workout.exercises.map((exercise) => {
         return (
-          <Space key={exercise.exerciseId}>
-            <Select
-              style={{ width: 150 }}
-              defaultValue={exerciseOptions.find(
-                (e) => e.value === exercise.exerciseId
-              )}
+          <div key={exercise.exerciseId}>
+            <SelectElement
               options={exerciseOptions}
+              value={exercise.exerciseId}
             />
-            <Select
-              style={{ width: 100 }}
-              defaultValue={repSchemeOptions.find(
-                (r) => r.value === `${exercise.sets} x ${exercise.reps}`
-              )}
-              options={repSchemeOptions}
-            />
-          </Space>
+            <Space className="flex flex-wrap"></Space>
+            <div>Chart</div>
+          </div>
         );
       })}
     </div>
   );
+}
+
+//Custom search
+type SelectProps = {
+  options: { label: string; value: string | number }[];
+  value: string | number;
+  onChange?: (value: string) => void;
+};
+function SelectElement({ options, value, onChange }: SelectProps) {
+  return <></>;
 }

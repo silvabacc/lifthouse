@@ -100,6 +100,11 @@ function Description({ text }: DescriptionProps) {
     };
   }, []);
 
+  const onClickShow = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    e.stopPropagation();
+    setExpanded(!expanded);
+  };
+
   return (
     <div
       className={`${
@@ -118,16 +123,12 @@ function Description({ text }: DescriptionProps) {
       </p>
       <div className="flex justify-end">
         {!expanded && showButton && (
-          <Button className="p-0" type="link" onClick={() => setExpanded(true)}>
+          <Button className="p-0" type="link" onClick={onClickShow}>
             Show More
           </Button>
         )}
         {expanded && (
-          <Button
-            className="p-0"
-            type="link"
-            onClick={() => setExpanded(false)}
-          >
+          <Button className="p-0" type="link" onClick={onClickShow}>
             Show Less
           </Button>
         )}
