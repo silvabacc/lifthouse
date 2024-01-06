@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useExercises } from "../../hooks/useExercise";
 import { IntensityRepRange, VolumeRepRange } from "../utils";
 import styles from "../page.module.css";
+import { FadeInAnimation } from "@/app/aniamtions/fadeInAnimation";
 
 type ExerciseCardProps = {
   workout: Workout;
@@ -61,10 +62,10 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
   }));
 
   //Add skeleton here
-  if (exerciseOptions.length === 0) return null;
+  if (exerciseOptions.length === 0) return <>Skeleton</>;
 
   return (
-    <div className="flex flex-col w-full p-4">
+    <FadeInAnimation className="flex flex-col w-full p-4">
       {workout.exercises.map((exercise) => {
         return (
           <div key={exercise.exerciseId}>
@@ -77,7 +78,7 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
           </div>
         );
       })}
-    </div>
+    </FadeInAnimation>
   );
 }
 

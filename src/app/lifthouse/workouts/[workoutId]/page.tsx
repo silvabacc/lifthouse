@@ -9,6 +9,7 @@ import { useWorkout } from "../hooks/useWorkout";
 import { Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
 import { templateName } from "./utils";
 import ExerciseCard from "./components/ExerciseCard";
+import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 
 const { Content, Footer } = Layout;
 
@@ -69,30 +70,35 @@ export default function WorkoutPlanPage({
   if (loading || !workout) return <div>Skeleton</div>;
 
   return (
-    <Layout className="h-full">
-      <Content className="h-full bg-white rounded-sm">
-        <PageInfoPortal title="Workout templates">
-          <WorkoutPageInfo
-            value={workout?.template}
-            onClickWorkoutType={onClickWorkoutType}
+    <PageAnimation>
+      <Layout className="h-full">
+        <Content className="h-full bg-white rounded-sm">
+          <PageInfoPortal title="Workout templates">
+            <WorkoutPageInfo
+              value={workout?.template}
+              onClickWorkoutType={onClickWorkoutType}
+            />
+          </PageInfoPortal>
+          <AddExerciseDrawer
+            drawOpen={drawOpen}
+            setDrawOpen={setDrawOpen}
+            onClickMuscle={onAddExerciseClick}
+            filterOutExercisesIds={
+              workout?.exercises.map((e) => e.exerciseId) || []
+            }
           />
-        </PageInfoPortal>
-        <AddExerciseDrawer
-          drawOpen={drawOpen}
-          setDrawOpen={setDrawOpen}
-          onClickMuscle={onAddExerciseClick}
-          filterOutExercisesIds={
-            workout?.exercises.map((e) => e.exerciseId) || []
-          }
-        />
-        <ExerciseCard workout={workout} />
-      </Content>
-      <Footer className="p-0 mt-4">
-        {workout?.template === WorkoutTemplate.custom && (
-          <AddButton title="+ Add Exercise" onClick={() => setDrawOpen(true)} />
-        )}
-      </Footer>
-    </Layout>
+          <ExerciseCard workout={workout} />
+        </Content>
+        <Footer className="p-0 mt-4">
+          {workout?.template === WorkoutTemplate.custom && (
+            <AddButton
+              title="+ Add Exercise"
+              onClick={() => setDrawOpen(true)}
+            />
+          )}
+        </Footer>
+      </Layout>
+    </PageAnimation>
   );
 }
 

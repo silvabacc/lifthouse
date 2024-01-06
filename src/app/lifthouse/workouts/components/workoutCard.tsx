@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
+import { FadeInAnimation } from "@/app/aniamtions/fadeInAnimation";
 
 const { confirm } = Modal;
 
@@ -39,13 +40,7 @@ export default function WorkoutCard({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 15 }}
-      transition={{ duration: 0.25 }}
-      className="flex flex-col justify-between bg-white cursor-pointer"
-    >
+    <FadeInAnimation className="flex flex-col justify-between bg-white cursor-pointer">
       <div className="relative p-6 h-32" onClick={onCardClick}>
         <h1 className="text-base font-medium pb-2">{name}</h1>
         <Description text={description} />
@@ -63,7 +58,7 @@ export default function WorkoutCard({
           Delete
         </Button>
       </div>
-    </motion.div>
+    </FadeInAnimation>
   );
 }
 
