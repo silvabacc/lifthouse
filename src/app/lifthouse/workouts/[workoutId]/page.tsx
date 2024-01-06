@@ -8,8 +8,8 @@ import AddExerciseDrawer from "./components/addExerciseDrawer";
 import { useWorkout } from "../hooks/useWorkout";
 import { Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
 import { templateName } from "./utils";
-import ExerciseCard from "./components/ExerciseCard";
 import { PageAnimation } from "@/app/aniamtions/pageAnimation";
+import ExerciseCard from "./components/ExerciseCard";
 
 const { Content, Footer } = Layout;
 
