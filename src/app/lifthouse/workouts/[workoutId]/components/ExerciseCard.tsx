@@ -1,5 +1,10 @@
 import { useFetch } from "@/app/hooks/useFetch";
-import { LogEntry, Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
+import {
+  ExerciseType,
+  LogEntry,
+  Workout,
+  WorkoutTemplate,
+} from "@/lib/supabase/db/types";
 import { Button, Input, Select, Space } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useExercises } from "../../hooks/useExercise";

@@ -51,7 +51,9 @@ export default function SelectElement({
       </div>
       {expanded && (
         <div className="absolute z-10 bg-white border border-slate-200 overflow-auto max-h-64 w-64">
-          <Search onChange={(e) => setSearch(e.target.value.toLowerCase())} />
+          <div className="bg-white sticky top-0">
+            <Search onChange={(e) => setSearch(e.target.value.toLowerCase())} />
+          </div>
           {options
             .filter((o) => o.label.toLocaleLowerCase().includes(search))
             .map((o) => {
