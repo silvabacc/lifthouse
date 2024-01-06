@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { DownOutlined } from "@ant-design/icons";
+import { Input } from "antd";
+
+const { Search } = Input;
 
 type SelectProps = {
   options: { label: string; value: string | number }[];
@@ -13,6 +16,7 @@ export default function SelectElement({
 }: SelectProps) {
   const [expanded, setExpnaded] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const [search, setSearch] = useState("");
 
   const findOption = (value?: string | number) =>
     options.find((o) => o.value === value);
@@ -46,22 +50,30 @@ export default function SelectElement({
         <DownOutlined />
       </div>
       {expanded && (
-        <div className="absolute z-10 bg-white border border-slate-200 overflow-auto h-64 w-64">
-          {options.map((o) => {
-            return (
-              <div
-                onClick={() => {
-                  setOptionSelected(o);
-                  setExpnaded(false);
-                  onChange?.(o.value);
-                }}
-                className="p-1 cursor-pointer hover:bg-slate-100"
-                key={o.value}
-              >
-                {o.label}
-              </div>
-            );
-          })}
+        <div className="absolute z-10 bg-white border border-slate-200 overflow-auto max-h-64 w-64">
+          <Search onChange={(e) => setSearch(e.target.value.toLowerCase())} />
+          {options
+            .filter((o) => o.label.toLocaleLowerCase().includes(search))
+            .map((o) => {
+              return (
+                <div
+                  onClick={() => {
+                    if (optionSelected.value === o.value) {
+                      setExpnaded(false);
+                      return;
+                    }
+                    setOptionSelected(o);
+                    setSearch("");
+                    setExpnaded(false);
+                    onChange?.(o.value);
+                  }}
+                  className="p-1 cursor-pointer hover:bg-slate-100"
+                  key={o.value}
+                >
+                  {o.label}
+                </div>
+              );
+            })}
         </div>
       )}
     </div>
