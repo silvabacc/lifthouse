@@ -13,11 +13,7 @@ export function useWorkout() {
   const { fetch } = useFetch();
 
   const fetchWorkouts = async () => {
-    const response: Workout[] = await fetch(`/api/workouts`, {
-      method: "POST",
-      body: JSON.stringify({ userId: user?.id }),
-    });
-
+    const response: Workout[] = await fetch(`/api/workouts`);
     return response;
   };
 
@@ -88,7 +84,6 @@ export function useWorkout() {
     const response: Workout[] = await fetch(`/api/workouts/create`, {
       method: "POST",
       body: JSON.stringify({
-        userId: user?.id,
         name: name,
         description: description,
       }),

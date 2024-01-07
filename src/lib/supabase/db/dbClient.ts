@@ -46,7 +46,9 @@ export default class DatabaseClient {
     }));
   }
 
-  async getWorkouts(userId: string): Promise<Workout[]> {
+  async getWorkouts(): Promise<Workout[]> {
+    const userId = await this.getUserId();
+
     const { data, error } = await this.supabase
       .from("workouts")
       .select("*")
@@ -87,7 +89,8 @@ export default class DatabaseClient {
     };
   }
 
-  async createWorkout(userId: string, name: string, description?: string) {
+  async createWorkout(name: string, description?: string) {
+    const userId = await this.getUserId();
     const { data, error } = await this.supabase
       .from("workouts")
       .insert([
@@ -159,12 +162,15 @@ export default class DatabaseClient {
     };
   }
 
-  async getLogs(
-    userId: string,
-    exerciseIds: number[],
-    startFrom: number,
-    endOn: number
-  ) {
+  async getUserId() {
+    const userId = (await this.supabase.auth.getSession()).data.session?.user
+      .id;
+    return userId;
+  }
+
+  async getLogs(exerciseIds: number[], startFrom: number, endOn: number) {
+    const userId = await this.getUserId();
+
     const { data, error } = await this.supabase
       .from("log_entries")
       .select("*")

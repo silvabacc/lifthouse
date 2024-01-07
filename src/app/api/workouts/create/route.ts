@@ -6,7 +6,6 @@ export async function POST(request: Request) {
   const body = await request.json();
   try {
     const schema = Joi.object({
-      userId: Joi.string().uuid().required(),
       name: Joi.string().required(),
       description: Joi.string().optional(),
     });
@@ -17,7 +16,7 @@ export async function POST(request: Request) {
   }
 
   const dbClient = new DatabaseClient();
-  const { userId, name, description } = body;
-  const result = await dbClient.createWorkout(userId, name, description);
+  const { name, description } = body;
+  const result = await dbClient.createWorkout(name, description);
   return NextResponse.json(result);
 }
