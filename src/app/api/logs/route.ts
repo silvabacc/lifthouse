@@ -27,6 +27,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Session timeout" }, { status: 400 });
   }
   const dbClient = new DatabaseClient();
-  const data = await dbClient.getLogs(id, exerciseIds, startFrom, endOn);
+  const data = await dbClient.getLogs(exerciseIds, startFrom, endOn);
   return NextResponse.json(data);
 }

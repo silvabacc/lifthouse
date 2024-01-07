@@ -11,6 +11,7 @@ import {
 } from "../utils";
 import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
 import SelectElement from "./selectComponent";
+import ExerciseCardSkeleton from "./exerciseCard.skeleton";
 
 type ExerciseCardProps = {
   workout: Workout;
@@ -23,7 +24,7 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
   const lastWeek = new Date(
     today.getFullYear(),
     today.getMonth(),
-    today.getDate() - 7
+    today.getDate() - 4
   );
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
   }, []);
 
   if (exercises.length === 0) {
-    return <div>Skeleton</div>;
+    return <ExerciseCardSkeleton />;
   }
 
   const repSchemeOptions = getRepScheme(workout.template).map((r) => ({

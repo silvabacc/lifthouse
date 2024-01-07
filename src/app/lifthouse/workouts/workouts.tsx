@@ -5,6 +5,7 @@ import AddWorkoutCard from "./components/addWorkoutCard";
 import WorkoutCard from "./components/workoutCard";
 import { useWorkout } from "./hooks/useWorkout";
 import { Workout } from "@/lib/supabase/db/types";
+import WorkoutSkeleton from "./workouts.skeleton";
 
 export default function Workouts() {
   const { fetchWorkouts, deleteWorkoutPlan } = useWorkout();
@@ -23,7 +24,7 @@ export default function Workouts() {
   }, []);
 
   if (isLoading) {
-    return <>Workouts Skeleton Placeholder</>;
+    return <WorkoutSkeleton />;
   }
 
   const onDelete = async (workoutId: number) => {

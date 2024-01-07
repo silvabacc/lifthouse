@@ -10,6 +10,7 @@ import { Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
 import { templateName } from "./utils";
 import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 import ExerciseCard from "./components/exerciseCard";
+import PageSkeleton from "./page.skeleton";
 
 const { Content, Footer } = Layout;
 
@@ -67,7 +68,7 @@ export default function WorkoutPlanPage({
     });
   };
 
-  if (loading || !workout) return <div>Skeleton</div>;
+  if (loading || !workout) return <PageSkeleton />;
 
   return (
     <PageAnimation>
