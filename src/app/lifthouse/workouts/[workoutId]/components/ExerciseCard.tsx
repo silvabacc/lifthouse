@@ -1,14 +1,14 @@
 import { useFetch } from "@/app/hooks/useFetch";
-import {
-  ExerciseType,
-  LogEntry,
-  Workout,
-  WorkoutTemplate,
-} from "@/lib/supabase/db/types";
-import { Button, Input, Select, Space } from "antd";
-import { useEffect, useRef, useState } from "react";
+import { LogEntry, Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
+import { Space } from "antd";
+import { useEffect, useState } from "react";
 import { useExercises } from "../../hooks/useExercise";
-import { IntensityRepRange, VolumeRepRange } from "../utils";
+import {
+  acceptedExerciseTypesForExercises,
+  formatValue,
+  getRepScheme,
+  intersection,
+} from "../utils";
 import { FadeInAnimation } from "@/app/aniamtions/fadeInAnimation";
 import SelectElement from "./selectComponent";
 
@@ -45,43 +45,48 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
     }
   }, []);
 
-  // Templates can change the rep schemes
-  const repRangeSchemeMapping = {
-    [WorkoutTemplate.lower_intensity]: IntensityRepRange,
-    [WorkoutTemplate.upper_intensity]: IntensityRepRange,
-    [WorkoutTemplate.lower_volume]: VolumeRepRange,
-    [WorkoutTemplate.upper_volume]: VolumeRepRange,
-  };
+  if (exercises.length === 0) {
+    return <div>Skeleton</div>;
+  }
 
-  const formatValue = (sets: number, reps: string) => `${sets}-${reps}`;
-
-  // If the template is not found, use the both rep scheme
-  const repSchemeOptions = (
-    repRangeSchemeMapping[
-      workout.template as keyof typeof repRangeSchemeMapping
-    ] || [...VolumeRepRange, ...IntensityRepRange]
-  ).map((r) => ({
+  const repSchemeOptions = getRepScheme(workout.template).map((r) => ({
     label: `${r.sets} x ${r.reps}`,
     value: formatValue(r.sets, r.reps),
   }));
 
-  const exerciseOptions = exercises.map((e) => ({
-    label: e.name,
-    value: e.exerciseId,
-  }));
-
-  //Add skeleton here
-  if (exerciseOptions.length === 0) return <>Skeleton</>;
-
   return (
     <FadeInAnimation className="flex flex-col w-full p-4">
       {workout.exercises.map((exercise) => {
+        const findExercise = exercises.find(
+          (e) => e.exerciseId === exercise.exerciseId
+        );
+
+        //With the current exercise selection, find all relevant exercises
+        //This is done via searching the exercise types
+        const filteredExercisesWithType = exercises
+          .filter((e) =>
+            intersection(e.exerciseType, findExercise?.exerciseType ?? [])
+          )
+          .filter((e) =>
+            intersection(
+              e.exerciseType,
+              acceptedExerciseTypesForExercises(workout.template)
+            )
+          );
+
+        //We only want to apply the exercises if a template is applied
+        const options = (
+          workout.template !== WorkoutTemplate.custom
+            ? filteredExercisesWithType
+            : exercises
+        ).map((e) => ({ value: e.exerciseId, label: e.name }));
+
         return (
           <div key={exercise.exerciseId}>
             <Space className="flex flex-wrap">
               <SelectElement
                 defaultValue={exercise.exerciseId}
-                options={exerciseOptions}
+                options={options}
               />
               <SelectElement
                 options={repSchemeOptions}

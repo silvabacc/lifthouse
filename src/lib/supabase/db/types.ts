@@ -8,6 +8,7 @@ export type Workout = {
   workoutId: number;
   name: string;
   description: string;
+  userId: string;
   exercises: WorkoutExercise[];
   template: WorkoutTemplate;
 };
@@ -30,6 +31,14 @@ export type LogEntry = {
   info: LogInfo;
   date: Date;
   notes: string;
+};
+
+export type Exercise = {
+  exerciseId: number;
+  name: string;
+  notes?: string;
+  exerciseType: ExerciseType[];
+  primaryMuscleGroup: PrimaryMuscleGroup;
 };
 
 export enum WorkoutTemplate {
@@ -60,7 +69,6 @@ export enum ExerciseType {
   VERTICAL_PRESS = "VERTICAL_PRESS",
   VERTICAL_PULL = "VERTICAL_PULL",
   HORIZONTAL_PRESS = "HORIZONTAL_PRESS",
-  HORIZONTAL_PULL = "HORIZONTAL_PULL",
   PUSH = "PUSH",
   PULL = "PULL",
   LEGS = "LEGS",
@@ -76,11 +84,3 @@ export enum PrimaryMuscleGroup {
   BACK = "BACK",
   LEGS = "LEGS",
 }
-
-export type Exercise = {
-  exerciseId: number;
-  name: string;
-  notes?: string;
-  exerciseType: ExerciseType[];
-  primaryMuscleGroup: PrimaryMuscleGroup;
-};

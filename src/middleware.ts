@@ -26,7 +26,6 @@ async function AuthMiddleware(
     /^\/lifthouse\/workouts\/(\d+)$/.test(request.nextUrl.pathname) &&
     request.method === "GET"
   ) {
-    console.log(request.nextUrl);
     const workoutId = request.nextUrl.pathname.split("/").pop();
 
     if (workoutId) {

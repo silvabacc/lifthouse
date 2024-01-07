@@ -40,6 +40,19 @@ export const VolumeRepRange = [
   { sets: 3, reps: "30s-60s" },
 ];
 
+export function getRepScheme(template: WorkoutTemplate) {
+  switch (template) {
+    case WorkoutTemplate.upper_intensity:
+    case WorkoutTemplate.lower_intensity:
+      return IntensityRepRange;
+    case WorkoutTemplate.upper_volume:
+    case WorkoutTemplate.lower_volume:
+      return VolumeRepRange;
+    default:
+      return [...IntensityRepRange, ...VolumeRepRange];
+  }
+}
+
 export const templateName = {
   [WorkoutTemplate.upper_intensity]: "Upper Body (High Intensity)",
   [WorkoutTemplate.upper_volume]: "Upper Body (High Volume)",
@@ -50,65 +63,47 @@ export const templateName = {
   [WorkoutTemplate.legs]: "Legs",
   [WorkoutTemplate.custom]: "Custom",
 };
-export const defaultExercisesForTemplates = {
-  [WorkoutTemplate.upper_intensity]: {
-    exercises: [
-      { exerciseId: 2, sets: 3, reps: "5" },
-      { type: ExerciseType.HORIZONTAL_PRESS, sets: 3, reps: "5" },
-      { type: ExerciseType.ACCESSORY_CHEST, sets: 3, reps: "6-10" },
-      { type: ExerciseType.UPPER_BACK, sets: 3, reps: "6-10" },
-      { type: ExerciseType.UPPER_BACK, sets: 3, reps: "6-10" },
-      { type: ExerciseType.ACCESSORY_SHOULDER, sets: 3, reps: "6-10" },
-      {
-        type: [ExerciseType.BICEPS, ExerciseType.FOREARMS],
-        sets: 3,
-        reps: "6-10",
-      },
-      {
-        type: [ExerciseType.BICEPS, ExerciseType.FOREARMS],
-        sets: 3,
-        reps: "6-10",
-      },
-    ],
-  },
-  [WorkoutTemplate.upper_volume]: {
-    exercises: [
-      { type: ExerciseType.VERTICAL_PRESS, sets: 5, reps: "10" },
-      { type: ExerciseType.HORIZONTAL_PRESS, sets: 5, reps: "10" },
-      { type: ExerciseType.ACCESSORY_CHEST, sets: 3, reps: "8-12" },
-      { type: ExerciseType.UPPER_BACK, sets: 3, reps: "8-12" },
-      { type: ExerciseType.UPPER_BACK, sets: 3, reps: "8-12" },
-      { type: ExerciseType.ACCESSORY_SHOULDER, sets: 3, reps: "8-12" },
-      {
-        type: [ExerciseType.BICEPS, ExerciseType.FOREARMS],
-        sets: 3,
-        reps: "8-12",
-      },
-      {
-        type: [ExerciseType.BICEPS, ExerciseType.FOREARMS],
-        sets: 3,
-        reps: "8-12",
-      },
-    ],
-  },
-  [WorkoutTemplate.lower_intensity]: {
-    exercises: [
-      { type: ExerciseType.LEGS_SQUAT, sets: 3, reps: "5" },
-      { type: ExerciseType.LEGS_DV, reps: "5" },
-      { type: ExerciseType.LEGS_ACCESSORY, reps: "6-10" },
-      { type: ExerciseType.LEGS_ACCESSORY, reps: "6-10" },
-      { type: ExerciseType.VERTICAL_PULL, reps: "6-10" },
-      { type: ExerciseType.ABS, reps: "6-10" },
-    ],
-  },
-  [WorkoutTemplate.lower_volume]: {
-    exercises: [
-      { type: ExerciseType.LEGS_SQUAT, sets: 5, reps: "10" },
-      { type: ExerciseType.LEGS_DV, sets: 5, reps: "10" },
-      { type: ExerciseType.LEGS_ACCESSORY, sets: 3, reps: "8-12" },
-      { type: ExerciseType.LEGS_ACCESSORY, sets: 3, reps: "8-12" },
-      { type: ExerciseType.VERTICAL_PULL, sets: 3, reps: "8-12" },
-      { type: ExerciseType.ABS, sets: 3, reps: "8-12" },
-    ],
-  },
-};
+
+export function acceptedExerciseTypesForExercises(template: WorkoutTemplate) {
+  switch (template) {
+    case WorkoutTemplate.upper_intensity:
+    case WorkoutTemplate.upper_volume:
+      return [
+        ExerciseType.VERTICAL_PRESS,
+        ExerciseType.HORIZONTAL_PRESS,
+        ExerciseType.UPPER_BACK,
+        ExerciseType.ACCESSORY_CHEST,
+        ExerciseType.ACCESSORY_SHOULDER,
+        ExerciseType.TRAPS,
+        ExerciseType.BICEPS,
+        ExerciseType.TRICEPS,
+        ExerciseType.FOREARMS,
+      ];
+    case WorkoutTemplate.lower_intensity:
+    case WorkoutTemplate.lower_volume:
+      return [
+        ExerciseType.VERTICAL_PRESS,
+        ExerciseType.HORIZONTAL_PRESS,
+        ExerciseType.UPPER_BACK,
+        ExerciseType.TRAPS,
+        ExerciseType.BICEPS,
+        ExerciseType.TRICEPS,
+        ExerciseType.FOREARMS,
+        ExerciseType.LEGS_SQUAT,
+        ExerciseType.LEGS_DV,
+        ExerciseType.LEGS_ACCESSORY,
+        ExerciseType.VERTICAL_PULL,
+        ExerciseType.ABS,
+      ];
+    default:
+      return Object.values(ExerciseType);
+  }
+}
+
+export function formatValue(sets: number, reps: string) {
+  return `${sets}-${reps}`;
+}
+
+export function intersection(arr1: ExerciseType[], arr2: ExerciseType[]) {
+  return arr1.filter((value) => arr2.includes(value)).length !== 0;
+}

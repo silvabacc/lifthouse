@@ -1,6 +1,12 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { createSupabaseServer } from "../server";
-import { Exercise, TemplateSetup, Workout, WorkoutTemplate } from "./types";
+import {
+  Exercise,
+  ExerciseType,
+  TemplateSetup,
+  Workout,
+  WorkoutTemplate,
+} from "./types";
 import { cookies } from "next/headers";
 
 export default class DatabaseClient {
@@ -33,7 +39,9 @@ export default class DatabaseClient {
       exerciseId: data.exercise_id,
       name: data.exercise_name,
       notes: data.notes,
-      exerciseType: data.exercise_type,
+      exerciseType: JSON.parse(
+        data.exercise_type.replace(/[\u201C\u201D]/g, '"')
+      ),
       primaryMuscleGroup: data.primary_muscle_group,
     }));
   }
@@ -157,7 +165,6 @@ export default class DatabaseClient {
     startFrom: number,
     endOn: number
   ) {
-    console.log(userId, exerciseIds, startFrom, endOn);
     const { data, error } = await this.supabase
       .from("log_entries")
       .select("*")
@@ -169,8 +176,6 @@ export default class DatabaseClient {
     if (error) {
       throw error;
     }
-
-    console.log("data!!!", data);
 
     return data.map((data) => ({
       logId: data.log_entry_id,

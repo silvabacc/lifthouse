@@ -9,7 +9,7 @@ import { useWorkout } from "../hooks/useWorkout";
 import { Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
 import { templateName } from "./utils";
 import { PageAnimation } from "@/app/aniamtions/pageAnimation";
-import ExerciseCard from "./components/ExerciseCard";
+import ExerciseCard from "./components/exerciseCard";
 
 const { Content, Footer } = Layout;
 

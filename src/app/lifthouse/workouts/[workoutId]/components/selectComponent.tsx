@@ -46,11 +46,11 @@ export default function SelectElement({
         className="flex items-center cursor-pointer justify-between border border-slate-200 p-1 rounded-lg"
         onClick={onClick}
       >
-        <p className="pr-2">{optionSelected.label}</p>
+        <p className="pr-2">{optionSelected?.label}</p>
         <DownOutlined />
       </div>
       {expanded && (
-        <div className="absolute z-10 bg-white border border-slate-200 overflow-auto max-h-64 w-64">
+        <div className="absolute z-10 bg-white border border-slate-200 overflow-auto max-h-64 min-w-56">
           <div className="bg-white sticky top-0">
             <Search onChange={(e) => setSearch(e.target.value.toLowerCase())} />
           </div>
@@ -69,7 +69,9 @@ export default function SelectElement({
                     setExpnaded(false);
                     onChange?.(o.value);
                   }}
-                  className="p-1 cursor-pointer hover:bg-slate-100"
+                  className={`p-1 cursor-pointer hover:bg-slate-100 ${
+                    o.value === optionSelected.value && "bg-slate-100"
+                  }`}
                   key={o.value}
                 >
                   {o.label}
