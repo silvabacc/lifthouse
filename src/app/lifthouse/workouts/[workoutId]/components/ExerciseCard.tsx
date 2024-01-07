@@ -1,6 +1,6 @@
 import { useFetch } from "@/app/hooks/useFetch";
 import { LogEntry, Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
-import { Space } from "antd";
+import { Button, DatePicker, Divider, Space } from "antd";
 import { useEffect, useState } from "react";
 import { useExercises } from "../../hooks/useExercise";
 import {
@@ -12,6 +12,9 @@ import {
 import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
 import SelectElement from "./selectComponent";
 import ExerciseCardSkeleton from "./exerciseCard.skeleton";
+import dayjs from "dayjs";
+
+const { RangePicker } = DatePicker;
 
 type ExerciseCardProps = {
   workout: Workout;
@@ -20,12 +23,8 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const { exercises } = useExercises();
   const { fetch } = useFetch();
-  const today = new Date();
-  const lastWeek = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate() - 4
-  );
+  const [firstDate, setFirstDate] = useState(dayjs());
+  const [secondDate, setSecondDate] = useState(dayjs().subtract(7, "day"));
 
   useEffect(() => {
     const fetchLogs = async () => {
@@ -33,8 +32,8 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
         method: "POST",
         body: JSON.stringify({
           exerciseIds: workout.exercises.map((e) => e.exerciseId),
-          startFrom: lastWeek,
-          endOn: today,
+          startFrom: secondDate,
+          endOn: firstDate,
         }),
       });
 
@@ -84,16 +83,32 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
 
         return (
           <div key={exercise.exerciseId}>
-            <Space className="flex flex-wrap">
-              <SelectElement
-                defaultValue={exercise.exerciseId}
-                options={options}
-              />
-              <SelectElement
-                options={repSchemeOptions}
-                defaultValue={formatValue(exercise.sets, exercise.reps)}
-              />
-            </Space>
+            <div className="flex flex-wrap justify-between">
+              <Space className="flex-wrap">
+                <SelectElement
+                  defaultValue={exercise.exerciseId}
+                  options={options}
+                />
+                <SelectElement
+                  options={repSchemeOptions}
+                  defaultValue={formatValue(exercise.sets, exercise.reps)}
+                />
+              </Space>
+              <div>
+                <Button className="p-0" type="link">
+                  Line
+                </Button>
+                <Divider type="vertical" />
+                <Button className="p-0" type="link">
+                  Bar
+                </Button>
+                <Divider type="vertical" />
+                <RangePicker
+                  placement="bottomLeft"
+                  defaultValue={[secondDate, firstDate]}
+                />
+              </div>
+            </div>
             <div>Chart</div>
           </div>
         );
