@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import { Input } from "antd";
+import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
+import { FadeInAnimation } from "@/app/aniamtions/fadeinAnimation";
 
 const { Search } = Input;
 
@@ -50,7 +52,7 @@ export default function SelectElement({
         <DownOutlined />
       </div>
       {expanded && (
-        <div className="absolute z-10 bg-white border border-slate-200 overflow-auto max-h-64 min-w-56">
+        <FadeInAnimation className="absolute z-10 bg-white border border-slate-200 overflow-auto max-h-64 min-w-56">
           <div className="bg-white sticky top-0">
             <Search onChange={(e) => setSearch(e.target.value.toLowerCase())} />
           </div>
@@ -78,7 +80,7 @@ export default function SelectElement({
                 </div>
               );
             })}
-        </div>
+        </FadeInAnimation>
       )}
     </div>
   );

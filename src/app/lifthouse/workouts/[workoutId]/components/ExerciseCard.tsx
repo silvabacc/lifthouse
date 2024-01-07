@@ -9,7 +9,7 @@ import {
   getRepScheme,
   intersection,
 } from "../utils";
-import { FadeInAnimation } from "@/app/aniamtions/fadeInAnimation";
+import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
 import SelectElement from "./selectComponent";
 
 type ExerciseCardProps = {
@@ -55,7 +55,7 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
   }));
 
   return (
-    <FadeInAnimation className="flex flex-col w-full p-4">
+    <BottomFadeInAnimation className="flex flex-col w-full p-4">
       {workout.exercises.map((exercise) => {
         const findExercise = exercises.find(
           (e) => e.exerciseId === exercise.exerciseId
@@ -97,6 +97,6 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
           </div>
         );
       })}
-    </FadeInAnimation>
+    </BottomFadeInAnimation>
   );
 }

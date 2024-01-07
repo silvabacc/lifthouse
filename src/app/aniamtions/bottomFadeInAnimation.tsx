@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-export function FadeInAnimation({
+export function BottomFadeInAnimation({
   children,
   className,
 }: {
@@ -12,9 +12,9 @@ export function FadeInAnimation({
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 15 }}
       transition={{ duration: 0.25 }}
     >
       {children}
