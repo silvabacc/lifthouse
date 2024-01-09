@@ -35,7 +35,7 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
   const { fetch } = useFetch();
   const [firstDate, setFirstDate] = useState(dayjs().subtract(30, "day"));
   const [secondDate, setSecondDate] = useState(dayjs());
-  const [view, setView] = useState<View>(View.table);
+  const [view, setView] = useState<View>(View.stacked);
 
   const fetchLogs = async () => {
     const response: LogEntry[] = await fetch(`/api/logs`, {

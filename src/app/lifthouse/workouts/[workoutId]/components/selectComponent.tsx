@@ -52,7 +52,11 @@ export default function SelectElement({
         <DownOutlined />
       </div>
       {expanded && (
-        <BottomFadeInAnimation className="absolute z-10 bg-white border border-slate-200 overflow-auto w-64 shadow-2xl">
+        <BottomFadeInAnimation
+          animationDuration={0.1}
+          animationHeight={256}
+          className="absolute z-10 bg-white border border-slate-200 overflow-auto w-64 shadow-2xl"
+        >
           <div className="bg-white sticky top-0">
             <Search onChange={(e) => setSearch(e.target.value.toLowerCase())} />
           </div>
