@@ -92,6 +92,8 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
             : exercises
         ).map((e) => ({ value: e.exerciseId, label: e.name }));
 
+        const data = logs.filter((l) => l.exerciseId === exercise.exerciseId);
+
         return (
           <div key={exercise.exerciseId}>
             <div className="flex flex-wrap justify-between">
@@ -145,28 +147,9 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
                 />
               </div>
               <div style={{ width: "100%" }}>
-                {view === View.stacked && (
-                  <StackedChart
-                    data={logs.filter(
-                      (l) => l.exerciseId === exercise.exerciseId
-                    )}
-                  />
-                )}
-                {view === View.line && (
-                  <LineChart
-                    data={logs.filter(
-                      (l) => l.exerciseId === exercise.exerciseId
-                    )}
-                  />
-                )}
-                {view === View.table && (
-                  <Table
-                    data={logs.filter(
-                      (l) => l.exerciseId === exercise.exerciseId
-                    )}
-                    exercises={exercises}
-                  />
-                )}
+                {view === View.stacked && <StackedChart data={data} />}
+                {view === View.line && <LineChart data={data} />}
+                {view === View.table && <Table data={data} />}
               </div>
               <Divider />
             </div>

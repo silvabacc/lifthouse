@@ -19,9 +19,8 @@ interface ExpandedDataType {
 
 type Props = {
   data: LogEntry[];
-  exercises: Exercise[];
 };
-export default function Table({ data, exercises }: Props) {
+export default function Table({ data }: Props) {
   const expandedRowRender = (logId: number) => {
     const row = data.find((l) => l.logId === logId);
     if (!row) {
