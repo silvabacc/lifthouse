@@ -21,7 +21,7 @@ export default function SelectElement({
   const [search, setSearch] = useState("");
 
   const findOption = (value?: string | number) =>
-    options.find((o) => o.value === value);
+    options.find((o) => o?.value === value);
 
   const [optionSelected, setOptionSelected] = useState(
     findOption(defaultValue) ?? options[0]

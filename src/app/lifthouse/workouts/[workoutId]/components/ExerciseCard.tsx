@@ -15,6 +15,7 @@ import SelectElement from "./selectComponent";
 import ExerciseCardSkeleton from "./exerciseCard.skeleton";
 import dayjs from "dayjs";
 import StackedChart from "./visuals/stacked";
+import LineChart from "./visuals/line";
 
 const { RangePicker } = DatePicker;
 
@@ -33,7 +34,7 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
   const { fetch } = useFetch();
   const [firstDate, setFirstDate] = useState(dayjs().subtract(30, "day"));
   const [secondDate, setSecondDate] = useState(dayjs());
-  const [view, setView] = useState<View>(View.stacked);
+  const [view, setView] = useState<View>(View.line);
 
   const fetchLogs = async () => {
     const response: LogEntry[] = await fetch(`/api/logs`, {
@@ -137,6 +138,13 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
               <div style={{ height: 400, width: "100%" }}>
                 {view === View.stacked && (
                   <StackedChart
+                    data={logs.filter(
+                      (l) => l.exerciseId === exercise.exerciseId
+                    )}
+                  />
+                )}
+                {view === View.line && (
+                  <LineChart
                     data={logs.filter(
                       (l) => l.exerciseId === exercise.exerciseId
                     )}
