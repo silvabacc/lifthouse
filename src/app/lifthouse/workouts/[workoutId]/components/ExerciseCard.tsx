@@ -16,6 +16,7 @@ import ExerciseCardSkeleton from "./exerciseCard.skeleton";
 import dayjs from "dayjs";
 import StackedChart from "./visuals/stacked";
 import LineChart from "./visuals/line";
+import Table from "./visuals/table";
 
 const { RangePicker } = DatePicker;
 
@@ -34,7 +35,7 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
   const { fetch } = useFetch();
   const [firstDate, setFirstDate] = useState(dayjs().subtract(30, "day"));
   const [secondDate, setSecondDate] = useState(dayjs());
-  const [view, setView] = useState<View>(View.line);
+  const [view, setView] = useState<View>(View.table);
 
   const fetchLogs = async () => {
     const response: LogEntry[] = await fetch(`/api/logs`, {
@@ -121,6 +122,14 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
                   Line
                 </Button>
                 <Divider type="vertical" />
+                <Button
+                  className="p-0"
+                  type={getButtonType(view, View.table)}
+                  onClick={() => setView(View.table)}
+                >
+                  Table
+                </Button>
+                <Divider type="vertical" />
                 <RangePicker
                   format={(value) => value.format("DD/MM/YYYY")}
                   onChange={(dates) => {
@@ -135,7 +144,7 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
                   defaultValue={[secondDate, firstDate]}
                 />
               </div>
-              <div style={{ height: 400, width: "100%" }}>
+              <div style={{ width: "100%" }}>
                 {view === View.stacked && (
                   <StackedChart
                     data={logs.filter(
@@ -148,6 +157,14 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
                     data={logs.filter(
                       (l) => l.exerciseId === exercise.exerciseId
                     )}
+                  />
+                )}
+                {view === View.table && (
+                  <Table
+                    data={logs.filter(
+                      (l) => l.exerciseId === exercise.exerciseId
+                    )}
+                    exercises={exercises}
                   />
                 )}
               </div>
