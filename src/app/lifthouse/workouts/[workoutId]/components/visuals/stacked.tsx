@@ -35,11 +35,34 @@ export default function StackedChart({ data }: StackedChartProps) {
       xField="weight"
       yField="reps"
       colorField="date"
+      sort={{ by: "x" }}
       label={{
         text: "reps",
         style: { dx: -10, color: "white" },
       }}
-      x={{}}
+      axis={{
+        y: {
+          labelFormatter: (v: string) => `${v} reps`,
+          style: {
+            labelTransform: "rotate(360)",
+          },
+        },
+        x: {
+          labelFormatter: (v: string) => `${v} kg`,
+        },
+      }}
+      legend={{
+        color: {
+          itemLabelText: (v: { label?: string }) => {
+            return v.label
+              ? new Date(v.label).toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "short",
+                })
+              : v;
+          },
+        },
+      }}
     />
   );
 }

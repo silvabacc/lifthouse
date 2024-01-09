@@ -31,7 +31,7 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const { exercises } = useExercises();
   const { fetch } = useFetch();
-  const [firstDate, setFirstDate] = useState(dayjs().subtract(14, "day"));
+  const [firstDate, setFirstDate] = useState(dayjs().subtract(30, "day"));
   const [secondDate, setSecondDate] = useState(dayjs());
   const [view, setView] = useState<View>(View.stacked);
 
@@ -121,6 +121,7 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
                 </Button>
                 <Divider type="vertical" />
                 <RangePicker
+                  format={(value) => value.format("DD/MM/YYYY")}
                   onChange={(dates) => {
                     if (dates?.[0] && dates[0] !== firstDate) {
                       setFirstDate(dates?.[0]);

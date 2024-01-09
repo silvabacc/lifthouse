@@ -177,7 +177,8 @@ export default class DatabaseClient {
       .in("exercise_id", exerciseIds)
       .eq("user_id", userId)
       .gte("date", startFrom)
-      .lte("date", endOn);
+      .lte("date", endOn)
+      .order("date", { ascending: true });
 
     if (error) {
       throw error;
