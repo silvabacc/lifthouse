@@ -57,7 +57,7 @@ export function getRepScheme(template: WorkoutTemplate) {
 export const templateName = {
   [WorkoutTemplate.upper_intensity]: "Upper Body (High Intensity)",
   [WorkoutTemplate.upper_volume]: "Upper Body (High Volume)",
-  [WorkoutTemplate.lower_intensity]: "Lower Body (High Intensity",
+  [WorkoutTemplate.lower_intensity]: "Lower Body (High Intensity)",
   [WorkoutTemplate.lower_volume]: "Lower Body (High Volume)",
   [WorkoutTemplate.push]: "Push",
   [WorkoutTemplate.pull]: "Pull",
