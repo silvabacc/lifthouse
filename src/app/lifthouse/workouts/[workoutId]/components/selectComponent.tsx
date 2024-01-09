@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import { Input } from "antd";
-import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
 import { FadeInAnimation } from "@/app/aniamtions/fadeinAnimation";
+import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
 
 const { Search } = Input;
 
@@ -45,42 +45,46 @@ export default function SelectElement({
   return (
     <div className="relative" ref={ref}>
       <div
-        className="flex items-center cursor-pointer justify-between border border-slate-200 p-1 rounded-lg"
+        className="flex items-center cursor-pointer justify-between border border-slate-200 p-2 rounded-lg"
         onClick={onClick}
       >
         <p className="pr-2">{optionSelected?.label}</p>
         <DownOutlined />
       </div>
       {expanded && (
-        <FadeInAnimation className="absolute z-10 bg-white border border-slate-200 overflow-auto max-h-64 min-w-56">
-          <div className="bg-white sticky top-0">
-            <Search onChange={(e) => setSearch(e.target.value.toLowerCase())} />
-          </div>
-          {options
-            .filter((o) => o.label.toLocaleLowerCase().includes(search))
-            .map((o) => {
-              return (
-                <div
-                  onClick={() => {
-                    if (optionSelected.value === o.value) {
+        <div className="absolute z-10 bg-white border border-slate-200 overflow-auto min-w-56 shadow-2xl">
+          <BottomFadeInAnimation className="">
+            <div className="bg-white sticky top-0">
+              <Search
+                onChange={(e) => setSearch(e.target.value.toLowerCase())}
+              />
+            </div>
+            {options
+              .filter((o) => o.label.toLocaleLowerCase().includes(search))
+              .map((o) => {
+                return (
+                  <div
+                    onClick={() => {
+                      if (optionSelected.value === o.value) {
+                        setExpnaded(false);
+                        return;
+                      }
+                      setOptionSelected(o);
+                      setSearch("");
                       setExpnaded(false);
-                      return;
-                    }
-                    setOptionSelected(o);
-                    setSearch("");
-                    setExpnaded(false);
-                    onChange?.(o.value);
-                  }}
-                  className={`p-1 cursor-pointer hover:bg-slate-100 ${
-                    o.value === optionSelected.value && "bg-slate-100"
-                  }`}
-                  key={o.value}
-                >
-                  {o.label}
-                </div>
-              );
-            })}
-        </FadeInAnimation>
+                      onChange?.(o.value);
+                    }}
+                    className={`p-2 cursor-pointer hover:bg-slate-100 ${
+                      o.value === optionSelected.value && "bg-slate-100"
+                    }`}
+                    key={o.value}
+                  >
+                    {o.label}
+                  </div>
+                );
+              })}
+          </BottomFadeInAnimation>
+        </div>
       )}
     </div>
   );

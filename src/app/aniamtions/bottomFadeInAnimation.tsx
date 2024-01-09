@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 export function BottomFadeInAnimation({
   children,
@@ -12,10 +12,10 @@ export function BottomFadeInAnimation({
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 15 }}
-      transition={{ duration: 0.25 }}
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ height: 256, opacity: 1 }} //height 256px is equal to h-64 in tailwindcss
+      exit={{ height: 0, opacity: 0 }}
+      transition={{ duration: 0.1, ease: "easeInOut" }}
     >
       {children}
     </motion.div>
