@@ -6,6 +6,7 @@ import { useExercises } from "../../hooks/useExercise";
 import {
   acceptedExerciseTypesForExercises,
   formatValue,
+  getButtonType,
   getRepScheme,
   intersection,
 } from "../utils";
@@ -13,8 +14,15 @@ import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
 import SelectElement from "./selectComponent";
 import ExerciseCardSkeleton from "./exerciseCard.skeleton";
 import dayjs from "dayjs";
+import StackedChart from "./visuals/stacked";
 
 const { RangePicker } = DatePicker;
+
+export enum View {
+  line = "line",
+  stacked = "stacked",
+  table = "table",
+}
 
 type ExerciseCardProps = {
   workout: Workout;
@@ -23,27 +31,28 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const { exercises } = useExercises();
   const { fetch } = useFetch();
-  const [firstDate, setFirstDate] = useState(dayjs());
-  const [secondDate, setSecondDate] = useState(dayjs().subtract(7, "day"));
+  const [firstDate, setFirstDate] = useState(dayjs().subtract(14, "day"));
+  const [secondDate, setSecondDate] = useState(dayjs());
+  const [view, setView] = useState<View>(View.stacked);
+
+  const fetchLogs = async () => {
+    const response: LogEntry[] = await fetch(`/api/logs`, {
+      method: "POST",
+      body: JSON.stringify({
+        exerciseIds: workout.exercises.map((e) => e.exerciseId),
+        startFrom: firstDate,
+        endOn: secondDate,
+      }),
+    });
+
+    setLogs(response);
+  };
 
   useEffect(() => {
-    const fetchLogs = async () => {
-      const response: LogEntry[] = await fetch(`/api/logs`, {
-        method: "POST",
-        body: JSON.stringify({
-          exerciseIds: workout.exercises.map((e) => e.exerciseId),
-          startFrom: secondDate,
-          endOn: firstDate,
-        }),
-      });
-
-      setLogs(response);
-    };
-
-    if (workout.exercises.length !== 0) {
+    if (secondDate > firstDate) {
       fetchLogs();
     }
-  }, []);
+  }, [firstDate, secondDate]);
 
   if (exercises.length === 0) {
     return <ExerciseCardSkeleton />;
@@ -55,7 +64,7 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
   }));
 
   return (
-    <BottomFadeInAnimation className="flex flex-col w-full p-4">
+    <BottomFadeInAnimation className="flex flex-col h-full w-full p-4">
       {workout.exercises.map((exercise) => {
         const findExercise = exercises.find(
           (e) => e.exerciseId === exercise.exerciseId
@@ -95,21 +104,46 @@ export default function ExerciseCard({ workout }: ExerciseCardProps) {
                 />
               </Space>
               <div>
-                <Button className="p-0" type="link">
+                <Button
+                  className="p-0"
+                  type={getButtonType(view, View.stacked)}
+                  onClick={() => setView(View.stacked)}
+                >
+                  Stacked
+                </Button>
+                <Divider type="vertical" />
+                <Button
+                  className="p-0"
+                  type={getButtonType(view, View.line)}
+                  onClick={() => setView(View.line)}
+                >
                   Line
                 </Button>
                 <Divider type="vertical" />
-                <Button className="p-0" type="link">
-                  Bar
-                </Button>
-                <Divider type="vertical" />
                 <RangePicker
+                  onChange={(dates) => {
+                    if (dates?.[0] && dates[0] !== firstDate) {
+                      setFirstDate(dates?.[0]);
+                    }
+                    if (dates?.[1] && dates[1] !== secondDate) {
+                      setSecondDate(dates?.[1]);
+                    }
+                  }}
                   placement="bottomLeft"
                   defaultValue={[secondDate, firstDate]}
                 />
               </div>
+              <div style={{ height: 400, width: "100%" }}>
+                {view === View.stacked && (
+                  <StackedChart
+                    data={logs.filter(
+                      (l) => l.exerciseId === exercise.exerciseId
+                    )}
+                  />
+                )}
+              </div>
+              <Divider />
             </div>
-            <div>Chart</div>
           </div>
         );
       })}

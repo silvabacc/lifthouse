@@ -186,7 +186,7 @@ export default class DatabaseClient {
     return data.map((data) => ({
       logId: data.log_entry_id,
       userId: data.user_id,
-      exerciseId: data.exercise_id,
+      exerciseId: parseInt(data.exercise_id),
       info: data.info,
       notes: data.notes,
       date: data.date,

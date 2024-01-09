@@ -21,14 +21,14 @@ export type TemplateSetup = {
 
 type LogInfo = {
   set: number;
-  reps: string;
+  reps: number;
   weight: number;
 };
 
 export type LogEntry = {
   logId: number;
   exerciseId: number;
-  info: LogInfo;
+  info: LogInfo[];
   date: Date;
   notes: string;
 };

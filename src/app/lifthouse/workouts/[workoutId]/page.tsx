@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Layout, Modal, Radio, Space } from "antd";
+import { Button, Divider, Layout, Modal, Radio, Space } from "antd";
 import { PageInfoPortal } from "../../components/pageInfo";
 import { use, useEffect, useState } from "react";
 import AddButton from "../components/addButton";
@@ -71,9 +71,9 @@ export default function WorkoutPlanPage({
   if (loading || !workout) return <PageSkeleton />;
 
   return (
-    <PageAnimation>
-      <Layout className="h-full">
-        <Content className="h-full bg-white rounded-sm">
+    <PageAnimation className="h-full">
+      <Layout className="relative h-full">
+        <Content className="h-full bg-white rounded-sm overflow-auto">
           <PageInfoPortal title="Workout templates">
             <WorkoutPageInfo
               value={workout?.template}

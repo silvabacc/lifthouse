@@ -1,4 +1,5 @@
 import { ExerciseType, WorkoutTemplate } from "@/lib/supabase/db/types";
+import { View } from "./components/exerciseCard";
 
 export const IntensityRepRange = [
   { sets: 3, reps: "3" },
@@ -106,4 +107,8 @@ export function formatValue(sets: number, reps: string) {
 
 export function intersection(arr1: ExerciseType[], arr2: ExerciseType[]) {
   return arr1.filter((value) => arr2.includes(value)).length !== 0;
+}
+
+export function getButtonType(currentView: View, targetView: View) {
+  return currentView === targetView ? "link" : "text";
 }
