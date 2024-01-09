@@ -1,8 +1,6 @@
-import { Exercise, LogEntry } from "@/lib/supabase/db/types";
+import { LogEntry } from "@/lib/supabase/db/types";
 import { Table as AntDTable, TableColumnsType } from "antd";
 import React from "react";
-
-const { Column, ColumnGroup } = AntDTable;
 
 interface TableDataType {
   key: React.Key;
