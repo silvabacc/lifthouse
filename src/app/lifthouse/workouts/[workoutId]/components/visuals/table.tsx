@@ -61,14 +61,16 @@ export default function Table({ data }: Props) {
   ];
 
   return (
-    <AntDTable
-      expandable={{
-        expandedRowRender(record) {
-          return expandedRowRender(parseInt(record.key.toString()));
-        },
-      }}
-      columns={columns}
-      dataSource={transformedData}
-    />
+    <div className="mt-4">
+      <AntDTable
+        expandable={{
+          expandedRowRender(record) {
+            return expandedRowRender(parseInt(record.key.toString()));
+          },
+        }}
+        columns={columns}
+        dataSource={transformedData}
+      />
+    </div>
   );
 }
