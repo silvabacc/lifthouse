@@ -52,7 +52,7 @@ export default function SelectElement({
         <DownOutlined />
       </div>
       {expanded && (
-        <div className="absolute z-10 bg-white border border-slate-200 overflow-auto min-w-56 shadow-2xl">
+        <div className="absolute z-10 bg-white border border-slate-200 overflow-auto w-56 shadow-2xl">
           <BottomFadeInAnimation className="">
             <div className="bg-white sticky top-0">
               <Search
