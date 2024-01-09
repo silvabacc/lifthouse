@@ -52,39 +52,35 @@ export default function SelectElement({
         <DownOutlined />
       </div>
       {expanded && (
-        <div className="absolute z-10 bg-white border border-slate-200 overflow-auto w-56 shadow-2xl">
-          <BottomFadeInAnimation className="">
-            <div className="bg-white sticky top-0">
-              <Search
-                onChange={(e) => setSearch(e.target.value.toLowerCase())}
-              />
-            </div>
-            {options
-              .filter((o) => o.label.toLocaleLowerCase().includes(search))
-              .map((o) => {
-                return (
-                  <div
-                    onClick={() => {
-                      if (optionSelected.value === o.value) {
-                        setExpnaded(false);
-                        return;
-                      }
-                      setOptionSelected(o);
-                      setSearch("");
+        <BottomFadeInAnimation className="absolute z-10 bg-white border border-slate-200 overflow-auto w-64 shadow-2xl">
+          <div className="bg-white sticky top-0">
+            <Search onChange={(e) => setSearch(e.target.value.toLowerCase())} />
+          </div>
+          {options
+            .filter((o) => o.label.toLocaleLowerCase().includes(search))
+            .map((o) => {
+              return (
+                <div
+                  onClick={() => {
+                    if (optionSelected.value === o.value) {
                       setExpnaded(false);
-                      onChange?.(o.value);
-                    }}
-                    className={`p-2 cursor-pointer hover:bg-slate-100 ${
-                      o.value === optionSelected.value && "bg-slate-100"
-                    }`}
-                    key={o.value}
-                  >
-                    {o.label}
-                  </div>
-                );
-              })}
-          </BottomFadeInAnimation>
-        </div>
+                      return;
+                    }
+                    setOptionSelected(o);
+                    setSearch("");
+                    setExpnaded(false);
+                    onChange?.(o.value);
+                  }}
+                  className={`p-2 cursor-pointer hover:bg-slate-100 ${
+                    o.value === optionSelected.value && "bg-slate-100"
+                  }`}
+                  key={o.value}
+                >
+                  {o.label}
+                </div>
+              );
+            })}
+        </BottomFadeInAnimation>
       )}
     </div>
   );
