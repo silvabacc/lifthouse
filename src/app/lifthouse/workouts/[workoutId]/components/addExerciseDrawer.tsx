@@ -3,21 +3,21 @@ import { Button, Drawer, Input, Modal, Space } from "antd";
 import { useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { useExercises } from "../../hooks/useExercise";
+import { useWorkoutIdContext } from "../context";
 
 type Props = {
   drawOpen: boolean;
   setDrawOpen: (modalOpen: boolean) => void;
   onClickMuscle: (exerciseId: number) => void;
   filterOutExercisesIds?: number[];
-  exercises: Exercise[];
 };
 export default function AddExerciseDrawer({
   drawOpen,
   setDrawOpen,
   onClickMuscle,
-  exercises,
   filterOutExercisesIds = [],
 }: Props) {
+  const { exercises } = useWorkoutIdContext();
   const [search, setSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 

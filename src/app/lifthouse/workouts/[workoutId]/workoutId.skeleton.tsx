@@ -1,7 +1,7 @@
 import { Skeleton, Space } from "antd";
 import { DotChartOutlined } from "@ant-design/icons";
 
-export default function PageSkeleton() {
+export default function WorkoutIdSkeleton() {
   return (
     <div className="h-full bg-white p-4 mt-4 h-full rounded-sm">
       <Skeleton active />

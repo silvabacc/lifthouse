@@ -19,6 +19,7 @@ import LineChart from "./components/visuals/line";
 import Table from "./components/visuals/table";
 import { useWorkout } from "../hooks/useWorkout";
 import { SelectExercise, SelectRepsScheme } from "./components/selectors";
+import { useWorkoutIdContext } from "./context";
 
 const { RangePicker } = DatePicker;
 
@@ -28,14 +29,9 @@ export enum View {
   table = "table",
 }
 
-type ExerciseCardProps = {
-  workout: Workout;
-  setWorkout: Dispatch<SetStateAction<Workout | undefined>>;
-};
-export default function Charts({ workout, setWorkout }: ExerciseCardProps) {
+export default function Charts() {
+  const { exercises, workout, setWorkout } = useWorkoutIdContext();
   const [logs, setLogs] = useState<LogEntry[]>([]);
-  const { updateWorkoutPlan } = useWorkout();
-  const { exercises } = useExercises();
   const { fetch } = useFetch();
   const [firstDate, setFirstDate] = useState(dayjs().subtract(30, "day"));
   const [secondDate, setSecondDate] = useState(dayjs());
@@ -69,10 +65,6 @@ export default function Charts({ workout, setWorkout }: ExerciseCardProps) {
       fetchLogs();
     }
   }, [firstDate, secondDate]);
-
-  if (exercises.length === 0) {
-    return <ChartsSkeleton />;
-  }
 
   if (loading) {
     return <ChartsSkeleton />;

@@ -3,17 +3,14 @@ import { useWorkout } from "../hooks/useWorkout";
 import { Exercise, Workout } from "@/lib/supabase/db/types";
 import { Collapse, CollapseProps, Input, Space } from "antd";
 import { SelectExercise, SelectRepsScheme } from "./components/selectors";
-
-type RecordProps = {
-  workout: Workout;
-  setWorkout: (workout: Workout) => void;
-  exercises: Exercise[];
-};
+import { useWorkoutIdContext } from "./context";
 
 const { TextArea } = Input;
 
-export function Record({ workout, setWorkout, exercises }: RecordProps) {
+export function Record() {
+  const { workout } = useWorkoutIdContext();
   const [workoutNote, setWorkoutNote] = useState("");
+
   return (
     <Space direction="vertical" className="w-full">
       {workout.exercises.map((exercise, index) => {
@@ -21,17 +18,8 @@ export function Record({ workout, setWorkout, exercises }: RecordProps) {
           <div key={`${exercise.exerciseId}-${index}`}>
             <div className="flex flex-wrap justify-between">
               <Space className="flex-wrap">
-                <SelectExercise
-                  exercises={exercises}
-                  defaultExercise={exercise}
-                  workout={workout}
-                  setWorkout={setWorkout}
-                />
-                <SelectRepsScheme
-                  defaultExercise={exercise}
-                  workout={workout}
-                  setWorkout={setWorkout}
-                />
+                <SelectExercise defaultExercise={exercise} />
+                <SelectRepsScheme defaultExercise={exercise} />
               </Space>
             </div>
             <TextArea

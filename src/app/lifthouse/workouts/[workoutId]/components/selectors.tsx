@@ -12,20 +12,14 @@ import {
 } from "../utils";
 import SelectElement from "./selectComponent";
 import { useWorkout } from "../../hooks/useWorkout";
+import { useWorkoutIdContext } from "../context";
 
 type SelectExerciseProps = {
-  exercises: Exercise[];
   defaultExercise: WorkoutExercise;
-  workout: Workout;
-  setWorkout: (workout: Workout) => void;
 };
-export function SelectExercise({
-  exercises,
-  defaultExercise,
-  workout,
-  setWorkout,
-}: SelectExerciseProps) {
+export function SelectExercise({ defaultExercise }: SelectExerciseProps) {
   const { updateWorkoutPlan } = useWorkout();
+  const { exercises, workout, setWorkout } = useWorkoutIdContext();
   const findExercise = exercises.find(
     (e) => e.exerciseId === defaultExercise.exerciseId
   );
@@ -84,14 +78,9 @@ export function SelectExercise({
 
 type SelectRepsSchemeProps = {
   defaultExercise: WorkoutExercise;
-  workout: Workout;
-  setWorkout: (workout: Workout) => void;
 };
-export function SelectRepsScheme({
-  defaultExercise,
-  workout,
-  setWorkout,
-}: SelectRepsSchemeProps) {
+export function SelectRepsScheme({ defaultExercise }: SelectRepsSchemeProps) {
+  const { workout, setWorkout } = useWorkoutIdContext();
   const { updateWorkoutPlan } = useWorkout();
 
   const repSchemeOptions = getRepScheme(workout.template).map((r) => ({

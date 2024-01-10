@@ -9,40 +9,25 @@ import { useWorkout } from "../hooks/useWorkout";
 import { Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
 import { templateName } from "./utils";
 import { PageAnimation } from "@/app/aniamtions/pageAnimation";
-import PageSkeleton from "./page.skeleton";
+import WorkoutIdSkeleton from "./workoutId.skeleton";
 import { Record } from "./record";
 import { useExercises } from "../hooks/useExercise";
 import dynamic from "next/dynamic";
+import { useWorkoutIdContext } from "./context";
 
 const Charts = dynamic(() => import("./charts"));
 
 const { Content, Footer } = Layout;
 
-export default function WorkoutPlanPage({
-  params,
-}: {
-  params: { workoutId: number };
-}) {
-  const { exercises, isLoading: exercisesLoading } = useExercises();
+export default function WorkoutPlanPage() {
+  const { workout, setWorkout, exercises } = useWorkoutIdContext();
   const [drawOpen, setDrawOpen] = useState(false);
-  const { fetchWorkoutData, updateWorkoutPlan, updateTemplate } = useWorkout();
-  const [loading, isLoading] = useState(false);
-  const [workout, setWorkout] = useState<Workout>();
-
-  useEffect(() => {
-    const fetch = async () => {
-      isLoading(true);
-      const workout = await fetchWorkoutData(params.workoutId);
-      setWorkout(workout);
-      isLoading(false);
-    };
-    fetch();
-  }, []);
+  const { updateWorkoutPlan, updateTemplate } = useWorkout();
 
   const onAddExerciseClick = async (exerciseId: number) => {
     const defaultExerciseSetup = { exerciseId, sets: 3, reps: "8-12" };
     await updateWorkoutPlan({
-      workoutId: params.workoutId,
+      workoutId: workout.workoutId,
       exercises: [...(workout?.exercises || []), defaultExerciseSetup],
     });
 
@@ -63,55 +48,43 @@ export default function WorkoutPlanPage({
       okText: "Yes",
       cancelText: "No",
       onOk: async () => {
-        const updatedData = await updateTemplate(params.workoutId, value);
+        const updatedData = await updateTemplate(workout.workoutId, value);
         setWorkout(updatedData);
       },
     });
   };
 
-  const generateTabItems = (workout: Workout) => {
+  const generateTabItems = () => {
     return [
       {
         key: "1",
         label: "Record",
-        children: (
-          <Record
-            workout={workout}
-            exercises={exercises}
-            setWorkout={setWorkout}
-          />
-        ),
+        children: <Record />,
       },
       {
         key: "2",
         label: "Graphs",
-        children: <Charts workout={workout} setWorkout={setWorkout} />,
+        children: <Charts />,
       },
     ];
   };
-
-  if (loading || !workout || exercisesLoading) return <PageSkeleton />;
 
   return (
     <PageAnimation className="h-full">
       <Layout className="relative h-full">
         <Content className="h-full bg-white rounded-sm overflow-auto">
           <PageInfoPortal title="Workout templates">
-            <WorkoutPageInfo
-              value={workout?.template}
-              onClickWorkoutType={onClickWorkoutType}
-            />
+            <WorkoutPageInfo onClickWorkoutType={onClickWorkoutType} />
           </PageInfoPortal>
           <AddExerciseDrawer
-            exercises={exercises}
             drawOpen={drawOpen}
             setDrawOpen={setDrawOpen}
             onClickMuscle={onAddExerciseClick}
             filterOutExercisesIds={
-              workout?.exercises.map((e) => e.exerciseId) || []
+              workout.exercises.map((e) => e.exerciseId) || []
             }
           />
-          <Tabs className="pl-4 pr-2" items={generateTabItems(workout)} />
+          <Tabs className="pl-4 pr-2" items={generateTabItems()} />
         </Content>
         <Footer className="p-0 mt-4">
           {workout?.template === WorkoutTemplate.custom && (
@@ -127,12 +100,13 @@ export default function WorkoutPlanPage({
 }
 
 function WorkoutPageInfo({
-  value,
   onClickWorkoutType,
 }: {
-  value?: WorkoutTemplate;
   onClickWorkoutType: (value: WorkoutTemplate) => void;
 }) {
+  const {
+    workout: { template },
+  } = useWorkoutIdContext();
   return (
     <Space className="pt-2" direction="vertical">
       <p className="text-gray-500 pb-2">
@@ -141,7 +115,7 @@ function WorkoutPageInfo({
         plan, or you can stick with your custom workout plan
       </p>
       <Radio.Group
-        value={value}
+        value={template}
         buttonStyle="solid"
         onChange={(value) =>
           onClickWorkoutType(value.target.value as WorkoutTemplate)

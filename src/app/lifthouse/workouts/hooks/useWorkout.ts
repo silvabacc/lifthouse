@@ -22,11 +22,6 @@ export function useWorkout() {
     });
   };
 
-  const fetchWorkoutData = async (workoutId: number) => {
-    const response: Workout = await fetch(`/api/workouts/${workoutId}`);
-    return response;
-  };
-
   type UpdateWorkoutPlanReturn = {
     workoutId: number;
     name?: string;
@@ -92,7 +87,6 @@ export function useWorkout() {
     deleteWorkoutPlan,
     createWorkoutPlan,
     fetchWorkouts,
-    fetchWorkoutData,
     updateWorkoutPlan,
     updateTemplate,
   };
