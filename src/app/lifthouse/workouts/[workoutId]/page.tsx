@@ -154,6 +154,7 @@ function WorkoutPageInfo({
           WorkoutTemplate.lower_intensity,
           WorkoutTemplate.upper_volume,
           WorkoutTemplate.lower_volume,
+          WorkoutTemplate.custom,
         ].map((template) => {
           return (
             <Radio.Button key={template} value={template}>
