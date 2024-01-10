@@ -1,13 +1,48 @@
 import { useEffect, useState } from "react";
 import { useWorkout } from "../hooks/useWorkout";
 import { Exercise, Workout } from "@/lib/supabase/db/types";
-import { Collapse, CollapseProps, Space } from "antd";
+import { Collapse, CollapseProps, Input, Space } from "antd";
+import { SelectExercise, SelectRepsScheme } from "./components/selectors";
 
 type RecordProps = {
   workout: Workout;
+  setWorkout: (workout: Workout) => void;
   exercises: Exercise[];
 };
 
-export function Record({ workout, exercises }: RecordProps) {
-  return <div className="pr-4 pb-4"></div>;
+const { TextArea } = Input;
+
+export function Record({ workout, setWorkout, exercises }: RecordProps) {
+  const [workoutNote, setWorkoutNote] = useState("");
+  return (
+    <Space direction="vertical" className="w-full">
+      {workout.exercises.map((exercise, index) => {
+        return (
+          <div key={`${exercise.exerciseId}-${index}`}>
+            <div className="flex flex-wrap justify-between">
+              <Space className="flex-wrap">
+                <SelectExercise
+                  exercises={exercises}
+                  defaultExercise={exercise}
+                  workout={workout}
+                  setWorkout={setWorkout}
+                />
+                <SelectRepsScheme
+                  defaultExercise={exercise}
+                  workout={workout}
+                  setWorkout={setWorkout}
+                />
+              </Space>
+            </div>
+            <TextArea
+              autoSize={true}
+              placeholder="Notes"
+              className="mt-4"
+              onChange={(e) => setWorkoutNote(e.target.value)}
+            />
+          </div>
+        );
+      })}
+    </Space>
+  );
 }

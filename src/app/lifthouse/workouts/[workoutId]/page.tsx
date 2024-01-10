@@ -30,7 +30,7 @@ export default function WorkoutPlanPage({
 }: {
   params: { workoutId: number };
 }) {
-  const { exercises } = useExercises();
+  const { exercises, isLoading: exercisesLoading } = useExercises();
   const [drawOpen, setDrawOpen] = useState(false);
   const { fetchWorkoutData, updateWorkoutPlan, updateTemplate } = useWorkout();
   const [loading, isLoading] = useState(false);
@@ -81,7 +81,13 @@ export default function WorkoutPlanPage({
       {
         key: "1",
         label: "Record",
-        children: <Record workout={workout} exercises={exercises} />,
+        children: (
+          <Record
+            workout={workout}
+            exercises={exercises}
+            setWorkout={setWorkout}
+          />
+        ),
       },
       {
         key: "2",
@@ -91,7 +97,7 @@ export default function WorkoutPlanPage({
     ];
   };
 
-  if (loading || !workout) return <PageSkeleton />;
+  if (loading || !workout || exercisesLoading) return <PageSkeleton />;
 
   return (
     <PageAnimation className="h-full">
