@@ -18,7 +18,7 @@ const Charts = dynamic(() => import("./charts"));
 const { Content, Footer } = Layout;
 
 export default function WorkoutPlanPage() {
-  const { workout, setWorkout, exercises } = useWorkoutIdContext();
+  const { workout, setWorkout } = useWorkoutIdContext();
   const [drawOpen, setDrawOpen] = useState(false);
   const { updateWorkoutPlan, updateTemplate } = useWorkout();
 
