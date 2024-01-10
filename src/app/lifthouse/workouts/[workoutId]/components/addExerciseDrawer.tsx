@@ -1,8 +1,7 @@
-import { Exercise, PrimaryMuscleGroup } from "@/lib/supabase/db/types";
+import { PrimaryMuscleGroup } from "@/lib/supabase/db/types";
 import { Button, Drawer, Input, Modal, Space } from "antd";
 import { useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { useExercises } from "../../hooks/useExercise";
 import { useWorkoutIdContext } from "../context";
 
 type Props = {

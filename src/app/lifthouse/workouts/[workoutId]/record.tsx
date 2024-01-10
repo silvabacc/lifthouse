@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
-import { useWorkout } from "../hooks/useWorkout";
-import { Exercise, Workout } from "@/lib/supabase/db/types";
-import { Collapse, CollapseProps, Input, Space } from "antd";
+import { useState } from "react";
+import { Input, Space } from "antd";
 import { SelectExercise, SelectRepsScheme } from "./components/selectors";
 import { useWorkoutIdContext } from "./context";
 

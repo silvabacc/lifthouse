@@ -1,9 +1,4 @@
-import {
-  Exercise,
-  Workout,
-  WorkoutExercise,
-  WorkoutTemplate,
-} from "@/lib/supabase/db/types";
+import { WorkoutExercise, WorkoutTemplate } from "@/lib/supabase/db/types";
 import {
   acceptedExerciseTypesForExercises,
   formatValue,

@@ -1,23 +1,14 @@
 import { useFetch } from "@/app/hooks/useFetch";
-import { LogEntry, Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
+import { LogEntry } from "@/lib/supabase/db/types";
 import { Button, DatePicker, Divider, Space } from "antd";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { useExercises } from "../hooks/useExercise";
-import {
-  acceptedExerciseTypesForExercises,
-  formatValue,
-  getButtonType,
-  getRepScheme,
-  intersection,
-} from "./utils";
+import { useEffect, useState } from "react";
+import { getButtonType } from "./utils";
 import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
-import SelectElement from "./components/selectComponent";
 import ChartsSkeleton from "./charts.skeleton";
 import dayjs from "dayjs";
 import StackedChart from "./components/visuals/stacked";
 import LineChart from "./components/visuals/line";
 import Table from "./components/visuals/table";
-import { useWorkout } from "../hooks/useWorkout";
 import { SelectExercise, SelectRepsScheme } from "./components/selectors";
 import { useWorkoutIdContext } from "./context";
 
@@ -55,16 +46,10 @@ export default function Charts() {
   };
 
   useEffect(() => {
-    if (workout) {
-      fetchLogs();
-    }
-  }, [workout]);
-
-  useEffect(() => {
     if (secondDate > firstDate) {
       fetchLogs();
     }
-  }, [firstDate, secondDate]);
+  }, [firstDate, secondDate, workout]);
 
   if (loading) {
     return <ChartsSkeleton />;
@@ -78,17 +63,8 @@ export default function Charts() {
           <div key={`${exercise.exerciseId}-${index}`}>
             <div className="flex flex-wrap justify-between">
               <Space className="flex-wrap">
-                <SelectExercise
-                  exercises={exercises}
-                  defaultExercise={exercise}
-                  workout={workout}
-                  setWorkout={setWorkout}
-                />
-                <SelectRepsScheme
-                  defaultExercise={exercise}
-                  workout={workout}
-                  setWorkout={setWorkout}
-                />
+                <SelectExercise defaultExercise={exercise} />
+                <SelectRepsScheme defaultExercise={exercise} />
               </Space>
               <div>
                 <Button

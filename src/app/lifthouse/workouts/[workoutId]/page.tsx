@@ -2,16 +2,14 @@
 
 import { Layout, Modal, Radio, Space, Tabs } from "antd";
 import { PageInfoPortal } from "../../components/pageInfo";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddButton from "../components/addButton";
 import AddExerciseDrawer from "./components/addExerciseDrawer";
 import { useWorkout } from "../hooks/useWorkout";
-import { Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
+import { WorkoutTemplate } from "@/lib/supabase/db/types";
 import { templateName } from "./utils";
 import { PageAnimation } from "@/app/aniamtions/pageAnimation";
-import WorkoutIdSkeleton from "./workoutId.skeleton";
 import { Record } from "./record";
-import { useExercises } from "../hooks/useExercise";
 import dynamic from "next/dynamic";
 import { useWorkoutIdContext } from "./context";
 
