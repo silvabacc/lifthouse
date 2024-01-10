@@ -31,7 +31,6 @@ export const WorkoutIdContextProvider = ({ children, workoutId }: any) => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
 
   const { fetch } = useFetch();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
     const fetchWorkoutData = async () => {
@@ -48,7 +47,7 @@ export const WorkoutIdContextProvider = ({ children, workoutId }: any) => {
     fetchWorkoutData();
   }, []);
 
-  if (!workout || !exercises) {
+  if (!workout || exercises.length === 0) {
     return <WorkoutIdSkeleton />;
   }
 

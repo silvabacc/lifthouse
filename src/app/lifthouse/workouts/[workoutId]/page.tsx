@@ -68,7 +68,9 @@ export default function WorkoutPlanPage() {
   };
 
   return (
-    <PageAnimation className="h-full">
+    <PageAnimation
+      className={`${workout.exercises.length === 0 ? "" : "h-full"}`}
+    >
       <Layout className="relative h-full">
         <Content className="h-full bg-white rounded-sm overflow-auto">
           <PageInfoPortal title="Workout templates">
@@ -82,7 +84,9 @@ export default function WorkoutPlanPage() {
               workout.exercises.map((e) => e.exerciseId) || []
             }
           />
-          <Tabs className="pl-4 pr-2" items={generateTabItems()} />
+          {workout.exercises.length !== 0 && (
+            <Tabs className="pl-4 pr-2" items={generateTabItems()} />
+          )}
         </Content>
         <Footer className="p-0 mt-4">
           {workout?.template === WorkoutTemplate.custom && (

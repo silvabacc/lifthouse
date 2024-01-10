@@ -7,11 +7,13 @@ import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
 const { Search } = Input;
 
 type SelectProps = {
+  value?: string | number;
   options: { label: string; value: string | number }[];
   defaultValue?: string | number;
   onChange?: (value: string | number) => void;
 };
 export default function SelectElement({
+  value,
   options,
   defaultValue,
   onChange,
@@ -48,7 +50,9 @@ export default function SelectElement({
         className="flex items-center cursor-pointer justify-between border border-slate-200 p-2 rounded-lg"
         onClick={onClick}
       >
-        <p className="pr-2">{optionSelected?.label}</p>
+        <p className="pr-2">
+          {findOption(value)?.label ?? optionSelected?.label}
+        </p>
         <DownOutlined />
       </div>
       {expanded && (

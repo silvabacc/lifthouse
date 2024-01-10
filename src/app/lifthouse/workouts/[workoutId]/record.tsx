@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Input, Space } from "antd";
+import { Input, Space, Tabs, TabsProps } from "antd";
 import { SelectExercise, SelectRepsScheme } from "./components/selectors";
 import { useWorkoutIdContext } from "./context";
+import { Start } from "./components/start";
 
 const { TextArea } = Input;
 
@@ -28,6 +29,7 @@ export function Record() {
               className="mt-4"
               onChange={(e) => setWorkoutNote(e.target.value)}
             />
+            <Start exercise={exercise} />
           </div>
         );
       })}

@@ -65,7 +65,7 @@ export function SelectExercise({ defaultExercise }: SelectExerciseProps) {
 
   return (
     <SelectElement
-      defaultValue={defaultExercise.exerciseId}
+      value={defaultExercise.exerciseId}
       options={options}
       onChange={(value) =>
         onChange(defaultExercise.exerciseId, value as number)
@@ -116,7 +116,7 @@ export function SelectRepsScheme({ defaultExercise }: SelectRepsSchemeProps) {
       onChange={(value) =>
         onChangeReps(defaultExercise.exerciseId, value as string)
       }
-      defaultValue={formatValue(defaultExercise.sets, defaultExercise.reps)}
+      value={formatValue(defaultExercise.sets, defaultExercise.reps)}
     />
   );
 }

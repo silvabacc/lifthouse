@@ -21,7 +21,7 @@ export enum View {
 }
 
 export default function Charts() {
-  const { exercises, workout, setWorkout } = useWorkoutIdContext();
+  const { workout } = useWorkoutIdContext();
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const { fetch } = useFetch();
   const [firstDate, setFirstDate] = useState(dayjs().subtract(30, "day"));
@@ -105,7 +105,7 @@ export default function Charts() {
                   defaultValue={[secondDate, firstDate]}
                 />
               </div>
-              <div style={{ width: "100%" }}>
+              <div style={{ width: "100%", height: 350 }}>
                 {view === View.stacked && <StackedChart data={data} />}
                 {view === View.line && <LineChart data={data} />}
                 {view === View.table && <Table data={data} />}
