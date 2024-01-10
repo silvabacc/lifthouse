@@ -19,17 +19,20 @@ export function SelectExercise({ defaultExercise }: SelectExerciseProps) {
     (e) => e.exerciseId === defaultExercise.exerciseId
   );
 
+  // Find common exercise types
+  const commonType = findExercise?.exerciseType.find((type) =>
+    acceptedExerciseTypesForExercises(workout.template).includes(type)
+  );
+
   //With the current exercise selection, find all relevant exercises
   //This is done via searching the exercise types
   const filteredExercisesWithType = exercises
+    .filter((e) => {
+      if (!commonType) return false;
+      return e.exerciseType.includes(commonType);
+    })
     .filter((e) =>
       intersection(e.exerciseType, findExercise?.exerciseType ?? [])
-    )
-    .filter((e) =>
-      intersection(
-        e.exerciseType,
-        acceptedExerciseTypesForExercises(workout.template)
-      )
     );
 
   //We only want to apply the exercises if a template is applied
@@ -78,7 +81,7 @@ export function SelectRepsScheme({ defaultExercise }: SelectRepsSchemeProps) {
   const { workout, setWorkout } = useWorkoutIdContext();
   const { updateWorkoutPlan } = useWorkout();
 
-  const repSchemeOptions = getRepScheme(workout.template).map((r) => ({
+  const repSchemeOptions = getRepScheme(workout.template).map((r, index) => ({
     label: `${r.sets} x ${r.reps}`,
     value: formatValue(r.sets, r.reps),
   }));

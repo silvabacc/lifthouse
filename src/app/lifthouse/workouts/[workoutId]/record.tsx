@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input, Space } from "antd";
 import { SelectExercise, SelectRepsScheme } from "./components/selectors";
 import { useWorkoutIdContext } from "./context";
@@ -10,8 +10,6 @@ const { TextArea } = Input;
 export function Record() {
   const { workout } = useWorkoutIdContext();
   const [workoutNote, setWorkoutNote] = useState("");
-
-  console.log(workout.exercises);
 
   return (
     <Space direction="vertical" className="w-full">
