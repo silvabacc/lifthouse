@@ -148,7 +148,13 @@ function WorkoutPageInfo({
           onClickWorkoutType(value.target.value as WorkoutTemplate)
         }
       >
-        {Object.values(WorkoutTemplate).map((template) => {
+        {/* Can add more templates */}
+        {[
+          WorkoutTemplate.upper_intensity,
+          WorkoutTemplate.lower_intensity,
+          WorkoutTemplate.upper_volume,
+          WorkoutTemplate.lower_volume,
+        ].map((template) => {
           return (
             <Radio.Button key={template} value={template}>
               {templateName[template] || template}
