@@ -9,7 +9,6 @@ import {
 } from "@/lib/supabase/db/types";
 
 export function useWorkout() {
-  const { user } = useAppContext();
   const { fetch } = useFetch();
 
   const fetchWorkouts = async () => {

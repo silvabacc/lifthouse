@@ -1,4 +1,4 @@
-import { PrimaryMuscleGroup } from "@/lib/supabase/db/types";
+import { Exercise, PrimaryMuscleGroup } from "@/lib/supabase/db/types";
 import { Button, Drawer, Input, Modal, Space } from "antd";
 import { useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
@@ -9,14 +9,15 @@ type Props = {
   setDrawOpen: (modalOpen: boolean) => void;
   onClickMuscle: (exerciseId: number) => void;
   filterOutExercisesIds?: number[];
+  exercises: Exercise[];
 };
 export default function AddExerciseDrawer({
   drawOpen,
   setDrawOpen,
   onClickMuscle,
+  exercises,
   filterOutExercisesIds = [],
 }: Props) {
-  const { exercises } = useExercises();
   const [search, setSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 

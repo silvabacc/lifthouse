@@ -1,7 +1,7 @@
 import { useFetch } from "@/app/hooks/useFetch";
 import { LogEntry, Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
 import { Button, DatePicker, Divider, Space } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useExercises } from "../hooks/useExercise";
 import {
   acceptedExerciseTypesForExercises,
@@ -36,8 +36,12 @@ export default function Charts({ workout }: ExerciseCardProps) {
   const [firstDate, setFirstDate] = useState(dayjs().subtract(30, "day"));
   const [secondDate, setSecondDate] = useState(dayjs());
   const [view, setView] = useState<View>(View.stacked);
+  const [loading, setLoading] = useState(false);
 
   const fetchLogs = async () => {
+    if (loading) return;
+
+    setLoading(true);
     const response: LogEntry[] = await fetch(`/api/logs`, {
       method: "POST",
       body: JSON.stringify({
@@ -46,9 +50,15 @@ export default function Charts({ workout }: ExerciseCardProps) {
         endOn: secondDate,
       }),
     });
-
+    setLoading(false);
     setLogs(response);
   };
+
+  useEffect(() => {
+    if (workout) {
+      fetchLogs();
+    }
+  }, [workout]);
 
   useEffect(() => {
     if (secondDate > firstDate) {
@@ -57,6 +67,10 @@ export default function Charts({ workout }: ExerciseCardProps) {
   }, [firstDate, secondDate]);
 
   if (exercises.length === 0) {
+    return <ExerciseCardSkeleton />;
+  }
+
+  if (loading) {
     return <ExerciseCardSkeleton />;
   }
 

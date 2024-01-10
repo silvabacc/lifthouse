@@ -21,6 +21,7 @@ import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 import Charts from "./charts";
 import PageSkeleton from "./page.skeleton";
 import { Record } from "./record";
+import { useExercises } from "../hooks/useExercise";
 
 const { Content, Footer } = Layout;
 
@@ -29,6 +30,7 @@ export default function WorkoutPlanPage({
 }: {
   params: { workoutId: number };
 }) {
+  const { exercises } = useExercises();
   const [drawOpen, setDrawOpen] = useState(false);
   const { fetchWorkoutData, updateWorkoutPlan, updateTemplate } = useWorkout();
   const [loading, isLoading] = useState(false);
@@ -67,13 +69,9 @@ export default function WorkoutPlanPage({
       content: "This may overwrite your current workout plan",
       okText: "Yes",
       cancelText: "No",
-      onOk: () => {
-        const updatedData = updateTemplate(params.workoutId, value);
-        setWorkout((prev) => {
-          if (prev) {
-            return { ...prev, template: value };
-          }
-        });
+      onOk: async () => {
+        const updatedData = await updateTemplate(params.workoutId, value);
+        setWorkout(updatedData);
       },
     });
   };
@@ -83,7 +81,7 @@ export default function WorkoutPlanPage({
       {
         key: "1",
         label: "Record",
-        children: <Record />,
+        children: <Record workout={workout} exercises={exercises} />,
       },
       {
         key: "2",
@@ -106,6 +104,7 @@ export default function WorkoutPlanPage({
             />
           </PageInfoPortal>
           <AddExerciseDrawer
+            exercises={exercises}
             drawOpen={drawOpen}
             setDrawOpen={setDrawOpen}
             onClickMuscle={onAddExerciseClick}
