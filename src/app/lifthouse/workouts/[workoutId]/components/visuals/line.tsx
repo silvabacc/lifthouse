@@ -1,11 +1,7 @@
 import { LogEntry } from "@/lib/supabase/db/types";
 import { Line } from "@ant-design/plots";
 import { Alert } from "antd";
-import { IntensityRepRange, VolumeRepRange, formatValue } from "../../utils";
-import SelectElement from "../selectComponent";
 import { useState } from "react";
-
-import { generate } from "@ant-design/colors";
 
 type LineChartProps = {
   data: LogEntry[];
@@ -15,8 +11,6 @@ export default function LineChart({ data }: LineChartProps) {
     value: i + 1,
     label: `Set ${i + 1}`,
   }));
-
-  const [set, setSet] = useState(sets[0].value);
 
   if (data.length === 0) {
     return (
