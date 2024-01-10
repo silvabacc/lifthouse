@@ -102,7 +102,7 @@ export function acceptedExerciseTypesForExercises(template: WorkoutTemplate) {
 }
 
 export function formatValue(sets: number, reps: string) {
-  return `${sets}-${reps}`;
+  return `${sets}:${reps}`;
 }
 
 export function intersection(arr1: ExerciseType[], arr2: ExerciseType[]) {

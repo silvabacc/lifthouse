@@ -1,7 +1,7 @@
 import { useFetch } from "@/app/hooks/useFetch";
 import { LogEntry, Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
 import { Button, DatePicker, Divider, Space } from "antd";
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useExercises } from "../hooks/useExercise";
 import {
   acceptedExerciseTypesForExercises,
@@ -17,6 +17,7 @@ import dayjs from "dayjs";
 import StackedChart from "./components/visuals/stacked";
 import LineChart from "./components/visuals/line";
 import Table from "./components/visuals/table";
+import { useWorkout } from "../hooks/useWorkout";
 
 const { RangePicker } = DatePicker;
 
@@ -28,15 +29,67 @@ export enum View {
 
 type ExerciseCardProps = {
   workout: Workout;
+  setWorkout: Dispatch<SetStateAction<Workout | undefined>>;
 };
-export default function Charts({ workout }: ExerciseCardProps) {
+export default function Charts({ workout, setWorkout }: ExerciseCardProps) {
   const [logs, setLogs] = useState<LogEntry[]>([]);
+  const { updateWorkoutPlan } = useWorkout();
   const { exercises } = useExercises();
   const { fetch } = useFetch();
   const [firstDate, setFirstDate] = useState(dayjs().subtract(30, "day"));
   const [secondDate, setSecondDate] = useState(dayjs());
   const [view, setView] = useState<View>(View.stacked);
   const [loading, setLoading] = useState(false);
+
+  const repSchemeOptions = getRepScheme(workout.template).map((r) => ({
+    label: `${r.sets} x ${r.reps}`,
+    value: formatValue(r.sets, r.reps),
+  }));
+
+  const onChangeReps = async (exerciseId: number, value: string) => {
+    const [sets, reps] = value.split(":");
+
+    const newExercises = workout.exercises.map((e) => {
+      if (e.exerciseId === exerciseId) {
+        return {
+          ...e,
+          sets: parseInt(sets),
+          reps: reps,
+        };
+      }
+      return e;
+    });
+
+    const updatedWorkout = await updateWorkoutPlan({
+      workoutId: workout.workoutId,
+      exercises: newExercises,
+    });
+
+    if (!updatedWorkout) return;
+
+    setWorkout(updatedWorkout);
+  };
+
+  const onChangeExercise = async (exerciseId: number, value: number) => {
+    const newExercises = workout.exercises.map((e) => {
+      if (e.exerciseId === exerciseId) {
+        return {
+          ...e,
+          exerciseId: value,
+        };
+      }
+      return e;
+    });
+
+    const updatedWorkout = await updateWorkoutPlan({
+      workoutId: workout.workoutId,
+      exercises: newExercises,
+    });
+
+    if (!updatedWorkout) return;
+
+    setWorkout(updatedWorkout);
+  };
 
   const fetchLogs = async () => {
     if (loading) return;
@@ -74,13 +127,8 @@ export default function Charts({ workout }: ExerciseCardProps) {
     return <ExerciseCardSkeleton />;
   }
 
-  const repSchemeOptions = getRepScheme(workout.template).map((r) => ({
-    label: `${r.sets} x ${r.reps}`,
-    value: formatValue(r.sets, r.reps),
-  }));
-
   return (
-    <BottomFadeInAnimation className="flex flex-col h-full w-full p-4">
+    <BottomFadeInAnimation className="flex flex-col h-full w-full">
       {workout.exercises.map((exercise) => {
         const findExercise = exercises.find(
           (e) => e.exerciseId === exercise.exerciseId
@@ -115,9 +163,15 @@ export default function Charts({ workout }: ExerciseCardProps) {
                 <SelectElement
                   defaultValue={exercise.exerciseId}
                   options={options}
+                  onChange={(value) =>
+                    onChangeExercise(exercise.exerciseId, value as number)
+                  }
                 />
                 <SelectElement
                   options={repSchemeOptions}
+                  onChange={(value) =>
+                    onChangeReps(exercise.exerciseId, value as string)
+                  }
                   defaultValue={formatValue(exercise.sets, exercise.reps)}
                 />
               </Space>

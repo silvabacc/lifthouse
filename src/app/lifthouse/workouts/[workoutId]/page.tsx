@@ -86,7 +86,7 @@ export default function WorkoutPlanPage({
       {
         key: "2",
         label: "Graphs",
-        children: <Charts workout={workout} />,
+        children: <Charts workout={workout} setWorkout={setWorkout} />,
       },
     ];
   };
@@ -112,7 +112,7 @@ export default function WorkoutPlanPage({
               workout?.exercises.map((e) => e.exerciseId) || []
             }
           />
-          <Tabs className="pl-4" items={generateTabItems(workout)} />
+          <Tabs className="pl-4 pr-2" items={generateTabItems(workout)} />
         </Content>
         <Footer className="p-0 mt-4">
           {workout?.template === WorkoutTemplate.custom && (

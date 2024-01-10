@@ -134,15 +134,25 @@ export default class DatabaseClient {
     exercises: number[],
     workoutId: string,
     template: WorkoutTemplate
-  ) {
-    const { error } = await this.supabase
+  ): Promise<Workout> {
+    const { data, error } = await this.supabase
       .from("workouts")
       .update({ name, description, exercises, template })
-      .match({ workout_id: workoutId });
+      .match({ workout_id: workoutId })
+      .select();
 
     if (error) {
       throw error;
     }
+
+    return {
+      workoutId: data[0].workout_id,
+      name: data[0].name,
+      description: data[0].description,
+      exercises: data[0].exercises,
+      userId: data[0].user_id,
+      template: data[0].template,
+    };
   }
 
   async getTemplateSetup(template: WorkoutTemplate): Promise<TemplateSetup> {

@@ -45,18 +45,15 @@ export function useWorkout() {
       return;
     }
 
-    const response: { success: boolean } = await fetch(
-      `/api/workouts/${workoutId}`,
-      {
-        method: "PUT",
-        body: JSON.stringify({
-          name,
-          description,
-          exercises,
-          template,
-        }),
-      }
-    );
+    const response: Workout = await fetch(`/api/workouts/${workoutId}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        name,
+        description,
+        exercises,
+        template,
+      }),
+    });
 
     return response;
   };

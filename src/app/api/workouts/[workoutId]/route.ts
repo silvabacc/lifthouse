@@ -59,7 +59,7 @@ export async function PUT(
     updatedExercises = setup.exercises;
   }
 
-  await dbClient.updateWorkout(
+  const workout = await dbClient.updateWorkout(
     name,
     description,
     updatedExercises,
@@ -67,10 +67,5 @@ export async function PUT(
     template
   );
 
-  return NextResponse.json({
-    name,
-    description,
-    exercises: updatedExercises,
-    template,
-  });
+  return NextResponse.json(workout);
 }
