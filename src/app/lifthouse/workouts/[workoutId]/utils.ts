@@ -1,5 +1,5 @@
 import { ExerciseType, WorkoutTemplate } from "@/lib/supabase/db/types";
-import { View } from "./components/exerciseCard";
+import { View } from "./charts";
 
 export const IntensityRepRange = [
   { sets: 3, reps: "3" },

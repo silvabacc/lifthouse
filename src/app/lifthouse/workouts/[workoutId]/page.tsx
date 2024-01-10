@@ -1,6 +1,15 @@
 "use client";
 
-import { Button, Divider, Layout, Modal, Radio, Space } from "antd";
+import {
+  Button,
+  Divider,
+  Layout,
+  Modal,
+  Radio,
+  Space,
+  Tabs,
+  TabsProps,
+} from "antd";
 import { PageInfoPortal } from "../../components/pageInfo";
 import { use, useEffect, useState } from "react";
 import AddButton from "../components/addButton";
@@ -9,8 +18,9 @@ import { useWorkout } from "../hooks/useWorkout";
 import { Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
 import { templateName } from "./utils";
 import { PageAnimation } from "@/app/aniamtions/pageAnimation";
-import ExerciseCard from "./components/exerciseCard";
+import Charts from "./charts";
 import PageSkeleton from "./page.skeleton";
+import { Record } from "./record";
 
 const { Content, Footer } = Layout;
 
@@ -68,6 +78,21 @@ export default function WorkoutPlanPage({
     });
   };
 
+  const generateTabItems = (workout: Workout) => {
+    return [
+      {
+        key: "1",
+        label: "Record",
+        children: <Record />,
+      },
+      {
+        key: "2",
+        label: "Graphs",
+        children: <Charts workout={workout} />,
+      },
+    ];
+  };
+
   if (loading || !workout) return <PageSkeleton />;
 
   return (
@@ -88,7 +113,7 @@ export default function WorkoutPlanPage({
               workout?.exercises.map((e) => e.exerciseId) || []
             }
           />
-          <ExerciseCard workout={workout} />
+          <Tabs className="pl-4" items={generateTabItems(workout)} />
         </Content>
         <Footer className="p-0 mt-4">
           {workout?.template === WorkoutTemplate.custom && (

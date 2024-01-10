@@ -2,21 +2,21 @@ import { useFetch } from "@/app/hooks/useFetch";
 import { LogEntry, Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
 import { Button, DatePicker, Divider, Space } from "antd";
 import { useEffect, useState } from "react";
-import { useExercises } from "../../hooks/useExercise";
+import { useExercises } from "../hooks/useExercise";
 import {
   acceptedExerciseTypesForExercises,
   formatValue,
   getButtonType,
   getRepScheme,
   intersection,
-} from "../utils";
+} from "./utils";
 import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
-import SelectElement from "./selectComponent";
-import ExerciseCardSkeleton from "./exerciseCard.skeleton";
+import SelectElement from "./components/selectComponent";
+import ExerciseCardSkeleton from "./components/exerciseCard.skeleton";
 import dayjs from "dayjs";
-import StackedChart from "./visuals/stacked";
-import LineChart from "./visuals/line";
-import Table from "./visuals/table";
+import StackedChart from "./components/visuals/stacked";
+import LineChart from "./components/visuals/line";
+import Table from "./components/visuals/table";
 
 const { RangePicker } = DatePicker;
 
@@ -29,7 +29,7 @@ export enum View {
 type ExerciseCardProps = {
   workout: Workout;
 };
-export default function ExerciseCard({ workout }: ExerciseCardProps) {
+export default function Charts({ workout }: ExerciseCardProps) {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const { exercises } = useExercises();
   const { fetch } = useFetch();
