@@ -1,27 +1,20 @@
 "use client";
 
-import {
-  Button,
-  Divider,
-  Layout,
-  Modal,
-  Radio,
-  Space,
-  Tabs,
-  TabsProps,
-} from "antd";
+import { Layout, Modal, Radio, Space, Tabs } from "antd";
 import { PageInfoPortal } from "../../components/pageInfo";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import AddButton from "../components/addButton";
 import AddExerciseDrawer from "./components/addExerciseDrawer";
 import { useWorkout } from "../hooks/useWorkout";
 import { Workout, WorkoutTemplate } from "@/lib/supabase/db/types";
 import { templateName } from "./utils";
 import { PageAnimation } from "@/app/aniamtions/pageAnimation";
-import Charts from "./charts";
 import PageSkeleton from "./page.skeleton";
 import { Record } from "./record";
 import { useExercises } from "../hooks/useExercise";
+import dynamic from "next/dynamic";
+
+const Charts = dynamic(() => import("./charts"));
 
 const { Content, Footer } = Layout;
 
