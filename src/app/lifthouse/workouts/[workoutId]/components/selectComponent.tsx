@@ -62,7 +62,7 @@ export default function SelectElement({
           </div>
           {options
             .filter((o) => o.label.toLocaleLowerCase().includes(search))
-            .map((o) => {
+            .map((o, index) => {
               return (
                 <div
                   onClick={() => {
@@ -78,7 +78,7 @@ export default function SelectElement({
                   className={`p-2 cursor-pointer hover:bg-slate-100 ${
                     o.value === optionSelected.value && "bg-slate-100"
                   }`}
-                  key={o.value}
+                  key={`${index}_${o.value}`}
                 >
                   {o.label}
                 </div>

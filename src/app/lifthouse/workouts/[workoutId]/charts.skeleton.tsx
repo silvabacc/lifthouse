@@ -1,6 +1,6 @@
 import { Skeleton } from "antd";
 
-export default function ExerciseCardSkeleton() {
+export default function ChartsSkeleton() {
   return (
     <div className="p-4 h-full">
       <Skeleton />

@@ -4,6 +4,7 @@ import { View } from "./charts";
 export const IntensityRepRange = [
   { sets: 3, reps: "3" },
   { sets: 3, reps: "5" },
+  { sets: 3, reps: "5-8" },
   { sets: 4, reps: "4-6" },
   { sets: 5, reps: "5" },
   { sets: 5, reps: "3" },
@@ -22,7 +23,7 @@ export const IntensityRepRange = [
   { sets: 2, reps: "5 @85%" },
   { sets: 3, reps: "6-8" },
   { sets: 3, reps: "6-10" },
-  { sets: 3, reps: "15s" },
+  { sets: 3, reps: "30s-60s" },
 ];
 
 export const VolumeRepRange = [
@@ -96,6 +97,12 @@ export function acceptedExerciseTypesForExercises(template: WorkoutTemplate) {
         ExerciseType.VERTICAL_PULL,
         ExerciseType.ABS,
       ];
+    case WorkoutTemplate.push:
+      return [ExerciseType.PUSH];
+    case WorkoutTemplate.pull:
+      return [ExerciseType.PULL];
+    case WorkoutTemplate.legs:
+      return [ExerciseType.LEGS];
     default:
       return Object.values(ExerciseType);
   }

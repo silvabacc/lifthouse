@@ -149,13 +149,7 @@ function WorkoutPageInfo({
         }
       >
         {/* Can add more templates */}
-        {[
-          WorkoutTemplate.upper_intensity,
-          WorkoutTemplate.lower_intensity,
-          WorkoutTemplate.upper_volume,
-          WorkoutTemplate.lower_volume,
-          WorkoutTemplate.custom,
-        ].map((template) => {
+        {Object.values(WorkoutTemplate).map((template) => {
           return (
             <Radio.Button key={template} value={template}>
               {templateName[template] || template}

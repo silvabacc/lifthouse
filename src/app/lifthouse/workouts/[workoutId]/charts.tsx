@@ -12,7 +12,7 @@ import {
 } from "./utils";
 import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
 import SelectElement from "./components/selectComponent";
-import ExerciseCardSkeleton from "./components/exerciseCard.skeleton";
+import ChartsSkeleton from "./charts.skeleton";
 import dayjs from "dayjs";
 import StackedChart from "./components/visuals/stacked";
 import LineChart from "./components/visuals/line";
@@ -120,11 +120,11 @@ export default function Charts({ workout, setWorkout }: ExerciseCardProps) {
   }, [firstDate, secondDate]);
 
   if (exercises.length === 0) {
-    return <ExerciseCardSkeleton />;
+    return <ChartsSkeleton />;
   }
 
   if (loading) {
-    return <ExerciseCardSkeleton />;
+    return <ChartsSkeleton />;
   }
 
   return (
