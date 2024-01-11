@@ -3,6 +3,8 @@ import { createSupabaseServer } from "../server";
 import {
   Exercise,
   ExerciseType,
+  LogEntry,
+  LogInfo,
   TemplateSetup,
   Workout,
   WorkoutTemplate,
@@ -64,7 +66,6 @@ export default class DatabaseClient {
       name: data.name,
       description: data.description,
       exercises: data.exercises,
-      userId: data.user_id,
       template: data.template,
     }));
   }
@@ -84,7 +85,6 @@ export default class DatabaseClient {
       name: data[0].name,
       description: data[0].description,
       exercises: data[0].exercises,
-      userId: data[0].user_id,
       template: data[0].template,
     };
   }
@@ -113,7 +113,6 @@ export default class DatabaseClient {
       name: data.name,
       description: data.description,
       exercises: data.exercises,
-      userId: data.user_id,
     }));
   }
 
@@ -150,7 +149,6 @@ export default class DatabaseClient {
       name: data[0].name,
       description: data[0].description,
       exercises: data[0].exercises,
-      userId: data[0].user_id,
       template: data[0].template,
     };
   }
@@ -196,11 +194,44 @@ export default class DatabaseClient {
 
     return data.map((data) => ({
       logId: data.log_entry_id,
-      userId: data.user_id,
       exerciseId: parseInt(data.exercise_id),
       info: data.info,
       notes: data.notes,
       date: data.date,
     }));
+  }
+
+  async setLogs(info: {
+    exerciseId: string;
+    date: Date;
+    notes?: string;
+    info: LogInfo;
+  }): Promise<LogEntry> {
+    const userId = await this.getUserId();
+
+    const { data, error } = await this.supabase
+      .from("log_entries")
+      .insert([
+        {
+          user_id: userId,
+          exercise_id: info.exerciseId,
+          date: info.date,
+          notes: info.notes,
+          info: info.info,
+        },
+      ])
+      .select();
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      logId: data[0].log_entry_id,
+      exerciseId: parseInt(data[0].exercise_id),
+      info: data[0].info,
+      notes: data[0].notes,
+      date: data[0].date,
+    };
   }
 }

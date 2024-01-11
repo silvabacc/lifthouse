@@ -1,16 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Input, Space, Tabs, TabsProps } from "antd";
+import { Button, Input, Space, Tabs, TabsProps } from "antd";
 import { SelectExercise, SelectRepsScheme } from "./components/selectors";
 import { useWorkoutIdContext } from "./context";
 import { Start } from "./components/start";
+import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 
 const { TextArea } = Input;
 
 export function Record() {
   const { workout } = useWorkoutIdContext();
-  const [workoutNote, setWorkoutNote] = useState("");
+  const { cacheLogInfo } = useLocalStorage();
+
+  const onChangeNoes = (value: string, exerciseId: number) => {
+    cacheLogInfo(exerciseId, { notes: value });
+  };
 
   return (
     <Space direction="vertical" className="w-full">
@@ -27,9 +32,12 @@ export function Record() {
               autoSize={true}
               placeholder="Notes"
               className="mt-4"
-              onChange={(e) => setWorkoutNote(e.target.value)}
+              onChange={(e) =>
+                onChangeNoes(e.target.value, exercise.exerciseId)
+              }
             />
             <Start exercise={exercise} />
+            <Button>Finish</Button>
           </div>
         );
       })}

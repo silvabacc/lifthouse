@@ -8,7 +8,6 @@ export type Workout = {
   workoutId: number;
   name: string;
   description: string;
-  userId: string;
   exercises: WorkoutExercise[];
   template: WorkoutTemplate;
 };
