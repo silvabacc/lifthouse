@@ -19,7 +19,7 @@ export type TemplateSetup = {
   exercises: WorkoutExercise[];
 };
 
-type LogInfo = {
+export type LogInfo = {
   set: number;
   reps: number;
   weight: number;
