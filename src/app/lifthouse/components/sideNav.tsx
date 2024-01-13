@@ -1,7 +1,6 @@
 "use client";
 
 import { Layout, Menu } from "antd";
-import { useAppContext } from "@/app/context";
 import Image from "next/image";
 import LifthouseLogo from "@/app/assets/ifthouse_logo_black.png";
 import { usePathname, useRouter } from "next/navigation";
@@ -47,8 +46,8 @@ export default function SiderNav() {
     items.find((item) => pathName.startsWith(item.path))?.key || "1";
 
   return (
-    <Sider breakpoint="sm" theme="light" trigger={null}>
-      <Image className="p-2" src={LifthouseLogo} alt="" />
+    <Sider collapsedWidth={40} breakpoint="sm" theme="light" trigger={null}>
+      <Image className="hidden sm:block p-2" src={LifthouseLogo} alt="" />
       <Menu theme="light" defaultSelectedKeys={[activeKey]} items={items} />
     </Sider>
   );

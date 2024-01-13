@@ -40,7 +40,7 @@ export function Record() {
               }
             />
             <Start exercise={exercise} />
-            <Button>Finish</Button>
+            <Button className="w-full">Finish</Button>
           </div>
         );
       })}
