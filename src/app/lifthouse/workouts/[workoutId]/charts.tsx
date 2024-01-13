@@ -92,7 +92,11 @@ export default function Charts() {
                   Line
                 </Button>
                 <Divider type="vertical" />
-                <Button className="p-0" onClick={() => onClickView(View.table)}>
+                <Button
+                  type={getButtonType(view, View.table)}
+                  className="p-0"
+                  onClick={() => onClickView(View.table)}
+                >
                   Table
                 </Button>
                 <Divider type="vertical" />

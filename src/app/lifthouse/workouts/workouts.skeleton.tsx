@@ -5,7 +5,7 @@ export default function WorkoutSkeleton() {
 
   return (
     <div className="grid lg:grid-cols-3 gap-4">
-      {Array.from({ length: 6 }).map((_, i) => (
+      {Array.from({ length: 12 }).map((_, i) => (
         <CardSkeleton key={i} />
       ))}
     </div>
