@@ -11,7 +11,7 @@ const { TextArea } = Input;
 
 export function Record() {
   const { workout } = useWorkoutIdContext();
-  const { cacheLogInfo } = useLocalStorage();
+  const { cacheLogInfo, getCachedLogInfo } = useLocalStorage();
 
   const onChangeNoes = (value: string, exerciseId: number) => {
     cacheLogInfo(exerciseId, { notes: value });
@@ -20,6 +20,8 @@ export function Record() {
   return (
     <Space direction="vertical" className="w-full">
       {workout.exercises.map((exercise, index) => {
+        const notes = getCachedLogInfo(exercise.exerciseId)?.notes;
+
         return (
           <div key={`${exercise.exerciseId}-${index}`}>
             <div className="flex flex-wrap justify-between">
@@ -30,6 +32,7 @@ export function Record() {
             </div>
             <TextArea
               autoSize={true}
+              defaultValue={notes}
               placeholder="Notes"
               className="mt-4"
               onChange={(e) =>

@@ -9,7 +9,12 @@ type Props = {
   exercise: WorkoutExercise;
 };
 export function Start({ exercise }: Props) {
-  const [currentSet, setCurrentSet] = useState(0);
+  const { getCachedLogInfo } = useLocalStorage();
+  const highestSet = getCachedLogInfo(exercise.exerciseId)?.info.reduce(
+    (acc, curr) => (curr.set > acc ? curr.set : acc),
+    0
+  );
+  const [currentSet, setCurrentSet] = useState(highestSet || 0);
 
   const items: StepProps[] = [];
   for (let i = 0; i < exercise.sets; i++) {
@@ -47,7 +52,10 @@ type StepRowProps = {
 function StepRow({ exerciseId, step, disabled, onContinue }: StepRowProps) {
   const [weight, setWeight] = useState<number>();
   const [reps, setReps] = useState<number>();
-  const { cacheLogInfo } = useLocalStorage();
+  const { getCachedLogInfo, cacheLogInfo } = useLocalStorage();
+  const cachedInfo = getCachedLogInfo(exerciseId)?.info.find(
+    (i) => i.set === step + 1
+  );
 
   const onNext = () => {
     // +1 for the set
@@ -68,6 +76,7 @@ function StepRow({ exerciseId, step, disabled, onContinue }: StepRowProps) {
         inputMode="decimal"
         value={weight}
         onChange={(weight) => setWeight(weight ?? 0)}
+        defaultValue={cachedInfo?.weight}
         min={0}
         prefix="kg"
       />
@@ -75,6 +84,7 @@ function StepRow({ exerciseId, step, disabled, onContinue }: StepRowProps) {
         disabled={disabled}
         inputMode="decimal"
         value={reps}
+        defaultValue={cachedInfo?.reps}
         min={0}
         onChange={(reps) => setReps(reps ?? 0)}
         prefix="reps"
