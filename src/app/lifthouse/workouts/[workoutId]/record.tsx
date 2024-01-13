@@ -34,19 +34,23 @@ export function Record() {
                 <SelectRepsScheme defaultExercise={exercise} />
               </Space>
             </div>
-            <TextArea
-              autoSize={true}
-              defaultValue={notes}
-              placeholder="Notes"
-              className="mt-4"
-              onChange={(e) =>
-                onChangeNoes(e.target.value, exercise.exerciseId)
-              }
-            />
-            <Divider />
             <div className="flex flex-wrap sm:flex-nowrap">
-              <Start exercise={exercise} />
-              <Divider type="vertical" className="hidden sm:block h-96" />
+              <div>
+                <TextArea
+                  autoSize={true}
+                  defaultValue={notes}
+                  placeholder="Notes"
+                  className="mt-4"
+                  onChange={(e) =>
+                    onChangeNoes(e.target.value, exercise.exerciseId)
+                  }
+                />
+                <Start exercise={exercise} />
+              </div>
+              <Divider
+                type="vertical"
+                className="hidden sm:block h-96 mt-4 ml-4"
+              />
               <iframe
                 className={`
                   ${
