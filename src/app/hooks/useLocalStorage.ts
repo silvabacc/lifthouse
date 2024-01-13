@@ -25,7 +25,7 @@ export function useLocalStorage() {
       };
 
       const updatedInfo = newInfo ? [...previousInfo, newInfo] : previousInfo;
-      const newNotes = notes ? notes : parsed.notes;
+      const newNotes = !newInfo ? notes : parsed.notes;
 
       const updated = { info: updatedInfo, notes: newNotes };
       window.localStorage.setItem(
