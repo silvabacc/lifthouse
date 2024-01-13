@@ -38,7 +38,7 @@ async function AuthMiddleware(
 
       if (error) {
         response = NextResponse.redirect(
-          `${request.nextUrl.origin}/lifthouse/workouts/-1?name=...`
+          `${request.nextUrl.origin}/lifthouse/workouts`
         );
       }
     }
