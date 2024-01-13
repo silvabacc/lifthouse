@@ -1,6 +1,7 @@
 "use client";
 
 import { LogEntry, LogInfo } from "@/lib/supabase/db/types";
+import { View } from "../lifthouse/workouts/[workoutId]/charts";
 
 interface CacheLogInfo {
   info: LogInfo[];
@@ -60,5 +61,13 @@ export function useLocalStorage() {
     return JSON.parse(existing) as CacheLogInfo;
   };
 
-  return { cacheLogInfo, getCachedLogInfo };
+  const cacheView = (view: View) => {
+    window.localStorage.setItem("view", view);
+  };
+
+  const getCachedView = () => {
+    return window.localStorage.getItem("view") as View | undefined;
+  };
+
+  return { cacheLogInfo, getCachedLogInfo, getCachedView, cacheView };
 }

@@ -11,6 +11,7 @@ import LineChart from "./components/visuals/line";
 import Table from "./components/visuals/table";
 import { SelectExercise, SelectRepsScheme } from "./components/selectors";
 import { useWorkoutIdContext } from "./context";
+import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 
 const { RangePicker } = DatePicker;
 
@@ -26,8 +27,11 @@ export default function Charts() {
   const { fetch } = useFetch();
   const [firstDate, setFirstDate] = useState(dayjs().subtract(30, "day"));
   const [secondDate, setSecondDate] = useState(dayjs());
-  const [view, setView] = useState<View>(View.stacked);
   const [loading, setLoading] = useState(false);
+
+  const { getCachedView, cacheView } = useLocalStorage();
+  const cachedView = getCachedView();
+  const [view, setView] = useState<View>(cachedView || View.stacked);
 
   const fetchLogs = async () => {
     if (loading) return;
@@ -55,6 +59,11 @@ export default function Charts() {
     return <ChartsSkeleton />;
   }
 
+  const onClickView = (view: View) => {
+    cacheView(view);
+    setView(view);
+  };
+
   return (
     <BottomFadeInAnimation className="flex flex-col h-full w-full">
       {workout.exercises.map((exercise, index) => {
@@ -70,7 +79,7 @@ export default function Charts() {
                 <Button
                   className="p-0"
                   type={getButtonType(view, View.stacked)}
-                  onClick={() => setView(View.stacked)}
+                  onClick={() => onClickView(View.stacked)}
                 >
                   Stacked
                 </Button>
@@ -78,16 +87,12 @@ export default function Charts() {
                 <Button
                   className="p-0"
                   type={getButtonType(view, View.line)}
-                  onClick={() => setView(View.line)}
+                  onClick={() => onClickView(View.line)}
                 >
                   Line
                 </Button>
                 <Divider type="vertical" />
-                <Button
-                  className="p-0"
-                  type={getButtonType(view, View.table)}
-                  onClick={() => setView(View.table)}
-                >
+                <Button className="p-0" onClick={() => onClickView(View.table)}>
                   Table
                 </Button>
                 <Divider type="vertical" />

@@ -31,7 +31,7 @@ export function Start({ exercise }: Props) {
     });
   }
   return (
-    <div className="flex flex-col mt-4">
+    <div style={{ minWidth: 260 }} className="flex h-full flex-col mt-4">
       <Steps
         onChange={(current) => setCurrentSet(current)}
         direction="vertical"

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Input, Space, Tabs, TabsProps } from "antd";
+import { Button, Divider, Input, Space, Tabs, TabsProps } from "antd";
 import { SelectExercise, SelectRepsScheme } from "./components/selectors";
 import { useWorkoutIdContext } from "./context";
 import { Start } from "./components/start";
@@ -12,6 +12,7 @@ const { TextArea } = Input;
 export function Record() {
   const { workout } = useWorkoutIdContext();
   const { cacheLogInfo, getCachedLogInfo } = useLocalStorage();
+  const [showVideo, setShowVideo] = useState(false);
 
   const onChangeNoes = (value: string, exerciseId: number) => {
     cacheLogInfo(exerciseId, { notes: value });
@@ -23,7 +24,7 @@ export function Record() {
         const notes = getCachedLogInfo(exercise.exerciseId)?.notes;
 
         return (
-          <div key={`${exercise.exerciseId}-${index}`}>
+          <div key={`${exercise.exerciseId}-${index} w-full`}>
             <div className="flex flex-wrap justify-between">
               <Space className="flex-wrap">
                 <SelectExercise defaultExercise={exercise} />
@@ -39,11 +40,29 @@ export function Record() {
                 onChangeNoes(e.target.value, exercise.exerciseId)
               }
             />
-            <Start exercise={exercise} />
-            <Button className="w-full">Finish</Button>
+            <Divider />
+            <div className="flex flex-wrap sm:flex-nowrap">
+              <Start exercise={exercise} />
+              <Divider type="vertical" className="hidden sm:block h-96" />
+              <iframe
+                className={`
+                  ${
+                    showVideo ? "block" : "hidden"
+                  } sm:block rounded w-full h-96 m-4`}
+                src="https://www.youtube.com/embed/BYKScL2sgCs"
+              />
+            </div>
+            <div className="block sm:hidden">
+              <Divider className="m-4" />
+              <Button onClick={() => setShowVideo(!showVideo)} type="link">
+                {showVideo ? "Close video demo" : "Video demo"}
+              </Button>
+            </div>
+            <Divider className="m-4" />
           </div>
         );
       })}
+      <Button className="w-full my-2">Finish workout!</Button>
     </Space>
   );
 }
