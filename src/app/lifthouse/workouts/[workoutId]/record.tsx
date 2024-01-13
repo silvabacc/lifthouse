@@ -10,7 +10,7 @@ import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 const { TextArea } = Input;
 
 export function Record() {
-  const { workout } = useWorkoutIdContext();
+  const { workout, exercises } = useWorkoutIdContext();
   const { cacheLogInfo, getCachedLogInfo } = useLocalStorage();
   const [showVideo, setShowVideo] = useState(false);
 
@@ -22,6 +22,9 @@ export function Record() {
     <Space direction="vertical" className="w-full">
       {workout.exercises.map((exercise, index) => {
         const notes = getCachedLogInfo(exercise.exerciseId)?.notes;
+        const exerciseVideo = exercises.find(
+          (e) => e.exerciseId === exercise.exerciseId
+        )?.youtubeId;
 
         return (
           <div key={`${exercise.exerciseId}-${index} w-full`}>
@@ -49,7 +52,7 @@ export function Record() {
                   ${
                     showVideo ? "block" : "hidden"
                   } sm:block rounded w-full h-96 m-4`}
-                src="https://www.youtube.com/embed/BYKScL2sgCs"
+                src={`https://www.youtube.com/embed/${exerciseVideo}`}
               />
             </div>
             <div className="block sm:hidden">

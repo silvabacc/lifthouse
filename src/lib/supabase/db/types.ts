@@ -38,6 +38,7 @@ export type Exercise = {
   notes?: string;
   exerciseType: ExerciseType[];
   primaryMuscleGroup: PrimaryMuscleGroup;
+  youtubeId?: string;
 };
 
 export enum WorkoutTemplate {

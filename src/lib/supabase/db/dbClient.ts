@@ -44,6 +44,7 @@ export default class DatabaseClient {
       exerciseType: JSON.parse(
         data.exercise_type.replace(/[\u201C\u201D]/g, '"')
       ),
+      youtubeId: data.youtube_id,
       primaryMuscleGroup: data.primary_muscle_group,
     }));
   }
