@@ -177,6 +177,27 @@ export default class DatabaseClient {
     return userId;
   }
 
+  async getLatestLogs(exerciseIds: number[]) {
+    const userId = await this.getUserId();
+
+    const { data, error } = await this.supabase.rpc("get_latest_logs", {
+      exercise_ids: exerciseIds,
+      history_user_id: userId,
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    return (data as any[]).map((data) => ({
+      logId: data.log_entry_id,
+      exerciseId: parseInt(data.exercise_id),
+      info: data.info,
+      notes: data.notes,
+      date: data.date,
+    }));
+  }
+
   async getLogs(exerciseIds: number[], startFrom: number, endOn: number) {
     const userId = await this.getUserId();
 

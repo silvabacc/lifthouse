@@ -1,4 +1,4 @@
-import { WorkoutExercise } from "@/lib/supabase/db/types";
+import { LogEntry, LogInfo, WorkoutExercise } from "@/lib/supabase/db/types";
 import { useWorkoutIdContext } from "../context";
 import { Button, InputNumber, Space, StepProps, Steps } from "antd";
 import { useState } from "react";
@@ -7,8 +7,9 @@ import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 
 type Props = {
   exercise: WorkoutExercise;
+  latestLogInfo?: LogInfo[];
 };
-export function Start({ exercise }: Props) {
+export function Start({ exercise, latestLogInfo }: Props) {
   const { getCachedLogInfo } = useLocalStorage();
   const highestSet = getCachedLogInfo(exercise.exerciseId)?.info.reduce(
     (acc, curr) => (curr.set > acc ? curr.set : acc),
@@ -18,12 +19,18 @@ export function Start({ exercise }: Props) {
 
   const items: StepProps[] = [];
   for (let i = 0; i < exercise.sets; i++) {
+    const latestLog = latestLogInfo?.find((l) => l.set === i + 1);
+
     items.push({
       title: `Set ${i + 1}`,
       description: (
         <StepRow
           exerciseId={exercise.exerciseId}
           step={i}
+          placeHolder={{
+            reps: latestLog?.reps.toString(),
+            weight: latestLog?.weight.toString(),
+          }}
           disabled={currentSet !== i}
           onContinue={() => setCurrentSet(currentSet + 1)}
         />
@@ -47,9 +54,16 @@ type StepRowProps = {
   exerciseId: number;
   step: number;
   disabled: boolean;
+  placeHolder?: { reps?: string; weight?: string };
   onContinue: () => void;
 };
-function StepRow({ exerciseId, step, disabled, onContinue }: StepRowProps) {
+function StepRow({
+  exerciseId,
+  step,
+  disabled,
+  placeHolder,
+  onContinue,
+}: StepRowProps) {
   const [weight, setWeight] = useState<number>();
   const [reps, setReps] = useState<number>();
   const { getCachedLogInfo, cacheLogInfo } = useLocalStorage();
@@ -74,6 +88,7 @@ function StepRow({ exerciseId, step, disabled, onContinue }: StepRowProps) {
       <InputNumber
         disabled={disabled}
         inputMode="decimal"
+        placeholder={placeHolder?.weight}
         value={weight}
         onChange={(weight) => setWeight(weight ?? 0)}
         defaultValue={cachedInfo?.weight}
@@ -84,6 +99,7 @@ function StepRow({ exerciseId, step, disabled, onContinue }: StepRowProps) {
         disabled={disabled}
         inputMode="decimal"
         value={reps}
+        placeholder={placeHolder?.reps}
         defaultValue={cachedInfo?.reps}
         min={0}
         onChange={(reps) => setReps(reps ?? 0)}

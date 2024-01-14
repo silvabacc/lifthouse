@@ -6,17 +6,35 @@ import { SelectExercise, SelectRepsScheme } from "./components/selectors";
 import { useWorkoutIdContext } from "./context";
 import { Start } from "./components/start";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
+import { useFetch } from "@/app/hooks/useFetch";
+import { LogEntry } from "@/lib/supabase/db/types";
 
 const { TextArea } = Input;
 
 export function Record() {
   const { workout, exercises } = useWorkoutIdContext();
   const { cacheLogInfo, getCachedLogInfo } = useLocalStorage();
+  const { fetch } = useFetch();
   const [showVideo, setShowVideo] = useState(false);
+  const [latestLogs, setLatestLogs] = useState<LogEntry[]>();
 
   const onChangeNoes = (value: string, exerciseId: number) => {
     cacheLogInfo(exerciseId, { notes: value });
   };
+
+  const fetchLatestLog = async () => {
+    const response: LogEntry[] = await fetch("/api/logs/latest", {
+      method: "POST",
+      body: JSON.stringify({
+        exerciseIds: workout.exercises.map((e) => e.exerciseId),
+      }),
+    });
+    setLatestLogs(response);
+  };
+
+  useEffect(() => {
+    fetchLatestLog();
+  }, [workout.exercises]);
 
   return (
     <Space direction="vertical" className="w-full">
@@ -39,13 +57,24 @@ export function Record() {
                 <TextArea
                   autoSize={true}
                   defaultValue={notes}
-                  placeholder="Notes"
+                  placeholder={
+                    latestLogs?.find(
+                      (l) => l.exerciseId === exercise.exerciseId
+                    )?.notes || "Notes"
+                  }
                   className="mt-4"
                   onChange={(e) =>
                     onChangeNoes(e.target.value, exercise.exerciseId)
                   }
                 />
-                <Start exercise={exercise} />
+                <Start
+                  exercise={exercise}
+                  latestLogInfo={
+                    latestLogs?.find(
+                      (l) => l.exerciseId === exercise.exerciseId
+                    )?.info
+                  }
+                />
               </div>
               <Divider
                 type="vertical"
