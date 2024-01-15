@@ -7,7 +7,6 @@ import { LogEntry, LogInfo } from "@/lib/supabase/db/types";
 
 export async function POST(request: Request) {
   const body = await request.json();
-  console.log("body!!!", body);
   try {
     const schema = Joi.array().items({
       exerciseId: Joi.number().required(),
