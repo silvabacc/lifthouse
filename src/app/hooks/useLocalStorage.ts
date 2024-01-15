@@ -61,6 +61,10 @@ export function useLocalStorage() {
     return JSON.parse(existing) as CacheLogInfo;
   };
 
+  const clearCacheLogInfo = (exerciseId: number[]) => {
+    exerciseId.forEach((id) => window.localStorage.removeItem(id.toString()));
+  };
+
   const cacheView = (view: View) => {
     window.localStorage.setItem("view", view);
   };
@@ -69,5 +73,11 @@ export function useLocalStorage() {
     return window.localStorage.getItem("view") as View | undefined;
   };
 
-  return { cacheLogInfo, getCachedLogInfo, getCachedView, cacheView };
+  return {
+    cacheLogInfo,
+    getCachedLogInfo,
+    clearCacheLogInfo,
+    getCachedView,
+    cacheView,
+  };
 }

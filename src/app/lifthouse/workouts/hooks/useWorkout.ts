@@ -2,14 +2,18 @@
 
 import { useAppContext } from "@/app/context";
 import { useFetch } from "@/app/hooks/useFetch";
+import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import {
   Workout,
   WorkoutExercise,
   WorkoutTemplate,
 } from "@/lib/supabase/db/types";
+import { useWorkoutIdContext } from "../[workoutId]/context";
 
 export function useWorkout() {
   const { fetch } = useFetch();
+  const { workout } = useWorkoutIdContext();
+  const { getCachedLogInfo } = useLocalStorage();
 
   const fetchWorkouts = async () => {
     const response: Workout[] = await fetch(`/api/workouts`);
@@ -83,11 +87,29 @@ export function useWorkout() {
     return response[0];
   };
 
+  const finishWorkout = async () => {
+    const logs = workout.exercises.map((exercise) => {
+      const cached = getCachedLogInfo(exercise.exerciseId);
+      return {
+        exerciseId: exercise.exerciseId,
+        info: cached?.info,
+        notes: cached?.notes,
+        date: new Date(),
+      };
+    });
+
+    await fetch("/api/logs/create", {
+      method: "POST",
+      body: JSON.stringify(logs),
+    });
+  };
+
   return {
     deleteWorkoutPlan,
     createWorkoutPlan,
     fetchWorkouts,
     updateWorkoutPlan,
     updateTemplate,
+    finishWorkout,
   };
 }

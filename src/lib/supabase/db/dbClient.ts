@@ -223,37 +223,31 @@ export default class DatabaseClient {
     }));
   }
 
-  async setLogs(info: {
-    exerciseId: string;
-    date: Date;
-    notes?: string;
-    info: LogInfo;
-  }): Promise<LogEntry> {
+  async setLogs(logs: LogEntry[]): Promise<LogEntry[]> {
     const userId = await this.getUserId();
+    const insertLogs = logs.map((log) => ({
+      exercise_id: log.exerciseId,
+      info: log.info,
+      notes: log.notes,
+      date: log.date,
+      user_id: userId,
+    }));
 
     const { data, error } = await this.supabase
       .from("log_entries")
-      .insert([
-        {
-          user_id: userId,
-          exercise_id: info.exerciseId,
-          date: info.date,
-          notes: info.notes,
-          info: info.info,
-        },
-      ])
+      .insert(insertLogs)
       .select();
 
     if (error) {
       throw error;
     }
 
-    return {
-      logId: data[0].log_entry_id,
-      exerciseId: parseInt(data[0].exercise_id),
-      info: data[0].info,
-      notes: data[0].notes,
-      date: data[0].date,
-    };
+    return data.map((data) => ({
+      logId: data.log_entry_id,
+      exerciseId: parseInt(data.exercise_id),
+      info: data.info,
+      notes: data.notes,
+      date: data.date,
+    }));
   }
 }

@@ -1,22 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Divider, Input, Space, Tabs, TabsProps } from "antd";
+import { Button, Divider, Input, Space, Tabs, TabsProps, message } from "antd";
 import { SelectExercise, SelectRepsScheme } from "./components/selectors";
 import { useWorkoutIdContext } from "./context";
 import { Start } from "./components/start";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { useFetch } from "@/app/hooks/useFetch";
 import { LogEntry } from "@/lib/supabase/db/types";
+import { useRouter } from "next/navigation";
+import useMessage from "antd/es/message/useMessage";
 
 const { TextArea } = Input;
 
 export function Record() {
   const { workout, exercises } = useWorkoutIdContext();
-  const { cacheLogInfo, getCachedLogInfo } = useLocalStorage();
+  const { cacheLogInfo, getCachedLogInfo, clearCacheLogInfo } =
+    useLocalStorage();
   const { fetch } = useFetch();
   const [showVideo, setShowVideo] = useState(false);
   const [latestLogs, setLatestLogs] = useState<LogEntry[]>();
+  const [saving, setSaving] = useState(false);
+  const router = useRouter();
+  const [messageApi, contextHolder] = message.useMessage();
 
   const onChangeNoes = (value: string, exerciseId: number) => {
     cacheLogInfo(exerciseId, { notes: value });
@@ -36,8 +42,33 @@ export function Record() {
     fetchLatestLog();
   }, [workout.exercises]);
 
+  const onFinish = async () => {
+    const logs = workout.exercises.map((exercise) => {
+      const cached = getCachedLogInfo(exercise.exerciseId);
+      return {
+        exerciseId: exercise.exerciseId,
+        info: cached?.info,
+        notes: cached?.notes,
+        date: new Date(),
+      };
+    });
+
+    setSaving(true);
+
+    await fetch("/api/logs/create", {
+      method: "POST",
+      body: JSON.stringify(logs),
+    });
+
+    setSaving(false);
+    clearCacheLogInfo(workout.exercises.map((e) => e.exerciseId));
+    router.push("/lifthouse/workouts");
+    messageApi.success("Saved!");
+  };
+
   return (
     <Space direction="vertical" className="w-full">
+      {contextHolder}
       {workout.exercises.map((exercise, index) => {
         const notes = getCachedLogInfo(exercise.exerciseId)?.notes;
         const exerciseVideo = exercises.find(
@@ -98,7 +129,9 @@ export function Record() {
           </div>
         );
       })}
-      <Button className="w-full my-2">Finish workout!</Button>
+      <Button onClick={onFinish} disabled={saving} className="w-full my-2">
+        {saving ? "Saving" : "Finish workout!"}
+      </Button>
     </Space>
   );
 }
