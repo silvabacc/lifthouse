@@ -7,9 +7,10 @@ import { useWorkoutIdContext } from "./context";
 import { Start } from "./components/start";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { useFetch } from "@/app/hooks/useFetch";
-import { LogEntry } from "@/lib/supabase/db/types";
+import { LogEntry, WorkoutTemplate } from "@/lib/supabase/db/types";
 import { useRouter } from "next/navigation";
 import useMessage from "antd/es/message/useMessage";
+import DeleteExerciseButton from "./components/deleteExerciseButton";
 
 const { TextArea } = Input;
 
@@ -82,6 +83,9 @@ export function Record() {
                 <SelectExercise defaultExercise={exercise} />
                 <SelectRepsScheme defaultExercise={exercise} />
               </Space>
+              {workout.template === WorkoutTemplate.custom && (
+                <DeleteExerciseButton exerciseId={exercise.exerciseId} />
+              )}
             </div>
             <div className="flex flex-wrap sm:flex-nowrap">
               <div>
