@@ -25,8 +25,9 @@ export default function SelectElement({
   const findOption = (value?: string | number) =>
     options.find((o) => o?.value === value);
 
+  //This may cause bugs...
   const [optionSelected, setOptionSelected] = useState(
-    findOption(defaultValue) ?? options[0]
+    (findOption(defaultValue) || findOption(value)) ?? options[0]
   );
 
   const onClick = () => setExpnaded(!expanded);
