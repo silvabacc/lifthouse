@@ -21,18 +21,18 @@ export default function AntdStyledComponentsRegistry({
   ));
 
   return (
-    <ConfigProvider
-      theme={{
-        components: {
-          Button: {
-            colorPrimary: "#000",
-            colorPrimaryActive: "#000",
-            colorPrimaryHover: "#000",
-          },
-        },
-      }}
-    >
-      <StyleProvider cache={cache}>{children}</StyleProvider>
-    </ConfigProvider>
+    // <ConfigProvider
+    //   theme={{
+    //     components: {
+    //       Button: {
+    //         colorPrimary: "#000",
+    //         colorPrimaryActive: "#000",
+    //         colorPrimaryHover: "#000",
+    //       },
+    //     },
+    //   }}
+    // >
+    <StyleProvider cache={cache}>{children}</StyleProvider>
+    // </ConfigProvider>
   );
 }

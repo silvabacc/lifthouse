@@ -1,6 +1,6 @@
 "use client";
 
-import { Layout, Modal, Radio, Space, Tabs } from "antd";
+import { Button, Layout, Modal, Radio, Space, Tabs } from "antd";
 import { PageInfoPortal } from "../../components/pageInfo";
 import { useState } from "react";
 import AddButton from "../components/addButton";
@@ -21,6 +21,7 @@ export default function WorkoutPlanPage() {
   const { workout, setWorkout } = useWorkoutIdContext();
   const [drawOpen, setDrawOpen] = useState(false);
   const { updateWorkoutPlan, updateTemplate } = useWorkout();
+  const [showRecord, setShowRecord] = useState(false);
 
   const onAddExerciseClick = async (exerciseId: number) => {
     const defaultExerciseSetup = { exerciseId, sets: 3, reps: "8-12" };
@@ -52,28 +53,18 @@ export default function WorkoutPlanPage() {
     });
   };
 
-  const generateTabItems = () => {
-    return [
-      {
-        key: "1",
-        label: "Record",
-        children: <Record />,
-      },
-      {
-        key: "2",
-        label: "Graphs",
-        children: <Charts />,
-      },
-    ];
-  };
+  const onClickRecord = () => {};
 
   return (
     <PageAnimation
       className={`${workout.exercises.length === 0 ? "" : "h-full"}`}
     >
       <Layout className="relative h-full">
-        <Content className="h-full bg-white rounded-sm overflow-auto">
-          <PageInfoPortal title="Workout templates">
+        <Content className="h-full bg-white rounded-sm overflow-auto p-4  ">
+          <PageInfoPortal
+            title="Workout templates"
+            extra={<RecordButton onClick={() => setShowRecord(!showRecord)} />}
+          >
             <WorkoutPageInfo onClickWorkoutType={onClickWorkoutType} />
           </PageInfoPortal>
           <AddExerciseDrawer
@@ -84,9 +75,15 @@ export default function WorkoutPlanPage() {
               workout.exercises.map((e) => e.exerciseId) || []
             }
           />
-          {workout.exercises.length !== 0 && (
-            <Tabs className="pl-4 pr-2" items={generateTabItems()} />
-          )}
+          {
+            <Record
+              show={showRecord}
+              onCancel={() => {
+                setShowRecord(false);
+              }}
+            />
+          }
+          <Charts />
         </Content>
         <Footer className="p-0 mt-4">
           {workout?.template === WorkoutTemplate.custom && (
@@ -98,6 +95,17 @@ export default function WorkoutPlanPage() {
         </Footer>
       </Layout>
     </PageAnimation>
+  );
+}
+
+type Props = {
+  onClick: () => void;
+};
+function RecordButton({ onClick }: Props) {
+  return (
+    <Button type="dashed" danger className="mt-4 m-0" onClick={onClick}>
+      Record a workout
+    </Button>
   );
 }
 

@@ -39,9 +39,10 @@ export default function PageInfo() {
 
 type Props = {
   children: JSX.Element;
+  extra?: JSX.Element;
   title?: string;
 };
-export function PageInfoPortal({ children, title }: Props) {
+export function PageInfoPortal({ children, extra, title }: Props) {
   const [mounted, setMounted] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
 
@@ -56,6 +57,7 @@ export function PageInfoPortal({ children, title }: Props) {
           <div className={`${showInfo ? "block" : "hidden"} sm:block`}>
             {children}
           </div>
+          {extra}
           <Button
             onClick={() => setShowInfo(!showInfo)}
             className={"block sm:hidden p-0 mt-2"}

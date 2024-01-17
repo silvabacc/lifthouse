@@ -73,11 +73,16 @@ export function useLocalStorage() {
     return window.localStorage.getItem("view") as View | undefined;
   };
 
+  const clearAllLocalStorage = () => {
+    window.localStorage.clear();
+  };
+
   return {
     cacheLogInfo,
     getCachedLogInfo,
     clearCacheLogInfo,
     getCachedView,
     cacheView,
+    clearAllLocalStorage,
   };
 }

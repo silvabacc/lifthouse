@@ -31,6 +31,7 @@ export default function DeleteExerciseButton({ exerciseId }: Props) {
     <Button
       className="mr-2"
       onClick={onClick}
+      danger
       icon={<DeleteOutlined className="text-rose-700" />}
     />
   );

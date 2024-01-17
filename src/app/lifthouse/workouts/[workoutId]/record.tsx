@@ -1,7 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Divider, Input, Space, Tabs, TabsProps, message } from "antd";
+import {
+  Button,
+  Divider,
+  Drawer,
+  Input,
+  Modal,
+  Space,
+  Tabs,
+  TabsProps,
+  message,
+} from "antd";
 import { SelectExercise, SelectRepsScheme } from "./components/selectors";
 import { useWorkoutIdContext } from "./context";
 import { Start } from "./components/start";
@@ -14,16 +24,36 @@ import DeleteExerciseButton from "./components/deleteExerciseButton";
 
 const { TextArea } = Input;
 
-export function Record() {
+const COMPACT_SCREEN = 330;
+
+type Props = {
+  show: boolean;
+  onCancel: () => void;
+};
+export function Record({ show, onCancel }: Props) {
   const { workout, exercises } = useWorkoutIdContext();
   const { cacheLogInfo, getCachedLogInfo, clearCacheLogInfo } =
     useLocalStorage();
   const { fetch } = useFetch();
-  const [showVideo, setShowVideo] = useState(false);
   const [latestLogs, setLatestLogs] = useState<LogEntry[]>();
   const [saving, setSaving] = useState(false);
   const router = useRouter();
   const [messageApi, contextHolder] = message.useMessage();
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth < COMPACT_SCREEN);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const onChangeNoes = (value: string, exerciseId: number) => {
     cacheLogInfo(exerciseId, { notes: value });
@@ -68,74 +98,70 @@ export function Record() {
   };
 
   return (
-    <Space direction="vertical" className="w-full">
-      {contextHolder}
-      {workout.exercises.map((exercise, index) => {
-        const notes = getCachedLogInfo(exercise.exerciseId)?.notes;
-        const exerciseVideo = exercises.find(
-          (e) => e.exerciseId === exercise.exerciseId
-        )?.youtubeId;
+    <Drawer
+      width={isSmallScreen ? "100%" : 330}
+      open={show}
+      onClose={onCancel}
+      footer={
+        <Button
+          type="primary"
+          onClick={onFinish}
+          disabled={saving}
+          className="w-full my-2"
+        >
+          {saving ? "Saving" : "Finish workout!"}
+        </Button>
+      }
+    >
+      <Space direction="vertical" className="w-full">
+        {contextHolder}
+        {workout.exercises.map((exercise, index) => {
+          const notes = getCachedLogInfo(exercise.exerciseId)?.notes;
+          const exerciseVideo = exercises.find(
+            (e) => e.exerciseId === exercise.exerciseId
+          )?.youtubeId;
 
-        return (
-          <div key={`${exercise.exerciseId}-${index} w-full`}>
-            <div className="flex flex-wrap justify-between">
-              <Space className="flex-wrap">
-                <SelectExercise defaultExercise={exercise} />
-                <SelectRepsScheme defaultExercise={exercise} />
-              </Space>
-              {workout.template === WorkoutTemplate.custom && (
-                <DeleteExerciseButton exerciseId={exercise.exerciseId} />
-              )}
-            </div>
-            <div className="flex flex-wrap sm:flex-nowrap">
-              <div>
-                <TextArea
-                  autoSize={true}
-                  defaultValue={notes}
-                  placeholder={
-                    latestLogs?.find(
-                      (l) => l.exerciseId === exercise.exerciseId
-                    )?.notes || "Notes"
-                  }
-                  className="mt-4"
-                  onChange={(e) =>
-                    onChangeNoes(e.target.value, exercise.exerciseId)
-                  }
-                />
-                <Start
-                  exercise={exercise}
-                  latestLogInfo={
-                    latestLogs?.find(
-                      (l) => l.exerciseId === exercise.exerciseId
-                    )?.info
-                  }
-                />
+          return (
+            <div key={`${exercise.exerciseId}-${index} w-full`}>
+              <div className="flex flex-wrap justify-between">
+                <Space className="flex-wrap">
+                  <SelectExercise defaultExercise={exercise} />
+                  <SelectRepsScheme defaultExercise={exercise} />
+                </Space>
+                {workout.template === WorkoutTemplate.custom && (
+                  <DeleteExerciseButton exerciseId={exercise.exerciseId} />
+                )}
               </div>
-              <Divider
-                type="vertical"
-                className="hidden sm:block h-96 mt-4 ml-4"
-              />
-              <iframe
-                className={`
-                  ${
-                    showVideo ? "block" : "hidden"
-                  } sm:block rounded w-full h-96 m-4`}
-                src={`https://www.youtube.com/embed/${exerciseVideo}`}
-              />
-            </div>
-            <div className="block sm:hidden">
+              <div className="flex flex-wrap sm:flex-nowrap">
+                <div>
+                  <TextArea
+                    autoSize={true}
+                    defaultValue={notes}
+                    placeholder={
+                      latestLogs?.find(
+                        (l) => l.exerciseId === exercise.exerciseId
+                      )?.notes || "Notes"
+                    }
+                    className="mt-4"
+                    onChange={(e) =>
+                      onChangeNoes(e.target.value, exercise.exerciseId)
+                    }
+                  />
+                  <Start
+                    exercise={exercise}
+                    latestLogInfo={
+                      latestLogs?.find(
+                        (l) => l.exerciseId === exercise.exerciseId
+                      )?.info
+                    }
+                  />
+                </div>
+              </div>
               <Divider className="m-4" />
-              <Button onClick={() => setShowVideo(!showVideo)} type="link">
-                {showVideo ? "Close video demo" : "Video demo"}
-              </Button>
             </div>
-            <Divider className="m-4" />
-          </div>
-        );
-      })}
-      <Button onClick={onFinish} disabled={saving} className="w-full my-2">
-        {saving ? "Saving" : "Finish workout!"}
-      </Button>
-    </Space>
+          );
+        })}
+      </Space>
+    </Drawer>
   );
 }

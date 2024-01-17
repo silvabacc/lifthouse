@@ -6,11 +6,13 @@ import { useAppContext } from "@/app/context";
 import { UnlockOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase/client";
+import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 
 const { Header: AntDHeader } = Layout;
 
 export default function Header() {
   const { user } = useAppContext();
+  const { clearAllLocalStorage } = useLocalStorage();
   const router = useRouter();
   const supabase = createSupabaseClient();
 
@@ -38,6 +40,7 @@ export default function Header() {
         break;
       case "2":
         supabase.auth.signOut();
+        clearAllLocalStorage();
         router.push("/");
         break;
     }
