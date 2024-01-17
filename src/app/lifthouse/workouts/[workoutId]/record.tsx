@@ -23,7 +23,7 @@ import DeleteExerciseButton from "./components/deleteExerciseButton";
 
 const { TextArea } = Input;
 
-const COMPACT_SCREEN = 330;
+const COMPACT_SCREEN = 300;
 
 type Props = {
   show: boolean;
@@ -103,7 +103,7 @@ export function Record({ show, onCancel }: Props) {
       onClose={onCancel}
       footer={
         <Button
-          type="primary"
+          type="secondary"
           onClick={onFinish}
           disabled={saving}
           className="w-full my-2"
