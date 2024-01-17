@@ -35,7 +35,7 @@ export default function StackedChart({ data }: StackedChartProps) {
       xField="weight"
       yField="reps"
       colorField="date"
-      sort={{ by: "x" }}
+      sort={{ by: "x" } as any}
       label={{
         text: "reps",
         style: { dx: -10, color: "white" },
