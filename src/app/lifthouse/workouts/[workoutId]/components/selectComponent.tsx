@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import { Input } from "antd";
-import { FadeInAnimation } from "@/app/aniamtions/fadeinAnimation";
 import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
 
 const { Search } = Input;
