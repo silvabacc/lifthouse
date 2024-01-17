@@ -19,7 +19,6 @@ import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { useFetch } from "@/app/hooks/useFetch";
 import { LogEntry, WorkoutTemplate } from "@/lib/supabase/db/types";
 import { useRouter } from "next/navigation";
-import useMessage from "antd/es/message/useMessage";
 import DeleteExerciseButton from "./components/deleteExerciseButton";
 
 const { TextArea } = Input;

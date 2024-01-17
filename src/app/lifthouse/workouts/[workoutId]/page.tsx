@@ -53,8 +53,6 @@ export default function WorkoutPlanPage() {
     });
   };
 
-  const onClickRecord = () => {};
-
   return (
     <PageAnimation
       className={`${workout.exercises.length === 0 ? "" : "h-full"}`}

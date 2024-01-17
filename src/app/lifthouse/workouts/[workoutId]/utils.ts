@@ -84,16 +84,9 @@ export function acceptedExerciseTypesForExercises(template: WorkoutTemplate) {
     case WorkoutTemplate.lower_intensity:
     case WorkoutTemplate.lower_volume:
       return [
-        ExerciseType.VERTICAL_PRESS,
-        ExerciseType.HORIZONTAL_PRESS,
-        ExerciseType.UPPER_BACK,
-        ExerciseType.TRAPS,
-        ExerciseType.BICEPS,
-        ExerciseType.TRICEPS,
-        ExerciseType.FOREARMS,
         ExerciseType.LEGS_SQUAT,
         ExerciseType.LEGS_DV,
-        ExerciseType.LEGS_ACCESSORY,
+        ExerciseType.ACCESSORY_LEGS,
         ExerciseType.VERTICAL_PULL,
         ExerciseType.ABS,
       ];

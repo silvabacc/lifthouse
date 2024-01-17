@@ -36,9 +36,9 @@ export default function SiderNav() {
     {
       key: "4",
       icon: <div>⚖️</div>,
-      onClick: () => router.push("/lifthouse/weight-ins"),
+      onClick: () => router.push("/lifthouse/weigh"),
       label: "Weigh ins",
-      path: "/lifthouse/weight-ins",
+      path: "/lifthouse/weigh",
     },
   ];
 
