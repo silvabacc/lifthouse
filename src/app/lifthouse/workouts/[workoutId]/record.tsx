@@ -102,12 +102,7 @@ export function Record({ show, onCancel }: Props) {
       open={show}
       onClose={onCancel}
       footer={
-        <Button
-          type="secondary"
-          onClick={onFinish}
-          disabled={saving}
-          className="w-full my-2"
-        >
+        <Button onClick={onFinish} disabled={saving} className="w-full my-2">
           {saving ? "Saving" : "Finish workout!"}
         </Button>
       }
