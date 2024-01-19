@@ -73,15 +73,17 @@ export function Record({ show, onCancel }: Props) {
   }, [workout.exercises]);
 
   const onFinish = async () => {
-    const logs = workout.exercises.map((exercise) => {
-      const cached = getCachedLogInfo(exercise.exerciseId);
-      return {
-        exerciseId: exercise.exerciseId,
-        info: cached?.info,
-        notes: cached?.notes,
-        date: new Date(),
-      };
-    });
+    const logs = workout.exercises
+      .map((exercise) => {
+        const cached = getCachedLogInfo(exercise.exerciseId);
+        return {
+          exerciseId: exercise.exerciseId,
+          info: cached?.info,
+          notes: cached?.notes,
+          date: new Date(),
+        };
+      })
+      .filter((log) => log.info);
 
     setSaving(true);
 
