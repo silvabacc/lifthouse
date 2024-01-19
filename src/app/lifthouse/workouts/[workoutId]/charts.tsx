@@ -15,6 +15,8 @@ import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 
 const { RangePicker } = DatePicker;
 
+const DEFAULT_LIMIT = 60;
+
 export enum View {
   line = "line",
   stacked = "stacked",
@@ -25,7 +27,9 @@ export default function Charts() {
   const { workout } = useWorkoutIdContext();
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const { fetch } = useFetch();
-  const [firstDate, setFirstDate] = useState(dayjs().subtract(30, "day"));
+  const [firstDate, setFirstDate] = useState(
+    dayjs().subtract(DEFAULT_LIMIT, "day")
+  );
   const [secondDate, setSecondDate] = useState(dayjs());
   const [loading, setLoading] = useState(false);
 
@@ -76,30 +80,19 @@ export default function Charts() {
                 <SelectRepsScheme defaultExercise={exercise} />
               </Space>
               <div>
-                <Button
-                  className="p-0"
-                  type={getButtonType(view, View.stacked)}
-                  onClick={() => onClickView(View.stacked)}
-                >
-                  Stacked
-                </Button>
-                <Divider type="vertical" />
-                <Button
-                  className="p-0"
-                  type={getButtonType(view, View.line)}
-                  onClick={() => onClickView(View.line)}
-                >
-                  Line
-                </Button>
-                <Divider type="vertical" />
-                <Button
-                  type={getButtonType(view, View.table)}
-                  className="p-0"
-                  onClick={() => onClickView(View.table)}
-                >
-                  Table
-                </Button>
-                <Divider type="vertical" />
+                {Object.values(View).map((v) => (
+                  <>
+                    <Button
+                      key={v}
+                      className="p-0"
+                      type={getButtonType(view, v)}
+                      onClick={() => onClickView(v)}
+                    >
+                      {v.charAt(0).toUpperCase() + v.slice(1)}
+                    </Button>
+                    <Divider type="vertical" />
+                  </>
+                ))}
                 <RangePicker
                   format={(value) => value.format("DD/MM/YYYY")}
                   onChange={(dates) => {
