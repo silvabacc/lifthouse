@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useWorkout } from "../hooks/useWorkout";
 import { Workout } from "@/lib/supabase/db/types";
 import AddButton from "./addButton";
-import ExerciseFormDrawer from "./exerciseFormDrawer";
+import WorkoutFormDrawer from "./workoutDrawerForm";
 
 const { TextArea } = Input;
 
@@ -36,7 +36,7 @@ export default function AddWorkoutCard({ setWorkouts }: AddWorkoutCardProps) {
   return (
     <>
       <AddButton title="+ Add Workout Plan" onClick={() => setDrawOpen(true)} />
-      <ExerciseFormDrawer
+      <WorkoutFormDrawer
         title="Add workout plan"
         open={drawOpen}
         onClose={() => setDrawOpen(false)}

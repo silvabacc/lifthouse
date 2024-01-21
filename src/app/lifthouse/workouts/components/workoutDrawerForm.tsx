@@ -21,7 +21,7 @@ type Props = {
   options?: Options;
 };
 
-export default function ExerciseFormDrawer({
+export default function WorkoutFormDrawer({
   title,
   open,
   onClose,

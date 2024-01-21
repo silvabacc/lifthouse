@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
-import ExerciseFormDrawer, {
+import WorkoutFormDrawer, {
   ExerciseFormDrawerField,
-} from "./exerciseFormDrawer";
+} from "./workoutDrawerForm";
 import { useWorkout } from "../hooks/useWorkout";
 import { Workout } from "@/lib/supabase/db/types";
 
@@ -65,7 +65,7 @@ export default function WorkoutCard({
 
   return (
     <BottomFadeInAnimation className="flex flex-col justify-between bg-white cursor-pointer">
-      <ExerciseFormDrawer
+      <WorkoutFormDrawer
         title="Edit workout plan"
         open={drawOpen}
         onClose={() => setDrawOpen(!drawOpen)}
