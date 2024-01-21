@@ -34,6 +34,12 @@ export default function Workouts() {
     );
   };
 
+  const onWorkoutUpdate = (workout: Workout) => {
+    setWorkouts((workouts) =>
+      workouts.map((w) => (w.workoutId === workout.workoutId ? workout : w))
+    );
+  };
+
   return (
     <div className="grid lg:grid-cols-3 gap-4">
       {workouts?.map((workout) => {
@@ -42,6 +48,7 @@ export default function Workouts() {
             key={workout.workoutId}
             {...workout}
             onDelete={onDelete}
+            onWorkoutUpdate={onWorkoutUpdate}
           />
         );
       })}
