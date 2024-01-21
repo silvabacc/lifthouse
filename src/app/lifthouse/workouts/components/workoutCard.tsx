@@ -66,6 +66,7 @@ export default function WorkoutCard({
   return (
     <BottomFadeInAnimation className="flex flex-col justify-between bg-white cursor-pointer">
       <ExerciseFormDrawer
+        title="Edit workout plan"
         open={drawOpen}
         onClose={() => setDrawOpen(!drawOpen)}
         onFinish={onFinish}

@@ -14,6 +14,7 @@ type Options = {
 };
 
 type Props = {
+  title: string;
   open: boolean;
   onClose: (modalOpen: boolean) => void;
   onFinish: (info: ExerciseFormDrawerField) => Promise<void>;
@@ -21,6 +22,7 @@ type Props = {
 };
 
 export default function ExerciseFormDrawer({
+  title,
   open,
   onClose,
   onFinish,
@@ -35,11 +37,7 @@ export default function ExerciseFormDrawer({
   };
 
   return (
-    <Drawer
-      open={open}
-      onClose={() => onClose(false)}
-      title="Edit workout plan"
-    >
+    <Drawer open={open} onClose={() => onClose(false)} title={title}>
       <Form onFinish={onSubmit}>
         <Form.Item name="name">
           <Input
