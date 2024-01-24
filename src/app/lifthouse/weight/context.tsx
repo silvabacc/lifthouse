@@ -44,11 +44,9 @@ const WeightContextProvider = ({ children }: any) => {
       const result: Weight[] = await fetch(
         `/api/weight?month=${monthSelected}&year=${yearSelected}`
       );
-      console.log(result);
       const transform = result.map((r) => {
         return { ...r, date: dayjs(r.date) };
       });
-      console.log(transform);
       setWeightData(transform);
     };
 

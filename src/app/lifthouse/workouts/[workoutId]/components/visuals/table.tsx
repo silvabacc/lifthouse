@@ -38,8 +38,8 @@ export default function Table({ data }: Props) {
 
     const columns: TableColumnsType<ExpandedDataType> = [
       { title: "Set", dataIndex: "set", key: "set" },
-      { title: "Reps", dataIndex: "reps", key: "rep" },
       { title: "Weight", dataIndex: "weight", key: "weight" },
+      { title: "Reps", dataIndex: "reps", key: "rep" },
     ];
 
     return (
