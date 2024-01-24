@@ -41,6 +41,12 @@ export type Exercise = {
   youtubeId?: string;
 };
 
+export type Weight = {
+  id: number;
+  date: Date;
+  weight: number;
+};
+
 export enum WorkoutTemplate {
   upper_intensity = "upper_intensity",
   upper_volume = "upper_volume",

@@ -33,7 +33,7 @@ body {
     }
 
     @media (min-width: 768px) {
-      width: 280px !important;
+      width: 300px !important;
       .ant-picker-header {
         position: relative;
         .ant-picker-header-prev-btn,

@@ -2,10 +2,9 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { createSupabaseServer } from "../server";
 import {
   Exercise,
-  ExerciseType,
   LogEntry,
-  LogInfo,
   TemplateSetup,
+  Weight,
   Workout,
   WorkoutTemplate,
 } from "./types";
@@ -248,6 +247,30 @@ export default class DatabaseClient {
       info: data.info,
       notes: data.notes,
       date: data.date,
+    }));
+  }
+
+  async getWeight(month: number, year: number): Promise<Weight[]> {
+    const userId = await this.getUserId();
+
+    console.log(userId);
+
+    const { data, error } = await this.supabase
+      .from("daily_weigh_in")
+      .select()
+      .eq("user_id", userId)
+      .gte("date", new Date(year, month - 1, 1).toDateString())
+      .lte("date", new Date(year, month + 1, 0).toDateString())
+      .order("date", { ascending: true });
+
+    if (error) {
+      throw error;
+    }
+
+    return data.map((data) => ({
+      id: data.daily_weigh_in_id,
+      date: data.date,
+      weight: data.weight,
     }));
   }
 }
