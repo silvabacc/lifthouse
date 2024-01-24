@@ -253,8 +253,6 @@ export default class DatabaseClient {
   async getWeight(month: number, year: number): Promise<Weight[]> {
     const userId = await this.getUserId();
 
-    console.log(userId);
-
     const { data, error } = await this.supabase
       .from("daily_weigh_in")
       .select()
