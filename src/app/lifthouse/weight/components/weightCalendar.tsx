@@ -94,7 +94,7 @@ export default function WeightCalendar() {
       >
         <div className="flex flex-col m-6">
           {info.originNode}
-          <p className="text-sm text-blue-600">{cellDayWeighIn?.weight}</p>
+          <p className="text-xs text-blue-600">{cellDayWeighIn?.weight}</p>
         </div>
       </Tooltip>
     );

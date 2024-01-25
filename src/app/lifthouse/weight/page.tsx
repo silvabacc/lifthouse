@@ -10,9 +10,7 @@ export default function WeightPage() {
   return (
     <div>
       <div className="h-full bg-white p-4">
-        <PageInfoPortal>
-          <WeightAlert />
-        </PageInfoPortal>
+        <PageInfoPortal extra={<WeightAlert />} />
         <div>
           <WeightLine />
           <WeightCalendar />

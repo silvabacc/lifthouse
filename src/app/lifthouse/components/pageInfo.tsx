@@ -38,7 +38,7 @@ export default function PageInfo() {
 }
 
 type Props = {
-  children: JSX.Element;
+  children?: JSX.Element;
   extra?: JSX.Element;
   title?: string;
 };
@@ -58,13 +58,15 @@ export function PageInfoPortal({ children, extra, title }: Props) {
             {children}
           </div>
           {extra}
-          <Button
-            onClick={() => setShowInfo(!showInfo)}
-            className={"block sm:hidden p-0 mt-2"}
-            type="link"
-          >
-            {showInfo ? "Show less" : "Show More"}
-          </Button>
+          {children && (
+            <Button
+              onClick={() => setShowInfo(!showInfo)}
+              className={"block sm:hidden p-0 mt-2"}
+              type="link"
+            >
+              {showInfo ? "Show less" : "Show More"}
+            </Button>
+          )}
         </div>,
         element
       )
