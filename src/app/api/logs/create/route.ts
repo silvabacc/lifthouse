@@ -26,13 +26,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: err.message }, { status: 400 });
   }
 
-  const supabase = createSupabaseServer(cookies());
-  const id = (await supabase.auth.getSession()).data.session?.user.id;
-
-  if (!id) {
-    return NextResponse.json({ error: "Session timeout" }, { status: 400 });
-  }
-
   const dbClient = new DatabaseClient();
   const data = await dbClient.setLogs(body as LogEntry[]);
   return NextResponse.json(data);

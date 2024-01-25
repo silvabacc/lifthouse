@@ -271,4 +271,56 @@ export default class DatabaseClient {
       weight: data.weight,
     }));
   }
+
+  async deleteWeight(weightId: number): Promise<void> {
+    const userId = await this.getUserId();
+
+    const { error } = await this.supabase
+      .from("daily_weigh_in")
+      .delete()
+      .match({ daily_weigh_in_id: weightId, user_id: userId });
+
+    if (error) {
+      throw error;
+    }
+  }
+
+  async updateWeight(weightId: number, weight: number): Promise<Weight> {
+    const userId = await this.getUserId();
+
+    const { data, error } = await this.supabase
+      .from("daily_weigh_in")
+      .update({ weight })
+      .match({ daily_weigh_in_id: weightId, user_id: userId })
+      .select();
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      id: data[0].daily_weigh_in_id,
+      date: data[0].date,
+      weight: data[0].weight,
+    };
+  }
+
+  async createWeight(weight: number, date: Date): Promise<Weight> {
+    const userId = await this.getUserId();
+
+    const { data, error } = await this.supabase
+      .from("daily_weigh_in")
+      .insert([{ weight, user_id: userId, date }])
+      .select();
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      id: data[0].daily_weigh_in_id,
+      date: data[0].date,
+      weight: data[0].weight,
+    };
+  }
 }
