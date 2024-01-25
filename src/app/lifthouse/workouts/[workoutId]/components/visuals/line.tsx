@@ -7,11 +7,6 @@ type LineChartProps = {
   data: LogEntry[];
 };
 export default function LineChart({ data }: LineChartProps) {
-  const sets = Array.from(Array(10)).map((_, i) => ({
-    value: i + 1,
-    label: `Set ${i + 1}`,
-  }));
-
   if (data.length === 0) {
     return (
       <Alert

@@ -8,6 +8,7 @@ import { CellRenderInfo } from "rc-picker/lib/interface";
 import { useState } from "react";
 import { useFetch } from "@/app/hooks/useFetch";
 import { Weight } from "@/lib/supabase/db/types";
+import WeightCalendarSkeleton from "./weightCalendar.skeleton";
 
 export default function WeightCalendar() {
   const {
@@ -17,6 +18,7 @@ export default function WeightCalendar() {
     setSelectedValue,
     weightData,
     setWeightData,
+    isLoading,
   } = useWeightInContext();
   const [weight, setWeight] = useState(0);
   const { fetch } = useFetch();
@@ -78,6 +80,10 @@ export default function WeightCalendar() {
       </Space>
     );
 
+    if (isLoading) {
+      return <WeightCalendarSkeleton />;
+    }
+
     return (
       <Tooltip
         trigger={"click"}
@@ -96,7 +102,7 @@ export default function WeightCalendar() {
 
   return (
     <Calendar
-      className="pr-4 w-80"
+      className="pr-4"
       disabledDate={(date) => date.year() > dayjs().year()}
       fullscreen={false}
       onPanelChange={onPanelChange}

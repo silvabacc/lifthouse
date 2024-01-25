@@ -25,6 +25,8 @@ interface WeightContextType {
   setYearSelected: (value: number) => void;
   weightData: WeightCalendar[];
   setWeightData: Dispatch<SetStateAction<WeightCalendar[]>>;
+  isLoading: boolean;
+  setLoading: Dispatch<SetStateAction<boolean>>;
 }
 
 const WeightContext = createContext<WeightContextType>({} as any);
@@ -36,11 +38,13 @@ const WeightContextProvider = ({ children }: any) => {
   const [monthSelected, setMonthSelected] = useState(dayjs().month());
   const [yearSelected, setYearSelected] = useState(dayjs().year());
   const [weightData, setWeightData] = useState<WeightCalendar[]>([]);
+  const [isLoading, setLoading] = useState(false);
   const { fetch } = useFetch();
 
   //Fetch data here
   useEffect(() => {
     const fetchWeightData = async () => {
+      setLoading(true);
       const result: Weight[] = await fetch(
         `/api/weight?month=${monthSelected}&year=${yearSelected}`
       );
@@ -48,6 +52,7 @@ const WeightContextProvider = ({ children }: any) => {
         return { ...r, date: dayjs(r.date) };
       });
       setWeightData(transform);
+      setLoading(false);
     };
 
     fetchWeightData();
@@ -64,6 +69,8 @@ const WeightContextProvider = ({ children }: any) => {
         setYearSelected,
         weightData,
         setWeightData,
+        isLoading,
+        setLoading,
       }}
     >
       {children}

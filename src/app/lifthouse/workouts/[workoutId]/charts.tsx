@@ -12,6 +12,7 @@ import Table from "./components/visuals/table";
 import { SelectExercise, SelectRepsScheme } from "./components/selectors";
 import { useWorkoutIdContext } from "./context";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
+import "./charts.css";
 
 const { RangePicker } = DatePicker;
 
@@ -80,8 +81,8 @@ export default function Charts() {
                 <SelectRepsScheme defaultExercise={exercise} />
               </Space>
               <div>
-                {Object.values(View).map((v) => (
-                  <>
+                {Object.values(View).map((v, idx) => (
+                  <div key={`${v}-${idx}`}>
                     <Button
                       key={v}
                       className="p-0"
@@ -91,7 +92,7 @@ export default function Charts() {
                       {v.charAt(0).toUpperCase() + v.slice(1)}
                     </Button>
                     <Divider type="vertical" />
-                  </>
+                  </div>
                 ))}
                 <RangePicker
                   format={(value) => value.format("DD/MM/YYYY")}
