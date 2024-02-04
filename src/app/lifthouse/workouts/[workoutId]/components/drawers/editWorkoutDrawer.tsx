@@ -24,15 +24,6 @@ export default function EditWorkoutDrawer({ show, onCancel }: Props) {
 
   const onClose = async () => {
     onCancel();
-
-    const updatedWorkout = await updateWorkoutPlan({
-      workoutId: workout.workoutId,
-      exercises: workoutExercises,
-    });
-
-    if (!updatedWorkout) return;
-
-    setWorkout(updatedWorkout);
   };
 
   return (

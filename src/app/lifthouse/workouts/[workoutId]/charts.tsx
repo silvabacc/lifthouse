@@ -1,6 +1,6 @@
 import { useFetch } from "@/app/hooks/useFetch";
 import { LogEntry } from "@/lib/supabase/db/types";
-import { Button, DatePicker, Divider, Space } from "antd";
+import { Button, DatePicker, Divider, Space, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { getButtonType } from "./utils";
 import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
@@ -14,6 +14,7 @@ import { useWorkoutIdContext } from "./context";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 
 const { RangePicker } = DatePicker;
+const { Text } = Typography;
 
 const DEFAULT_LIMIT = 60;
 
@@ -24,7 +25,7 @@ export enum View {
 }
 
 export default function Charts() {
-  const { workout } = useWorkoutIdContext();
+  const { workout, exercises } = useWorkoutIdContext();
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const { fetch } = useFetch();
   const [firstDate, setFirstDate] = useState(
@@ -71,13 +72,18 @@ export default function Charts() {
   return (
     <BottomFadeInAnimation className="flex flex-col h-full w-full">
       {workout.exercises.map((exercise, index) => {
+        const exerciseInfo = exercises.find(
+          (e) => e.exerciseId === exercise.exerciseId
+        );
         const data = logs.filter((l) => l.exerciseId === exercise.exerciseId);
         return (
           <div key={`${exercise.exerciseId}-${index}`}>
             <div className="flex flex-wrap justify-between">
-              <Space className="flex-wrap">
-                <SelectExercise defaultExercise={exercise} />
-                <SelectRepsScheme defaultExercise={exercise} />
+              <Space direction="vertical" className="my-2">
+                <h1 className="text-lg font-medium">{exerciseInfo?.name}</h1>
+                <Text className="text-base" keyboard>
+                  {exercise.sets} x {exercise.reps}
+                </Text>
               </Space>
               <div>
                 <Space>

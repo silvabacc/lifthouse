@@ -10,6 +10,7 @@ import {
   Space,
   Tabs,
   TabsProps,
+  Typography,
   message,
 } from "antd";
 import { SelectExercise, SelectRepsScheme } from "../selectors";
@@ -22,6 +23,7 @@ import { useRouter } from "next/navigation";
 import DeleteExerciseButton from "../deleteExerciseButton";
 
 const { TextArea } = Input;
+const { Text } = Typography;
 
 const COMPACT_SCREEN = 300;
 
@@ -113,16 +115,20 @@ export function Record({ show, onCancel }: Props) {
         {contextHolder}
         {workout.exercises.map((exercise, index) => {
           const notes = getCachedLogInfo(exercise.exerciseId)?.notes;
-          const exerciseVideo = exercises.find(
+          const exerciseInfo = exercises.find(
             (e) => e.exerciseId === exercise.exerciseId
-          )?.youtubeId;
+          );
 
           return (
             <div key={`${exercise.exerciseId}-${index} w-full`}>
               <div className="flex flex-wrap justify-between">
                 <Space className="flex-wrap">
-                  <SelectExercise defaultExercise={exercise} />
-                  <SelectRepsScheme defaultExercise={exercise} />
+                  <h1 className="text-base font-medium">
+                    {exerciseInfo?.name}
+                  </h1>
+                  <Text className="text-sm" keyboard>
+                    {exercise.sets} x {exercise.reps}
+                  </Text>
                 </Space>
                 {workout.template === WorkoutTemplate.custom && (
                   <DeleteExerciseButton exerciseId={exercise.exerciseId} />
