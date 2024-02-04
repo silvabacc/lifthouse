@@ -257,7 +257,7 @@ export default class DatabaseClient {
       .from("daily_weigh_in")
       .select()
       .eq("user_id", userId)
-      .gte("date", new Date(year, month - 1, 1).toDateString())
+      .gte("date", new Date(year, month, 1).toDateString())
       .lte("date", new Date(year, month + 1, 0).toDateString())
       .order("date", { ascending: true });
 

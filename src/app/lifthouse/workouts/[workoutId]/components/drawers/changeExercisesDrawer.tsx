@@ -11,18 +11,64 @@ type Props = {
   onCancel: () => void;
 };
 export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
-  const { workout } = useWorkoutIdContext();
-  const [workoutExercises, setWorkoutExercises] = useState(
+  const { workout, setWorkout } = useWorkoutIdContext();
+  const { updateWorkoutPlan } = useWorkout();
+
+  //State that holds the exercises that are not yet updated
+  const [updatedWorkoutExercises, setUpdatedWorkoutExercises] = useState(
     workout.exercises || []
   );
   const controls = useDragControls();
 
   useEffect(() => {
-    setWorkoutExercises(workout.exercises || []);
+    setUpdatedWorkoutExercises(workout.exercises || []);
   }, [workout]);
 
   const onClose = async () => {
+    const updatedWorkout = await updateWorkoutPlan({
+      workoutId: workout.workoutId,
+      exercises: updatedWorkoutExercises,
+    });
+
+    if (!updatedWorkout) return;
+
+    // Checks if the exercises has been updated
+    if (JSON.stringify(updatedWorkout) !== JSON.stringify(workout)) {
+      setWorkout(updatedWorkout);
+    }
+
     onCancel();
+  };
+
+  const onChangeExercise = async (exerciseId: number, value: number) => {
+    const newExercises = workout.exercises.map((e) => {
+      if (e.exerciseId === exerciseId) {
+        return {
+          ...e,
+          exerciseId: value,
+        };
+      }
+      return e;
+    });
+
+    setUpdatedWorkoutExercises(newExercises);
+  };
+
+  const onChangeReps = async (exerciseId: number, value: string) => {
+    const [sets, reps] = value.split(":");
+
+    const newExercises = workout.exercises.map((e) => {
+      if (e.exerciseId === exerciseId) {
+        return {
+          ...e,
+          sets: parseInt(sets),
+          reps: reps,
+        };
+      }
+      return e;
+    });
+
+    setUpdatedWorkoutExercises(newExercises);
   };
 
   return (
@@ -30,11 +76,11 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
       <Reorder.Group
         className="h-full"
         axis="y"
-        values={workoutExercises}
-        onReorder={setWorkoutExercises}
+        values={updatedWorkoutExercises}
+        onReorder={setUpdatedWorkoutExercises}
       >
         <Space size="large" className="w-full" direction="vertical">
-          {workoutExercises.map((item) => (
+          {updatedWorkoutExercises.map((item) => (
             <Reorder.Item
               className="p-2 shadow rounded flex justify-between items-center w-full bg-white"
               key={item?.exerciseId}
@@ -42,8 +88,14 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
               dragControls={controls}
             >
               <Space direction="vertical" className="w-full">
-                <SelectExercise defaultExercise={item} />
-                <SelectRepsScheme defaultExercise={item} />
+                <SelectExercise
+                  defaultExercise={item}
+                  onChange={onChangeExercise}
+                />
+                <SelectRepsScheme
+                  defaultExercise={item}
+                  onChange={onChangeReps}
+                />
               </Space>
               <MenuOutlined
                 className="m-4"

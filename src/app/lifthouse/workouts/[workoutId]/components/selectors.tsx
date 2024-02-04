@@ -11,8 +11,12 @@ import { useWorkoutIdContext } from "../context";
 
 type SelectExerciseProps = {
   defaultExercise: WorkoutExercise;
+  onChange: (exerciseId: number, value: number) => void;
 };
-export function SelectExercise({ defaultExercise }: SelectExerciseProps) {
+export function SelectExercise({
+  defaultExercise,
+  onChange,
+}: SelectExerciseProps) {
   const { updateWorkoutPlan } = useWorkout();
   const { exercises, workout, setWorkout } = useWorkoutIdContext();
   const findExercise = exercises.find(
@@ -42,27 +46,6 @@ export function SelectExercise({ defaultExercise }: SelectExerciseProps) {
       : exercises
   ).map((e) => ({ value: e.exerciseId, label: e.name }));
 
-  const onChange = async (exerciseId: number, value: number) => {
-    const newExercises = workout.exercises.map((e) => {
-      if (e.exerciseId === exerciseId) {
-        return {
-          ...e,
-          exerciseId: value,
-        };
-      }
-      return e;
-    });
-
-    const updatedWorkout = await updateWorkoutPlan({
-      workoutId: workout.workoutId,
-      exercises: newExercises,
-    });
-
-    if (!updatedWorkout) return;
-
-    setWorkout(updatedWorkout);
-  };
-
   return (
     <SelectElement
       value={defaultExercise.exerciseId}
@@ -76,45 +59,24 @@ export function SelectExercise({ defaultExercise }: SelectExerciseProps) {
 
 type SelectRepsSchemeProps = {
   defaultExercise: WorkoutExercise;
+  onChange: (exerciseId: number, value: string) => void;
 };
-export function SelectRepsScheme({ defaultExercise }: SelectRepsSchemeProps) {
-  const { workout, setWorkout } = useWorkoutIdContext();
-  const { updateWorkoutPlan } = useWorkout();
+export function SelectRepsScheme({
+  defaultExercise,
+  onChange,
+}: SelectRepsSchemeProps) {
+  const { workout } = useWorkoutIdContext();
 
   const repSchemeOptions = getRepScheme(workout.template).map((r, index) => ({
     label: `${r.sets} x ${r.reps}`,
     value: formatValue(r.sets, r.reps),
   }));
 
-  const onChangeReps = async (exerciseId: number, value: string) => {
-    const [sets, reps] = value.split(":");
-
-    const newExercises = workout.exercises.map((e) => {
-      if (e.exerciseId === exerciseId) {
-        return {
-          ...e,
-          sets: parseInt(sets),
-          reps: reps,
-        };
-      }
-      return e;
-    });
-
-    const updatedWorkout = await updateWorkoutPlan({
-      workoutId: workout.workoutId,
-      exercises: newExercises,
-    });
-
-    if (!updatedWorkout) return;
-
-    setWorkout(updatedWorkout);
-  };
-
   return (
     <SelectElement
       options={repSchemeOptions}
       onChange={(value) =>
-        onChangeReps(defaultExercise.exerciseId, value as string)
+        onChange(defaultExercise.exerciseId, value as string)
       }
       value={formatValue(defaultExercise.sets, defaultExercise.reps)}
     />
