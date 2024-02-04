@@ -10,9 +10,8 @@ type Props = {
   show: boolean;
   onCancel: () => void;
 };
-export default function EditWorkoutDrawer({ show, onCancel }: Props) {
-  const { workout, setWorkout } = useWorkoutIdContext();
-  const { updateWorkoutPlan } = useWorkout();
+export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
+  const { workout } = useWorkoutIdContext();
   const [workoutExercises, setWorkoutExercises] = useState(
     workout.exercises || []
   );

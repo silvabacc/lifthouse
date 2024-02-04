@@ -12,7 +12,7 @@ import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 import { Record } from "./components/drawers/recordDrawer";
 import dynamic from "next/dynamic";
 import { useWorkoutIdContext } from "./context";
-import EditWorkoutDrawer from "./components/drawers/editWorkoutDrawer";
+import ChangeExercisesDrawer from "./components/drawers/changeExercisesDrawer";
 
 const Charts = dynamic(() => import("./charts"));
 
@@ -80,7 +80,7 @@ export default function WorkoutPlanPage() {
               workout.exercises.map((e) => e.exerciseId) || []
             }
           />
-          <EditWorkoutDrawer
+          <ChangeExercisesDrawer
             show={showEdit}
             onCancel={() => setShowEdit(false)}
           />
@@ -122,7 +122,7 @@ function PageInfoExtra({ onClickRecord, onClickEdit }: Props) {
         className="text-sky-500 mt-4 m-0"
         onClick={onClickEdit}
       >
-        Edit workout
+        Edit Exercises
       </Button>
     </Space>
   );
