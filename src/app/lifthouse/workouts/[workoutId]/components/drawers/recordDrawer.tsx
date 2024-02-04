@@ -12,14 +12,14 @@ import {
   TabsProps,
   message,
 } from "antd";
-import { SelectExercise, SelectRepsScheme } from "./components/selectors";
-import { useWorkoutIdContext } from "./context";
-import { Start } from "./components/start";
+import { SelectExercise, SelectRepsScheme } from "../selectors";
+import { useWorkoutIdContext } from "../../context";
+import { Start } from "../start";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { useFetch } from "@/app/hooks/useFetch";
 import { LogEntry, WorkoutTemplate } from "@/lib/supabase/db/types";
 import { useRouter } from "next/navigation";
-import DeleteExerciseButton from "./components/deleteExerciseButton";
+import DeleteExerciseButton from "../deleteExerciseButton";
 
 const { TextArea } = Input;
 

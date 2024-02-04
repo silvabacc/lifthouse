@@ -4,14 +4,15 @@ import { Button, Layout, Modal, Radio, Space, Tabs } from "antd";
 import { PageInfoPortal } from "../../components/pageInfo";
 import { useState } from "react";
 import AddButton from "../components/addButton";
-import AddExerciseDrawer from "./components/addExerciseDrawer";
+import AddExerciseDrawer from "./components/drawers/addExerciseDrawer";
 import { useWorkout } from "../hooks/useWorkout";
 import { WorkoutTemplate } from "@/lib/supabase/db/types";
 import { templateName } from "./utils";
 import { PageAnimation } from "@/app/aniamtions/pageAnimation";
-import { Record } from "./record";
+import { Record } from "./components/drawers/recordDrawer";
 import dynamic from "next/dynamic";
 import { useWorkoutIdContext } from "./context";
+import EditWorkoutDrawer from "./components/drawers/editWorkoutDrawer";
 
 const Charts = dynamic(() => import("./charts"));
 
@@ -22,6 +23,7 @@ export default function WorkoutPlanPage() {
   const [drawOpen, setDrawOpen] = useState(false);
   const { updateWorkoutPlan, updateTemplate } = useWorkout();
   const [showRecord, setShowRecord] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
   const onAddExerciseClick = async (exerciseId: number) => {
     const defaultExerciseSetup = { exerciseId, sets: 3, reps: "8-12" };
@@ -61,7 +63,12 @@ export default function WorkoutPlanPage() {
         <Content className="h-full bg-white rounded-sm overflow-auto p-4">
           <PageInfoPortal
             title="Workout templates"
-            extra={<RecordButton onClick={() => setShowRecord(!showRecord)} />}
+            extra={
+              <PageInfoExtra
+                onClickRecord={() => setShowRecord(!showRecord)}
+                onClickEdit={() => setShowEdit(!showEdit)}
+              />
+            }
           >
             <WorkoutPageInfo onClickWorkoutType={onClickWorkoutType} />
           </PageInfoPortal>
@@ -72,6 +79,10 @@ export default function WorkoutPlanPage() {
             filterOutExercisesIds={
               workout.exercises.map((e) => e.exerciseId) || []
             }
+          />
+          <EditWorkoutDrawer
+            show={showEdit}
+            onCancel={() => setShowEdit(false)}
           />
           {
             <Record
@@ -97,13 +108,23 @@ export default function WorkoutPlanPage() {
 }
 
 type Props = {
-  onClick: () => void;
+  onClickRecord: () => void;
+  onClickEdit: () => void;
 };
-function RecordButton({ onClick }: Props) {
+function PageInfoExtra({ onClickRecord, onClickEdit }: Props) {
   return (
-    <Button type="dashed" danger className="mt-4 m-0" onClick={onClick}>
-      Record a workout
-    </Button>
+    <Space>
+      <Button type="dashed" danger className="mt-4 m-0" onClick={onClickRecord}>
+        Record a workout
+      </Button>
+      <Button
+        type="dashed"
+        className="text-sky-500 mt-4 m-0"
+        onClick={onClickEdit}
+      >
+        Edit workout
+      </Button>
+    </Space>
   );
 }
 
