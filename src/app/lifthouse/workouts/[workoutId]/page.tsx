@@ -122,7 +122,7 @@ function PageInfoExtra({ onClickRecord, onClickEdit }: Props) {
         className="text-sky-500 mt-4 m-0"
         onClick={onClickEdit}
       >
-        Edit Exercises
+        Change exercises
       </Button>
     </Space>
   );

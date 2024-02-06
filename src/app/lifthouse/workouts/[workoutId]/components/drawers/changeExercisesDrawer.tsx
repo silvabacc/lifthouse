@@ -14,6 +14,10 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
   const { workout, setWorkout } = useWorkoutIdContext();
   const { updateWorkoutPlan } = useWorkout();
 
+  //Could also use useDragControls from framer-motion but this is buggy with having separate ReOrder.Item components
+  //So implemented my own way of doing this
+  const [draggable, setDraggable] = useState(false);
+
   //State that holds the exercises that are not yet updated
   const [updatedWorkoutExercises, setUpdatedWorkoutExercises] = useState(
     workout.exercises || []
@@ -74,18 +78,19 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
   return (
     <Drawer width={"100%"} open={show} onClose={onClose}>
       <Reorder.Group
-        className="h-full"
         axis="y"
         values={updatedWorkoutExercises}
         onReorder={setUpdatedWorkoutExercises}
       >
         <Space size="large" className="w-full" direction="vertical">
-          {updatedWorkoutExercises.map((item) => (
+          {updatedWorkoutExercises.map((item, idx) => (
+            //Do not put this in a child component, as ReOrder.Item is buggy when the state is updated
             <Reorder.Item
               className="p-2 shadow rounded flex justify-between items-center w-full bg-white"
               key={item?.exerciseId}
               value={item}
-              dragControls={controls}
+              dragListener={draggable}
+              onDragEnd={() => setDraggable(false)}
             >
               <Space direction="vertical" className="w-full">
                 <SelectExercise
@@ -98,8 +103,10 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
                 />
               </Space>
               <MenuOutlined
+                onMouseEnter={() => setDraggable(true)}
+                onMouseLeave={() => setDraggable(false)}
+                onTouchStart={() => setDraggable(true)}
                 className="m-4"
-                onPointerDown={(e) => controls.start(e)}
               />
             </Reorder.Item>
           ))}
