@@ -30,7 +30,7 @@ export default function PageInfo() {
   });
 
   return (
-    <div className="bg-white p-6">
+    <div className="bg-white px-6 pb-4">
       <Breadcrumb items={items} />
       <div id="page-info" />
     </div>
@@ -52,7 +52,7 @@ export function PageInfoPortal({ children, extra, title }: Props) {
 
   return mounted && element
     ? createPortal(
-        <div className="pt-4 ">
+        <div className="pt-1">
           <h1 className="text-2xl font-bold">{title}</h1>
           <div className={`${showInfo ? "block" : "hidden"} sm:block`}>
             {children}

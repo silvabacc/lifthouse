@@ -60,10 +60,6 @@ export default function Charts() {
     }
   }, [firstDate, secondDate, workout]);
 
-  if (loading) {
-    return <ChartsSkeleton />;
-  }
-
   const onClickView = (view: View) => {
     cacheView(view);
     setView(view);
@@ -71,60 +67,67 @@ export default function Charts() {
 
   return (
     <BottomFadeInAnimation className="flex flex-col h-full w-full">
-      {workout.exercises.map((exercise, index) => {
-        const exerciseInfo = exercises.find(
-          (e) => e.exerciseId === exercise.exerciseId
-        );
-        const data = logs.filter((l) => l.exerciseId === exercise.exerciseId);
-        return (
-          <div key={`${exercise.exerciseId}-${index}`}>
-            <div className="flex flex-wrap justify-between">
-              <Space direction="vertical" className="my-2">
-                <h1 className="text-lg font-medium">{exerciseInfo?.name}</h1>
-                <Text className="text-base" keyboard>
-                  {exercise.sets} x {exercise.reps}
-                </Text>
-              </Space>
-              <div>
-                <Space>
-                  {Object.values(View).map((v, idx) => (
-                    <div key={`${v}-${idx}`}>
-                      <Button
-                        key={v}
-                        className="p-0"
-                        type={getButtonType(view, v)}
-                        onClick={() => onClickView(v)}
-                      >
-                        {v.charAt(0).toUpperCase() + v.slice(1)}
-                      </Button>
-                      <Divider type="vertical" />
-                    </div>
-                  ))}
-                </Space>
-                <RangePicker
-                  format={(value) => value.format("DD/MM/YYYY")}
-                  onChange={(dates) => {
-                    if (dates?.[0] && dates[0] !== firstDate) {
-                      setFirstDate(dates?.[0]);
-                    }
-                    if (dates?.[1] && dates[1] !== secondDate) {
-                      setSecondDate(dates?.[1]);
-                    }
-                  }}
-                  placement="bottomLeft"
-                  defaultValue={[secondDate, firstDate]}
-                />
+      <div className={`overflow-y-auto ${loading && "opacity-50"}`}>
+        {workout.exercises.map((exercise, index) => {
+          const exerciseInfo = exercises.find(
+            (e) => e.exerciseId === exercise.exerciseId
+          );
+          const data = logs.filter((l) => l.exerciseId === exercise.exerciseId);
+          return (
+            <div key={`${exercise.exerciseId}-${index}`}>
+              <div className="flex flex-wrap">
+                <div className="flex justify-between items-start sticky top-0 z-10 bg-white w-full pb-2">
+                  <div>
+                    <h1 className="text-lg font-medium">
+                      {exerciseInfo?.name}
+                    </h1>
+                    <Text className="text-base" keyboard>
+                      {exercise.sets} x {exercise.reps}
+                    </Text>
+                  </div>
+                  <div className="flex ">
+                    <Space>
+                      {Object.values(View).map((v, idx) => (
+                        <div key={`${v}-${idx}`}>
+                          <Button
+                            key={v}
+                            className="p-0"
+                            type={getButtonType(view, v)}
+                            onClick={() => onClickView(v)}
+                          >
+                            {v.charAt(0).toUpperCase() + v.slice(1)}
+                          </Button>
+                          <Divider type="vertical" />
+                        </div>
+                      ))}
+                    </Space>
+                    <RangePicker
+                      format={(value) => value.format("DD/MM/YYYY")}
+                      onChange={(dates) => {
+                        if (dates?.[0] && dates[0] !== firstDate) {
+                          setFirstDate(dates?.[0]);
+                        }
+                        if (dates?.[1] && dates[1] !== secondDate) {
+                          setSecondDate(dates?.[1]);
+                        }
+                      }}
+                      placement="bottomLeft"
+                      defaultValue={[secondDate, firstDate]}
+                    />
+                  </div>
+                </div>
+
+                <div className="w-full">
+                  {view === View.stacked && <StackedChart data={data} />}
+                  {view === View.line && <LineChart data={data} />}
+                  {view === View.table && <Table data={data} />}
+                </div>
+                <Divider />
               </div>
-              <div className="w-full">
-                {view === View.stacked && <StackedChart data={data} />}
-                {view === View.line && <LineChart data={data} />}
-                {view === View.table && <Table data={data} />}
-              </div>
-              <Divider />
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </BottomFadeInAnimation>
   );
 }

@@ -60,7 +60,7 @@ export default function WorkoutPlanPage() {
       className={`${workout.exercises.length === 0 ? "" : "h-full"}`}
     >
       <Layout className="relative h-full">
-        <Content className="h-full bg-white rounded-sm overflow-auto p-4">
+        <Content className="h-full bg-white rounded-sm p-4">
           <PageInfoPortal
             title="Workout templates"
             extra={
