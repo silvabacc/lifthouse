@@ -15,6 +15,9 @@ body {
   margin: 0px;
   overscroll-behavior: none;
 }
+.ant-picker-calendar-header .ant-radio-group {
+  display: none;
+}
 
 .ant-picker-dropdown {
   .ant-picker-panels {
