@@ -32,6 +32,7 @@ export default function StackedChart({ data }: StackedChartProps) {
     <Bar
       data={transformData}
       stack={true}
+      tooltip={false}
       xField="weight"
       yField="reps"
       colorField="date"

@@ -32,6 +32,7 @@ export default function LineChart({ data }: LineChartProps) {
   return (
     <Line
       data={transformData}
+      tooltip={false}
       xField="date"
       yField="weight"
       colorField="set"
