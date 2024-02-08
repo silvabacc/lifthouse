@@ -76,7 +76,7 @@ export default function Charts() {
           return (
             <div key={`${exercise.exerciseId}-${index}`}>
               <div className="flex flex-wrap">
-                <div className="flex justify-between items-start sticky top-0 z-10 bg-white w-full pb-2">
+                <div className="flex flex-wrap justify-between items-start z-10 bg-white w-full pb-2">
                   <div>
                     <h1 className="text-lg font-medium">
                       {exerciseInfo?.name}
@@ -85,7 +85,7 @@ export default function Charts() {
                       {exercise.sets} x {exercise.reps}
                     </Text>
                   </div>
-                  <div className="flex ">
+                  <div className="flex flex-wrap h-8">
                     <Space>
                       {Object.values(View).map((v, idx) => (
                         <div key={`${v}-${idx}`}>
