@@ -5,9 +5,9 @@ import {
   getRepScheme,
   intersection,
 } from "../utils";
-import SelectElement from "./selectComponent";
-import { useWorkout } from "../../hooks/useWorkout";
+import SelectElement, { Options } from "./selectComponent";
 import { useWorkoutIdContext } from "../context";
+import { useEffect, useState } from "react";
 
 type SelectExerciseProps = {
   defaultExercise: WorkoutExercise;
@@ -17,11 +17,17 @@ export function SelectExercise({
   defaultExercise,
   onChange,
 }: SelectExerciseProps) {
-  const { updateWorkoutPlan } = useWorkout();
-  const { exercises, workout, setWorkout } = useWorkoutIdContext();
+  const { exercises, workout } = useWorkoutIdContext();
   const findExercise = exercises.find(
     (e) => e.exerciseId === defaultExercise.exerciseId
   );
+  const [currentExercises, setCurrentExercises] = useState<number[]>(
+    workout.exercises.map((e) => e.exerciseId)
+  );
+
+  useEffect(() => {
+    setCurrentExercises(workout.exercises.map((e) => e.exerciseId));
+  }, [workout]);
 
   // Find common exercise types
   const commonType = findExercise?.exerciseType.find((type) =>
@@ -40,11 +46,18 @@ export function SelectExercise({
     );
 
   //We only want to apply the exercises if a template is applied
-  const options = (
+  const options: Options[] = (
     workout.template !== WorkoutTemplate.custom
       ? filteredExercisesWithType
       : exercises
-  ).map((e) => ({ value: e.exerciseId, label: e.name }));
+  ).map((e) => ({
+    value: e.exerciseId,
+    label: e.name,
+    disabledOptions: {
+      disabled: currentExercises.includes(e.exerciseId),
+      message: "This exercise is already in the workout",
+    },
+  }));
 
   return (
     <SelectElement

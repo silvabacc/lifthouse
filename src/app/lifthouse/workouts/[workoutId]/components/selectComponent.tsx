@@ -1,13 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 import { DownOutlined } from "@ant-design/icons";
-import { Input } from "antd";
+import { Input, Tooltip } from "antd";
 import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
+import { WarningOutlined } from "@ant-design/icons";
 
 const { Search } = Input;
 
+const WARNING_COLOR = "text-orange-600";
+
+type DisabledOptions = {
+  disabled: boolean;
+  message?: string;
+};
+
+export type Options = {
+  label: string;
+  value: string | number;
+  disabledOptions?: DisabledOptions;
+};
+
 type SelectProps = {
   value?: string | number;
-  options: { label: string; value: string | number }[];
+  options: Options[];
   defaultValue?: string | number;
   onChange?: (value: string | number) => void;
 };
@@ -44,6 +58,21 @@ export default function SelectElement({
     };
   }, []);
 
+  const onOptionSelect = (o: Options) => {
+    if (o.disabledOptions?.disabled) {
+      return;
+    }
+
+    if (optionSelected.value === o.value) {
+      setExpnaded(false);
+      return;
+    }
+    setOptionSelected(o);
+    setSearch("");
+    setExpnaded(false);
+    onChange?.(o.value);
+  };
+
   return (
     <div className="relative" ref={ref}>
       <div
@@ -67,24 +96,31 @@ export default function SelectElement({
           {options
             .filter((o) => o.label.toLocaleLowerCase().includes(search))
             .map((o, index) => {
+              const showDisabled =
+                o.disabledOptions?.disabled && o.value !== optionSelected.value;
+
               return (
                 <div
-                  onClick={() => {
-                    if (optionSelected.value === o.value) {
-                      setExpnaded(false);
-                      return;
-                    }
-                    setOptionSelected(o);
-                    setSearch("");
-                    setExpnaded(false);
-                    onChange?.(o.value);
-                  }}
-                  className={`p-2 cursor-pointer hover:bg-slate-100 ${
+                  className={`p-2 ${
+                    showDisabled && "bg-orange-100"
+                  } cursor-pointer hover:bg-slate-100 ${
                     o.value === optionSelected.value && "bg-slate-100"
                   }`}
                   key={`${index}_${o.value}`}
                 >
-                  {o.label}
+                  <div className={`flex justify-between`}>
+                    <span className="w-full" onClick={() => onOptionSelect(o)}>
+                      {o.label}
+                    </span>
+                    {showDisabled && (
+                      <Tooltip
+                        trigger={"click"}
+                        title={o.disabledOptions?.message}
+                      >
+                        <WarningOutlined className={`pr-2 ${WARNING_COLOR}`} />
+                      </Tooltip>
+                    )}
+                  </div>
                 </div>
               );
             })}

@@ -22,7 +22,6 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
   const [updatedWorkoutExercises, setUpdatedWorkoutExercises] = useState(
     workout.exercises || []
   );
-  const controls = useDragControls();
 
   useEffect(() => {
     setUpdatedWorkoutExercises(workout.exercises || []);
