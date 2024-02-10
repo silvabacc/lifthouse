@@ -30,9 +30,10 @@ export default function StackedChart({ data }: StackedChartProps) {
 
   return (
     <Bar
+      className="pointer-events-none"
       data={transformData}
-      stack={true}
       tooltip={false}
+      stack={true}
       xField="weight"
       yField="reps"
       colorField="date"

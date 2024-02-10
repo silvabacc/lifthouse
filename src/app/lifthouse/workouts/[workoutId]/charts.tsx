@@ -102,6 +102,7 @@ export default function Charts() {
                       ))}
                     </Space>
                     <RangePicker
+                      className="my-2"
                       format={(value) => value.format("DD/MM/YYYY")}
                       onChange={(dates) => {
                         if (dates?.[0] && dates[0] !== firstDate) {

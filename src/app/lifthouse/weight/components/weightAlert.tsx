@@ -5,7 +5,7 @@ import { useWeightInContext } from "../context";
 import dayjs from "dayjs";
 
 export default function WeightAlert() {
-  const { weightData, isLoading } = useWeightInContext();
+  const { weightData, isLoading, selectedValue } = useWeightInContext();
 
   if (isLoading) {
     return <Skeleton active />;
@@ -20,8 +20,15 @@ export default function WeightAlert() {
         weighIn.date.month() === mondayOfCurrentWeek.month()
     )?.weight || 0;
 
+  if (
+    selectedValue.year() !== dayjs().year() ||
+    selectedValue.month() !== dayjs().month()
+  ) {
+    return null;
+  }
+
   return (
-    <div>
+    <div className="pt-2">
       {weeklyGoal === 0 ? (
         <Alert
           type="warning"

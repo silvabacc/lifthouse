@@ -1,7 +1,6 @@
 import { LogEntry } from "@/lib/supabase/db/types";
 import { Line } from "@ant-design/plots";
 import { Alert } from "antd";
-import { useState } from "react";
 
 type LineChartProps = {
   data: LogEntry[];
@@ -31,10 +30,11 @@ export default function LineChart({ data }: LineChartProps) {
 
   return (
     <Line
+      className="pointer-events-none pt-4"
       data={transformData}
-      tooltip={false}
       xField="date"
       yField="weight"
+      tooltip={false}
       colorField="set"
       scale={{ color: { palette: "warm" } }}
       axis={{

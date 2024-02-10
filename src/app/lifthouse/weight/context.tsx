@@ -56,7 +56,7 @@ const WeightContextProvider = ({ children }: any) => {
     };
 
     fetchWeightData();
-  }, [fetch, monthSelected, yearSelected]);
+  }, [monthSelected, yearSelected]);
 
   return (
     <WeightContext.Provider

@@ -72,7 +72,7 @@ export default function Table({ data }: Props) {
     <div className="mt-4">
       <Button
         type="link"
-        className="p-0 mt-2"
+        className="p-0 mt-4"
         onClick={() => {
           expandedKeys.length === data.length
             ? setExpandedKeys([])
