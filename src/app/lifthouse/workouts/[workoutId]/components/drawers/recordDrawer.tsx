@@ -6,14 +6,10 @@ import {
   Divider,
   Drawer,
   Input,
-  Modal,
   Space,
-  Tabs,
-  TabsProps,
   Typography,
   message,
 } from "antd";
-import { SelectExercise, SelectRepsScheme } from "../selectors";
 import { useWorkoutIdContext } from "../../context";
 import { Start } from "../start";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
@@ -24,8 +20,6 @@ import DeleteExerciseButton from "../deleteExerciseButton";
 
 const { TextArea } = Input;
 const { Text } = Typography;
-
-const COMPACT_SCREEN = 300;
 
 type Props = {
   show: boolean;
@@ -40,21 +34,6 @@ export function Record({ show, onCancel }: Props) {
   const [saving, setSaving] = useState(false);
   const router = useRouter();
   const [messageApi, contextHolder] = message.useMessage();
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSmallScreen(window.innerWidth < COMPACT_SCREEN);
-    };
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   const onChangeNoes = (value: string, exerciseId: number) => {
     cacheLogInfo(exerciseId, { notes: value });
@@ -102,7 +81,7 @@ export function Record({ show, onCancel }: Props) {
 
   return (
     <Drawer
-      width={isSmallScreen ? "100%" : 330}
+      width={350}
       open={show}
       onClose={onCancel}
       footer={

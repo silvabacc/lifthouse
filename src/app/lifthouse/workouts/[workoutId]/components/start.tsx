@@ -1,8 +1,8 @@
 import { LogEntry, LogInfo, WorkoutExercise } from "@/lib/supabase/db/types";
 import { useWorkoutIdContext } from "../context";
-import { Button, InputNumber, Space, StepProps, Steps } from "antd";
+import { Button, InputNumber, Space, StepProps, Steps, Tooltip } from "antd";
 import { useState } from "react";
-import { CheckCircleOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 
 type Props = {
@@ -32,6 +32,7 @@ export function Start({ exercise, latestLogInfo }: Props) {
             weight: latestLog?.weight.toString(),
           }}
           disabled={currentSet !== i}
+          warningEnabled={currentSet > i}
           onContinue={() => setCurrentSet(currentSet + 1)}
         />
       ),
@@ -54,6 +55,7 @@ type StepRowProps = {
   exerciseId: number;
   step: number;
   disabled: boolean;
+  warningEnabled: boolean; //Warnings can only appear if the current set is less than the rendered set
   placeHolder?: { reps?: string; weight?: string };
   onContinue: () => void;
 };
@@ -61,6 +63,7 @@ function StepRow({
   exerciseId,
   step,
   disabled,
+  warningEnabled,
   placeHolder,
   onContinue,
 }: StepRowProps) {
@@ -82,6 +85,8 @@ function StepRow({
     });
     onContinue();
   };
+
+  const showWarning = warningEnabled && !reps;
 
   return (
     <Space>
@@ -112,6 +117,13 @@ function StepRow({
         icon={<CheckCircleOutlined className="p-0 m-0" />}
         onClick={onNext}
       />
+      {showWarning && (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Tooltip trigger={"click"} title="Reps is missing!">
+            <WarningOutlined className="text-orange-400" />
+          </Tooltip>
+        </div>
+      )}
     </Space>
   );
 }
