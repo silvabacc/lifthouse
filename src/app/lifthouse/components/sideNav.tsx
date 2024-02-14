@@ -30,8 +30,8 @@ export default function SiderNav() {
       key: "3",
       icon: <div>🥑</div>,
       label: "Meal tracker",
-      onClick: () => router.push("/lifthouse/meal-tracker"),
-      path: "/lifthouse/meal-tracker",
+      onClick: () => router.push("/lifthouse/meals"),
+      path: "/lifthouse/meals",
     },
     {
       key: "4",
@@ -47,7 +47,11 @@ export default function SiderNav() {
 
   return (
     <Sider collapsedWidth={40} breakpoint="sm" theme="light" trigger={null}>
-      <Image className="hidden sm:block p-2" src={LifthouseLogo} alt="" />
+      <Image
+        className="hidden sm:block p-2 w-full h-20"
+        src={LifthouseLogo}
+        alt=""
+      />
       <Menu theme="light" defaultSelectedKeys={[activeKey]} items={items} />
     </Sider>
   );

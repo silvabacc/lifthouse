@@ -1,8 +1,6 @@
 import DatabaseClient from "@/lib/supabase/db/dbClient";
-import { createSupabaseServer } from "@/lib/supabase/server";
 import Joi from "joi";
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
   const body = await request.json();

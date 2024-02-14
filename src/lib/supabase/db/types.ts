@@ -47,6 +47,16 @@ export type Weight = {
   weight: number;
 };
 
+export type Meal = {
+  id: number;
+  date: Date;
+  mealName: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+};
+
 export enum WorkoutTemplate {
   upper_intensity = "upper_intensity",
   upper_volume = "upper_volume",

@@ -3,6 +3,7 @@ import { createSupabaseServer } from "../server";
 import {
   Exercise,
   LogEntry,
+  Meal,
   TemplateSetup,
   Weight,
   Workout,
@@ -322,5 +323,29 @@ export default class DatabaseClient {
       date: data[0].date,
       weight: data[0].weight,
     };
+  }
+
+  async getMeals(day: string): Promise<Meal[]> {
+    const userId = await this.getUserId();
+
+    const { data, error } = await this.supabase
+      .from("meals")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("date", day);
+
+    if (error) {
+      throw error;
+    }
+
+    return data.map((data) => ({
+      id: data.id,
+      mealName: data.meal_name,
+      calories: data.calories,
+      protein: data.protein,
+      date: data.date,
+      carbs: data.carbs,
+      fat: data.fat,
+    }));
   }
 }
