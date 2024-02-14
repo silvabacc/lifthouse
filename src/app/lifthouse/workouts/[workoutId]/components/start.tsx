@@ -86,7 +86,7 @@ function StepRow({
     onContinue();
   };
 
-  const showWarning = warningEnabled && !reps;
+  const showWarning = warningEnabled && (reps ? !reps : !cachedInfo?.reps);
 
   return (
     <Space>
