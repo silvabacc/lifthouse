@@ -41,6 +41,7 @@ const DateMover: React.FC<DateMoverProps> = ({
       <div className="flex justify-center items-center">
         <Button
           className={ARROW_MARGIN}
+          shape="circle"
           type="primary"
           onClick={onLeftArrowClick}
           icon={<ArrowLeftOutlined />}
@@ -63,6 +64,7 @@ const DateMover: React.FC<DateMoverProps> = ({
           className={`${ARROW_MARGIN} ${
             DateUtils.isToday(selectedDay) ? "invisible" : "visible"
           }`}
+          shape="circle"
           type="primary"
           onClick={onRightArrowClick}
           icon={<ArrowRightOutlined />}
