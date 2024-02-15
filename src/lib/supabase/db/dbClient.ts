@@ -348,4 +348,15 @@ export default class DatabaseClient {
       fat: data.fat,
     }));
   }
+
+  async deleteMeal(mealId: string): Promise<void> {
+    const { error } = await this.supabase
+      .from("meals")
+      .delete()
+      .match({ id: mealId });
+
+    if (error) {
+      throw error;
+    }
+  }
 }

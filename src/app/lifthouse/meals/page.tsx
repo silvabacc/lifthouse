@@ -6,6 +6,8 @@ import { Skeleton, TabsProps, Tabs } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import DateMover from "./components/dateMover";
+import MacroNutrients from "./components/macroNutrients";
+import MealCard from "./components/mealCard";
 
 export default function MealsPage() {
   const [activeTab, setActivetab] = useState("1");
@@ -18,7 +20,15 @@ export default function MealsPage() {
     setActivetab("1");
   };
 
-  const onDeleteCard = async (id: string) => {};
+  const onDeleteCard = async (id: number) => {
+    const deleteMealResponse = await fetch(`/api/meals/${id}`, {
+      method: "DELETE",
+    });
+
+    if (deleteMealResponse.success) {
+      setMealData(mealData.filter((meal) => meal.id !== id));
+    }
+  };
 
   useEffect(() => {
     const fetchMeals = async () => {
@@ -30,27 +40,27 @@ export default function MealsPage() {
     fetchMeals();
   }, [selectedDay]);
 
-  // const Cards = () => {
-  //   return (
-  //     <>
-  //       <Skeleton loading={isLoading} />
-  //       {mealData?.map((meal) => (
-  //         <MealTrackerCard
-  //           key={meal.id}
-  //           data={meal}
-  //           onDeleteCard={() => onDeleteCard(meal.id)}
-  //         />
-  //       ))}
-  //     </>
-  //   );
-  // };
+  const Cards = () => {
+    return (
+      <>
+        <Skeleton loading={isLoading} />
+        {mealData?.map((meal) => (
+          <MealCard
+            key={meal.id}
+            data={meal}
+            onDeleteCard={() => onDeleteCard(meal.id)}
+          />
+        ))}
+      </>
+    );
+  };
 
   const items: TabsProps["items"] = [
-    // {
-    //   key: "1",
-    //   label: `Meals`,
-    //   children: Cards(),
-    // },
+    {
+      key: "1",
+      label: `Meals`,
+      children: Cards(),
+    },
     // {
     //   key: "2",
     //   label: `Add Entry`,
@@ -60,18 +70,25 @@ export default function MealsPage() {
 
   const calories = mealData?.reduce((acc, curr) => acc + curr.calories, 0) || 0;
   const protein = mealData?.reduce((acc, curr) => acc + curr.protein, 0) || 0;
+  const fat = mealData?.reduce((acc, curr) => acc + curr.fat, 0) || 0;
+  const carbs = mealData?.reduce((acc, curr) => acc + curr.carbs, 0) || 0;
 
   return (
     <div className="flex flex-col items-center">
       <DateMover selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
-      {/* <MacroNutrients calories={calories} protein={protein} />
+      <MacroNutrients
+        calories={calories}
+        protein={protein}
+        fat={fat}
+        carbs={carbs}
+      />
       <Tabs
         style={{ width: "100%" }}
         activeKey={activeTab}
         onChange={setActivetab}
         centered
         items={items}
-      /> */}
+      />
     </div>
   );
 }

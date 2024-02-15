@@ -51,7 +51,7 @@ const DateMover: React.FC<DateMoverProps> = ({
           color="white"
           title={ToolTipCalendar}
         >
-          <Button className="w-52 h-12" type="primary">
+          <Button className="w-40 h-12" type="primary">
             <Title
               level={4}
               style={{ color: "white", margin: 0, whiteSpace: "nowrap" }}

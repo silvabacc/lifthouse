@@ -29,7 +29,7 @@ export default function SiderNav() {
     {
       key: "3",
       icon: <div>🥑</div>,
-      label: "Meal tracker",
+      label: "Meals",
       onClick: () => router.push("/lifthouse/meals"),
       path: "/lifthouse/meals",
     },
