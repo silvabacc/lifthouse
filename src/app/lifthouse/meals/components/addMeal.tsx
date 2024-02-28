@@ -24,7 +24,7 @@ export default function AddMeal({ goToMealTab }: AddMealProps) {
     mealTitle: string,
     nutrients: { calories: number; protein: number; fat: number; carbs: number }
   ) => {
-    const response = await fetch("/api/meals", {
+    await fetch("/api/meals", {
       method: "POST",
       body: JSON.stringify({
         mealTitle: mealTitle,

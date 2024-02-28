@@ -6,9 +6,11 @@ import { Skeleton, TabsProps, Tabs } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import DateMover from "./components/dateMover";
-import MacroNutrients from "./components/macroNutrients";
 import MealCard from "./components/mealCard";
 import AddMeal from "./components/addMeal";
+import dynamic from "next/dynamic";
+
+const MacroNutrients = dynamic(() => import("./components/macroNutrients"));
 
 export default function MealsPage() {
   const [activeTab, setActivetab] = useState("1");

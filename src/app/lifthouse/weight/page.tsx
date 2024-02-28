@@ -1,7 +1,6 @@
-import { Divider } from "antd";
 import WeightCalendar from "./components/weightCalendar";
 import WeightAlert from "./components/weightAlert";
-import PageInfo, { PageInfoPortal } from "../components/pageInfo";
+import { PageInfoPortal } from "../components/pageInfo";
 import dynamic from "next/dynamic";
 
 const WeightLine = dynamic(() => import("./components/weightLine"));

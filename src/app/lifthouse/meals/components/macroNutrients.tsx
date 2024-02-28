@@ -1,10 +1,7 @@
-import { Divider, Typography } from "antd";
 import React from "react";
 import NumberText from "./number";
 import { HIGHLIGHT_COLOR } from "./constants";
 import { Pie } from "@ant-design/plots";
-
-const { Title } = Typography;
 
 interface MacroNutrientsProps {
   calories: number;
