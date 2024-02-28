@@ -44,7 +44,7 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
   };
 
   const onChangeExercise = async (exerciseId: number, value: number) => {
-    const newExercises = workout.exercises.map((e) => {
+    const newExercises = updatedWorkoutExercises.map((e) => {
       if (e.exerciseId === exerciseId) {
         return {
           ...e,
@@ -60,7 +60,7 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
   const onChangeReps = async (exerciseId: number, value: string) => {
     const [sets, reps] = value.split(":");
 
-    const newExercises = workout.exercises.map((e) => {
+    const newExercises = updatedWorkoutExercises.map((e) => {
       if (e.exerciseId === exerciseId) {
         return {
           ...e,
