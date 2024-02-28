@@ -79,9 +79,9 @@ export default function SelectElement({
         className="flex items-center cursor-pointer justify-between border-solid border-slate-200 p-2 rounded-lg"
         onClick={onClick}
       >
-        <p className="pr-2">
+        <span className="pr-2">
           {findOption(value)?.label ?? optionSelected?.label}
-        </p>
+        </span>
         <DownOutlined />
       </div>
       {expanded && (
