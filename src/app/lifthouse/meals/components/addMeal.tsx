@@ -46,6 +46,10 @@ export default function AddMeal({ goToMealTab }: AddMealProps) {
 
   const proteinRow = [{ state: proteinPer, set: setProteinPer }];
 
+  const carbsRow = [{ state: carbsPer, set: setCarbsPer }];
+
+  const fatRow = [{ state: fatsPer, set: setFatsPer }];
+
   useEffect(() => {
     window.addEventListener("resize", () => {
       scrollToCard();
@@ -65,12 +69,12 @@ export default function AddMeal({ goToMealTab }: AddMealProps) {
 
   useEffect(() => {
     if (!grams || !carbsPer) return;
-    setCarbsPer(grams * (carbsPer / 100));
+    setCarbsTotal(grams * (carbsPer / 100));
   }, [carbsPer, grams]);
 
   useEffect(() => {
     if (!grams || !fatsPer) return;
-    setProteinTotal(grams * (fatsPer / 100));
+    setFatsTotal(grams * (fatsPer / 100));
   }, [fatsPer, grams]);
 
   const handleCalorieTotalChange = (value: number) => {
@@ -81,6 +85,16 @@ export default function AddMeal({ goToMealTab }: AddMealProps) {
   const handleProteinTotalChange = (value: number) => {
     setProteinTotal(value);
     setProteinPer(0);
+  };
+
+  const handleFatTotalChange = (value: number) => {
+    setFatsTotal(value);
+    setFatsPer(0);
+  };
+
+  const handleCarbTotalChange = (value: number) => {
+    setCarbsPer(value);
+    setCaloriesTotal(0);
   };
 
   const handleAdd = async () => {
@@ -101,11 +115,15 @@ export default function AddMeal({ goToMealTab }: AddMealProps) {
 
   const clearAll = () => {
     setMealTitle("");
-    setCaloriesPer(0);
-    setCaloriesTotal(0);
-    setGrams(0);
-    setProteinPer(0);
-    setProteinTotal(0);
+    setCaloriesPer(undefined);
+    setCaloriesTotal(undefined);
+    setGrams(undefined);
+    setProteinPer(undefined);
+    setProteinTotal(undefined);
+    setCarbsPer(undefined);
+    setCarbsTotal(undefined);
+    setFatsPer(undefined);
+    setFatsTotal(undefined);
   };
 
   const scrollToCard = () => {
@@ -171,6 +189,56 @@ export default function AddMeal({ goToMealTab }: AddMealProps) {
                 precision={1}
                 value={caloriesTotal}
                 onChange={(e) => handleCalorieTotalChange(e as number)}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p className="text-slate-400">Fat</p>
+            </td>
+            {fatRow.map((item, index) => (
+              <td key={index}>
+                <InputNumber
+                  placeholder="0"
+                  inputMode="decimal"
+                  precision={1}
+                  value={item.state}
+                  onChange={(e) => handleNutritionInput(e as number, item.set)}
+                />
+              </td>
+            ))}
+            <td>
+              <InputNumber
+                placeholder="0"
+                inputMode="decimal"
+                precision={1}
+                value={fatsTotal}
+                onChange={(e) => handleFatTotalChange(e as number)}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p className="text-slate-400">Carbs</p>
+            </td>
+            {carbsRow.map((item, index) => (
+              <td key={index}>
+                <InputNumber
+                  placeholder="0"
+                  inputMode="decimal"
+                  precision={1}
+                  value={item.state}
+                  onChange={(e) => handleNutritionInput(e as number, item.set)}
+                />
+              </td>
+            ))}
+            <td>
+              <InputNumber
+                placeholder="0"
+                inputMode="decimal"
+                precision={1}
+                value={carbsTotal}
+                onChange={(e) => handleCarbTotalChange(e as number)}
               />
             </td>
           </tr>
