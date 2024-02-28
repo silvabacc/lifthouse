@@ -1,7 +1,8 @@
-import { Skeleton, Typography } from "antd";
+import { Divider, Typography } from "antd";
 import React from "react";
 import NumberText from "./number";
 import { HIGHLIGHT_COLOR } from "./constants";
+import { Pie } from "@ant-design/plots";
 
 const { Title } = Typography;
 
@@ -18,28 +19,33 @@ const MacroNutrients: React.FC<MacroNutrientsProps> = ({
   fat,
   carbs,
 }) => {
+  const config = {
+    data: [
+      { type: "Protein", value: protein },
+      { type: "Fats", value: fat },
+      { type: "Carbs", value: carbs },
+    ],
+    angleField: "value",
+    colorField: "type",
+    tooltip: false,
+    legend: {
+      color: {
+        position: "left",
+      },
+    },
+  };
+
   return (
-    <div className="w-full">
-      <div className={`text-center text-2xl ${HIGHLIGHT_COLOR}`}>
-        <Title level={4}>Calories</Title>
-        <NumberText value={calories} />
-      </div>
+    <div className="w-72">
       <div
         className={`flex justify-evenly text-center text-2xl ${HIGHLIGHT_COLOR}`}
       >
-        <div>
-          <Title level={4}>Fat</Title>
-          <NumberText value={fat} />
-        </div>
-        <div>
-          <Title level={4}>Carbs</Title>
-          <NumberText value={carbs} />
-        </div>
-        <div>
-          <Title level={4}> Protein</Title>
-          <NumberText value={protein} />
-        </div>
+        <p className="text-black">Calories</p>
+        <NumberText value={calories} />
       </div>
+      {(protein > 0 || carbs > 0 || fat > 0) && (
+        <Pie {...config} height={200} width={300} />
+      )}
     </div>
   );
 };

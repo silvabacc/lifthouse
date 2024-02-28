@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import DateMover from "./components/dateMover";
 import MacroNutrients from "./components/macroNutrients";
 import MealCard from "./components/mealCard";
+import AddMeal from "./components/addMeal";
 
 export default function MealsPage() {
   const [activeTab, setActivetab] = useState("1");
@@ -18,6 +19,7 @@ export default function MealsPage() {
 
   const goToMealTab = () => {
     setActivetab("1");
+    fetchMeals();
   };
 
   const onDeleteCard = async (id: number) => {
@@ -30,13 +32,15 @@ export default function MealsPage() {
     }
   };
 
+  const fetchMeals = async () => {
+    setLoading(true);
+    const data = await fetch(`/api/meals?day=${selectedDay}`);
+    setMealData(data);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchMeals = async () => {
-      setLoading(true);
-      const data = await fetch(`/api/meals?day=${selectedDay}`);
-      setMealData(data);
-      setLoading(false);
-    };
+    setMealData([]);
     fetchMeals();
   }, [selectedDay]);
 
@@ -61,11 +65,11 @@ export default function MealsPage() {
       label: `Meals`,
       children: Cards(),
     },
-    // {
-    //   key: "2",
-    //   label: `Add Entry`,
-    //   children: <AddMealCard goToMealTab={goToMealTab} />,
-    // },
+    {
+      key: "2",
+      label: `Add Entry`,
+      children: <AddMeal goToMealTab={goToMealTab} />,
+    },
   ];
 
   const calories = mealData?.reduce((acc, curr) => acc + curr.calories, 0) || 0;

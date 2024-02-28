@@ -359,4 +359,40 @@ export default class DatabaseClient {
       throw error;
     }
   }
+
+  async addMeal(
+    mealTitle: string,
+    nutrients: { calories: number; protein: number; fat: number; carbs: number }
+  ): Promise<Meal> {
+    const userId = await this.getUserId();
+
+    const { data, error } = await this.supabase
+      .from("meals")
+      .insert([
+        {
+          meal_name: mealTitle,
+          calorie: nutrients.calories,
+          protein: nutrients.protein,
+          carbs: nutrients.carbs,
+          fat: nutrients.fat,
+          user_id: userId,
+          date: new Date().toDateString(),
+        },
+      ])
+      .select();
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      id: data[0].id,
+      mealName: data[0].meal_name,
+      calories: data[0].calories,
+      protein: data[0].protein,
+      date: data[0].date,
+      carbs: data[0].carbs,
+      fat: data[0].fat,
+    };
+  }
 }

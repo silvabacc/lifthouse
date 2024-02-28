@@ -51,14 +51,9 @@ const DateMover: React.FC<DateMoverProps> = ({
           color="white"
           title={ToolTipCalendar}
         >
-          <Button className="w-40 h-12" type="primary">
-            <Title
-              level={4}
-              style={{ color: "white", margin: 0, whiteSpace: "nowrap" }}
-            >
-              {title}
-            </Title>
-          </Button>
+          <div className="w-40 rounded bg-blue-500 text-white cursor-pointer px-4">
+            <h1 className="text-xl">{title}</h1>
+          </div>
         </Tooltip>
         <Button
           className={`${ARROW_MARGIN} ${
@@ -70,7 +65,7 @@ const DateMover: React.FC<DateMoverProps> = ({
           icon={<ArrowRightOutlined />}
         />
       </div>
-      <Title level={5}>{selectedDay.format("DD/MM/YYYY")}</Title>
+      <h3 className="m-0">{selectedDay.format("DD/MM/YYYY")}</h3>
     </div>
   );
 };

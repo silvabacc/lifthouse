@@ -25,3 +25,29 @@ export async function GET(request: NextRequest) {
   const data = await dbClient.getMeals(day);
   return NextResponse.json(data);
 }
+
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+
+  try {
+    const schema = Joi.object({
+      mealTitle: Joi.string().required(),
+      calories: Joi.number().required(),
+      protein: Joi.number().required(),
+      carbs: Joi.date().required(),
+      fat: Joi.number().required(),
+    });
+    schema.validateAsync(body);
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message }, { status: 400 });
+  }
+
+  const dbClient = new DatabaseClient();
+  const data = await dbClient.addMeal(body.mealTitle, {
+    protein: body.protein,
+    fat: body.fat,
+    carbs: body.carbs,
+    calories: body.calories,
+  });
+  return NextResponse.json(data);
+}
