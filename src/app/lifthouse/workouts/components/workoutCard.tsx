@@ -29,7 +29,6 @@ export default function WorkoutCard({
 }: WorkoutCardProps) {
   const [drawOpen, setDrawOpen] = useState<boolean>(false);
   const { updateWorkoutPlan } = useWorkout();
-  const [disableButton, setDisableButton] = useState<boolean>(false);
   const router = useRouter();
 
   const showDeleteConfirm = () => {
