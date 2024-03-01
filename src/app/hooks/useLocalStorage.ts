@@ -1,7 +1,7 @@
 "use client";
 
 import { LogEntry, LogInfo } from "@/lib/supabase/db/types";
-import { View } from "../lifthouse/workouts/[workoutId]/charts";
+import { View } from "../lifthouse/types";
 
 interface CacheLogInfo {
   info: LogInfo[];

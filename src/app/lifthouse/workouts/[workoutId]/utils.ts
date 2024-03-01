@@ -1,10 +1,10 @@
 import { ExerciseType, WorkoutTemplate } from "@/lib/supabase/db/types";
-import { View } from "./charts";
 import {
   BarChartOutlined,
   LineChartOutlined,
   TableOutlined,
 } from "@ant-design/icons";
+import { View } from "../../types";
 
 export const IntensityRepRange = [
   { sets: 3, reps: "3" },
