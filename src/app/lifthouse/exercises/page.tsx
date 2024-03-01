@@ -7,7 +7,9 @@ import { FilterOutlined } from "@ant-design/icons";
 import { Button, Divider, Input, Space, Tag } from "antd";
 import { useEffect, useState } from "react";
 import ExerciseCardSkeleton from "./exercises.skeleton";
-import ExerciseDrawer from "./drawer";
+import dynamic from "next/dynamic";
+
+const ExerciseDrawer = dynamic(() => import("./drawer"));
 
 const { Search } = Input;
 const { CheckableTag } = Tag;
@@ -95,9 +97,9 @@ export default function Exercises() {
           })}
       </div>
       <ExerciseDrawer
-        exercise={selectedExercise}
         show={showDrawer}
-        onClose={() => setShowDrawer((prev) => !prev)}
+        onClose={() => setShowDrawer(false)}
+        exercise={selectedExercise}
       />
     </PageAnimation>
   );

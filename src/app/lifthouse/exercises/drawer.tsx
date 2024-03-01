@@ -24,7 +24,6 @@ type Props = {
   onClose: () => void;
 };
 export default function ExerciseDrawer({ exercise, show, onClose }: Props) {
-  const [exerciseData, setExerciseData] = useState<Exercise>();
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const { fetch } = useFetch();
   const { getCachedView, cacheView } = useLocalStorage();
