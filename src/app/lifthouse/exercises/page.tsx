@@ -7,9 +7,7 @@ import { FilterOutlined } from "@ant-design/icons";
 import { Button, Divider, Input, Space, Tag } from "antd";
 import { useEffect, useState } from "react";
 import ExerciseCardSkeleton from "./exercises.skeleton";
-import dynamic from "next/dynamic";
-
-const ExerciseDrawer = dynamic(() => import("./drawer"));
+import ExerciseDrawer from "./drawer";
 
 const { Search } = Input;
 const { CheckableTag } = Tag;

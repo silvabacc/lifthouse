@@ -10,9 +10,11 @@ import {
   LineChartOutlined,
   TableOutlined,
 } from "@ant-design/icons";
-import StackedChart from "../components/visuals/stacked";
-import LineChart from "../components/visuals/line";
-import Table from "../components/visuals/table";
+import dynamic from "next/dynamic";
+
+const StackedChart = dynamic(() => import("../components/visuals/stacked"));
+const LineChart = dynamic(() => import("../components/visuals/line"));
+const Table = dynamic(() => import("../components/visuals/table"));
 
 const DEFAULT_LIMIT = 60;
 
