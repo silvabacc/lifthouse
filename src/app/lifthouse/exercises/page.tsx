@@ -6,6 +6,8 @@ import { Exercise, PrimaryMuscleGroup } from "@/lib/supabase/db/types";
 import { FilterOutlined } from "@ant-design/icons";
 import { Button, Divider, Input, Space, Tag } from "antd";
 import { useEffect, useState } from "react";
+import ExerciseCardSkeleton from "./exercises.skeleton";
+import ExerciseDrawer from "./drawer";
 
 const { Search } = Input;
 const { CheckableTag } = Tag;
@@ -16,11 +18,16 @@ export default function Exercises() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<PrimaryMuscleGroup[]>([]);
   const [expandedFilter, setExpandedFilter] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [selectedExercise, setSelectedExercise] = useState<Exercise>();
+  const [showDrawer, setShowDrawer] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     const fetchExercises = async () => {
       const response = await fetch("/api/exercises");
       setExercises(response);
+      setLoading(false);
     };
     fetchExercises();
   }, []);
@@ -30,6 +37,11 @@ export default function Exercises() {
       ? [...selectedTags, tag]
       : selectedTags.filter((t) => t !== tag);
     setSelectedTags(nextSelectedTags);
+  };
+
+  const onClickCard = (exercise: Exercise) => {
+    setShowDrawer((prev) => !prev);
+    setSelectedExercise(exercise);
   };
 
   return (
@@ -58,7 +70,7 @@ export default function Exercises() {
           </div>
         )}
       </div>
-
+      {loading && <ExerciseCardSkeleton />}
       <div className="grid lg:grid-cols-3 gap-4">
         {exercises
           ?.filter((o) => o.name.toLocaleLowerCase().includes(searchQuery))
@@ -72,6 +84,7 @@ export default function Exercises() {
               <div
                 key={exercise.exerciseId}
                 className="bg-white rounded p-6 cursor-pointer"
+                onClick={() => onClickCard(exercise)}
               >
                 <p className="text-base font-medium pb-2">{exercise.name}</p>
                 <p className="text-sm leading-6 text-gray-400">
@@ -81,6 +94,11 @@ export default function Exercises() {
             );
           })}
       </div>
+      <ExerciseDrawer
+        exercise={selectedExercise}
+        show={showDrawer}
+        onClose={() => setShowDrawer((prev) => !prev)}
+      />
     </PageAnimation>
   );
 }

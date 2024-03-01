@@ -6,23 +6,18 @@ import { getButtonType } from "./utils";
 import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
 import ChartsSkeleton from "./charts.skeleton";
 import dayjs from "dayjs";
-import StackedChart from "./components/visuals/stacked";
-import LineChart from "./components/visuals/line";
-import Table from "./components/visuals/table";
+import StackedChart from "../../components/visuals/stacked";
+import LineChart from "../../components/visuals/line";
+import Table from "../../components/visuals/table";
 import { SelectExercise, SelectRepsScheme } from "./components/selectors";
 import { useWorkoutIdContext } from "./context";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
+import { View } from "../../types";
 
 const { RangePicker } = DatePicker;
 const { Text } = Typography;
 
 const DEFAULT_LIMIT = 60;
-
-export enum View {
-  line = "line",
-  stacked = "stacked",
-  table = "table",
-}
 
 export default function Charts() {
   const { workout, exercises } = useWorkoutIdContext();
