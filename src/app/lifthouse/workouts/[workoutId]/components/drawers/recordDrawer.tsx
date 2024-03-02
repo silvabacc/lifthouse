@@ -14,9 +14,8 @@ import { useWorkoutIdContext } from "../../context";
 import { Start } from "../start";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { useFetch } from "@/app/hooks/useFetch";
-import { LogEntry, WorkoutTemplate } from "@/lib/supabase/db/types";
+import { LogEntry } from "@/lib/supabase/db/types";
 import { useRouter } from "next/navigation";
-import DeleteExerciseButton from "../deleteExerciseButton";
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -109,9 +108,6 @@ export function Record({ show, onCancel }: Props) {
                     {exercise.sets} x {exercise.reps}
                   </Text>
                 </Space>
-                {workout.template === WorkoutTemplate.custom && (
-                  <DeleteExerciseButton exerciseId={exercise.exerciseId} />
-                )}
               </div>
               <div className="flex flex-wrap sm:flex-nowrap">
                 <div>

@@ -1,18 +1,18 @@
 import { useFetch } from "@/app/hooks/useFetch";
-import { LogEntry } from "@/lib/supabase/db/types";
+import { LogEntry, WorkoutTemplate } from "@/lib/supabase/db/types";
 import { Button, DatePicker, Divider, Space, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { getButtonType } from "./utils";
 import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
-import ChartsSkeleton from "./charts.skeleton";
 import dayjs from "dayjs";
 import StackedChart from "../../components/visuals/stacked";
 import LineChart from "../../components/visuals/line";
 import Table from "../../components/visuals/table";
-import { SelectExercise, SelectRepsScheme } from "./components/selectors";
 import { useWorkoutIdContext } from "./context";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { View } from "../../types";
+import { useWorkout } from "../hooks/useWorkout";
+import DeleteExerciseButton from "./components/deleteExerciseButton";
 
 const { RangePicker } = DatePicker;
 const { Text } = Typography;
@@ -60,6 +60,8 @@ export default function Charts() {
     setView(view);
   };
 
+  const isCustomWorkout = workout.template === WorkoutTemplate.custom;
+
   return (
     <BottomFadeInAnimation className="flex flex-col h-full w-full">
       <div className={`overflow-y-auto ${loading && "opacity-50"}`}>
@@ -96,20 +98,27 @@ export default function Charts() {
                         </div>
                       ))}
                     </Space>
-                    <RangePicker
-                      className="my-2"
-                      format={(value) => value.format("DD/MM/YYYY")}
-                      onChange={(dates) => {
-                        if (dates?.[0] && dates[0] !== firstDate) {
-                          setFirstDate(dates?.[0]);
-                        }
-                        if (dates?.[1] && dates[1] !== secondDate) {
-                          setSecondDate(dates?.[1]);
-                        }
-                      }}
-                      placement="bottomLeft"
-                      defaultValue={[secondDate, firstDate]}
-                    />
+                    <div className="flex items-center">
+                      <RangePicker
+                        className="my-2"
+                        format={(value) => value.format("DD/MM/YYYY")}
+                        onChange={(dates) => {
+                          if (dates?.[0] && dates[0] !== firstDate) {
+                            setFirstDate(dates?.[0]);
+                          }
+                          if (dates?.[1] && dates[1] !== secondDate) {
+                            setSecondDate(dates?.[1]);
+                          }
+                        }}
+                        placement="bottomLeft"
+                        defaultValue={[secondDate, firstDate]}
+                      />
+                      {isCustomWorkout && (
+                        <DeleteExerciseButton
+                          exerciseId={exercise.exerciseId}
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
 
