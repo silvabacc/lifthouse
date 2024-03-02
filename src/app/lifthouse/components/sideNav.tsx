@@ -2,7 +2,7 @@
 
 import { Layout, Menu } from "antd";
 import Image from "next/image";
-import LifthouseLogo from "@/app/assets/ifthouse_logo_black.png";
+import LifthouseLogo from "@/app/assets/lifthouse_logo_black.png";
 import { usePathname, useRouter } from "next/navigation";
 
 const { Sider } = Layout;
