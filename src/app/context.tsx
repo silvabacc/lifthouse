@@ -7,7 +7,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import LifthouseLogo from "@/app/assets/lifthouse_logo_black.png";
 import Image from "next/image";
 import { LoadingOutlined } from "@ant-design/icons";
-import { FadeInAnimation } from "./aniamtions/fadeinAnimation";
+import { FadeInAnimation } from "@/app/aniamtions/fadeinAnimation";
 
 type AppContext = {
   user: User | undefined;
