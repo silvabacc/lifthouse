@@ -1,7 +1,6 @@
 import { Button } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useWorkoutIdContext } from "../context";
-import { useFetch } from "@/app/hooks/useFetch";
 import { useWorkout } from "../../hooks/useWorkout";
 
 type Props = {

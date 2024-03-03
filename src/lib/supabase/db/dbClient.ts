@@ -251,6 +251,19 @@ export default class DatabaseClient {
     }));
   }
 
+  async deleteLog(logId: number) {
+    const userId = await this.getUserId();
+
+    const { error } = await this.supabase
+      .from("log_entries")
+      .delete()
+      .match({ log_entry_id: logId, user_id: userId });
+
+    if (error) {
+      throw error;
+    }
+  }
+
   async getWeight(month: number, year: number): Promise<Weight[]> {
     const userId = await this.getUserId();
 
@@ -350,10 +363,12 @@ export default class DatabaseClient {
   }
 
   async deleteMeal(mealId: string): Promise<void> {
+    const userId = await this.getUserId();
+
     const { error } = await this.supabase
       .from("meals")
       .delete()
-      .match({ id: mealId });
+      .match({ id: mealId, user_id: userId });
 
     if (error) {
       throw error;
