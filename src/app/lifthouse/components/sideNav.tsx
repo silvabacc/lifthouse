@@ -28,13 +28,20 @@ export default function SiderNav() {
     },
     {
       key: "3",
+      icon: <div>🦾</div>,
+      label: "531",
+      onClick: () => router.push("/lifthouse/531"),
+      path: "/lifthouse/531",
+    },
+    {
+      key: "4",
       icon: <div>🥑</div>,
       label: "Meals",
       onClick: () => router.push("/lifthouse/meals"),
       path: "/lifthouse/meals",
     },
     {
-      key: "4",
+      key: "5",
       icon: <div>⚖️</div>,
       onClick: () => router.push("/lifthouse/weight"),
       label: "Weight",
