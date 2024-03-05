@@ -45,7 +45,12 @@ const MacroNutrients: React.FC<MacroNutrientsProps> = ({
         <NumberText value={calories} />
       </div>
       {(protein > 0 || carbs > 0 || fat > 0) && (
-        <Pie {...config} height={200} width={300} />
+        <Pie
+          className="pointer-events-none"
+          {...config}
+          height={200}
+          width={300}
+        />
       )}
     </div>
   );
