@@ -51,7 +51,7 @@ export type Meal = {
   id: number;
   date: Date;
   mealName: string;
-  calories: number;
+  calorie: number;
   protein: number;
   carbs: number;
   fat: number;

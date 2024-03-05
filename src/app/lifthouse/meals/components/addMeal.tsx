@@ -93,8 +93,8 @@ export default function AddMeal({ goToMealTab }: AddMealProps) {
   };
 
   const handleCarbTotalChange = (value: number) => {
-    setCarbsPer(value);
-    setCaloriesTotal(0);
+    setCarbsTotal(value);
+    setCarbsPer(0);
   };
 
   const handleAdd = async () => {

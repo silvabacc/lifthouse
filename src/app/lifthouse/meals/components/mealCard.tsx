@@ -26,7 +26,7 @@ const MealCard: React.FC<MealCardProps> = ({ data, onDeleteCard }) => {
     >
       <div className="flex justify-between">
         <p className="text-slate-400 mr-2.5">Calories</p>
-        <NumberText value={data.calories} />
+        <NumberText value={data.calorie} />
       </div>
       <div className="flex justify-between">
         <p className="text-slate-400">Fat</p>

@@ -74,7 +74,7 @@ export default function MealsPage() {
     },
   ];
 
-  const calories = mealData?.reduce((acc, curr) => acc + curr.calories, 0) || 0;
+  const calories = mealData?.reduce((acc, curr) => acc + curr.calorie, 0) || 0;
   const protein = mealData?.reduce((acc, curr) => acc + curr.protein, 0) || 0;
   const fat = mealData?.reduce((acc, curr) => acc + curr.fat, 0) || 0;
   const carbs = mealData?.reduce((acc, curr) => acc + curr.carbs, 0) || 0;

@@ -1,7 +1,7 @@
 import React from "react";
 import NumberText from "./number";
 import { HIGHLIGHT_COLOR } from "./constants";
-import { Pie } from "@ant-design/plots";
+import { Pie, PieConfig } from "@ant-design/plots";
 
 interface MacroNutrientsProps {
   calories: number;
@@ -16,7 +16,7 @@ const MacroNutrients: React.FC<MacroNutrientsProps> = ({
   fat,
   carbs,
 }) => {
-  const config = {
+  const config: PieConfig = {
     data: [
       { type: "Protein", value: protein },
       { type: "Fats", value: fat },
@@ -25,6 +25,10 @@ const MacroNutrients: React.FC<MacroNutrientsProps> = ({
     angleField: "value",
     colorField: "type",
     tooltip: false,
+    label: {
+      text: "value",
+      position: "inside",
+    },
     legend: {
       color: {
         position: "left",

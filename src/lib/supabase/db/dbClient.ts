@@ -354,7 +354,7 @@ export default class DatabaseClient {
     return data.map((data) => ({
       id: data.id,
       mealName: data.meal_name,
-      calories: data.calories,
+      calorie: data.calorie,
       protein: data.protein,
       date: data.date,
       carbs: data.carbs,
@@ -403,7 +403,7 @@ export default class DatabaseClient {
     return {
       id: data[0].id,
       mealName: data[0].meal_name,
-      calories: data[0].calories,
+      calorie: data[0].calories,
       protein: data[0].protein,
       date: data[0].date,
       carbs: data[0].carbs,
