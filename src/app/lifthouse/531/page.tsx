@@ -3,18 +3,22 @@
 import { Button, Card } from "antd";
 import { useState } from "react";
 import { PageInfoPortal } from "../components/pageInfo";
+import { SetupDrawer } from "./components/setup";
 
 export default function FiveThreeOnePage() {
   const [benchPB, setBenchPB] = useState(0);
   const [squatPB, setSquatPB] = useState(0);
   const [deadliftPB, setDeadliftDB] = useState(0);
+  const [setupOpen, setSetupOpen] = useState(false);
 
   return (
     <>
       <PageInfoPortal
         extra={
           <span>
-            <Button>Set your personal best for SBD</Button>
+            <Button onClick={() => setSetupOpen(true)}>
+              Set your personal best for SBD
+            </Button>
           </span>
         }
       />
@@ -28,6 +32,7 @@ export default function FiveThreeOnePage() {
         <Card>
           <CardContent title="Deadlift" value={deadliftPB} />
         </Card>
+        <SetupDrawer open={setupOpen} onClose={() => setSetupOpen(false)} />
       </div>
     </>
   );
