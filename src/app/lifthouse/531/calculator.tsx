@@ -13,6 +13,14 @@ export default function Calculator() {
   const [showTable, setShowTable] = useState(false);
   const tableRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    return () => {
+      setShowTable(false);
+      setWeight(0);
+      setReps(0);
+    };
+  }, []);
+
   const onCalculcate = () => {
     if (weight && reps) {
       setShowTable(true);
@@ -63,9 +71,13 @@ export default function Calculator() {
             { title: "Reps", setter: setReps },
           ].map((item) => (
             <div key={item.title} className="flex items-center mt-4">
-              <span className="font-bold mr-4 w-16">{item.title}</span>
               <div className="w-full">
-                <Form.Item name={item.title.toLowerCase()}>
+                <Form.Item
+                  label={
+                    <span className="font-bold mr-4 w-16">{item.title}</span>
+                  }
+                  name={item.title.toLowerCase()}
+                >
                   <InputNumber
                     required
                     onChange={(value) => {
