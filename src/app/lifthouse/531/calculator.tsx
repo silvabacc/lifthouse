@@ -92,6 +92,7 @@ export default function Calculator() {
         </Form>
         <div ref={tableRef}>
           <Table
+            pagination={false}
             className={`${showTable ? "visible" : "invisible h-0"} mt-4`}
             columns={columns}
             bordered={false}
