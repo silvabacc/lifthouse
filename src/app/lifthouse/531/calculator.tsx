@@ -1,5 +1,6 @@
-import { Button, Collapse, Form, InputNumber } from "antd";
-import { useEffect, useState } from "react";
+import { Button, Collapse, Form, InputNumber, Table } from "antd";
+import { table } from "console";
+import { useEffect, useRef, useState } from "react";
 
 type FieldType = {
   weight: number;
@@ -9,15 +10,41 @@ type FieldType = {
 export default function Calculator() {
   const [weight, setWeight] = useState<number>(0);
   const [reps, setReps] = useState<number>(0);
-  const [calculate, setCalculate] = useState(false);
+  const [showTable, setShowTable] = useState(false);
+  const tableRef = useRef<HTMLDivElement>(null);
 
   const onCalculcate = () => {
     if (weight && reps) {
-      setCalculate(true);
+      setShowTable(true);
     } else {
-      setCalculate(false);
+      setShowTable(false);
     }
+    tableRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  const columns = [
+    {
+      id: "percentage",
+      dataIndex: "percentage",
+      title: "Percentage",
+    },
+    { id: "weight", dataIndex: "weight", title: "Weight" },
+  ];
+
+  const percentages = Array.from(
+    { length: Math.ceil((100 - 45) / 5) },
+    (_, i) => 100 - i * 5
+  );
+
+  const data = percentages.map((percentage) => {
+    const second = 0.0278 * reps;
+    const calc = (weight / (1.0278 - second)) * percentage;
+    return {
+      key: percentage,
+      percentage: `${percentage}%`,
+      weight: `${(calc / 100).toFixed(2)} kg`,
+    };
+  });
 
   return (
     <Collapse className="my-2">
@@ -42,7 +69,7 @@ export default function Calculator() {
                   <InputNumber
                     required
                     onChange={(value) => {
-                      setCalculate(false);
+                      setShowTable(false);
                       item.setter(value as number);
                     }}
                     className="w-full"
@@ -63,11 +90,14 @@ export default function Calculator() {
             </Button>
           </div>
         </Form>
-        {calculate && (
-          <>
-            {weight} {reps}
-          </>
-        )}
+        <div ref={tableRef}>
+          <Table
+            className={`${showTable ? "visible" : "invisible h-0"} mt-4`}
+            columns={columns}
+            bordered={false}
+            dataSource={data}
+          />
+        </div>
       </Collapse.Panel>
     </Collapse>
   );
