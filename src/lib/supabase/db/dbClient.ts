@@ -2,6 +2,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { createSupabaseServer } from "../server";
 import {
   Exercise,
+  FiveThreeOne,
   LogEntry,
   Meal,
   TemplateSetup,
@@ -409,5 +410,49 @@ export default class DatabaseClient {
       carbs: data[0].carbs,
       fat: data[0].fat,
     };
+  }
+
+  async getFiveThreeOne() {
+    const userId = await this.getUserId();
+
+    const { data, error } = await this.supabase
+      .from("five_three_one")
+      .select("*")
+      .eq("user_id", userId);
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      id: data[0].id,
+      bench: data[0].bench || 0,
+      squat: data[0].squat || 0,
+      deadlift: data[0].deadlift || 0,
+    } as FiveThreeOne;
+  }
+
+  async setFiveThreeOne(info: {
+    bench: number;
+    squat: number;
+    deadlift: number;
+  }) {
+    const userId = await this.getUserId();
+
+    const { data, error } = await this.supabase
+      .from("five_three_one")
+      .upsert({ ...info, user_id: userId }, { onConflict: "user_id" })
+      .select();
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      id: data[0].id,
+      bench: data[0].bench,
+      squat: data[0].squat,
+      deadlift: data[0].deadlift,
+    } as FiveThreeOne;
   }
 }

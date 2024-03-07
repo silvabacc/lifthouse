@@ -1,15 +1,31 @@
 "use client";
 
-import { Button, Card } from "antd";
-import { useState } from "react";
+import { Button, Card, Skeleton } from "antd";
+import { useEffect, useState } from "react";
 import { PageInfoPortal } from "../components/pageInfo";
 import { SetupDrawer } from "./components/setup";
+import { useFetch } from "@/app/hooks/useFetch";
+import { FiveThreeOne } from "@/lib/supabase/db/types";
 
 export default function FiveThreeOnePage() {
+  const { fetch } = useFetch();
   const [benchPB, setBenchPB] = useState(0);
   const [squatPB, setSquatPB] = useState(0);
   const [deadliftPB, setDeadliftDB] = useState(0);
   const [setupOpen, setSetupOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const response: FiveThreeOne = await fetch("/api/531");
+      setBenchPB(response.bench);
+      setSquatPB(response.squat);
+      setDeadliftDB(response.deadlift);
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -24,15 +40,27 @@ export default function FiveThreeOnePage() {
       />
       <div className="grid lg:grid-cols-3 gap-4">
         <Card>
-          <CardContent title="Bench" value={benchPB} />
+          <CardContent title="Bench" value={benchPB} isLoading={loading} />
         </Card>
         <Card>
-          <CardContent title="Squat" value={squatPB} />
+          <CardContent title="Squat" value={squatPB} isLoading={loading} />
         </Card>
         <Card>
-          <CardContent title="Deadlift" value={deadliftPB} />
+          <CardContent
+            title="Deadlift"
+            value={deadliftPB}
+            isLoading={loading}
+          />
         </Card>
-        <SetupDrawer open={setupOpen} onClose={() => setSetupOpen(false)} />
+        <SetupDrawer
+          pbs={{
+            bench: { weight: benchPB, setter: setBenchPB },
+            squat: { weight: squatPB, setter: setSquatPB },
+            deadlift: { weight: deadliftPB, setter: setDeadliftDB },
+          }}
+          open={setupOpen}
+          onClose={() => setSetupOpen(false)}
+        />
       </div>
     </>
   );
@@ -41,12 +69,17 @@ export default function FiveThreeOnePage() {
 type Props = {
   title: string;
   value: number;
+  isLoading?: boolean;
 };
-function CardContent({ title, value }: Props) {
+function CardContent({ title, value, isLoading }: Props) {
   return (
     <div className="flex items-center justify-between">
       <h2>{title}</h2>
-      <span className="font-bold text-cyan-600">{value} kg</span>
+      {isLoading ? (
+        <Skeleton.Button active />
+      ) : (
+        <span className="font-bold text-cyan-600">{value} kg</span>
+      )}
     </div>
   );
 }

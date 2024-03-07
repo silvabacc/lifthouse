@@ -57,6 +57,13 @@ export type Meal = {
   fat: number;
 };
 
+export type FiveThreeOne = {
+  id: number;
+  bench: number;
+  squat: number;
+  deadlift: number;
+};
+
 export enum WorkoutTemplate {
   upper_intensity = "upper_intensity",
   upper_volume = "upper_volume",

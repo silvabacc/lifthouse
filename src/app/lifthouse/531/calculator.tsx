@@ -1,11 +1,5 @@
 import { Button, Collapse, Form, InputNumber, Table } from "antd";
-import { table } from "console";
 import { useEffect, useRef, useState } from "react";
-
-type FieldType = {
-  weight: number;
-  reps: number;
-};
 
 export default function Calculator() {
   const [weight, setWeight] = useState<number>(0);
