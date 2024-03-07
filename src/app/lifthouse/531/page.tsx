@@ -78,7 +78,7 @@ function CardContent({ title, value, isLoading }: Props) {
       {isLoading ? (
         <Skeleton.Button active />
       ) : (
-        <span className="font-bold text-cyan-600">{value} kg</span>
+        <span className="font-bold text-blue-500 text-lg">{value} kg</span>
       )}
     </div>
   );
