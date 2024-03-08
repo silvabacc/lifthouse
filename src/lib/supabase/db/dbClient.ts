@@ -28,11 +28,17 @@ export default class DatabaseClient {
     this.supabase = createSupabaseServer(cookieStore);
   }
 
-  async getExercises(): Promise<Exercise[]> {
-    const { data, error } = await this.supabase
+  async getExercises(exerciseIds?: number[]): Promise<Exercise[]> {
+    const query = this.supabase
       .from("exercises_two")
       .select("*")
       .order("exercise_name", { ascending: true });
+
+    if (exerciseIds) {
+      query.in("exercise_id", exerciseIds);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       throw error;
@@ -415,6 +421,9 @@ export default class DatabaseClient {
   async getFiveThreeOne() {
     const userId = await this.getUserId();
 
+    const FiveThreeOneExercisesIds = [2, 22, 119, 126];
+    const exercieData = await this.getExercises(FiveThreeOneExercisesIds);
+
     const { data, error } = await this.supabase
       .from("five_three_one")
       .select("*")
@@ -425,10 +434,12 @@ export default class DatabaseClient {
     }
 
     return {
-      id: data[0].id,
-      bench: data[0].bench || 0,
-      squat: data[0].squat || 0,
-      deadlift: data[0].deadlift || 0,
+      id: data[0]?.id,
+      bench: data[0]?.bench || 0,
+      squat: data[0]?.squat || 0,
+      deadlift: data[0]?.deadlift || 0,
+      exercises: exercieData,
+      currentWeek: data[0]?.current_week || 1,
     } as FiveThreeOne;
   }
 

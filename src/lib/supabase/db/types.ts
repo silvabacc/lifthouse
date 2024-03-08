@@ -62,6 +62,8 @@ export type FiveThreeOne = {
   bench: number;
   squat: number;
   deadlift: number;
+  exercises: Exercise[];
+  currentWeek: number;
 };
 
 export enum WorkoutTemplate {

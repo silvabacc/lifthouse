@@ -1,17 +1,20 @@
 "use client";
 
-import { Button, Card, Skeleton } from "antd";
+import { Alert, Button, Card, Skeleton } from "antd";
 import { useEffect, useState } from "react";
 import { PageInfoPortal } from "../components/pageInfo";
 import { SetupDrawer } from "./components/setup";
 import { useFetch } from "@/app/hooks/useFetch";
-import { FiveThreeOne } from "@/lib/supabase/db/types";
+import { Exercise, FiveThreeOne } from "@/lib/supabase/db/types";
+import FiveThreeOneWeeks from "./fiveThreeOneWeeks";
 
 export default function FiveThreeOnePage() {
   const { fetch } = useFetch();
   const [benchPB, setBenchPB] = useState(0);
   const [squatPB, setSquatPB] = useState(0);
   const [deadliftPB, setDeadliftDB] = useState(0);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [currentWeek, setCurrentWeek] = useState(1);
   const [setupOpen, setSetupOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -23,12 +26,14 @@ export default function FiveThreeOnePage() {
       setSquatPB(response.squat);
       setDeadliftDB(response.deadlift);
       setLoading(false);
+      setExercises(response.exercises);
+      setCurrentWeek(response.currentWeek);
     };
     fetchData();
   }, []);
 
   return (
-    <>
+    <div>
       <PageInfoPortal
         extra={
           <span>
@@ -37,6 +42,15 @@ export default function FiveThreeOnePage() {
             </Button>
           </span>
         }
+      />
+      <SetupDrawer
+        pbs={{
+          bench: { weight: benchPB, setter: setBenchPB },
+          squat: { weight: squatPB, setter: setSquatPB },
+          deadlift: { weight: deadliftPB, setter: setDeadliftDB },
+        }}
+        open={setupOpen}
+        onClose={() => setSetupOpen(false)}
       />
       <div className="grid lg:grid-cols-3 gap-4">
         <Card>
@@ -52,17 +66,22 @@ export default function FiveThreeOnePage() {
             isLoading={loading}
           />
         </Card>
-        <SetupDrawer
-          pbs={{
-            bench: { weight: benchPB, setter: setBenchPB },
-            squat: { weight: squatPB, setter: setSquatPB },
-            deadlift: { weight: deadliftPB, setter: setDeadliftDB },
-          }}
-          open={setupOpen}
-          onClose={() => setSetupOpen(false)}
-        />
       </div>
-    </>
+      <Alert
+        className="mt-4"
+        type="info"
+        showIcon
+        message={
+          <div>
+            <span className="font-bold">531 program</span> runs in{" "}
+            <span className="font-bold">4 week </span>
+            blocks, so it is important to progress through each week and not to
+            skip to any in order for this program to be effective
+          </div>
+        }
+      ></Alert>
+      <FiveThreeOneWeeks exercises={exercises} currentWeek={currentWeek} />
+    </div>
   );
 }
 
