@@ -1,4 +1,8 @@
-import { WorkoutExercise, WorkoutTemplate } from "@/lib/supabase/db/types";
+import {
+  Exercise,
+  WorkoutExercise,
+  WorkoutTemplate,
+} from "@/lib/supabase/db/types";
 import {
   acceptedExerciseTypesForExercises,
   formatValue,
@@ -10,24 +14,27 @@ import { useWorkoutIdContext } from "../context";
 import { useEffect, useState } from "react";
 
 type SelectExerciseProps = {
+  items: WorkoutExercise[];
   defaultExercise: WorkoutExercise;
   onChange: (exerciseId: number, value: number) => void;
 };
 export function SelectExercise({
   defaultExercise,
+  items,
   onChange,
 }: SelectExerciseProps) {
+  console.log(items);
   const { exercises, workout } = useWorkoutIdContext();
   const findExercise = exercises.find(
     (e) => e.exerciseId === defaultExercise.exerciseId
   );
   const [currentExercises, setCurrentExercises] = useState<number[]>(
-    workout.exercises.map((e) => e.exerciseId)
+    items.map((e) => e.exerciseId)
   );
 
   useEffect(() => {
-    setCurrentExercises(workout.exercises.map((e) => e.exerciseId));
-  }, [workout]);
+    setCurrentExercises(items.map((e) => e.exerciseId));
+  }, [items]);
 
   // Find common exercise types
   const commonType = findExercise?.exerciseType.find((type) =>

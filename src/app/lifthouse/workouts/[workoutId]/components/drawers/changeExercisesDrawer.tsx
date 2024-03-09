@@ -94,6 +94,7 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
             >
               <Space direction="vertical" className="w-full">
                 <SelectExercise
+                  items={updatedWorkoutExercises}
                   defaultExercise={item}
                   onChange={onChangeExercise}
                 />
