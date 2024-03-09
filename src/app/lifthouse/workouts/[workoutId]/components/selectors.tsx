@@ -23,7 +23,6 @@ export function SelectExercise({
   items,
   onChange,
 }: SelectExerciseProps) {
-  console.log(items);
   const { exercises, workout } = useWorkoutIdContext();
   const findExercise = exercises.find(
     (e) => e.exerciseId === defaultExercise.exerciseId

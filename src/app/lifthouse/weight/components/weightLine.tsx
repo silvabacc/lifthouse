@@ -20,7 +20,8 @@ export default function WeightLine() {
   return (
     <Line
       height={350}
-      className="w-full"
+      tooltip={false}
+      className="w-full pointer-events-none"
       data={transformData}
       xField="date"
       yField="weight"

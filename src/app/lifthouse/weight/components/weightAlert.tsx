@@ -34,7 +34,7 @@ export default function WeightAlert() {
           type="warning"
           closable
           message="No weekly goal set. Weekly goals are set when a weigh in is
-entered on the Monday of the current week"
+entered on the Sunday of the current week"
         />
       ) : (
         <Alert
