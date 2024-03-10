@@ -11,7 +11,7 @@ import {
   message,
 } from "antd";
 import { useWorkoutIdContext } from "../../context";
-import { Start } from "../start";
+import { Complete } from "./complete";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { useFetch } from "@/app/hooks/useFetch";
 import { LogEntry } from "@/lib/supabase/db/types";
@@ -124,7 +124,7 @@ export function Record({ show, onCancel }: Props) {
                       onChangeNoes(e.target.value, exercise.exerciseId)
                     }
                   />
-                  <Start
+                  <Complete
                     exercise={exercise}
                     latestLogInfo={
                       latestLogs?.find(

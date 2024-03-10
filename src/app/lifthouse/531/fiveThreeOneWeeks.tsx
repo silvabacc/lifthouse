@@ -1,5 +1,6 @@
 import { Exercise } from "@/lib/supabase/db/types";
 import { Button, Checkbox, Collapse, CollapseProps, Space } from "antd";
+import { Complete } from "../workouts/[workoutId]/components/drawers/complete";
 
 type Props = {
   exercises: Exercise[];
@@ -11,9 +12,9 @@ export default function FiveThreeOneWeeks({ exercises, currentWeek }: Props) {
     "Week 2",
     "Week 3",
     "Week 4",
-  ].map((exercise, index) => ({
+  ].map((week, index) => ({
     key: index + 1,
-    label: <h3 className="font-bold m-0">Week {index + 1}</h3>,
+    label: <h3 className="font-bold m-0">{week}</h3>,
     children: <ExerciseRow exercises={exercises} />,
     collapsible: index + 1 !== currentWeek ? "disabled" : undefined,
   }));

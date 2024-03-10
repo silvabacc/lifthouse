@@ -1,4 +1,4 @@
-export type WorkoutExercise = {
+export type ExerciseConfiguration = {
   exerciseId: number;
   sets: number;
   reps: string;
@@ -8,14 +8,14 @@ export type Workout = {
   workoutId: number;
   name: string;
   description: string;
-  exercises: WorkoutExercise[];
+  exercises: ExerciseConfiguration[];
   template: WorkoutTemplate;
 };
 
 export type TemplateSetup = {
   setupId: number;
   template: WorkoutTemplate;
-  exercises: WorkoutExercise[];
+  exercises: ExerciseConfiguration[];
 };
 
 export type LogInfo = {

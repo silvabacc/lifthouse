@@ -5,7 +5,7 @@ import { useFetch } from "@/app/hooks/useFetch";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import {
   Workout,
-  WorkoutExercise,
+  ExerciseConfiguration,
   WorkoutTemplate,
 } from "@/lib/supabase/db/types";
 import { useWorkoutIdContext } from "../[workoutId]/context";
@@ -30,7 +30,7 @@ export function useWorkout() {
     workoutId: number;
     name?: string;
     description?: string;
-    exercises?: WorkoutExercise[];
+    exercises?: ExerciseConfiguration[];
     template?: WorkoutTemplate;
   };
   const updateWorkoutPlan = async ({

@@ -1,6 +1,6 @@
 import {
   Exercise,
-  WorkoutExercise,
+  ExerciseConfiguration,
   WorkoutTemplate,
 } from "@/lib/supabase/db/types";
 import {
@@ -14,8 +14,8 @@ import { useWorkoutIdContext } from "../context";
 import { useEffect, useState } from "react";
 
 type SelectExerciseProps = {
-  items: WorkoutExercise[];
-  defaultExercise: WorkoutExercise;
+  items: ExerciseConfiguration[];
+  defaultExercise: ExerciseConfiguration;
   onChange: (exerciseId: number, value: number) => void;
 };
 export function SelectExercise({
@@ -77,7 +77,7 @@ export function SelectExercise({
 }
 
 type SelectRepsSchemeProps = {
-  defaultExercise: WorkoutExercise;
+  defaultExercise: ExerciseConfiguration;
   onChange: (exerciseId: number, value: string) => void;
 };
 export function SelectRepsScheme({

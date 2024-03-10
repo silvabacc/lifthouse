@@ -1,9 +1,9 @@
 "use client";
 
-import { Alert, Button, Card, Skeleton } from "antd";
+import { Alert, Button, Card, Drawer, Skeleton } from "antd";
 import { useEffect, useState } from "react";
 import { PageInfoPortal } from "../components/pageInfo";
-import { SetupDrawer } from "./components/setup";
+import { Setup } from "./components/setup";
 import { useFetch } from "@/app/hooks/useFetch";
 import { Exercise, FiveThreeOne } from "@/lib/supabase/db/types";
 import FiveThreeOneWeeks from "./fiveThreeOneWeeks";
@@ -32,26 +32,51 @@ export default function FiveThreeOnePage() {
     fetchData();
   }, []);
 
+  if (!loading && (!benchPB || !squatPB || !deadliftPB)) {
+    return (
+      <div>
+        <h1 className="text-2xl">Welcome to the 531 program</h1>
+        <Alert
+          className="mb-4"
+          showIcon
+          message="You need to setup your personal bests before you can start using this
+          program"
+        />
+        <Setup
+          pbs={{
+            bench: { weight: benchPB, setter: setBenchPB },
+            squat: { weight: squatPB, setter: setSquatPB },
+            deadlift: { weight: deadliftPB, setter: setDeadliftDB },
+          }}
+          open={setupOpen}
+          onClose={() => setSetupOpen(false)}
+        />
+      </div>
+    );
+  }
+
   return (
     <div>
       <PageInfoPortal
         extra={
           <span>
             <Button onClick={() => setSetupOpen(true)}>
-              Set your personal best for SBD
+              Edit SBD personal bests
             </Button>
           </span>
         }
       />
-      <SetupDrawer
-        pbs={{
-          bench: { weight: benchPB, setter: setBenchPB },
-          squat: { weight: squatPB, setter: setSquatPB },
-          deadlift: { weight: deadliftPB, setter: setDeadliftDB },
-        }}
-        open={setupOpen}
-        onClose={() => setSetupOpen(false)}
-      />
+      <Drawer open={setupOpen} onClose={() => setSetupOpen(false)}>
+        <Setup
+          pbs={{
+            bench: { weight: benchPB, setter: setBenchPB },
+            squat: { weight: squatPB, setter: setSquatPB },
+            deadlift: { weight: deadliftPB, setter: setDeadliftDB },
+          }}
+          open={setupOpen}
+          onClose={() => setSetupOpen(false)}
+        />
+      </Drawer>
       <div className="grid lg:grid-cols-3 gap-4">
         <Card>
           <CardContent title="Bench" value={benchPB} isLoading={loading} />
@@ -79,7 +104,7 @@ export default function FiveThreeOnePage() {
             skip to any in order for this program to be effective
           </div>
         }
-      ></Alert>
+      />
       <FiveThreeOneWeeks exercises={exercises} currentWeek={currentWeek} />
     </div>
   );

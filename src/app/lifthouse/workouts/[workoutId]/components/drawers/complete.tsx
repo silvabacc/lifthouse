@@ -1,15 +1,14 @@
-import { LogEntry, LogInfo, WorkoutExercise } from "@/lib/supabase/db/types";
-import { useWorkoutIdContext } from "../context";
+import { LogInfo, ExerciseConfiguration } from "@/lib/supabase/db/types";
 import { Button, InputNumber, Space, StepProps, Steps, Tooltip } from "antd";
 import { useState } from "react";
 import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 
 type Props = {
-  exercise: WorkoutExercise;
+  exercise: ExerciseConfiguration;
   latestLogInfo?: LogInfo[];
 };
-export function Start({ exercise, latestLogInfo }: Props) {
+export function Complete({ exercise, latestLogInfo }: Props) {
   const { getCachedLogInfo } = useLocalStorage();
   const highestSet = getCachedLogInfo(exercise.exerciseId)?.info.reduce(
     (acc, curr) => (curr.set > acc ? curr.set : acc),
