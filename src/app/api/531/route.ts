@@ -15,6 +15,7 @@ export async function POST(request: Request) {
       bench: Joi.number().required(),
       squat: Joi.number().required(),
       deadlift: Joi.number().required(),
+      ohp: Joi.number().required(),
     });
 
     await schema.validateAsync(body);

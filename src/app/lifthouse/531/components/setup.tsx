@@ -1,8 +1,8 @@
-import { Drawer, InputNumber, Button, Card, Space, Form } from "antd";
+import { InputNumber, Button, Card, Space, Form } from "antd";
 import Calculator from "../calculator";
 import { useFetch } from "@/app/hooks/useFetch";
 import { FiveThreeOne } from "@/lib/supabase/db/types";
-import { useEffect } from "react";
+import { useFiveThreeOneContext } from "../context";
 
 type FieldType = {
   bench: number;
@@ -11,15 +11,11 @@ type FieldType = {
 };
 
 type Props = {
-  pbs: {
-    bench: { weight: number; setter: (value: number) => void };
-    squat: { weight: number; setter: (value: number) => void };
-    deadlift: { weight: number; setter: (value: number) => void };
-  };
   open: boolean;
   onClose: () => void;
 };
-export function Setup({ pbs, open, onClose }: Props) {
+export function Setup({ open, onClose }: Props) {
+  const { fiveThreeOneInfo, setFiveThreeOneInfo } = useFiveThreeOneContext();
   const { fetch } = useFetch();
 
   const onFinish = async (values: FieldType) => {
@@ -27,11 +23,11 @@ export function Setup({ pbs, open, onClose }: Props) {
       method: "POST",
       body: JSON.stringify(values),
     });
-    pbs.bench.setter(response.bench);
-    pbs.squat.setter(response.squat);
-    pbs.deadlift.setter(response.deadlift);
+    setFiveThreeOneInfo(response);
     onClose();
   };
+
+  const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;
 
   return (
     <div>
@@ -43,24 +39,20 @@ export function Setup({ pbs, open, onClose }: Props) {
           program to be effective
         </span>
         <Form className="mt-4" onFinish={onFinish}>
-          {[
-            { title: "Bench", value: pbs.bench.weight },
-            { title: "Squat", value: pbs.squat.weight },
-            { title: "Deadlift", value: pbs.deadlift.weight },
-          ].map((lift) => (
-            <div key={lift.title} className="flex items-center ">
+          {[bench, ohp, squat, deadlift].map((lift) => (
+            <div key={lift.exercise.name} className="flex items-center ">
               <div className="w-full">
                 <Form.Item
-                  name={lift.title.toLocaleLowerCase()}
+                  name={lift.exercise.name.toLocaleLowerCase()}
                   colon={false}
                   label={
                     <span className="text-left font-bold mr-4 w-16">
-                      {lift.title}
+                      {lift.exercise.name}
                     </span>
                   }
                 >
                   <InputNumber
-                    defaultValue={lift.value}
+                    defaultValue={lift.pb}
                     required
                     className="w-full"
                     suffix="kg"

@@ -57,12 +57,17 @@ export type Meal = {
   fat: number;
 };
 
+export type PersonalBest = {
+  exercise: Exercise;
+  pb: number;
+};
+
 export type FiveThreeOne = {
   id: number;
-  bench: number;
-  squat: number;
-  deadlift: number;
-  exercises: Exercise[];
+  bench: PersonalBest;
+  squat: PersonalBest;
+  deadlift: PersonalBest;
+  ohp: PersonalBest;
   currentWeek: number;
 };
 
