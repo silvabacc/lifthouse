@@ -12,9 +12,9 @@ import {
 } from "@ant-design/icons";
 import dynamic from "next/dynamic";
 
-const StackedChart = dynamic(() => import("../components/visuals/stacked"));
-const LineChart = dynamic(() => import("../components/visuals/line"));
-const Table = dynamic(() => import("../components/visuals/table"));
+const StackedChart = dynamic(() => import("../components/logVisuals/stacked"));
+const LineChart = dynamic(() => import("../components/logVisuals/line"));
+const Table = dynamic(() => import("../components/logVisuals/table"));
 
 const DEFAULT_LIMIT = 60;
 

@@ -8,6 +8,11 @@ interface CacheLogInfo {
   notes?: string;
 }
 
+interface CachedFiveThreeOneInfo {
+  week: number;
+  completed: number[];
+}
+
 export function useLocalStorage() {
   const cacheLogInfo = (
     exerciseId: number,
@@ -77,6 +82,25 @@ export function useLocalStorage() {
     window.localStorage.clear();
   };
 
+  const cacheFiveThreeOneInfo = ({
+    week,
+    completed,
+  }: {
+    week: number;
+    completed: number[];
+  }) => {
+    window.localStorage.setItem("531", JSON.stringify({ week, completed }));
+  };
+
+  const getCachedFiveThreeOneInfo = (): CachedFiveThreeOneInfo | undefined => {
+    const existing = window.localStorage.getItem("531");
+    if (!existing) {
+      return;
+    }
+
+    return JSON.parse(existing) as CachedFiveThreeOneInfo;
+  };
+
   return {
     cacheLogInfo,
     getCachedLogInfo,
@@ -84,5 +108,7 @@ export function useLocalStorage() {
     getCachedView,
     cacheView,
     clearAllLocalStorage,
+    getCachedFiveThreeOneInfo,
+    cacheFiveThreeOneInfo,
   };
 }

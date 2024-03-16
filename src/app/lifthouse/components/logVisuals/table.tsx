@@ -19,8 +19,9 @@ interface ExpandedDataType {
 
 type Props = {
   data: LogEntry[];
+  setLogs?: (logs: LogEntry[]) => void;
 };
-export default function Table({ data }: Props) {
+export default function Table({ data, setLogs }: Props) {
   const [expandedKeys, setExpandedKeys] = useState<number[]>([]);
   const [dataSource, setDataSource] = useState<TableDataType[]>([]);
   const { fetch } = useFetch();
@@ -35,6 +36,7 @@ export default function Table({ data }: Props) {
     if (response.success) {
       const newData = dataSource.filter((item) => item.key !== key);
       setDataSource(newData);
+      setLogs && setLogs(data.filter((item) => item.logId !== key));
     }
   };
 

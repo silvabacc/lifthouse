@@ -2,6 +2,7 @@ import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { Exercise, PersonalBest } from "@/lib/supabase/db/types";
 import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import {
+  Alert,
   Button,
   Drawer,
   InputNumber,
@@ -29,8 +30,15 @@ export default function CompleteFiveThreeOneModal({
   reps,
   intensity,
 }: Props) {
-  const { getCachedLogInfo } = useLocalStorage();
+  const {
+    getCachedLogInfo,
+    clearCacheLogInfo,
+    cacheFiveThreeOneInfo,
+    getCachedFiveThreeOneInfo,
+  } = useLocalStorage();
   const [currentSet, setCurrentSet] = useState(0);
+  const [showWarning, setShowWarning] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const highestSet =
@@ -66,8 +74,65 @@ export default function CompleteFiveThreeOneModal({
     }
   };
 
+  const onOk = async () => {
+    const info = getCachedLogInfo(selectedExercise.exercise.exerciseId)?.info;
+    const cachedFiveThreeOneInfo = getCachedFiveThreeOneInfo();
+
+    const completed = info?.length === sets;
+    if (!completed) {
+      setShowWarning(true);
+      return;
+    }
+
+    const { exercise } = selectedExercise;
+
+    const cached = getCachedLogInfo(selectedExercise.exercise.exerciseId);
+    const logs = {
+      exerciseId: exercise.exerciseId,
+      info: cached?.info,
+      notes: cached?.notes,
+      date: new Date(),
+    };
+
+    setSaving(true);
+
+    await fetch("/api/logs/create", {
+      method: "POST",
+      body: JSON.stringify([logs]),
+    });
+
+    if (cachedFiveThreeOneInfo?.completed.length === 3) {
+      console.log("here");
+      cacheFiveThreeOneInfo({
+        week: cachedFiveThreeOneInfo?.week + 1,
+        completed: [],
+      });
+    } else {
+      cacheFiveThreeOneInfo({
+        week: cachedFiveThreeOneInfo?.week || 1,
+        completed: [
+          ...(cachedFiveThreeOneInfo?.completed || []),
+          exercise.exerciseId,
+        ],
+      });
+    }
+
+    setSaving(false);
+
+    clearCacheLogInfo([exercise.exerciseId]);
+
+    setShowWarning(false);
+    onClose();
+  };
+
   return (
-    <Modal width={400} open={open} onCancel={onClose} okText={"Finish"}>
+    <Modal
+      width={400}
+      open={open}
+      onCancel={onClose}
+      okText={saving ? "Saving" : "Finish"}
+      onOk={onOk}
+    >
       <div className="flex h-full flex-col">
         <div className="mb-4">
           <span className="text-xs ml-2 mr-6">Set</span>
@@ -80,6 +145,15 @@ export default function CompleteFiveThreeOneModal({
           items={items}
           current={currentSet}
         />
+        {showWarning && (
+          <Alert
+            showIcon
+            type="error"
+            message={
+              "You haven't finished submitted all the reps for each the sets"
+            }
+          />
+        )}
       </div>
     </Modal>
   );

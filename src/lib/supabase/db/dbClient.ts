@@ -473,7 +473,6 @@ export default class DatabaseClient {
       squat: { exercise: exercieData[0], pb: data[0].squat },
       deadlift: { exercise: exercieData[2], pb: data[0].deadlift },
       ohp: { exercise: exercieData[3], pb: data[0].ohp },
-      currentWeek: data[0].current_week,
     } as FiveThreeOne;
   }
 }

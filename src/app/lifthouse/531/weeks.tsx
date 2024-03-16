@@ -1,11 +1,14 @@
 import { Button, Collapse, CollapseProps, Space } from "antd";
 import CompleteFiveThreeOneModal from "./components/complete531";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFiveThreeOneContext } from "./context";
 import { PersonalBest } from "@/lib/supabase/db/types";
+import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 
 export default function FiveThreeOneWeeks() {
-  const { fiveThreeOneInfo } = useFiveThreeOneContext();
+  const { getCachedFiveThreeOneInfo } = useLocalStorage();
+  const cacheFiveThreeOneInfo = getCachedFiveThreeOneInfo();
+
   const items: CollapseProps["items"] = [
     {
       title: "Week 1",
@@ -32,7 +35,7 @@ export default function FiveThreeOneWeeks() {
       />
     ),
     collapsible:
-      index + 1 !== fiveThreeOneInfo.currentWeek ? "disabled" : undefined,
+      index + 1 !== (cacheFiveThreeOneInfo?.week || 1) ? "disabled" : undefined,
   }));
   return <Collapse className="mt-4" items={items} />;
 }

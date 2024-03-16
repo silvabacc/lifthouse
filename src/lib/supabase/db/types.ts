@@ -68,7 +68,6 @@ export type FiveThreeOne = {
   squat: PersonalBest;
   deadlift: PersonalBest;
   ohp: PersonalBest;
-  currentWeek: number;
 };
 
 export enum WorkoutTemplate {

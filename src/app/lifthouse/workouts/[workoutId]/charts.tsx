@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import { getButtonType } from "./utils";
 import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
 import dayjs from "dayjs";
-import StackedChart from "../../components/visuals/stacked";
-import LineChart from "../../components/visuals/line";
-import Table from "../../components/visuals/table";
+import StackedChart from "../../components/logVisuals/stacked";
+import LineChart from "../../components/logVisuals/line";
+import Table from "../../components/logVisuals/table";
 import { useWorkoutIdContext } from "./context";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { View } from "../../types";
@@ -54,6 +54,10 @@ export default function Charts() {
       fetchLogs();
     }
   }, [firstDate, secondDate, workout]);
+
+  const onDeleteLog = (exerciseId: number) => {
+    setLogs(logs.filter((l) => l.exerciseId !== exerciseId));
+  };
 
   const onClickView = (view: View) => {
     cacheView(view);
@@ -125,7 +129,9 @@ export default function Charts() {
                 <div className="w-full">
                   {view === View.stacked && <StackedChart data={data} />}
                   {view === View.line && <LineChart data={data} />}
-                  {view === View.table && <Table data={data} />}
+                  {view === View.table && (
+                    <Table data={data} setLogs={setLogs} />
+                  )}
                 </div>
                 <Divider />
               </div>
