@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { useFiveThreeOneContext } from "./context";
 import { PersonalBest } from "@/lib/supabase/db/types";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
+import { CheckCircleOutlined, CheckCircleTwoTone } from "@ant-design/icons";
 
 export default function FiveThreeOneWeeks() {
   const { getCachedFiveThreeOneInfo } = useLocalStorage();
   const cacheFiveThreeOneInfo = getCachedFiveThreeOneInfo();
+  const { week } = useFiveThreeOneContext();
 
   const items: CollapseProps["items"] = [
     {
@@ -24,20 +26,19 @@ export default function FiveThreeOneWeeks() {
       intensity: [0.75, 0.85, 0.95],
     },
     { title: "Week 4", sets: 3, reps: [5, 5, 5], intensity: [0.4, 0.5, 0.6] },
-  ].map((week, index) => ({
+  ].map((item, index) => ({
     key: index + 1,
-    label: <h3 className="font-bold m-0">{week.title}</h3>,
+    label: <h3 className="font-bold m-0">{item.title}</h3>,
     children: (
       <ExerciseRow
-        sets={week.sets}
-        reps={week.reps}
-        intensity={week.intensity}
+        sets={item.sets}
+        reps={item.reps}
+        intensity={item.intensity}
       />
     ),
-    collapsible:
-      index + 1 !== (cacheFiveThreeOneInfo?.week || 1) ? "disabled" : undefined,
+    collapsible: index + 1 !== week ? "disabled" : undefined,
   }));
-  return <Collapse className="mt-4" items={items} />;
+  return <Collapse activeKey={week} className="mt-4" items={items} />;
 }
 
 type ExerciseRowProps = {
@@ -47,7 +48,7 @@ type ExerciseRowProps = {
 };
 function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
   const [open, setOpen] = useState(false);
-  const { fiveThreeOneInfo } = useFiveThreeOneContext();
+  const { fiveThreeOneInfo, completed } = useFiveThreeOneContext();
   const [exerciseSelected, setExerciseSelected] = useState<PersonalBest>();
 
   const { bench, ohp, squat, deadlift } = fiveThreeOneInfo;
@@ -59,18 +60,28 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
 
   return (
     <div>
-      {[bench, ohp, squat, deadlift].map((pb) => (
-        <div key={pb?.exercise?.name}>
-          <div className="flex mb-2 justify-between">
-            <Space>
-              <span>{pb?.exercise?.name}</span>
-            </Space>
-            <Button type="primary" onClick={() => handleOpen(pb)}>
-              Start
-            </Button>
+      {[bench, ohp, squat, deadlift].map((pb) => {
+        const isCompleted = completed.includes(pb?.exercise?.exerciseId);
+        return (
+          <div key={pb?.exercise?.name}>
+            <div className="flex mb-2 justify-between">
+              <Space>
+                <span>{pb?.exercise?.name}</span>
+              </Space>
+              {isCompleted ? (
+                <CheckCircleTwoTone
+                  className="text-2xl"
+                  twoToneColor="#52c41a"
+                />
+              ) : (
+                <Button type="primary" onClick={() => handleOpen(pb)}>
+                  Start
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
       {exerciseSelected && (
         <CompleteFiveThreeOneModal
           open={open}

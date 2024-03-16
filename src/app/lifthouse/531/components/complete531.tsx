@@ -13,6 +13,7 @@ import {
   Tooltip,
 } from "antd";
 import { useEffect, useState } from "react";
+import { useFiveThreeOneContext } from "../context";
 
 type Props = {
   open: boolean;
@@ -39,6 +40,7 @@ export default function CompleteFiveThreeOneModal({
   const [currentSet, setCurrentSet] = useState(0);
   const [showWarning, setShowWarning] = useState(false);
   const [saving, setSaving] = useState(false);
+  const { setWeek, setCompleted } = useFiveThreeOneContext();
 
   useEffect(() => {
     const highestSet =
@@ -102,11 +104,12 @@ export default function CompleteFiveThreeOneModal({
     });
 
     if (cachedFiveThreeOneInfo?.completed.length === 3) {
-      console.log("here");
       cacheFiveThreeOneInfo({
         week: cachedFiveThreeOneInfo?.week + 1,
         completed: [],
       });
+      setWeek(cachedFiveThreeOneInfo?.week + 1);
+      setCompleted([]);
     } else {
       cacheFiveThreeOneInfo({
         week: cachedFiveThreeOneInfo?.week || 1,
@@ -115,6 +118,11 @@ export default function CompleteFiveThreeOneModal({
           exercise.exerciseId,
         ],
       });
+      setWeek(cachedFiveThreeOneInfo?.week || 1);
+      setCompleted([
+        ...(cachedFiveThreeOneInfo?.completed || []),
+        exercise.exerciseId,
+      ]);
     }
 
     setSaving(false);
