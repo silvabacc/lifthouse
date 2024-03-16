@@ -48,64 +48,67 @@ export default function Calculator() {
     };
   });
 
-  return (
-    <Collapse className="my-2">
-      <Collapse.Panel
-        header={<span className="font-bold m-0 mb-2">1RM calculator</span>}
-        key="1"
-      >
-        <span>
-          Using the Brzycki formula, we can estimate your maximum load for a
-          weight training exercise. All you need to input is your best weight
-          and reps performed for the exercise
-        </span>
-        <Form>
-          {[
-            { title: "Weight", setter: setWeight },
-            { title: "Reps", setter: setReps },
-          ].map((item) => (
-            <div key={item.title} className="flex items-center mt-4">
-              <div className="w-full">
-                <Form.Item
-                  label={
-                    <span className="font-bold mr-4 w-16">{item.title}</span>
-                  }
-                  name={item.title.toLowerCase()}
-                >
-                  <InputNumber
-                    required
-                    onChange={(value) => {
-                      setShowTable(false);
-                      item.setter(value as number);
-                    }}
-                    className="w-full"
-                    suffix="kg"
-                  />
-                </Form.Item>
+  const items = [
+    {
+      key: "1",
+      label: <span className="font-bold m-0 mb-2">1RM calculator</span>,
+      children: (
+        <>
+          <span>
+            Using the Brzycki formula, we can estimate your maximum load for a
+            weight training exercise. All you need to input is your best weight
+            and reps performed for the exercise
+          </span>
+          <Form>
+            {[
+              { title: "Weight", setter: setWeight },
+              { title: "Reps", setter: setReps },
+            ].map((item) => (
+              <div key={item.title} className="flex items-center mt-4">
+                <div className="w-full">
+                  <Form.Item
+                    label={
+                      <span className="font-bold mr-4 w-16">{item.title}</span>
+                    }
+                    name={item.title.toLowerCase()}
+                  >
+                    <InputNumber
+                      required
+                      onChange={(value) => {
+                        setShowTable(false);
+                        item.setter(value as number);
+                      }}
+                      className="w-full"
+                      suffix="kg"
+                    />
+                  </Form.Item>
+                </div>
               </div>
+            ))}
+            <div className="flex justify-center mt-4">
+              <Button
+                type="primary"
+                className="w-64"
+                onClick={onCalculcate}
+                htmlType="submit"
+              >
+                Calculate
+              </Button>
             </div>
-          ))}
-          <div className="flex justify-center mt-4">
-            <Button
-              type="primary"
-              className="w-64"
-              onClick={onCalculcate}
-              htmlType="submit"
-            >
-              Calculate
-            </Button>
+          </Form>
+          <div ref={tableRef}>
+            <Table
+              pagination={false}
+              className={`${showTable ? "visible" : "invisible h-0"} mt-4`}
+              columns={columns}
+              bordered={false}
+              dataSource={data}
+            />
           </div>
-        </Form>
-        <div ref={tableRef}>
-          <Table
-            pagination={false}
-            className={`${showTable ? "visible" : "invisible h-0"} mt-4`}
-            columns={columns}
-            bordered={false}
-            dataSource={data}
-          />
-        </div>
-      </Collapse.Panel>
-    </Collapse>
-  );
+        </>
+      ),
+    },
+  ];
+
+  return <Collapse items={items} className="my-2" />;
 }

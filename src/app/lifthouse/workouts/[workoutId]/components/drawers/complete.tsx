@@ -1,6 +1,6 @@
 import { LogInfo, ExerciseConfiguration } from "@/lib/supabase/db/types";
 import { Button, InputNumber, Space, StepProps, Steps, Tooltip } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 
@@ -15,6 +15,12 @@ export function Complete({ exercise, latestLogInfo }: Props) {
     0
   );
   const [currentSet, setCurrentSet] = useState(highestSet || 0);
+
+  const onChange = (current: number) => {
+    if (current < currentSet) {
+      setCurrentSet(current);
+    }
+  };
 
   const items: StepProps[] = [];
   for (let i = 0; i < exercise.sets; i++) {
@@ -40,7 +46,7 @@ export function Complete({ exercise, latestLogInfo }: Props) {
   return (
     <div style={{ minWidth: 260 }} className="flex h-full flex-col mt-4">
       <Steps
-        onChange={(current) => setCurrentSet(current)}
+        onChange={onChange}
         direction="vertical"
         items={items}
         size="small"
@@ -72,8 +78,17 @@ function StepRow({
   const cachedInfo = getCachedLogInfo(exerciseId)?.info.find(
     (i) => i.set === step + 1
   );
+  const [noRepsWarning, setNoRepsWarning] = useState(false);
 
   const onNext = () => {
+    const currentReps = reps ? !reps : !cachedInfo?.reps;
+    if (currentReps) {
+      setNoRepsWarning(true);
+      return;
+    }
+
+    setNoRepsWarning(false);
+
     // +1 for the set
     cacheLogInfo(exerciseId, {
       info: {
@@ -85,7 +100,8 @@ function StepRow({
     onContinue();
   };
 
-  const showWarning = warningEnabled && (reps ? !reps : !cachedInfo?.reps);
+  const showWarning =
+    noRepsWarning || (warningEnabled && (reps ? !reps : !cachedInfo?.reps));
 
   return (
     <Space>

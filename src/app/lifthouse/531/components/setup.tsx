@@ -8,6 +8,7 @@ type FieldType = {
   bench: number;
   squat: number;
   deadlift: number;
+  ohp: number;
 };
 
 type Props = {
@@ -28,6 +29,28 @@ export function Setup({ open, onClose }: Props) {
   };
 
   const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;
+  const formItems = [
+    {
+      pb: bench.pb,
+      exercise: bench.exercise,
+      key: "bench",
+    },
+    {
+      pb: squat.pb,
+      exercise: squat.exercise,
+      key: "squat",
+    },
+    {
+      pb: deadlift.pb,
+      exercise: deadlift.exercise,
+      key: "deadlift",
+    },
+    {
+      pb: ohp.pb,
+      exercise: ohp.exercise,
+      key: "ohp",
+    },
+  ];
 
   return (
     <div>
@@ -39,22 +62,17 @@ export function Setup({ open, onClose }: Props) {
           program to be effective
         </span>
         <Form className="mt-4" onFinish={onFinish}>
-          {[bench, ohp, squat, deadlift].map((lift) => (
-            <div key={lift.exercise.name} className="flex items-center ">
+          {formItems.map((lift) => (
+            <div key={lift.exercise.name} className="flex items-center">
               <div className="w-full">
-                <Form.Item
-                  name={lift.exercise.name.toLocaleLowerCase()}
-                  colon={false}
-                  label={
-                    <span className="text-left font-bold mr-4 w-16">
-                      {lift.exercise.name}
-                    </span>
-                  }
-                >
+                <span className="text-left font-bold">
+                  {lift.exercise.name}
+                </span>
+                <Form.Item name={lift.key} colon={false}>
                   <InputNumber
-                    defaultValue={lift.pb}
+                    placeholder={lift.pb.toString()}
                     required
-                    className="w-full"
+                    className="w-full mt-4"
                     suffix="kg"
                   />
                 </Form.Item>

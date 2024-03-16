@@ -5,12 +5,13 @@ import {
   Button,
   Drawer,
   InputNumber,
+  Modal,
   Space,
   StepProps,
   Steps,
   Tooltip,
 } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   open: boolean;
@@ -20,7 +21,7 @@ type Props = {
   reps: number[];
   intensity: number[];
 };
-export default function CompleteFiveThreeOneDrawer({
+export default function CompleteFiveThreeOneModal({
   open,
   onClose,
   selectedExercise,
@@ -29,12 +30,18 @@ export default function CompleteFiveThreeOneDrawer({
   intensity,
 }: Props) {
   const { getCachedLogInfo } = useLocalStorage();
-  const highestSet = getCachedLogInfo(
-    selectedExercise.exercise.exerciseId
-  )?.info.reduce((acc, curr) => (curr.set > acc ? curr.set : acc), 0);
-  const [currentSet, setCurrentSet] = useState(highestSet || 0);
+  const [currentSet, setCurrentSet] = useState(0);
 
-  console.log(sets, reps, intensity);
+  useEffect(() => {
+    const highestSet =
+      getCachedLogInfo(selectedExercise.exercise.exerciseId)?.info.reduce(
+        (acc, curr) => (curr.set > acc ? curr.set : acc),
+        0
+      ) || 0;
+
+    setCurrentSet(highestSet);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedExercise]);
 
   const items: StepProps[] = [];
   for (let i = 0; i < sets; i++) {
@@ -53,23 +60,28 @@ export default function CompleteFiveThreeOneDrawer({
     });
   }
 
+  const onChange = (current: number) => {
+    if (current < currentSet) {
+      setCurrentSet(current);
+    }
+  };
+
   return (
-    <Drawer open={open} onClose={onClose}>
+    <Modal width={400} open={open} onCancel={onClose} okText={"Finish"}>
       <div className="flex h-full flex-col">
-        <div className="flex">
-          <span>Set</span>
-          <span>Weight</span>
-          <span>Target</span>
+        <div className="mb-4">
+          <span className="text-xs ml-2 mr-6">Set</span>
+          <span className="text-xs mr-6">Weight</span>
+          <span className="text-xs ml-2">Target</span>
         </div>
         <Steps
-          onChange={(current) => setCurrentSet(current)}
+          onChange={onChange}
           direction="vertical"
           items={items}
-          size="small"
           current={currentSet}
         />
       </div>
-    </Drawer>
+    </Modal>
   );
 }
 
@@ -96,27 +108,42 @@ function Row({
   const cachedInfo = getCachedLogInfo(info.exercise.exerciseId)?.info.find(
     (i) => i.set === step + 1
   );
+  const [noRepsWarning, setNoRepsWarning] = useState(false);
+
+  useEffect(() => {
+    setReps(cachedInfo?.reps);
+  }, [info]);
+
+  const weight = intensity * info.pb;
 
   const onNext = () => {
+    const currentReps = reps ? !reps : !cachedInfo?.reps;
+    if (currentReps) {
+      setNoRepsWarning(true);
+      return;
+    }
+
+    setNoRepsWarning(false);
+
     // +1 for the set
-    // cacheLogInfo(exerciseId, {
-    //   info: {
-    //     set: step + 1,
-    //     reps: reps || 0,
-    //     weight: weight || 0,
-    //   },
-    // });
+    cacheLogInfo(info.exercise.exerciseId, {
+      info: {
+        set: step + 1,
+        reps: reps || 0,
+        weight: weight || 0,
+      },
+    });
     onContinue();
   };
 
-  const showWarning = warningEnabled && (reps ? !reps : !cachedInfo?.reps);
-
+  const showWarning =
+    noRepsWarning || (warningEnabled && (reps ? !reps : !cachedInfo?.reps));
   return (
-    <Space>
-      <span>Intensity: {intensity * info.pb}</span>
-      <span>Target: {target}</span>
-
+    <div className="flex mb-4">
+      <span className="mx-3 w-16">{weight}</span>
+      <span className="w-16">{target}</span>
       <InputNumber
+        className="mr-4"
         disabled={disabled}
         inputMode="decimal"
         value={reps}
@@ -133,12 +160,12 @@ function Row({
         onClick={onNext}
       />
       {showWarning && (
-        <div onClick={(e) => e.stopPropagation()}>
+        <div className="mt-1" onClick={(e) => e.stopPropagation()}>
           <Tooltip trigger={"click"} title="Reps is missing!">
             <WarningOutlined className="text-orange-400" />
           </Tooltip>
         </div>
       )}
-    </Space>
+    </div>
   );
 }

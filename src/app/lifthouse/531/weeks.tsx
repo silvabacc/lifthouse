@@ -1,5 +1,5 @@
 import { Button, Collapse, CollapseProps, Space } from "antd";
-import CompleteFiveThreeOneDrawer from "./components/complete531";
+import CompleteFiveThreeOneModal from "./components/complete531";
 import { useState } from "react";
 import { useFiveThreeOneContext } from "./context";
 import { PersonalBest } from "@/lib/supabase/db/types";
@@ -69,7 +69,7 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
         </div>
       ))}
       {exerciseSelected && (
-        <CompleteFiveThreeOneDrawer
+        <CompleteFiveThreeOneModal
           open={open}
           onClose={() => setOpen(false)}
           selectedExercise={exerciseSelected}
