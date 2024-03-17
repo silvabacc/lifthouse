@@ -93,7 +93,7 @@ function CardContent({ title, value, isLoading }: Props) {
         <div className="flex flex-col ml-4 whitespace-nowrap">
           <span className="font-bold text-blue-500 text-lg ">{value} kg</span>
           <span className="text-right text-xs text-neutral-500">
-            90% {(value * 0.9).toFixed(0)} kg
+            90% {((value || 0) * 0.9).toFixed(0)} kg
           </span>
         </div>
       )}
