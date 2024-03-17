@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Colors */
+  --caption-color: #808080;
+}
+
+html,
+body {
+  max-width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+  margin: 0px;
+  overscroll-behavior: none;
+}
+.ant-picker-calendar-header .ant-radio-group {
+  display: none;
+}
+
+.ant-picker-dropdown {
+  .ant-picker-panels {
+    .ant-picker-panel {
+      &:last-child {
+        width: 0;
+        .ant-picker-header {
+          position: absolute;
+          right: 0;
+          .ant-picker-header-prev-btn,
+          .ant-picker-header-view {
+            visibility: hidden;
+          }
+        }
+
+        .ant-picker-body {
+          display: none;
+        }
+
+        @media (min-width: 768px) {
+          width: 280px !important;
+          .ant-picker-header {
+            position: relative;
+            .ant-picker-header-prev-btn,
+            .ant-picker-header-view {
+              visibility: initial;
+            }
+          }
+
+          .ant-picker-body {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}
