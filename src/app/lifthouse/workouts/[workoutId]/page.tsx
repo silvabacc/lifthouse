@@ -114,12 +114,12 @@ type Props = {
 function PageInfoExtra({ onClickRecord, onClickEdit }: Props) {
   return (
     <Space>
-      <Button type="dashed" danger className="mt-4 m-0" onClick={onClickRecord}>
+      <Button type="dashed" danger className="mt-2 m-0" onClick={onClickRecord}>
         Record a workout
       </Button>
       <Button
         type="dashed"
-        className="text-sky-500 mt-4 m-0"
+        className="text-sky-500 mt-2 m-0"
         onClick={onClickEdit}
       >
         Change exercises
@@ -137,8 +137,8 @@ function WorkoutPageInfo({
     workout: { template },
   } = useWorkoutIdContext();
   return (
-    <Space className="pt-2" direction="vertical">
-      <p className="text-gray-500 pb-2">
+    <Space direction="vertical">
+      <p className="m-0 pb-2 text-gray-500">
         You can apply workout templates by clicking on the template buttons
         below. This will overwrite all of the exercises for this current workout
         plan, or you can stick with your custom workout plan
