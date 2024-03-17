@@ -11,7 +11,6 @@ import Table from "../../components/logVisuals/table";
 import { useWorkoutIdContext } from "./context";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { View } from "../../types";
-import { useWorkout } from "../hooks/useWorkout";
 import DeleteExerciseButton from "./components/deleteExerciseButton";
 
 const { RangePicker } = DatePicker;

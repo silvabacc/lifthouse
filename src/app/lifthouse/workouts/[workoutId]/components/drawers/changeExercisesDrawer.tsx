@@ -75,7 +75,12 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
   };
 
   return (
-    <Drawer width={"100%"} open={show} onClose={onClose}>
+    <Drawer
+      width={"100%"}
+      open={show}
+      onClose={onClose}
+      title="Change exercises"
+    >
       <Reorder.Group
         className="p-0"
         axis="y"

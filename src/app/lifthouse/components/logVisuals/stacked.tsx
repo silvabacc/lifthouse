@@ -9,7 +9,7 @@ export default function StackedChart({ data }: StackedChartProps) {
   if (data.length === 0) {
     return (
       <Alert
-        className="mt-8"
+        className="mt-12"
         description="No logs have been recorded for this exercise 😢"
         type="info"
         showIcon
