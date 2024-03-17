@@ -33,6 +33,10 @@ Most of my training knowledge comes from [Alex Leonidas](https://www.youtube.com
     <td align="center"><img src="/docs/images/exercises.png" alt="Image 3" ></td>
     <td align="center"><img src="/docs/images/change.png" alt="Image 4" ></td>
   </tr>
+  <tr>
+    <td align="center"><img src="/docs/images/desk_workouts.png" alt="Image 5" ></td>
+      <td align="center"><img src="/docs/images/desk_workouts_2.png" alt="Image 6" ></td>
+  </tr>
   <!-- Add more rows as needed -->
 </table>
 
@@ -41,7 +45,9 @@ Most of my training knowledge comes from [Alex Leonidas](https://www.youtube.com
 <table>
   <tr>
     <td align="center"><img src="/docs/images/meal_1.png" alt="Image 1" ></td>
-      <td align="center"><img src="/docs/images/weight.png" alt="Image 1" ></td>
+      <td align="center"><img src="/docs/images/desk_meals.png" alt="Image 2" ></td>
+    <td align="center"><img src="/docs/images/weight.png" alt="Image 3" ></td>
+    <td align="center"><img src="/docs/images/desk_weight.png" alt="Image 4" ></td>
   </tr>
   <!-- Add more rows as needed -->
 </table>
@@ -53,6 +59,9 @@ Most of my training knowledge comes from [Alex Leonidas](https://www.youtube.com
     <td align="center"><img src="/docs/images/531_1.png" alt="Image 1" ></td>
     <td align="center"><img src="/docs/images/531_2.png" alt="Image 2" ></td>
     <td align="center"><img src="/docs/images/531_record.png" alt="Image 3" ></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="/docs/images/desk_531.png" alt="Image 1" ></td>
   </tr>
   <!-- Add more rows as needed -->
 </table>
