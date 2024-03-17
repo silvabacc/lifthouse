@@ -6,11 +6,13 @@ import { LogEntry, PersonalBest } from "@/lib/supabase/db/types";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { CheckCircleTwoTone } from "@ant-design/icons";
 import { useFetch } from "@/app/hooks/useFetch";
-import StackedChart from "../components/logVisuals/stacked";
-import LineChart from "../components/logVisuals/line";
 import { View } from "../types";
 import { getButtonType } from "../utils";
-import Table from "../components/logVisuals/table";
+import dynamic from "next/dynamic";
+
+const StackedChart = dynamic(() => import("../components/logVisuals/stacked"));
+const LineChart = dynamic(() => import("../components/logVisuals/line"));
+const Table = dynamic(() => import("../components/logVisuals/table"));
 
 export default function FiveThreeOneWeeks() {
   const { getCachedFiveThreeOneInfo } = useLocalStorage();
