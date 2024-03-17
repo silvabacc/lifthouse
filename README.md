@@ -2,15 +2,14 @@
 
 This is a personal gym progress tracking app that is tailoured to the way I train. I use to use Google spreedsheets to track my progress, but I found that everything seemed so manual, so I dedicated time to create this application to streamline the same processes I do for my Google Sheets. You probably won't find this useful, or even UI/UX friendly, but it works for me :)
 
-This application is designed for mobile devices but since it is also a PWA, you can view it from the desktop, but please note that the design approach is mobile-first, and I haven't done any real work has been done to make it suitable for the desktop
+This application is takes the mobile-first design prinicple, so ideally you should use the application on mobile.
 
 # Tech Stack
 
 - React
 - Supabase (using a postgres db and their authentication service)
-- Firebase for deployment (which you can find [here](https://lifthouse.web.app/))
+- Vercel for deployment (which you can find [here](https://lifthouse.vercel.app/))
   - You can signup without authentication an email (for now)
-- Vite PWA plugin
 
 # My Training
 
