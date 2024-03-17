@@ -205,23 +205,39 @@ export default class DatabaseClient {
     }));
   }
 
-  async getLogs(exerciseIds: number[], startFrom: number, endOn: number) {
+  async getLogs(
+    exerciseIds: number[],
+    rows: number = 10,
+    startFrom?: number,
+    endOn?: number
+  ) {
     const userId = await this.getUserId();
 
-    const { data, error } = await this.supabase
-      .from("log_entries")
-      .select("*")
-      .in("exercise_id", exerciseIds)
-      .eq("user_id", userId)
-      .gte("date", startFrom)
-      .lte("date", endOn)
-      .order("date", { ascending: true });
+    let query;
+    if (startFrom && endOn) {
+      query = this.supabase
+        .from("log_entries")
+        .select("*")
+        .in("exercise_id", exerciseIds)
+        .eq("user_id", userId)
+        .gte("date", startFrom)
+        .lte("date", endOn)
+        .order("date", { ascending: true });
+    } else {
+      query = this.supabase.rpc("get_limited_logs", {
+        exercise_ids: exerciseIds,
+        user_id: userId,
+        rows,
+      });
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       throw error;
     }
 
-    return data.map((data) => ({
+    return (data as any[]).map((data) => ({
       logId: data.log_entry_id,
       exerciseId: parseInt(data.exercise_id),
       info: data.info,

@@ -1,11 +1,16 @@
-import { Button, Collapse, CollapseProps, Space } from "antd";
+import { Button, Collapse, CollapseProps, Divider, Select, Space } from "antd";
 import CompleteFiveThreeOneModal from "./components/complete531";
 import { useEffect, useState } from "react";
 import { useFiveThreeOneContext } from "./context";
 import { LogEntry, PersonalBest } from "@/lib/supabase/db/types";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
-import { CheckCircleOutlined, CheckCircleTwoTone } from "@ant-design/icons";
+import { CheckCircleTwoTone } from "@ant-design/icons";
 import { useFetch } from "@/app/hooks/useFetch";
+import StackedChart from "../components/logVisuals/stacked";
+import LineChart from "../components/logVisuals/line";
+import { View } from "../types";
+import { getButtonType } from "../utils";
+import Table from "../components/logVisuals/table";
 
 export default function FiveThreeOneWeeks() {
   const { getCachedFiveThreeOneInfo } = useLocalStorage();
@@ -50,34 +55,61 @@ type ExerciseRowProps = {
 function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
   const [open, setOpen] = useState(false);
   const { fiveThreeOneInfo, completed } = useFiveThreeOneContext();
+  const { cacheView, getCachedView } = useLocalStorage();
   const [exerciseSelected, setExerciseSelected] = useState<PersonalBest>();
   const [latestLogs, setLatestLogs] = useState<LogEntry[]>([]);
+  const [logs, setLogs] = useState<LogEntry[]>([]);
   const { fetch } = useFetch();
+  const [view, setView] = useState(getCachedView() || View.stacked);
 
   const { bench, ohp, squat, deadlift } = fiveThreeOneInfo;
+  const exercises = [bench, ohp, squat, deadlift];
+
+  const [selectedExercise, setSelectedExercise] = useState<number>(
+    bench.exercise.exerciseId
+  );
 
   useEffect(() => {
     const fetchLatestLog = async () => {
       const response: LogEntry[] = await fetch("/api/logs/latest", {
         method: "POST",
         body: JSON.stringify({
-          exerciseIds: [
-            bench?.exercise?.exerciseId,
-            ohp?.exercise?.exerciseId,
-            squat?.exercise?.exerciseId,
-            deadlift?.exercise?.exerciseId,
-          ],
+          exerciseIds: exercises.map((e) => e?.exercise?.exerciseId),
         }),
       });
       setLatestLogs(response);
     };
+
+    const fetchLogs = async () => {
+      const response: LogEntry[] = await fetch("/api/logs", {
+        method: "POST",
+        body: JSON.stringify({
+          exerciseIds: exercises.map((e) => e?.exercise?.exerciseId),
+        }),
+      });
+      setLogs(response);
+    };
+
     fetchLatestLog();
+    fetchLogs();
   }, []);
 
   const handleOpen = (exercise: PersonalBest) => {
     setExerciseSelected(exercise);
     setOpen(true);
   };
+
+  const selectOptions = exercises.map((e) => ({
+    label: e?.exercise?.name,
+    value: e?.exercise?.exerciseId,
+  }));
+
+  const onClickView = (view: View) => {
+    cacheView(view);
+    setView(view);
+  };
+
+  const exerciseLogs = logs.filter((l) => l.exerciseId === selectedExercise);
 
   return (
     <div>
@@ -118,6 +150,37 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
           }
         />
       )}
+      <div>
+        <Divider />
+        <h3>Progress</h3>
+        <Select
+          options={selectOptions}
+          value={selectedExercise}
+          onChange={(value) => setSelectedExercise(value)}
+        />
+        <div className="w-full">
+          <Space>
+            {Object.values(View).map((v, idx) => (
+              <div key={`${v}-${idx}`}>
+                <Button
+                  key={v}
+                  className="p-0"
+                  type={getButtonType(view, v)}
+                  onClick={() => onClickView(v)}
+                >
+                  {v.charAt(0).toUpperCase() + v.slice(1)}
+                </Button>
+                <Divider type="vertical" />
+              </div>
+            ))}
+          </Space>
+          {view === View.stacked && <StackedChart data={exerciseLogs} />}
+          {view === View.line && <LineChart data={exerciseLogs} />}
+          {view === View.table && (
+            <Table data={exerciseLogs} setLogs={setLogs} />
+          )}
+        </div>
+      </div>
     </div>
   );
 }

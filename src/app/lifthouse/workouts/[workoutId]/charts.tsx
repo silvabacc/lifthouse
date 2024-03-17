@@ -2,7 +2,6 @@ import { useFetch } from "@/app/hooks/useFetch";
 import { LogEntry, WorkoutTemplate } from "@/lib/supabase/db/types";
 import { Button, DatePicker, Divider, Space, Typography } from "antd";
 import { useEffect, useState } from "react";
-import { getButtonType } from "./utils";
 import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
 import dayjs from "dayjs";
 import StackedChart from "../../components/logVisuals/stacked";
@@ -12,6 +11,7 @@ import { useWorkoutIdContext } from "./context";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { View } from "../../types";
 import DeleteExerciseButton from "./components/deleteExerciseButton";
+import { getButtonType } from "../../utils";
 
 const { RangePicker } = DatePicker;
 const { Text } = Typography;

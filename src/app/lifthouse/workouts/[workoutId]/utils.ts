@@ -113,7 +113,3 @@ export function formatValue(sets: number, reps: string) {
 export function intersection(arr1: ExerciseType[], arr2: ExerciseType[]) {
   return arr1.filter((value) => arr2.includes(value)).length !== 0;
 }
-
-export function getButtonType(currentView: View, targetView: View) {
-  return currentView === targetView ? "link" : "text";
-}
