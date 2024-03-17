@@ -1,14 +1,12 @@
 "use client";
 
 import { Alert, Button, Card, Drawer, Skeleton } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PageInfoPortal } from "../components/pageInfo";
 import { Setup } from "./components/setup";
-import { useFetch } from "@/app/hooks/useFetch";
-import { Exercise, FiveThreeOne } from "@/lib/supabase/db/types";
+import { FiveThreeOne } from "@/lib/supabase/db/types";
 import Weeks from "./weeks";
 import { useFiveThreeOneContext } from "./context";
-import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 
 export default function FiveThreeOne() {
   const { fiveThreeOneInfo, loading } = useFiveThreeOneContext();

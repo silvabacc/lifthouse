@@ -2,6 +2,7 @@ import { useFetch } from "@/app/hooks/useFetch";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { Exercise, FiveThreeOne } from "@/lib/supabase/db/types";
 import { createContext, useContext, useEffect, useState } from "react";
+import FiveThreeOneSkeleton from "./fiveThreeOne.skeleton";
 
 type FiveThreeOneContextType = {
   fiveThreeOneInfo: FiveThreeOne;
@@ -43,8 +44,8 @@ const FiveThreeOneContextProvider = ({ children }: any) => {
     }
   }, []);
 
-  if (!fiveThreeOneInfo) {
-    return null;
+  if (loading || !fiveThreeOneInfo) {
+    return <FiveThreeOneSkeleton />;
   }
 
   return (
