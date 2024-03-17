@@ -7,6 +7,7 @@ This application is takes the mobile-first design prinicple, so ideally you shou
 # Tech Stack
 
 - React
+- NextJS
 - Supabase (using a postgres db and their authentication service)
 - Vercel for deployment (which you can find [here](https://lifthouse.vercel.app/))
   - You can signup without authentication an email (for now)
