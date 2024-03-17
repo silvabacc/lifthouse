@@ -196,7 +196,7 @@ function Row({
     setReps(cachedInfo?.reps);
   }, [info]);
 
-  const weight = intensity * info.pb;
+  const weight = (intensity * 0.9 * info.pb).toFixed(0);
 
   const onNext = () => {
     const currentReps = reps ? !reps : !cachedInfo?.reps;
@@ -212,7 +212,7 @@ function Row({
       info: {
         set: step + 1,
         reps: reps || 0,
-        weight: weight || 0,
+        weight: parseInt(weight) || 0,
       },
     });
     onContinue();
@@ -222,8 +222,8 @@ function Row({
     noRepsWarning || (warningEnabled && (reps ? !reps : !cachedInfo?.reps));
   return (
     <div className="flex mb-4">
-      <span className="mx-3 w-16">{weight}</span>
-      <span className="w-16">{target}</span>
+      <span className="mx-3 w-16 font-bold">{weight}</span>
+      <span className="w-16 font-bold">{target}</span>
       <InputNumber
         className="mr-4"
         disabled={disabled}

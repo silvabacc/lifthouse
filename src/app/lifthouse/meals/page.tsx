@@ -9,6 +9,7 @@ import DateMover from "./components/dateMover";
 import MealCard from "./components/mealCard";
 import AddMeal from "./components/addMeal";
 import dynamic from "next/dynamic";
+import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 
 const MacroNutrients = dynamic(() => import("./components/macroNutrients"));
 
@@ -80,7 +81,7 @@ export default function MealsPage() {
   const carbs = mealData?.reduce((acc, curr) => acc + curr.carbs, 0) || 0;
 
   return (
-    <div className="flex flex-col items-center">
+    <PageAnimation className="flex flex-col items-center">
       <DateMover selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
       <MacroNutrients
         calories={calories}
@@ -95,6 +96,6 @@ export default function MealsPage() {
         centered
         items={items}
       />
-    </div>
+    </PageAnimation>
   );
 }

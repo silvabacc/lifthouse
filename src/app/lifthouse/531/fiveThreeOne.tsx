@@ -8,6 +8,7 @@ import { useFetch } from "@/app/hooks/useFetch";
 import { Exercise, FiveThreeOne } from "@/lib/supabase/db/types";
 import Weeks from "./weeks";
 import { useFiveThreeOneContext } from "./context";
+import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 
 export default function FiveThreeOne() {
   const { fiveThreeOneInfo, loading } = useFiveThreeOneContext();
@@ -15,7 +16,7 @@ export default function FiveThreeOne() {
 
   const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;
 
-  if (!loading && (!bench || !squat || !deadlift || !ohp)) {
+  if (!loading && (!bench.pb || !squat.pb || !deadlift.pb || !ohp.pb)) {
     return (
       <div>
         <h1 className="text-2xl">Welcome to the 531 program</h1>
@@ -60,13 +61,15 @@ export default function FiveThreeOne() {
       <Alert
         className="mt-4"
         type="info"
-        showIcon
         message={
           <div>
             <span className="font-bold">531 program</span> runs in{" "}
             <span className="font-bold">4 week </span>
             blocks, so it is important to progress through each week and not to
-            skip to any in order for this program to be effective
+            skip to any in order for this program to be effective. We take{" "}
+            <span className="font-bold">90% </span>
+            of your total personal best and use that as the base for the
+            program.
           </div>
         }
       />
@@ -87,9 +90,12 @@ function CardContent({ title, value, isLoading }: Props) {
       {isLoading ? (
         <Skeleton.Button active />
       ) : (
-        <span className="ml-4 font-bold text-blue-500 text-lg whitespace-nowrap">
-          {value} kg
-        </span>
+        <div className="flex flex-col ml-4 whitespace-nowrap">
+          <span className="font-bold text-blue-500 text-lg ">{value} kg</span>
+          <span className="text-right text-xs text-neutral-500">
+            90% {(value * 0.9).toFixed(0)} kg
+          </span>
+        </div>
       )}
     </div>
   );

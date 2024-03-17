@@ -432,6 +432,17 @@ export default class DatabaseClient {
       throw error;
     }
 
+    if (data.length === 0) {
+      return {
+        bench: { exercise: exercieData[1], pb: 0 },
+        squat: { exercise: exercieData[0], pb: 0 },
+        deadlift: { exercise: exercieData[2], pb: 0 },
+        ohp: { exercise: exercieData[3], pb: 0 },
+      } as FiveThreeOne;
+    }
+
+    console.log(data);
+
     return this.transformDataToFiveThreeOne(exercieData, data);
   }
 
