@@ -441,8 +441,6 @@ export default class DatabaseClient {
       } as FiveThreeOne;
     }
 
-    console.log(data);
-
     return this.transformDataToFiveThreeOne(exercieData, data);
   }
 

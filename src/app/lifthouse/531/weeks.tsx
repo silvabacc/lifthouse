@@ -2,9 +2,10 @@ import { Button, Collapse, CollapseProps, Space } from "antd";
 import CompleteFiveThreeOneModal from "./components/complete531";
 import { useEffect, useState } from "react";
 import { useFiveThreeOneContext } from "./context";
-import { PersonalBest } from "@/lib/supabase/db/types";
+import { LogEntry, PersonalBest } from "@/lib/supabase/db/types";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { CheckCircleOutlined, CheckCircleTwoTone } from "@ant-design/icons";
+import { useFetch } from "@/app/hooks/useFetch";
 
 export default function FiveThreeOneWeeks() {
   const { getCachedFiveThreeOneInfo } = useLocalStorage();
@@ -50,8 +51,28 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
   const [open, setOpen] = useState(false);
   const { fiveThreeOneInfo, completed } = useFiveThreeOneContext();
   const [exerciseSelected, setExerciseSelected] = useState<PersonalBest>();
+  const [latestLogs, setLatestLogs] = useState<LogEntry[]>([]);
+  const { fetch } = useFetch();
 
   const { bench, ohp, squat, deadlift } = fiveThreeOneInfo;
+
+  useEffect(() => {
+    const fetchLatestLog = async () => {
+      const response: LogEntry[] = await fetch("/api/logs/latest", {
+        method: "POST",
+        body: JSON.stringify({
+          exerciseIds: [
+            bench?.exercise?.exerciseId,
+            ohp?.exercise?.exerciseId,
+            squat?.exercise?.exerciseId,
+            deadlift?.exercise?.exerciseId,
+          ],
+        }),
+      });
+      setLatestLogs(response);
+    };
+    fetchLatestLog();
+  }, []);
 
   const handleOpen = (exercise: PersonalBest) => {
     setExerciseSelected(exercise);
@@ -90,6 +111,11 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
           sets={sets}
           reps={reps}
           intensity={intensity}
+          latestLogInfo={
+            latestLogs.find(
+              (l) => l.exerciseId === exerciseSelected.exercise.exerciseId
+            )?.info
+          }
         />
       )}
     </div>

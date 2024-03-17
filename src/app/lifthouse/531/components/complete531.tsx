@@ -1,5 +1,10 @@
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
-import { Exercise, PersonalBest } from "@/lib/supabase/db/types";
+import {
+  Exercise,
+  LogEntry,
+  LogInfo,
+  PersonalBest,
+} from "@/lib/supabase/db/types";
 import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import {
   Alert,
@@ -22,6 +27,7 @@ type Props = {
   sets: number;
   reps: number[];
   intensity: number[];
+  latestLogInfo?: LogInfo[];
 };
 export default function CompleteFiveThreeOneModal({
   open,
@@ -30,6 +36,7 @@ export default function CompleteFiveThreeOneModal({
   sets,
   reps,
   intensity,
+  latestLogInfo,
 }: Props) {
   const {
     getCachedLogInfo,
@@ -133,6 +140,9 @@ export default function CompleteFiveThreeOneModal({
     onClose();
   };
 
+  const latestReps = latestLogInfo?.at(-1)?.reps || 0;
+  const improvement = (latestReps || 0) - reps[0];
+
   return (
     <Modal
       width={400}
@@ -153,6 +163,23 @@ export default function CompleteFiveThreeOneModal({
           items={items}
           current={currentSet}
         />
+        {latestLogInfo && (
+          <Alert
+            showIcon
+            type="info"
+            message={
+              <div>
+                Last set you did{" "}
+                <span className="font-bold">
+                  {latestLogInfo?.at(-1)?.weight} kg x {latestReps}
+                </span>{" "}
+                ({improvement <= 0 ? "" : "+"}
+                {improvement})
+              </div>
+            }
+          />
+        )}
+
         {showWarning && (
           <Alert
             showIcon
