@@ -1,4 +1,12 @@
-import { Button, Collapse, CollapseProps, Divider, Select, Space } from "antd";
+import {
+  Button,
+  Collapse,
+  CollapseProps,
+  Divider,
+  Select,
+  Skeleton,
+  Space,
+} from "antd";
 import CompleteFiveThreeOneModal from "./components/complete531";
 import { useEffect, useState } from "react";
 import { useFiveThreeOneContext } from "./context";
@@ -15,8 +23,6 @@ const LineChart = dynamic(() => import("../components/logVisuals/line"));
 const Table = dynamic(() => import("../components/logVisuals/table"));
 
 export default function FiveThreeOneWeeks() {
-  const { getCachedFiveThreeOneInfo } = useLocalStorage();
-  const cacheFiveThreeOneInfo = getCachedFiveThreeOneInfo();
   const { week } = useFiveThreeOneContext();
 
   const items: CollapseProps["items"] = [
@@ -60,6 +66,7 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
   const { cacheView, getCachedView } = useLocalStorage();
   const [exerciseSelected, setExerciseSelected] = useState<PersonalBest>();
   const [latestLogs, setLatestLogs] = useState<LogEntry[]>([]);
+  const [loading, setLoading] = useState(true);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const { fetch } = useFetch();
   const [view, setView] = useState(getCachedView() || View.stacked);
@@ -83,6 +90,7 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
     };
 
     const fetchLogs = async () => {
+      setLoading(true);
       const response: LogEntry[] = await fetch("/api/logs", {
         method: "POST",
         body: JSON.stringify({
@@ -90,6 +98,7 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
         }),
       });
       setLogs(response);
+      setLoading(false);
     };
 
     fetchLatestLog();
@@ -176,10 +185,16 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
               </div>
             ))}
           </Space>
-          {view === View.stacked && <StackedChart data={exerciseLogs} />}
-          {view === View.line && <LineChart data={exerciseLogs} />}
-          {view === View.table && (
-            <Table data={exerciseLogs} setLogs={setLogs} />
+          {loading ? (
+            <Skeleton />
+          ) : (
+            <>
+              {view === View.stacked && <StackedChart data={exerciseLogs} />}
+              {view === View.line && <LineChart data={exerciseLogs} />}
+              {view === View.table && (
+                <Table data={exerciseLogs} setLogs={setLogs} />
+              )}
+            </>
           )}
         </div>
       </div>
