@@ -11,7 +11,6 @@ import { useWorkout } from "../hooks/useWorkout";
 import { Workout } from "@/lib/supabase/db/types";
 
 const { confirm } = Modal;
-const { TextArea } = Input;
 
 type WorkoutCardProps = {
   name: string;

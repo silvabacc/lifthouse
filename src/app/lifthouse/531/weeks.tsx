@@ -154,11 +154,10 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
           sets={sets}
           reps={reps}
           intensity={intensity}
-          latestLogInfo={
-            latestLogs.find(
-              (l) => l.exerciseId === exerciseSelected.exercise.exerciseId
-            )?.info
-          }
+          setLogs={setLogs}
+          latestLog={latestLogs.find(
+            (l) => l.exerciseId === exerciseSelected.exercise.exerciseId
+          )}
         />
       )}
       <div>

@@ -101,6 +101,10 @@ export function useLocalStorage() {
     return JSON.parse(existing) as CachedFiveThreeOneInfo;
   };
 
+  const clearFiveThreeOne = () => {
+    window.localStorage.removeItem("531");
+  };
+
   return {
     cacheLogInfo,
     getCachedLogInfo,
@@ -110,5 +114,6 @@ export function useLocalStorage() {
     clearAllLocalStorage,
     getCachedFiveThreeOneInfo,
     cacheFiveThreeOneInfo,
+    clearFiveThreeOne,
   };
 }

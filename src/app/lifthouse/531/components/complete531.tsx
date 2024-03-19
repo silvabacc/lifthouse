@@ -1,19 +1,23 @@
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
-import { LogInfo, PersonalBest } from "@/lib/supabase/db/types";
+import { LogEntry, LogInfo, PersonalBest } from "@/lib/supabase/db/types";
 import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import {
   Alert,
   Button,
   Collapse,
+  Input,
   InputNumber,
   Modal,
   StepProps,
   Steps,
   Tooltip,
 } from "antd";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useFiveThreeOneContext } from "../context";
 import Warmup from "./warmup";
+import { useFetch } from "@/app/hooks/useFetch";
+
+const { TextArea } = Input;
 
 type Props = {
   open: boolean;
@@ -22,7 +26,8 @@ type Props = {
   sets: number;
   reps: number[];
   intensity: number[];
-  latestLogInfo?: LogInfo[];
+  setLogs: Dispatch<SetStateAction<LogEntry[]>>;
+  latestLog?: LogEntry;
 };
 export default function CompleteFiveThreeOneModal({
   open,
@@ -31,18 +36,21 @@ export default function CompleteFiveThreeOneModal({
   sets,
   reps,
   intensity,
-  latestLogInfo,
+  setLogs,
+  latestLog,
 }: Props) {
   const {
     getCachedLogInfo,
     clearCacheLogInfo,
     cacheFiveThreeOneInfo,
     getCachedFiveThreeOneInfo,
+    cacheLogInfo,
   } = useLocalStorage();
   const [currentSet, setCurrentSet] = useState(0);
   const [showWarning, setShowWarning] = useState(false);
   const [saving, setSaving] = useState(false);
   const { setWeek, setCompleted } = useFiveThreeOneContext();
+  const { fetch } = useFetch();
 
   useEffect(() => {
     const highestSet =
@@ -78,6 +86,12 @@ export default function CompleteFiveThreeOneModal({
     }
   };
 
+  const onChangeNoes = (value: string) => {
+    cacheLogInfo(selectedExercise.exercise.exerciseId, {
+      notes: value,
+    });
+  };
+
   const onOk = async () => {
     const info = getCachedLogInfo(selectedExercise.exercise.exerciseId)?.info;
     const cachedFiveThreeOneInfo = getCachedFiveThreeOneInfo();
@@ -100,10 +114,12 @@ export default function CompleteFiveThreeOneModal({
 
     setSaving(true);
 
-    await fetch("/api/logs/create", {
+    const response = await fetch("/api/logs/create", {
       method: "POST",
       body: JSON.stringify([logs]),
     });
+
+    setLogs((logs) => [...response, logs]);
 
     if (cachedFiveThreeOneInfo?.completed.length === 3) {
       cacheFiveThreeOneInfo({
@@ -132,10 +148,11 @@ export default function CompleteFiveThreeOneModal({
     clearCacheLogInfo([exercise.exerciseId]);
 
     setShowWarning(false);
+
     onClose();
   };
 
-  const latestReps = latestLogInfo?.at(-1)?.reps || 0;
+  const latestReps = latestLog?.info?.at(-1)?.reps || 0;
   const improvement = (latestReps || 0) - reps[0];
 
   return (
@@ -143,7 +160,10 @@ export default function CompleteFiveThreeOneModal({
       width={400}
       title={selectedExercise.exercise.name}
       open={open}
-      onCancel={onClose}
+      onCancel={() => {
+        setShowWarning(false);
+        onClose();
+      }}
       okText={saving ? "Saving" : "Finish"}
       onOk={onOk}
     >
@@ -159,7 +179,7 @@ export default function CompleteFiveThreeOneModal({
           items={items}
           current={currentSet}
         />
-        {latestLogInfo && (
+        {latestLog && (
           <Alert
             showIcon
             type="info"
@@ -167,7 +187,7 @@ export default function CompleteFiveThreeOneModal({
               <div>
                 Last set you did{" "}
                 <span className="font-bold">
-                  {latestLogInfo?.at(-1)?.weight} kg x {latestReps}
+                  {latestLog.info?.at(-1)?.weight} kg x {latestReps}
                 </span>{" "}
                 ({improvement <= 0 ? "" : "+"}
                 {improvement})
@@ -175,6 +195,12 @@ export default function CompleteFiveThreeOneModal({
             }
           />
         )}
+        <TextArea
+          autoSize={true}
+          placeholder={latestLog?.notes || "Notes"}
+          className="my-2"
+          onChange={(e) => onChangeNoes(e.target.value)}
+        />
         {showWarning && (
           <Alert
             className="mt-2"

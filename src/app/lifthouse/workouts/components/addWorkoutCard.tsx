@@ -1,13 +1,9 @@
-import getConfig from "@/config";
-import { Button, Drawer, Form, Input, Modal, Space } from "antd";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useWorkout } from "../hooks/useWorkout";
 import { Workout } from "@/lib/supabase/db/types";
 import AddButton from "./addButton";
 import WorkoutFormDrawer from "./workoutDrawerForm";
-
-const { TextArea } = Input;
 
 type FieldType = {
   name: string;

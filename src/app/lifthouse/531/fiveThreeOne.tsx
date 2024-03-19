@@ -7,9 +7,12 @@ import { Setup } from "./components/setup";
 import { FiveThreeOne } from "@/lib/supabase/db/types";
 import Weeks from "./weeks";
 import { useFiveThreeOneContext } from "./context";
+import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 
 export default function FiveThreeOne() {
-  const { fiveThreeOneInfo, loading } = useFiveThreeOneContext();
+  const { clearFiveThreeOne } = useLocalStorage();
+  const { fiveThreeOneInfo, loading, setWeek, setCompleted } =
+    useFiveThreeOneContext();
   const [setupOpen, setSetupOpen] = useState(false);
 
   const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;
@@ -30,6 +33,12 @@ export default function FiveThreeOne() {
   }
 
   const exercises = [bench, squat, deadlift, ohp];
+
+  const resetWeeks = () => {
+    clearFiveThreeOne();
+    setWeek(1);
+    setCompleted([]);
+  };
 
   return (
     <div>
@@ -68,6 +77,15 @@ export default function FiveThreeOne() {
             <span className="font-bold">90% </span>
             of your total personal best and use that as the base for the
             program.
+            <div className="font-bold">
+              You can reset the your progress{" "}
+              <span
+                onClick={resetWeeks}
+                className="text-blue-500 cursor-pointer"
+              >
+                here
+              </span>
+            </div>
           </div>
         }
       />
