@@ -1,24 +1,19 @@
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
-import {
-  Exercise,
-  LogEntry,
-  LogInfo,
-  PersonalBest,
-} from "@/lib/supabase/db/types";
+import { LogInfo, PersonalBest } from "@/lib/supabase/db/types";
 import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import {
   Alert,
   Button,
-  Drawer,
+  Collapse,
   InputNumber,
   Modal,
-  Space,
   StepProps,
   Steps,
   Tooltip,
 } from "antd";
 import { useEffect, useState } from "react";
 import { useFiveThreeOneContext } from "../context";
+import Warmup from "./warmup";
 
 type Props = {
   open: boolean;
@@ -146,6 +141,7 @@ export default function CompleteFiveThreeOneModal({
   return (
     <Modal
       width={400}
+      title={selectedExercise.exercise.name}
       open={open}
       onCancel={onClose}
       okText={saving ? "Saving" : "Finish"}
@@ -179,9 +175,9 @@ export default function CompleteFiveThreeOneModal({
             }
           />
         )}
-
         {showWarning && (
           <Alert
+            className="mt-2"
             showIcon
             type="error"
             message={
@@ -190,6 +186,15 @@ export default function CompleteFiveThreeOneModal({
           />
         )}
       </div>
+      <Collapse
+        className="mt-2"
+        items={[
+          {
+            label: "Warmup",
+            children: <Warmup selectedExercise={selectedExercise} />,
+          },
+        ]}
+      />
     </Modal>
   );
 }
