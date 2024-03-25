@@ -129,19 +129,19 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
         return (
           <div key={pb?.exercise?.name}>
             <div className="flex mb-2 justify-between">
-              <Space>
-                <span>{pb?.exercise?.name}</span>
-              </Space>
-              {isCompleted ? (
-                <CheckCircleTwoTone
-                  className="text-2xl"
-                  twoToneColor="#52c41a"
-                />
-              ) : (
-                <Button type="primary" onClick={() => handleOpen(pb)}>
-                  Start
-                </Button>
-              )}
+              <span className="truncate">{pb?.exercise?.name}</span>
+              <div className="ml-4">
+                {isCompleted ? (
+                  <CheckCircleTwoTone
+                    className="text-2xl"
+                    twoToneColor="#52c41a"
+                  />
+                ) : (
+                  <Button type="primary" onClick={() => handleOpen(pb)}>
+                    Start
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         );
@@ -164,6 +164,7 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
         <Divider />
         <h3>Progress</h3>
         <Select
+          className="w-full"
           options={selectOptions}
           value={selectedExercise}
           onChange={(value) => setSelectedExercise(value)}

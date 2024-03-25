@@ -119,7 +119,7 @@ export default function CompleteFiveThreeOneModal({
       body: JSON.stringify([logs]),
     });
 
-    setLogs((logs) => [...response, logs]);
+    setLogs((logs) => [...logs, ...response]);
 
     if (cachedFiveThreeOneInfo?.completed.length === 3) {
       cacheFiveThreeOneInfo({
