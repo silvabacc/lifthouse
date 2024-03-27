@@ -1,27 +1,10 @@
-import {
-  Button,
-  Collapse,
-  CollapseProps,
-  Divider,
-  Select,
-  Skeleton,
-  Space,
-} from "antd";
+import { Button, Collapse, CollapseProps } from "antd";
 import CompleteFiveThreeOneModal from "./components/complete531";
 import { useEffect, useState } from "react";
 import { useFiveThreeOneContext } from "./context";
 import { LogEntry, PersonalBest } from "@/lib/supabase/db/types";
-import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { CheckCircleTwoTone } from "@ant-design/icons";
 import { useFetch } from "@/app/hooks/useFetch";
-import { View } from "../types";
-import { getButtonType } from "../utils";
-import dynamic from "next/dynamic";
-import Progress531 from "./components/progress";
-
-const StackedChart = dynamic(() => import("../components/logVisuals/stacked"));
-const LineChart = dynamic(() => import("../components/logVisuals/line"));
-const Table = dynamic(() => import("../components/logVisuals/table"));
 
 export default function FiveThreeOneWeeks() {
   const { week } = useFiveThreeOneContext();

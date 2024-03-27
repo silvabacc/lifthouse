@@ -1,5 +1,5 @@
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
-import { LogEntry, LogInfo, PersonalBest } from "@/lib/supabase/db/types";
+import { LogEntry, PersonalBest } from "@/lib/supabase/db/types";
 import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import {
   Alert,
@@ -9,7 +9,6 @@ import {
   Drawer,
   Input,
   InputNumber,
-  Modal,
   StepProps,
   Steps,
   Tooltip,

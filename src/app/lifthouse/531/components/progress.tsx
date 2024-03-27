@@ -4,9 +4,13 @@ import { getButtonType } from "../../utils";
 import { useState } from "react";
 import { View } from "../../types";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
-import StackedChart from "../../components/logVisuals/stacked";
-import LineChart from "../../components/logVisuals/line";
-import Table from "../../components/logVisuals/table";
+import dynamic from "next/dynamic";
+
+const StackedChart = dynamic(
+  () => import("../../components/logVisuals/stacked")
+);
+const LineChart = dynamic(() => import("../../components/logVisuals/line"));
+const Table = dynamic(() => import("../../components/logVisuals/table"));
 
 type Props = {
   exerciseId: number;
