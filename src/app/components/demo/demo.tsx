@@ -5,15 +5,20 @@ import { createDemoAccount } from "./actions";
 import { message } from "antd";
 import { useState } from "react";
 
-export function DemoText() {
+type Props = {
+  onClick?: () => void;
+};
+
+export function DemoText({ onClick }: Props) {
   const router = useRouter();
   const [creating, setCreating] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
 
-  const onClick = async () => {
+  const onDemoClick = async () => {
     if (creating) {
       return;
     }
+
     setCreating(true);
 
     const { error } = await createDemoAccount();
@@ -23,10 +28,11 @@ export function DemoText() {
       messageApi.destroy();
     } else {
       messageApi.destroy();
-      messageApi.success("Logging you in...");
+      messageApi.loading("Creating demo account 🚀");
       router.push("/lifthouse");
     }
 
+    onClick && onClick();
     setCreating(false);
   };
 
@@ -37,7 +43,7 @@ export function DemoText() {
       <span
         className="text-blue-500 cursor-pointer"
         onClick={() => {
-          onClick();
+          onDemoClick();
         }}
       >
         demo

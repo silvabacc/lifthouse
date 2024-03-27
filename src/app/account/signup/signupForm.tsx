@@ -40,7 +40,7 @@ export default function SignupForm() {
       setAlert(error);
     } else {
       messageApi.destroy();
-      messageApi.success("Logging you in...");
+      messageApi.success("Logging you in 🚀");
       router.push("/");
     }
   };

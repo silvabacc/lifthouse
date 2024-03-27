@@ -34,7 +34,7 @@ export default function LoginForm() {
   const router = useRouter();
 
   const onSignInWithProivderClick = async (provider: Provider) => {
-    messageApi.loading("Logging in...");
+    messageApi.loading("Logging in 🚀");
 
     const supabase = createSupabaseClient();
     const { error } = await supabase.auth.signInWithOAuth({
@@ -52,7 +52,7 @@ export default function LoginForm() {
   const onFinish = async (info: FieldType) => {
     setErrorMessage("");
     const { email, password } = info;
-    messageApi.loading("Logging in...");
+    messageApi.loading("Logging in 🚀");
 
     const { error } = await signInWithEmail(email, password);
 

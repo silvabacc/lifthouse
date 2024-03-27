@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Button, Divider, Space } from "antd";
+import { Button, Divider, Space, message } from "antd";
 import Image from "next/image";
 import SelfMade from "./assets/selfmade.png";
 import Banner from "./assets/banner.png";
@@ -18,6 +18,7 @@ type Props = {
 
 export default function LandingPage({ quote, author }: Props) {
   const [isSmallScreen, setIsSmallScreen] = useState<boolean>();
+  const [messageApi, contextHolder] = message.useMessage();
   const router = useRouter();
 
   useEffect(() => {
@@ -43,6 +44,7 @@ export default function LandingPage({ quote, author }: Props) {
 
   return (
     <LayoutAnimation className="h-full">
+      {contextHolder}
       {isSmallScreen && <Image src={Banner} alt="" className="w-full h-auto" />}
       <div
         className={`flex h-full bg-no-repeat bg-right bg-fixed ${
@@ -70,7 +72,7 @@ export default function LandingPage({ quote, author }: Props) {
                 New here? Sign up!
               </Button>
             </Space>
-            <DemoText />
+            <DemoText onClick={() => messageApi.loading("Logging you in")} />
           </div>
         </div>
       </div>
