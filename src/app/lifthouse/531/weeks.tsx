@@ -17,6 +17,7 @@ import { useFetch } from "@/app/hooks/useFetch";
 import { View } from "../types";
 import { getButtonType } from "../utils";
 import dynamic from "next/dynamic";
+import Progress531 from "./components/progress";
 
 const StackedChart = dynamic(() => import("../components/logVisuals/stacked"));
 const LineChart = dynamic(() => import("../components/logVisuals/line"));
@@ -43,6 +44,7 @@ export default function FiveThreeOneWeeks() {
   ].map((item, index) => ({
     key: index + 1,
     label: <h3 className="font-bold m-0">{item.title}</h3>,
+    showArrow: false,
     children: (
       <ExerciseRow
         sets={item.sets}
@@ -63,20 +65,14 @@ type ExerciseRowProps = {
 function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
   const [open, setOpen] = useState(false);
   const { fiveThreeOneInfo, completed } = useFiveThreeOneContext();
-  const { cacheView, getCachedView } = useLocalStorage();
   const [exerciseSelected, setExerciseSelected] = useState<PersonalBest>();
   const [latestLogs, setLatestLogs] = useState<LogEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const { fetch } = useFetch();
-  const [view, setView] = useState(getCachedView() || View.stacked);
 
   const { bench, ohp, squat, deadlift } = fiveThreeOneInfo;
   const exercises = [bench, ohp, squat, deadlift];
-
-  const [selectedExercise, setSelectedExercise] = useState<number>(
-    bench.exercise.exerciseId
-  );
 
   useEffect(() => {
     const fetchLatestLog = async () => {
@@ -110,17 +106,9 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
     setOpen(true);
   };
 
-  const selectOptions = exercises.map((e) => ({
-    label: e?.exercise?.name,
-    value: e?.exercise?.exerciseId,
-  }));
-
-  const onClickView = (view: View) => {
-    cacheView(view);
-    setView(view);
-  };
-
-  const exerciseLogs = logs.filter((l) => l.exerciseId === selectedExercise);
+  const exerciseLogs = logs.filter(
+    (l) => l.exerciseId === exerciseSelected?.exercise.exerciseId
+  );
 
   return (
     <div>
@@ -153,6 +141,7 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
           selectedExercise={exerciseSelected}
           sets={sets}
           reps={reps}
+          logs={exerciseLogs}
           intensity={intensity}
           setLogs={setLogs}
           latestLog={latestLogs.find(
@@ -160,44 +149,6 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
           )}
         />
       )}
-      <div>
-        <Divider />
-        <h3>Progress</h3>
-        <Select
-          className="w-full"
-          options={selectOptions}
-          value={selectedExercise}
-          onChange={(value) => setSelectedExercise(value)}
-        />
-        <div className="w-full">
-          <Space>
-            {Object.values(View).map((v, idx) => (
-              <div key={`${v}-${idx}`}>
-                <Button
-                  key={v}
-                  className="p-0"
-                  type={getButtonType(view, v)}
-                  onClick={() => onClickView(v)}
-                >
-                  {v.charAt(0).toUpperCase() + v.slice(1)}
-                </Button>
-                <Divider type="vertical" />
-              </div>
-            ))}
-          </Space>
-          {loading ? (
-            <Skeleton />
-          ) : (
-            <>
-              {view === View.stacked && <StackedChart data={exerciseLogs} />}
-              {view === View.line && <LineChart data={exerciseLogs} />}
-              {view === View.table && (
-                <Table data={exerciseLogs} setLogs={setLogs} />
-              )}
-            </>
-          )}
-        </div>
-      </div>
     </div>
   );
 }

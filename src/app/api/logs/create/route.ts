@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   try {
     const schema = Joi.array().items({
       exerciseId: Joi.number().required(),
-      notes: Joi.string().optional(),
+      notes: Joi.string().allow(null, "").optional(),
       info: Joi.array()
         .items({
           set: Joi.number().required(),

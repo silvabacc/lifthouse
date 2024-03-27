@@ -5,6 +5,8 @@ import {
   Alert,
   Button,
   Collapse,
+  Divider,
+  Drawer,
   Input,
   InputNumber,
   Modal,
@@ -16,6 +18,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useFiveThreeOneContext } from "../context";
 import Warmup from "./warmup";
 import { useFetch } from "@/app/hooks/useFetch";
+import Progress531 from "./progress";
 
 const { TextArea } = Input;
 
@@ -26,6 +29,7 @@ type Props = {
   sets: number;
   reps: number[];
   intensity: number[];
+  logs: LogEntry[];
   setLogs: Dispatch<SetStateAction<LogEntry[]>>;
   latestLog?: LogEntry;
 };
@@ -38,6 +42,7 @@ export default function CompleteFiveThreeOneModal({
   intensity,
   setLogs,
   latestLog,
+  logs,
 }: Props) {
   const {
     getCachedLogInfo,
@@ -91,6 +96,7 @@ export default function CompleteFiveThreeOneModal({
     cacheLogInfo(selectedExercise.exercise.exerciseId, {
       notes: value,
     });
+    setNotes(value);
   };
 
   const onOk = async () => {
@@ -158,18 +164,16 @@ export default function CompleteFiveThreeOneModal({
   const improvement = (latestReps || 0) - reps[0];
 
   return (
-    <Modal
-      width={400}
+    <Drawer
+      width={"100%"}
       title={selectedExercise.exercise.name}
       open={open}
-      onCancel={() => {
+      onClose={() => {
         setShowWarning(false);
         onClose();
       }}
-      okText={saving ? "Saving" : "Finish"}
-      onOk={onOk}
     >
-      <div className="flex h-full flex-col">
+      <div className="flex flex-col">
         <div className="mb-4">
           <span className="text-xs ml-2 mr-6">Set</span>
           <span className="text-xs mr-6">Weight</span>
@@ -224,7 +228,25 @@ export default function CompleteFiveThreeOneModal({
           },
         ]}
       />
-    </Modal>
+      <Progress531
+        exerciseId={selectedExercise.exercise.exerciseId}
+        setLogs={setLogs}
+        logs={logs}
+      />
+      <div className="fixed bottom-0 pb-2 bg-white w-full">
+        <Divider className="m-0" />
+        <div className="flex justify-end pr-12">
+          <Button
+            className="w-20 mt-2"
+            type="primary"
+            onClick={onOk}
+            loading={saving}
+          >
+            {saving ? "Saving" : "Finish"}
+          </Button>
+        </div>
+      </div>
+    </Drawer>
   );
 }
 
