@@ -50,6 +50,7 @@ export default function CompleteFiveThreeOneModal({
   const [showWarning, setShowWarning] = useState(false);
   const [saving, setSaving] = useState(false);
   const { setWeek, setCompleted } = useFiveThreeOneContext();
+  const [notes, setNotes] = useState<string>();
   const { fetch } = useFetch();
 
   useEffect(() => {
@@ -148,6 +149,7 @@ export default function CompleteFiveThreeOneModal({
     clearCacheLogInfo([exercise.exerciseId]);
 
     setShowWarning(false);
+    setNotes("");
 
     onClose();
   };
@@ -197,6 +199,7 @@ export default function CompleteFiveThreeOneModal({
         )}
         <TextArea
           autoSize={true}
+          value={notes}
           placeholder={latestLog?.notes || "Notes"}
           className="my-2"
           onChange={(e) => onChangeNoes(e.target.value)}
