@@ -7,6 +7,7 @@ import Image from "next/image";
 import SelfMade from "./assets/selfmade.png";
 import Banner from "./assets/banner.png";
 import { LayoutAnimation } from "./aniamtions/layoutAnimation";
+import { DemoText } from "./components/demo/demo";
 
 const COMPACT_SCREEN = 850;
 
@@ -69,6 +70,7 @@ export default function LandingPage({ quote, author }: Props) {
                 New here? Sign up!
               </Button>
             </Space>
+            <DemoText />
           </div>
         </div>
       </div>

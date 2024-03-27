@@ -13,6 +13,7 @@ import Link from "next/link";
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { signInWithEmail } from "./actions";
 import { useRouter } from "next/navigation";
+import { DemoText } from "@/app/components/demo/demo";
 
 enum Provider {
   Google = "google",
@@ -96,6 +97,7 @@ export default function LoginForm() {
             Google
           </Button>
         </div>
+        <DemoText />
       </FormWrapper>
     </>
   );
