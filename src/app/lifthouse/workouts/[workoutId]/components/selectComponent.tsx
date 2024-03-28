@@ -88,7 +88,7 @@ export default function SelectElement({
         <BottomFadeInAnimation
           animationDuration={0.1}
           animationHeight={256}
-          className="absolute z-10 bg-white border-solid border-slate-200 overflow-auto w-full shadow-2xl"
+          className="absolute z-10 bg-white border-solid border-slate-200 overflow-auto w-full shadow-2xl pb-4"
         >
           <div className="bg-white sticky top-0">
             <Search onChange={(e) => setSearch(e.target.value.toLowerCase())} />

@@ -1,9 +1,9 @@
-import { Drawer, Space } from "antd";
+import { Button, Drawer, Space } from "antd";
 import { Reorder, useDragControls } from "framer-motion";
 import { useWorkoutIdContext } from "../../context";
 import { useEffect, useState } from "react";
 import { SelectExercise, SelectRepsScheme } from "../selectors";
-import { MenuOutlined } from "@ant-design/icons";
+import { MenuOutlined, SaveOutlined } from "@ant-design/icons";
 import { useWorkout } from "../../../hooks/useWorkout";
 
 type Props = {
@@ -13,6 +13,7 @@ type Props = {
 export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
   const { workout, setWorkout } = useWorkoutIdContext();
   const { updateWorkoutPlan } = useWorkout();
+  const [saving, setSaving] = useState(false);
 
   //Could also use useDragControls from framer-motion but this is buggy with having separate ReOrder.Item components
   //So implemented my own way of doing this
@@ -28,6 +29,7 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
   }, [workout]);
 
   const onClose = async () => {
+    setSaving(true);
     const updatedWorkout = await updateWorkoutPlan({
       workoutId: workout.workoutId,
       exercises: updatedWorkoutExercises,
@@ -40,6 +42,7 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
       setWorkout(updatedWorkout);
     }
 
+    setSaving(false);
     onCancel();
   };
 
@@ -80,6 +83,7 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
       open={show}
       onClose={onClose}
       title="Change exercises"
+      extra={<ExtraIcon saving={saving} onClick={onClose} />}
     >
       <Reorder.Group
         className="p-0"
@@ -119,5 +123,21 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
         </Space>
       </Reorder.Group>
     </Drawer>
+  );
+}
+
+type ExtraIconProps = {
+  saving?: boolean;
+  onClick: () => void;
+};
+function ExtraIcon({ saving, onClick }: ExtraIconProps) {
+  return (
+    <Button
+      icon={<SaveOutlined />}
+      type={saving ? "default" : "primary"}
+      onClick={onClick}
+    >
+      {saving ? "Saving 🚀" : "Save"}
+    </Button>
   );
 }
