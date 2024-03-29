@@ -26,7 +26,7 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
 
   useEffect(() => {
     setUpdatedWorkoutExercises(workout.exercises || []);
-  }, [workout]);
+  }, [show, workout.exercises]);
 
   const onClose = async () => {
     setSaving(true);
@@ -81,7 +81,7 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
     <Drawer
       width={"100%"}
       open={show}
-      onClose={onClose}
+      onClose={onCancel}
       title="Change exercises"
       extra={<ExtraIcon saving={saving} onClick={onClose} />}
     >
