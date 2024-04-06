@@ -4,7 +4,6 @@ import { Alert, Button, Card, Drawer, Skeleton } from "antd";
 import { useState } from "react";
 import { PageInfoPortal } from "../components/pageInfo";
 import { Setup } from "./components/setup";
-import { FiveThreeOne } from "@/lib/supabase/db/types";
 import Weeks from "./weeks";
 import { useFiveThreeOneContext } from "./context";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";

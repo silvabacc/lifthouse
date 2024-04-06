@@ -16,7 +16,11 @@ async function AuthMiddleware(
   }
 
   // if user is not signed in and the current path is not / redirect the user to /
-  if (!user && request.nextUrl.pathname !== "/") {
+  if (
+    !user &&
+    request.nextUrl.pathname !== "/" &&
+    !request.nextUrl.pathname.startsWith("/_next/")
+  ) {
     response = NextResponse.redirect(new URL("/", request.url));
   }
 
@@ -99,6 +103,10 @@ export async function middleware(request: NextRequest) {
       },
     }
   );
+
+  if (request.nextUrl.pathname === "/") {
+    next = await AuthMiddleware(request, next, supabase);
+  }
 
   if (request.nextUrl.pathname.startsWith("/lifthouse")) {
     next = await AuthMiddleware(request, next, supabase);
