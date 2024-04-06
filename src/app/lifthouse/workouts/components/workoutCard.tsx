@@ -1,4 +1,13 @@
-import { Button, Divider, Modal, Drawer, Form, Input, Space } from "antd";
+import {
+  Button,
+  Divider,
+  Modal,
+  Drawer,
+  Form,
+  Input,
+  Space,
+  Typography,
+} from "antd";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { ExclamationCircleFilled } from "@ant-design/icons";
@@ -11,6 +20,8 @@ import { useWorkout } from "../hooks/useWorkout";
 import { Workout } from "@/lib/supabase/db/types";
 
 const { confirm } = Modal;
+
+const { Paragraph } = Typography;
 
 type WorkoutCardProps = {
   name: string;
@@ -69,8 +80,10 @@ export default function WorkoutCard({
         onClose={() => setDrawOpen(!drawOpen)}
         onFinish={onFinish}
         options={{ nameRequired: false, descriptionRequired: false }}
+        defaultTitleFieldValue={name}
+        defaultDescriptionFieldValue={description}
       />
-      <div className="relative p-6 h-32" onClick={onCardClick}>
+      <div className="relative p-6 " onClick={onCardClick}>
         <h1 className="text-base font-medium pb-2">{name}</h1>
         <Description text={description} />
       </div>
@@ -141,26 +154,16 @@ function Description({ text }: DescriptionProps) {
           : ""
       } bg-white z-10`}
     >
-      <p
-        ref={ref}
-        className={`text-sm leading-6 ${
-          !expanded ? "line-clamp-2" : ""
-        } text-gray-400`}
+      <Paragraph
+        ellipsis={{
+          rows: 2,
+          expandable: true,
+          symbol: "more",
+          onExpand: (e) => e.stopPropagation(),
+        }}
       >
         {text}
-      </p>
-      <div className="flex justify-end">
-        {!expanded && showButton && (
-          <Button className="p-0" type="link" onClick={onClickShow}>
-            Show More
-          </Button>
-        )}
-        {expanded && (
-          <Button className="p-0" type="link" onClick={onClickShow}>
-            Show Less
-          </Button>
-        )}
-      </div>
+      </Paragraph>
     </div>
   );
 }

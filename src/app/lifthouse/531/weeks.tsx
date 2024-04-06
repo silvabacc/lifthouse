@@ -1,29 +1,51 @@
-import { Button, Collapse, CollapseProps } from "antd";
+import {
+  Button,
+  Collapse,
+  CollapseProps,
+  Space,
+  Table,
+  Typography,
+  notification,
+} from "antd";
 import CompleteFiveThreeOneModal from "./components/complete531";
 import { useEffect, useState } from "react";
 import { useFiveThreeOneContext } from "./context";
 import { LogEntry, PersonalBest } from "@/lib/supabase/db/types";
 import { CheckCircleTwoTone } from "@ant-design/icons";
 import { useFetch } from "@/app/hooks/useFetch";
+import { useLocalStorage } from "@/app/hooks/useLocalStorage";
+import { useFiveThreeOne } from "./useFiveThreeOne";
+
+const { Text } = Typography;
 
 export default function FiveThreeOneWeeks() {
   const { week } = useFiveThreeOneContext();
 
   const items: CollapseProps["items"] = [
     {
-      title: "Week 1",
+      title: <WeekTitle week={1} currentWeek={week} />,
       sets: 3,
       reps: [5, 5, 5],
       intensity: [0.65, 0.75, 0.85],
     },
-    { title: "Week 2", sets: 3, reps: [3, 3, 3], intensity: [0.7, 0.8, 0.9] },
     {
-      title: "Week 3",
+      title: <WeekTitle week={2} currentWeek={week} />,
+      sets: 3,
+      reps: [3, 3, 3],
+      intensity: [0.7, 0.8, 0.9],
+    },
+    {
+      title: <WeekTitle week={3} currentWeek={week} />,
       sets: 3,
       reps: [5, 3, 1],
       intensity: [0.75, 0.85, 0.95],
     },
-    { title: "Week 4", sets: 3, reps: [5, 5, 5], intensity: [0.4, 0.5, 0.6] },
+    {
+      title: <WeekTitle week={4} currentWeek={week} />,
+      sets: 3,
+      reps: [5, 5, 5],
+      intensity: [0.4, 0.5, 0.6],
+    },
   ].map((item, index) => ({
     key: index + 1,
     label: <h3 className="font-bold m-0">{item.title}</h3>,
@@ -133,5 +155,77 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
         />
       )}
     </div>
+  );
+}
+
+type WeekTitleProps = {
+  week: number;
+  currentWeek: number;
+};
+function WeekTitle({ week, currentWeek }: WeekTitleProps) {
+  const { increasePersonalBests } = useFiveThreeOne();
+  const { setWeek, setCompleted, fiveThreeOneInfo } = useFiveThreeOneContext();
+  const { cacheFiveThreeOneInfo } = useLocalStorage();
+  const [api, contextHolder] = notification.useNotification();
+
+  const showWeek = week === currentWeek;
+  const onClickSkip = async () => {
+    const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;
+    const exercises = [bench, squat, deadlift, ohp];
+
+    if (week >= 4) {
+      setWeek(1);
+      cacheFiveThreeOneInfo({ week: 1, completed: [] });
+      await increasePersonalBests();
+
+      api.info({
+        message: (
+          <div className="font-bold">
+            You have completed a 531 cycle, your personal bests have been
+            increased
+          </div>
+        ),
+        description: <NotificationDescription exercises={exercises} />,
+      });
+    } else {
+      setWeek(week + 1);
+      cacheFiveThreeOneInfo({ week: week + 1, completed: [] });
+    }
+
+    setCompleted([]);
+  };
+
+  return (
+    <div className="flex justify-between font-bold m-0">
+      {contextHolder}
+      <span>Week {week}</span>
+      {showWeek && (
+        <Button onClick={onClickSkip} type="link">
+          Skip
+        </Button>
+      )}
+    </div>
+  );
+}
+
+type NotificationDescriptionProps = {
+  exercises: PersonalBest[];
+};
+
+function NotificationDescription({ exercises }: NotificationDescriptionProps) {
+  return (
+    <Space direction="vertical">
+      {exercises.map((info) => (
+        <div className="flex justify-between " key={info.exercise.exerciseId}>
+          <Text className="w-36" ellipsis={{ tooltip: "I am ellipsis now!" }}>
+            {info.exercise.name}
+          </Text>
+          <div>
+            <span className="text-blue-500 font-bold">{info.pb} kg</span>
+            <span className="text-green-500"> (+2)</span>
+          </div>
+        </div>
+      ))}
+    </Space>
   );
 }

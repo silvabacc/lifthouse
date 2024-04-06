@@ -18,6 +18,7 @@ import { useFiveThreeOneContext } from "../context";
 import Warmup from "./warmup";
 import { useFetch } from "@/app/hooks/useFetch";
 import Progress531 from "./progress";
+import { useFiveThreeOne } from "../useFiveThreeOne";
 
 const { TextArea } = Input;
 
@@ -49,7 +50,9 @@ export default function CompleteFiveThreeOneModal({
     cacheFiveThreeOneInfo,
     getCachedFiveThreeOneInfo,
     cacheLogInfo,
+    clearFiveThreeOne,
   } = useLocalStorage();
+  const { increasePersonalBests } = useFiveThreeOne();
   const [currentSet, setCurrentSet] = useState(0);
   const [showWarning, setShowWarning] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -132,7 +135,15 @@ export default function CompleteFiveThreeOneModal({
         week: cachedFiveThreeOneInfo?.week + 1,
         completed: [],
       });
-      setWeek(cachedFiveThreeOneInfo?.week + 1);
+
+      if (cachedFiveThreeOneInfo?.week === 4) {
+        clearFiveThreeOne();
+        setWeek(1);
+        increasePersonalBests();
+      } else {
+        setWeek(cachedFiveThreeOneInfo?.week + 1);
+      }
+
       setCompleted([]);
     } else {
       cacheFiveThreeOneInfo({

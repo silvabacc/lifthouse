@@ -31,7 +31,7 @@ export function DemoText() {
   };
 
   return (
-    <div className="text-sm text-gray-600 mt-6">
+    <div className="text-sm text-gray-600 mt-4">
       {contextHolder}
       Want to try out Lifthouse? Use our{" "}
       <span

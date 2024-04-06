@@ -19,6 +19,8 @@ type Props = {
   onClose: (modalOpen: boolean) => void;
   onFinish: (info: ExerciseFormDrawerField) => Promise<void>;
   options?: Options;
+  defaultTitleFieldValue?: string;
+  defaultDescriptionFieldValue?: string;
 };
 
 export default function WorkoutFormDrawer({
@@ -27,6 +29,8 @@ export default function WorkoutFormDrawer({
   onClose,
   onFinish,
   options = { nameRequired: true, descriptionRequired: false },
+  defaultTitleFieldValue,
+  defaultDescriptionFieldValue,
 }: Props) {
   const [disable, setDisable] = useState(false);
 
@@ -41,6 +45,7 @@ export default function WorkoutFormDrawer({
       <Form onFinish={onSubmit}>
         <Form.Item name="name">
           <Input
+            defaultValue={defaultTitleFieldValue}
             required={options.nameRequired}
             size="large"
             placeholder="Edit plan name"
@@ -48,6 +53,7 @@ export default function WorkoutFormDrawer({
         </Form.Item>
         <Form.Item name="description">
           <TextArea
+            defaultValue={defaultDescriptionFieldValue}
             showCount
             required={options.descriptionRequired}
             maxLength={100}
