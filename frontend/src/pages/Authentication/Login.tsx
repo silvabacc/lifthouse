@@ -7,6 +7,7 @@ import { LockOutlined, GoogleOutlined } from "@ant-design/icons";
 import useAuthentication from "@frontend/hooks/useAuthentication";
 import { AuthenticationContainer } from "./AuthenticationStyles";
 import { EmailField, FormButton, FormWrapper } from "./components/Form";
+import UpdateAlert from "../common/UpdateAlert";
 
 const { Text } = Typography;
 

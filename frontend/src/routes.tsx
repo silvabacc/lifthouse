@@ -13,6 +13,7 @@ import Header from "./pages/common/Header";
 import SettingMenu from "./common/SettingMenu";
 import Transition from "./pages/common/Transition";
 import AllExercises from "./pages/Workout/components/AllExercises/AllExercises";
+import UpdateAlert from "./pages/common/UpdateAlert";
 
 export const pageTitleMapping = {
   [RoutineType.UPPER_INTENSITY]: "Upper Intensity",
@@ -36,6 +37,7 @@ const guardRoutes = (
         showBackButton={showBackButton}
         rightHandSide={<SettingMenu />}
       />
+      <UpdateAlert />
       <Transition>
         {isAuthenticated ? element : <Navigate to={"/login"} />}
       </Transition>
