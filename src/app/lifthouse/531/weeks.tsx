@@ -2,9 +2,9 @@ import {
   Button,
   Collapse,
   CollapseProps,
+  Modal,
   Space,
   Table,
-  Typography,
   notification,
 } from "antd";
 import CompleteFiveThreeOneModal from "./components/complete531";
@@ -15,8 +15,10 @@ import { CheckCircleTwoTone } from "@ant-design/icons";
 import { useFetch } from "@/app/hooks/useFetch";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { useFiveThreeOne } from "./useFiveThreeOne";
-
-const { Text } = Typography;
+import {
+  NotificationDescription,
+  NotificationMessage,
+} from "./components/notification";
 
 export default function FiveThreeOneWeeks() {
   const { week } = useFiveThreeOneContext();
@@ -167,9 +169,21 @@ function WeekTitle({ week, currentWeek }: WeekTitleProps) {
   const { setWeek, setCompleted, fiveThreeOneInfo } = useFiveThreeOneContext();
   const { cacheFiveThreeOneInfo } = useLocalStorage();
   const [api, contextHolder] = notification.useNotification();
+  const [modal, modalContextHolder] = Modal.useModal();
 
   const showWeek = week === currentWeek;
   const onClickSkip = async () => {
+    modal.confirm({
+      title: "Are you sure you want to skip this week?",
+      onOk: async () => {
+        await skipWeek();
+      },
+      okText: "Yes",
+      cancelText: "No",
+    });
+  };
+
+  const skipWeek = async () => {
     const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;
     const exercises = [bench, squat, deadlift, ohp];
 
@@ -179,12 +193,7 @@ function WeekTitle({ week, currentWeek }: WeekTitleProps) {
       await increasePersonalBests();
 
       api.info({
-        message: (
-          <div className="font-bold">
-            You have completed a 531 cycle, your personal bests have been
-            increased
-          </div>
-        ),
+        message: <NotificationMessage />,
         description: <NotificationDescription exercises={exercises} />,
       });
     } else {
@@ -198,6 +207,7 @@ function WeekTitle({ week, currentWeek }: WeekTitleProps) {
   return (
     <div className="flex justify-between font-bold m-0">
       {contextHolder}
+      {modalContextHolder}
       <span>Week {week}</span>
       {showWeek && (
         <Button onClick={onClickSkip} type="link">
@@ -205,27 +215,5 @@ function WeekTitle({ week, currentWeek }: WeekTitleProps) {
         </Button>
       )}
     </div>
-  );
-}
-
-type NotificationDescriptionProps = {
-  exercises: PersonalBest[];
-};
-
-function NotificationDescription({ exercises }: NotificationDescriptionProps) {
-  return (
-    <Space direction="vertical">
-      {exercises.map((info) => (
-        <div className="flex justify-between " key={info.exercise.exerciseId}>
-          <Text className="w-36" ellipsis={{ tooltip: "I am ellipsis now!" }}>
-            {info.exercise.name}
-          </Text>
-          <div>
-            <span className="text-blue-500 font-bold">{info.pb} kg</span>
-            <span className="text-green-500"> (+2)</span>
-          </div>
-        </div>
-      ))}
-    </Space>
   );
 }

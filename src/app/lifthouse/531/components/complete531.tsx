@@ -12,6 +12,7 @@ import {
   StepProps,
   Steps,
   Tooltip,
+  notification,
 } from "antd";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useFiveThreeOneContext } from "../context";
@@ -19,6 +20,7 @@ import Warmup from "./warmup";
 import { useFetch } from "@/app/hooks/useFetch";
 import Progress531 from "./progress";
 import { useFiveThreeOne } from "../useFiveThreeOne";
+import { NotificationDescription, NotificationMessage } from "./notification";
 
 const { TextArea } = Input;
 
@@ -56,9 +58,13 @@ export default function CompleteFiveThreeOneModal({
   const [currentSet, setCurrentSet] = useState(0);
   const [showWarning, setShowWarning] = useState(false);
   const [saving, setSaving] = useState(false);
-  const { setWeek, setCompleted } = useFiveThreeOneContext();
+  const { setWeek, setCompleted, fiveThreeOneInfo } = useFiveThreeOneContext();
   const [notes, setNotes] = useState<string>();
   const { fetch } = useFetch();
+  const [api, contextHolder] = notification.useNotification();
+  const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;
+
+  const exercises = [bench, squat, deadlift, ohp];
 
   useEffect(() => {
     const highestSet =
@@ -139,7 +145,11 @@ export default function CompleteFiveThreeOneModal({
       if (cachedFiveThreeOneInfo?.week === 4) {
         clearFiveThreeOne();
         setWeek(1);
-        increasePersonalBests();
+        await increasePersonalBests();
+        api.info({
+          message: <NotificationMessage />,
+          description: <NotificationDescription exercises={exercises} />,
+        });
       } else {
         setWeek(cachedFiveThreeOneInfo?.week + 1);
       }
@@ -183,6 +193,7 @@ export default function CompleteFiveThreeOneModal({
         onClose();
       }}
     >
+      {contextHolder}
       <div className="flex flex-col">
         <div className="mb-4">
           <span className="text-xs ml-2 mr-6">Set</span>
