@@ -1,6 +1,6 @@
 # lifthouse
 
-This is a personal gym progress tracking app that is tailoured to the way I train. I use to use Google spreedsheets to track my progress, but I found that everything seemed so manual, so I dedicated time to create this application to streamline the same processes I do for my Google Sheets. You probably won't find this useful, or even UI/UX friendly, but it works for me :)
+This is a personal gym progress tracking app that is tailoured to the way I train. Previously, I used Google spreedsheets to track my progress, but I found that everything seemed so manual, so I dedicated time to create this application to streamline the same processes I do for my Google Sheets. You probably won't find this useful, or even UI/UX friendly, but it works for me :)
 
 This application is takes the mobile-first design prinicple, so ideally you should use the application on mobile.
 
