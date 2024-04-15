@@ -57,7 +57,7 @@ export function PageInfoPortal({ children, extra, title }: Props) {
           <div className={`${showInfo ? "block" : "hidden"} sm:block`}>
             {children}
           </div>
-          {extra}
+          <div className="w-full overflow-x-auto">{extra}</div>
           {children && (
             <Button
               onClick={() => setShowInfo(!showInfo)}

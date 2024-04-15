@@ -81,15 +81,18 @@ export default function MealsPage() {
   const carbs = mealData?.reduce((acc, curr) => acc + curr.carbs, 0) || 0;
 
   return (
-    <PageAnimation className="flex flex-col items-center">
+    <PageAnimation className="flex flex-col items-center bg-white h-full overflow-y-auto">
       <DateMover selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
       <MacroNutrients
+        isLoading={isLoading}
         calories={calories}
         protein={protein}
         fat={fat}
         carbs={carbs}
       />
       <Tabs
+        type="card"
+        className="p-4"
         style={{ width: "100%" }}
         activeKey={activeTab}
         onChange={setActivetab}

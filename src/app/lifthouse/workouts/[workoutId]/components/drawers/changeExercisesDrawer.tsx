@@ -79,7 +79,6 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
 
   return (
     <Drawer
-      width={"100%"}
       open={show}
       onClose={onCancel}
       title="Change exercises"
