@@ -56,6 +56,22 @@ export function useLocalStorage() {
     );
   };
 
+  const removeLogInfo = (exerciseId: number, set: number) => {
+    const existing = window.localStorage.getItem(exerciseId.toString());
+
+    if (!existing) {
+      return;
+    }
+
+    const parsed = JSON.parse(existing) as CacheLogInfo;
+    const updatedInfo = parsed.info.filter((p) => p.set !== set);
+
+    window.localStorage.setItem(
+      exerciseId.toString(),
+      JSON.stringify({ info: updatedInfo, notes: parsed.notes })
+    );
+  };
+
   const getCachedLogInfo = (exerciseId: number): CacheLogInfo | undefined => {
     const existing = window.localStorage.getItem(exerciseId.toString());
 
@@ -107,6 +123,7 @@ export function useLocalStorage() {
 
   return {
     cacheLogInfo,
+    removeLogInfo,
     getCachedLogInfo,
     clearCacheLogInfo,
     getCachedView,

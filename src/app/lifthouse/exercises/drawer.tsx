@@ -1,6 +1,6 @@
 import { useFetch } from "@/app/hooks/useFetch";
 import { Exercise, LogEntry } from "@/lib/supabase/db/types";
-import { Button, DatePicker, Drawer } from "antd";
+import { Button, DatePicker, Drawer, Modal } from "antd";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
@@ -11,6 +11,7 @@ import {
   TableOutlined,
 } from "@ant-design/icons";
 import dynamic from "next/dynamic";
+import { Complete } from "../components/compete";
 
 const StackedChart = dynamic(() => import("../components/logVisuals/stacked"));
 const LineChart = dynamic(() => import("../components/logVisuals/line"));
@@ -28,7 +29,10 @@ type Props = {
 export default function ExerciseDrawer({ exercise, show, onClose }: Props) {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const { fetch } = useFetch();
-  const { getCachedView, cacheView } = useLocalStorage();
+  const { getCachedView, cacheView, clearCacheLogInfo, getCachedLogInfo } =
+    useLocalStorage();
+  const [modal, contextHolder] = Modal.useModal();
+  const [saving, setSaving] = useState(false);
 
   const [firstDate, setFirstDate] = useState(
     dayjs().subtract(DEFAULT_LIMIT, "day")
@@ -66,9 +70,52 @@ export default function ExerciseDrawer({ exercise, show, onClose }: Props) {
     setView(view);
   };
 
+  const onClickRecord = () => {
+    modal.info({
+      title: "Record an entry",
+      icon: <></>,
+      okText: `${saving ? "Saving" : "Finish"}`,
+      onOk: onFinish,
+      content: exercise ? <Complete exercise={exercise} /> : <></>,
+    });
+  };
+
+  const onFinish = async () => {
+    if (!exercise) return;
+
+    const cached = getCachedLogInfo(exercise.exerciseId);
+
+    const exerciseLog = [
+      {
+        exerciseId: exercise.exerciseId,
+        info: cached?.info,
+        notes: cached?.notes,
+        date: new Date(),
+      },
+    ];
+
+    setSaving(true);
+
+    const response: LogEntry[] = await fetch("/api/logs/create", {
+      method: "POST",
+      body: JSON.stringify(exerciseLog),
+    });
+
+    setLogs((prev) => [...prev, ...response]);
+
+    setSaving(false);
+    clearCacheLogInfo([exercise.exerciseId]);
+  };
+
   return (
-    <Drawer width={"100%"} open={show} onClose={onClose}>
+    <Drawer
+      width={"100%"}
+      open={show}
+      onClose={onClose}
+      extra={<RecordEntry onClick={onClickRecord} />}
+    >
       <div className={`overflow-y-auto ${loading && "opacity-50"}`}>
+        {contextHolder}
         <div>
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold">{exercise?.name}</h1>
@@ -111,5 +158,16 @@ export default function ExerciseDrawer({ exercise, show, onClose }: Props) {
         </div>
       </div>
     </Drawer>
+  );
+}
+
+type RecordEntryProps = {
+  onClick: () => void;
+};
+function RecordEntry({ onClick }: RecordEntryProps) {
+  return (
+    <Button type="dashed" danger onClick={onClick}>
+      Record an entry
+    </Button>
   );
 }
