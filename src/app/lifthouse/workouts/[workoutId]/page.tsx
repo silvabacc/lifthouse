@@ -110,7 +110,7 @@ function PageInfoExtra({
   onClickWorkoutTemplate,
 }: Props) {
   return (
-    <Space>
+    <Space className="pb-4">
       <Button type="dashed" danger onClick={onClickRecord}>
         Record a workout
       </Button>

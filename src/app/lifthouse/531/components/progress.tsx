@@ -46,7 +46,7 @@ export default function Progress531({ logs, setLogs }: Props) {
             </div>
           ))}
         </Space>
-        <div>
+        <div className="pb-4">
           {view === View.stacked && <StackedChart data={logs} />}
           {view === View.line && <LineChart data={logs} />}
           {view === View.table && <Table data={logs} setLogs={setLogs} />}

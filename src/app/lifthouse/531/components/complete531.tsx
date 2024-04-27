@@ -258,7 +258,7 @@ export default function CompleteFiveThreeOneModal({
         <Divider className="m-0" />
         <div className="flex justify-end pr-12">
           <Button
-            className="w-20 mt-2"
+            className="mt-2"
             type="primary"
             onClick={onOk}
             loading={saving}
