@@ -198,7 +198,7 @@ export default function CompleteFiveThreeOneModal({
         <div className="mb-4">
           <span className="text-xs ml-2 mr-6">Set</span>
           <span className="text-xs mr-6">Weight</span>
-          <span className="text-xs ml-2">Target</span>
+          <span className="text-xs ml-8">Target</span>
         </div>
         <Steps
           onChange={onChange}
@@ -289,6 +289,7 @@ function Row({
   warningEnabled,
   onContinue,
 }: RowProps) {
+  const [weight, setWeight] = useState(calculateIntensity(info.pb, intensity));
   const [reps, setReps] = useState<number>();
   const { getCachedLogInfo, cacheLogInfo } = useLocalStorage();
   const cachedInfo = getCachedLogInfo(info.exercise.exerciseId)?.info.find(
@@ -298,9 +299,8 @@ function Row({
 
   useEffect(() => {
     setReps(cachedInfo?.reps);
+    setWeight(calculateIntensity(info.pb, intensity));
   }, [info]);
-
-  const weight = (intensity * 0.9 * info.pb).toFixed(0);
 
   const onNext = () => {
     const currentReps = reps ? !reps : !cachedInfo?.reps;
@@ -316,7 +316,7 @@ function Row({
       info: {
         set: step + 1,
         reps: reps || 0,
-        weight: parseInt(weight) || 0,
+        weight: weight || 0,
       },
     });
     onContinue();
@@ -326,8 +326,16 @@ function Row({
     noRepsWarning || (warningEnabled && (reps ? !reps : !cachedInfo?.reps));
   return (
     <div className="flex mb-4">
-      <span className="mx-3 w-16 font-bold">{weight}</span>
-      <span className="w-16 font-bold">{target}</span>
+      <InputNumber
+        disabled={disabled}
+        inputMode="decimal"
+        value={weight}
+        defaultValue={weight}
+        min={0}
+        onChange={(value) => setWeight(value ?? 0)}
+        prefix="kg"
+      />
+      <span className="w-16 text-center font-bold">{target}</span>
       <InputNumber
         className="mr-4"
         disabled={disabled}
@@ -354,4 +362,8 @@ function Row({
       )}
     </div>
   );
+}
+
+function calculateIntensity(weight: number, intensity: number) {
+  return parseInt((weight * intensity).toFixed(0));
 }
