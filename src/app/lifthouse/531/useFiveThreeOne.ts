@@ -12,11 +12,11 @@ export function useFiveThreeOne() {
 
     const response: FiveThreeOne = await fetch("/api/531", {
       method: "POST",
-      // Increase the weights by 4.5kg for lower body and 2kg for upper body
+      // Increase the weights by 5kg for lower body and 2kg for upper body
       body: JSON.stringify({
         bench: bench.pb + 2,
-        squat: squat.pb + 4.5,
-        deadlift: deadlift.pb + 4.5,
+        squat: squat.pb + 5,
+        deadlift: deadlift.pb + 5,
         ohp: ohp.pb + 2,
       }),
     });
