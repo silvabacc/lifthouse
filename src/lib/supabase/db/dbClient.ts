@@ -207,7 +207,7 @@ export default class DatabaseClient {
 
   async getLogs(
     exerciseIds: number[],
-    rows: number = 10,
+    rows: number = 20,
     startFrom?: number,
     endOn?: number
   ) {
