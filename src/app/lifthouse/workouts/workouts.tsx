@@ -6,18 +6,19 @@ import WorkoutCard from "./components/workoutCard";
 import { useWorkout } from "./hooks/useWorkout";
 import { Workout } from "@/lib/supabase/db/types";
 import WorkoutSkeleton from "./workouts.skeleton";
+import WorkoutTutorial from "./workouts.tutorial";
 
 export default function Workouts() {
   const { fetchWorkouts, deleteWorkoutPlan } = useWorkout();
   const [workouts, setWorkouts] = useState<Workout[]>([]);
-  const [isLoading, setLoading] = useState<boolean>();
+  const [isLoading, setIsLoading] = useState<boolean>();
 
   useEffect(() => {
     const fetch = async () => {
-      setLoading(true);
+      setIsLoading(true);
       const workouts = await fetchWorkouts();
       setWorkouts(workouts);
-      setLoading(false);
+      setIsLoading(false);
     };
 
     fetch();
@@ -41,18 +42,19 @@ export default function Workouts() {
   };
 
   return (
-    <div className="grid lg:grid-cols-3 gap-4">
-      {workouts?.map((workout) => {
-        return (
+    <div>
+      <WorkoutTutorial />
+      <div className="grid lg:grid-cols-3 gap-4">
+        {workouts?.map((workout) => (
           <WorkoutCard
             key={workout.workoutId}
             {...workout}
             onDelete={onDelete}
             onWorkoutUpdate={onWorkoutUpdate}
           />
-        );
-      })}
-      <AddWorkoutCard setWorkouts={setWorkouts} />
+        ))}
+        <AddWorkoutCard setWorkouts={setWorkouts} />
+      </div>
     </div>
   );
 }

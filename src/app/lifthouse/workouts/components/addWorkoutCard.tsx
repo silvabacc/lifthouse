@@ -16,17 +16,13 @@ type AddWorkoutCardProps = {
 
 export default function AddWorkoutCard({ setWorkouts }: AddWorkoutCardProps) {
   const [drawOpen, setDrawOpen] = useState(false);
-  const [disable, setDisabled] = useState(false);
   const { createWorkoutPlan } = useWorkout();
-  const router = useRouter();
 
   const onFinish = async (info: FieldType) => {
-    setDisabled(true);
     const response = await createWorkoutPlan(info.name, info.description);
 
     setWorkouts((prev) => [...prev, response]);
     setDrawOpen(false);
-    setDisabled(false);
   };
 
   return (

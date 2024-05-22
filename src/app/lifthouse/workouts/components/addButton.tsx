@@ -6,7 +6,7 @@ type AddExerciseButtonProps = {
 
 export default function AddButton({ title, onClick }: AddExerciseButtonProps) {
   return (
-    <div className="border-dotted border-2 border-sky-400 bg-white flex items-center cursor-pointer">
+    <div className="add-button border-dotted border-2 border-sky-400 bg-white flex items-center cursor-pointer">
       <Button
         onClick={onClick}
         type="link"

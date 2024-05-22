@@ -7,10 +7,13 @@ import { createContext, useContext, useEffect, useState } from "react";
 import LifthouseLogo from "@/app/assets/lifthouse_logo_black.png";
 import Image from "next/image";
 import { LoadingOutlined } from "@ant-design/icons";
+import { useLocalStorage } from "./hooks/useLocalStorage";
 
 type AppContext = {
   user: User | undefined;
   setUser: (user: User) => void;
+  enableTutorial: boolean;
+  setEnableTutorial: (flag: boolean) => void;
 };
 
 const AppContext = createContext<AppContext>({} as AppContext);
@@ -19,6 +22,15 @@ const useAppContext = () => useContext(AppContext);
 
 const AppContextProvider = ({ children }: any) => {
   const [user, setUser] = useState<User>();
+  const { getTutorialFlag, setTutorialFlag } = useLocalStorage();
+  const [enableTutorial, setEnableTutorial] = useState<boolean>(
+    getTutorialFlag() || true
+  );
+
+  const setEnableTutorialFlag = (flag: boolean) => {
+    setEnableTutorial(flag);
+    setTutorialFlag(flag);
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -49,7 +61,14 @@ const AppContextProvider = ({ children }: any) => {
   }
 
   return (
-    <AppContext.Provider value={{ user, setUser }}>
+    <AppContext.Provider
+      value={{
+        user,
+        setUser,
+        enableTutorial,
+        setEnableTutorial: setEnableTutorialFlag,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );

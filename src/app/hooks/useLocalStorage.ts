@@ -1,6 +1,6 @@
 "use client";
 
-import { LogEntry, LogInfo } from "@/lib/supabase/db/types";
+import { LogInfo } from "@/lib/supabase/db/types";
 import { View } from "../lifthouse/types";
 
 interface CacheLogInfo {
@@ -13,7 +13,35 @@ interface CachedFiveThreeOneInfo {
   completed: number[];
 }
 
+const STORAGE_KEYS = {
+  VIEW: "view",
+  FIVE_THREE_ONE: "531",
+  TUTORIAL: "tutorial",
+};
+
+enum TutorialStorage {
+  workoutPage = "workoutPage",
+}
+
 export function useLocalStorage() {
+  const getTutorialFlag = (value: TutorialStorage) => {
+    const storage = window.localStorage.getItem(STORAGE_KEYS.TUTORIAL);
+
+    if (!storage) {
+      return value;
+    }
+
+    return (JSON.parse(storage) as TutorialStorage)[value] || false;
+  };
+
+  const setTutorialFlag = (flag: boolean) => {
+    if (flag) {
+      window.localStorage.setItem(STORAGE_KEYS.TUTORIAL, "enabled");
+    } else {
+      window.localStorage.removeItem(STORAGE_KEYS.TUTORIAL);
+    }
+  };
+
   const cacheLogInfo = (
     exerciseId: number,
     { info, notes }: { info?: LogInfo; notes?: string }
@@ -87,11 +115,11 @@ export function useLocalStorage() {
   };
 
   const cacheView = (view: View) => {
-    window.localStorage.setItem("view", view);
+    window.localStorage.setItem(STORAGE_KEYS.VIEW, view);
   };
 
   const getCachedView = () => {
-    return window.localStorage.getItem("view") as View | undefined;
+    return window.localStorage.getItem(STORAGE_KEYS.VIEW) as View | undefined;
   };
 
   const clearAllLocalStorage = () => {
@@ -105,11 +133,14 @@ export function useLocalStorage() {
     week: number;
     completed: number[];
   }) => {
-    window.localStorage.setItem("531", JSON.stringify({ week, completed }));
+    window.localStorage.setItem(
+      STORAGE_KEYS.FIVE_THREE_ONE,
+      JSON.stringify({ week, completed })
+    );
   };
 
   const getCachedFiveThreeOneInfo = (): CachedFiveThreeOneInfo | undefined => {
-    const existing = window.localStorage.getItem("531");
+    const existing = window.localStorage.getItem(STORAGE_KEYS.FIVE_THREE_ONE);
     if (!existing) {
       return;
     }
@@ -132,5 +163,7 @@ export function useLocalStorage() {
     getCachedFiveThreeOneInfo,
     cacheFiveThreeOneInfo,
     clearFiveThreeOne,
+    getTutorialFlag,
+    setTutorialFlag,
   };
 }

@@ -1,9 +1,12 @@
 "use client";
 
 import { Button, Dropdown, Layout, MenuProps } from "antd";
-import { SettingOutlined } from "@ant-design/icons";
+import {
+  SettingOutlined,
+  UnlockOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons";
 import { useAppContext } from "@/app/context";
-import { UnlockOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
