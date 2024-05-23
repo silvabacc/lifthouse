@@ -1,12 +1,4 @@
-import {
-  Button,
-  Collapse,
-  CollapseProps,
-  Modal,
-  Space,
-  Table,
-  notification,
-} from "antd";
+import { Button, Collapse, CollapseProps, Modal, notification } from "antd";
 import CompleteFiveThreeOneModal from "./components/complete531";
 import { useEffect, useState } from "react";
 import { useFiveThreeOneContext } from "./context";
@@ -74,8 +66,6 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
   const { fiveThreeOneInfo, completed } = useFiveThreeOneContext();
   const [exerciseSelected, setExerciseSelected] = useState<PersonalBest>();
   const [latestLogs, setLatestLogs] = useState<LogEntry[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [logs, setLogs] = useState<LogEntry[]>([]);
   const { fetch } = useFetch();
 
   const { bench, ohp, squat, deadlift } = fiveThreeOneInfo;
@@ -92,30 +82,13 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
       setLatestLogs(response);
     };
 
-    const fetchLogs = async () => {
-      setLoading(true);
-      const response: LogEntry[] = await fetch("/api/logs", {
-        method: "POST",
-        body: JSON.stringify({
-          exerciseIds: exercises.map((e) => e?.exercise?.exerciseId),
-        }),
-      });
-      setLogs(response);
-      setLoading(false);
-    };
-
     fetchLatestLog();
-    fetchLogs();
   }, []);
 
   const handleOpen = (exercise: PersonalBest) => {
     setExerciseSelected(exercise);
     setOpen(true);
   };
-
-  const exerciseLogs = logs.filter(
-    (l) => l.exerciseId === exerciseSelected?.exercise.exerciseId
-  );
 
   return (
     <div>
@@ -148,9 +121,7 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
           selectedExercise={exerciseSelected}
           sets={sets}
           reps={reps}
-          logs={exerciseLogs}
           intensity={intensity}
-          setLogs={setLogs}
           latestLog={latestLogs.find(
             (l) => l.exerciseId === exerciseSelected.exercise.exerciseId
           )}

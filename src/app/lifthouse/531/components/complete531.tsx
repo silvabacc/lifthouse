@@ -14,13 +14,13 @@ import {
   Tooltip,
   notification,
 } from "antd";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFiveThreeOneContext } from "../context";
 import Warmup from "./warmup";
 import { useFetch } from "@/app/hooks/useFetch";
-import Progress531 from "./progress";
 import { useFiveThreeOne } from "../useFiveThreeOne";
 import { NotificationDescription, NotificationMessage } from "./notification";
+import { LogVisual } from "../../components/logVisuals/logVisual";
 
 const { TextArea } = Input;
 
@@ -31,8 +31,6 @@ type Props = {
   sets: number;
   reps: number[];
   intensity: number[];
-  logs: LogEntry[];
-  setLogs: Dispatch<SetStateAction<LogEntry[]>>;
   latestLog?: LogEntry;
 };
 export default function CompleteFiveThreeOneModal({
@@ -42,9 +40,7 @@ export default function CompleteFiveThreeOneModal({
   sets,
   reps,
   intensity,
-  setLogs,
   latestLog,
-  logs,
 }: Props) {
   const {
     getCachedLogInfo,
@@ -60,7 +56,6 @@ export default function CompleteFiveThreeOneModal({
   const [saving, setSaving] = useState(false);
   const { setWeek, setCompleted, fiveThreeOneInfo } = useFiveThreeOneContext();
   const [notes, setNotes] = useState<string>();
-  const { fetch } = useFetch();
   const [api, contextHolder] = notification.useNotification();
   const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;
 
@@ -129,12 +124,10 @@ export default function CompleteFiveThreeOneModal({
 
     setSaving(true);
 
-    const response = await fetch("/api/logs/create", {
+    await fetch("/api/logs/create", {
       method: "POST",
       body: JSON.stringify([logs]),
     });
-
-    setLogs((logs) => [...logs, ...response]);
 
     if (cachedFiveThreeOneInfo?.completed.length === 3) {
       cacheFiveThreeOneInfo({
@@ -241,7 +234,6 @@ export default function CompleteFiveThreeOneModal({
         )}
       </div>
       <Collapse
-        className="mt-2"
         items={[
           {
             label: "Warmup",
@@ -249,11 +241,9 @@ export default function CompleteFiveThreeOneModal({
           },
         ]}
       />
-      <Progress531
-        exerciseId={selectedExercise.exercise.exerciseId}
-        setLogs={setLogs}
-        logs={logs}
-      />
+      <div className="mt-4">
+        <LogVisual exercise={selectedExercise.exercise} />
+      </div>
       <div className="fixed bottom-0 pb-2 bg-white w-full">
         <Divider className="m-0" />
         <div className="flex justify-end pr-12">

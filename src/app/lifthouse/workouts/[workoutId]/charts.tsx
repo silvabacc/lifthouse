@@ -9,7 +9,7 @@ import LineChart from "../../components/logVisuals/line";
 import Table from "../../components/logVisuals/table";
 import { useWorkoutIdContext } from "./context";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
-import { View } from "../../types";
+import { View } from "../../components/logVisuals/types";
 import DeleteExerciseButton from "./components/deleteExerciseButton";
 import { getButtonType } from "../../utils";
 

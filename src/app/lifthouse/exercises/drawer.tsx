@@ -4,7 +4,7 @@ import { Button, DatePicker, Drawer, Modal } from "antd";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
-import { View } from "../types";
+import { View } from "../components/logVisuals/types";
 import {
   BarChartOutlined,
   LineChartOutlined,
