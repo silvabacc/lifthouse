@@ -7,6 +7,7 @@ import { useFetch } from "@/app/hooks/useFetch";
 import { Exercise, LogEntry } from "@/lib/supabase/db/types";
 import dynamic from "next/dynamic";
 import ChartsSkeleton from "./charts.skeleton";
+import { RecordEntry } from "./recordEntry";
 
 const DEFAULT_LIMIT = 60;
 
@@ -18,8 +19,14 @@ const Table = dynamic(() => import("./table"));
 
 type LogVisualProps = {
   exercise: Exercise;
+  showExerciseName?: boolean;
+  allowNewEntry?: boolean;
 };
-export function LogVisual({ exercise }: LogVisualProps) {
+export function LogVisual({
+  exercise,
+  showExerciseName,
+  allowNewEntry,
+}: LogVisualProps) {
   const [loading, setLoading] = useState(false);
   const { getCachedView, cacheView } = useLocalStorage();
   const { fetchLogs } = useFetch();
@@ -63,32 +70,42 @@ export function LogVisual({ exercise }: LogVisualProps) {
 
   return (
     <>
-      <Space>
-        {Object.values(View).map((v, idx) => (
-          <div key={`${v}-${idx}`}>
-            <Button
-              key={v}
-              className="p-0"
-              type={getButtonType(view, v)}
-              onClick={() => onClickView(v)}
-            >
-              {v.charAt(0).toUpperCase() + v.slice(1)}
-            </Button>
-            <Divider type="vertical" />
+      <div className="flex justify-between pb-4">
+        {showExerciseName && <h1 className="m-0 p-0">{exercise.name}</h1>}
+        {allowNewEntry && (
+          <div className="flex justify-end">
+            <RecordEntry exercise={exercise} setLogs={setLogs} />
           </div>
-        ))}
-      </Space>
-      <RangePicker
-        value={[firstDate, secondDate]}
-        onChange={(dates) => {
-          if (dates?.[0] && dates[0] !== firstDate) {
-            setFirstDate(dates?.[0]);
-          }
-          if (dates?.[1] && dates[1] !== secondDate) {
-            setSecondDate(dates?.[1]);
-          }
-        }}
-      />
+        )}
+      </div>
+      <div className="flex flex-wrap justify-between">
+        <Space>
+          {Object.values(View).map((v, idx) => (
+            <div key={`${v}-${idx}`}>
+              <Button
+                key={v}
+                className="p-0"
+                type={getButtonType(view, v)}
+                onClick={() => onClickView(v)}
+              >
+                {v.charAt(0).toUpperCase() + v.slice(1)}
+              </Button>
+              <Divider type="vertical" />
+            </div>
+          ))}
+        </Space>
+        <RangePicker
+          value={[firstDate, secondDate]}
+          onChange={(dates) => {
+            if (dates?.[0] && dates[0] !== firstDate) {
+              setFirstDate(dates?.[0]);
+            }
+            if (dates?.[1] && dates[1] !== secondDate) {
+              setSecondDate(dates?.[1]);
+            }
+          }}
+        />
+      </div>
       <div className="pb-4">
         {view === View.stacked && <StackedChart data={logs} />}
         {view === View.line && <LineChart data={logs} />}

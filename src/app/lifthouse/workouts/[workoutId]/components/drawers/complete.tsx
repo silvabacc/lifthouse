@@ -1,6 +1,6 @@
 import { LogInfo, ExerciseConfiguration } from "@/lib/supabase/db/types";
 import { Button, InputNumber, Space, StepProps, Steps, Tooltip } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 

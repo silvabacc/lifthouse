@@ -12,7 +12,7 @@ import {
   Steps,
   Tooltip,
 } from "antd";
-import { Dispatch, SetStateAction, cache, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   CheckCircleOutlined,
   DeleteOutlined,
