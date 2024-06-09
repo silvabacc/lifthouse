@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Layout, Modal, Radio, Space } from "antd";
+import { Button, Layout, Space } from "antd";
 import { PageInfoPortal } from "../../components/pageInfo";
 import { useState } from "react";
 import AddButton from "../components/addButton";
@@ -9,19 +9,17 @@ import { useWorkout } from "../hooks/useWorkout";
 import { WorkoutTemplate } from "@/lib/supabase/db/types";
 import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 import { Record } from "./components/drawers/recordDrawer";
-import dynamic from "next/dynamic";
 import { useWorkoutIdContext } from "./context";
 import ChangeExercisesDrawer from "./components/drawers/changeExercisesDrawer";
 import TemplateDrawer from "./components/drawers/templateDrawer";
-
-const Charts = dynamic(() => import("./charts"));
+import Charts from "./charts";
 
 const { Content, Footer } = Layout;
 
 export default function WorkoutPlanPage() {
   const { workout, setWorkout } = useWorkoutIdContext();
   const [drawOpen, setDrawOpen] = useState(false);
-  const { updateWorkoutPlan, updateTemplate } = useWorkout();
+  const { updateWorkoutPlan } = useWorkout();
   const [showRecord, setShowRecord] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showTemplate, setShowTemplate] = useState(false);

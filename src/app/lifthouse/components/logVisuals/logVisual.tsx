@@ -70,7 +70,7 @@ export function LogVisual({
 
   return (
     <>
-      <div className="flex justify-between pb-4">
+      <div className="flex justify-between pb-2">
         {showExerciseName && <h1 className="m-0 p-0">{exercise.name}</h1>}
         {allowNewEntry && (
           <div className="flex justify-end">

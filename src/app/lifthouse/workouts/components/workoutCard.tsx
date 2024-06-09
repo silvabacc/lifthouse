@@ -1,15 +1,5 @@
-import {
-  Button,
-  Divider,
-  Modal,
-  Drawer,
-  Form,
-  Input,
-  Space,
-  Typography,
-} from "antd";
-import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { Button, Divider, Modal, Typography } from "antd";
+import { useState } from "react";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
@@ -108,58 +98,17 @@ export default function WorkoutCard({
   );
 }
 
-/**
- * May remove this in the future
- */
 type DescriptionProps = {
   text: string;
 };
 function Description({ text }: DescriptionProps) {
-  const [expanded, setExpanded] = useState(false);
-  const [showButton, setShowButton] = useState(false);
-  const ref = useRef<HTMLParagraphElement>(null);
-
-  // Adds the show button when the description is in overflow/line clamp
-  const handleResize = () => {
-    if (
-      ref.current &&
-      ref?.current?.offsetHeight < ref?.current?.scrollHeight
-    ) {
-      setShowButton(true);
-    } else {
-      setShowButton(false);
-    }
-  };
-
-  useEffect(() => {
-    handleResize();
-    // Add event listener on mount
-    window.addEventListener("resize", handleResize);
-    // Clean up the event listener on unmount
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  const onClickShow = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    e.stopPropagation();
-    setExpanded(!expanded);
-  };
-
   return (
-    <div
-      className={`${
-        expanded
-          ? "absolute p-4 mr-6 rounded-lg border-double border-2 border-stone-500"
-          : ""
-      } bg-white z-10`}
-    >
+    <div>
       <Paragraph
         ellipsis={{
           rows: 2,
           expandable: true,
           symbol: "more",
-          onExpand: (e) => e.stopPropagation(),
         }}
       >
         {text}
