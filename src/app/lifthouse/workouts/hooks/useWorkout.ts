@@ -40,7 +40,7 @@ export function useWorkout() {
     exercises,
     template,
   }: UpdateWorkoutPlanReturn) => {
-    if (!name && !description && !exercises && !template) {
+    if (!name && description === undefined && !exercises && !template) {
       return;
     }
 

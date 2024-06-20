@@ -16,7 +16,6 @@ export function RecordEntry({ exercise, setLogs }: RecordEntryProps) {
   const [saving, setSaving] = useState(false);
 
   const onClick = () => {
-    console.log("click");
     modal.info({
       title: "Record an entry",
       icon: <></>,
