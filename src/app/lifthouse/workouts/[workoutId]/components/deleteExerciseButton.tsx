@@ -28,6 +28,7 @@ export default function DeleteExerciseButton({ exerciseId }: Props) {
 
   return (
     <Button
+      type="link"
       className="ml-2"
       onClick={onClick}
       danger

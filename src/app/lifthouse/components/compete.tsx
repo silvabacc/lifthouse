@@ -244,7 +244,7 @@ function StepRow({
               <Button
                 type="link"
                 className="p-0 m-0 text-orange-400"
-                icon={<WarningOutlined className="" />}
+                icon={<WarningOutlined />}
               />
             </Tooltip>
           </div>

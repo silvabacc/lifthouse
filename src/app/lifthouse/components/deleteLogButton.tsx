@@ -12,6 +12,7 @@ export default function DeleteLogButton({ onDelete }: Props) {
   return (
     <Button
       className="ml-2"
+      type="link"
       onClick={onClick}
       danger
       icon={<DeleteOutlined className="text-rose-700" />}
