@@ -1,4 +1,3 @@
-import { PrimaryMuscleGroup } from "@/lib/supabase/db/types";
 import { FilterOutlined } from "@ant-design/icons";
 import { Button, Input, Tag } from "antd";
 import { useState } from "react";
@@ -26,18 +25,7 @@ export default function SearchElement({
       : selectedTags.filter((t) => t !== tag);
     setSelectedTags?.(nextSelectedTags);
   };
-  console.log("🚀 ~ filterTagOptions:", filterTagOptions);
-  console.log(
-    "🚀 ~ filterTagOptions?.length === 0 :",
-    filterTagOptions?.length === 0
-  );
 
-  console.log("🚀 ~ selectedTags.length:", selectedTags.length);
-  console.log("🚀 ~ expandedFilter:", expandedFilter);
-  console.log(
-    "🚀 ~ selectedTags.length === 0 && !expandedFilter:",
-    selectedTags.length === 0 && !expandedFilter
-  );
   return (
     <>
       <div className="flex justify-between w-full pb-2">

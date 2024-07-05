@@ -79,7 +79,7 @@ export default function SelectElement({
   return (
     <div className="relative" ref={ref}>
       <div
-        className="flex items-center cursor-pointer justify-between border-solid border-slate-200 p-2 rounded-lg"
+        className="flex items-center cursor-pointer justify-between p-2"
         onClick={onClick}
       >
         <span className="pr-2">
@@ -91,7 +91,7 @@ export default function SelectElement({
         <BottomFadeInAnimation
           animationDuration={0.1}
           animationHeight={256}
-          className="absolute z-10 bg-white border-solid border-slate-200 overflow-auto w-full shadow-2xl pb-4"
+          className="absolute z-10 bg-white border-solid border-slate-200 overflow-auto w-full shadow-2xl pb-4 rounded-lg"
         >
           <div className="bg-white sticky top-0">
             <SearchElement
