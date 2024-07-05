@@ -95,6 +95,7 @@ export function LogVisual({
           ))}
         </Space>
         <RangePicker
+          inputReadOnly
           value={[firstDate, secondDate]}
           onChange={(dates) => {
             if (dates?.[0] && dates[0] !== firstDate) {
