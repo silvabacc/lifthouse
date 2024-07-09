@@ -1,6 +1,6 @@
 "use client";
 
-import { LogEntry, LogInfo } from "@/lib/supabase/db/types";
+import { LogInfo } from "@/lib/supabase/db/types";
 import { View } from "../lifthouse/components/logVisuals/types";
 
 interface CacheLogInfo {
@@ -14,6 +14,15 @@ interface CachedFiveThreeOneInfo {
 }
 
 export function useLocalStorage() {
+  const collapsedStorage = {
+    get: () => {
+      return window.localStorage.getItem("collapsed") === "true";
+    },
+    set: (collapsed: boolean) => {
+      window.localStorage.setItem("collapsed", collapsed.toString());
+    },
+  };
+
   const cacheLogInfo = (
     exerciseId: number,
     { info, notes }: { info?: LogInfo; notes?: string }
@@ -132,5 +141,6 @@ export function useLocalStorage() {
     getCachedFiveThreeOneInfo,
     cacheFiveThreeOneInfo,
     clearFiveThreeOne,
+    collapsedStorage,
   };
 }

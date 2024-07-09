@@ -7,8 +7,11 @@ import { UnlockOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
+import getConfig from "@/config";
 
 const { Header: AntDHeader } = Layout;
+
+const { pageUrl } = getConfig();
 
 export default function Header() {
   const { user } = useAppContext();
@@ -36,7 +39,7 @@ export default function Header() {
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     switch (e.key) {
       case "1":
-        router.push("/lifthouse/update-password");
+        router.push(`/${pageUrl}/update-password`);
         break;
       case "2":
         supabase.auth.signOut();

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { createDemoAccount } from "./actions";
 import { message } from "antd";
 import { useState } from "react";
+import { redirectToHome } from "@/lib/utils";
 
 export function DemoText() {
   const router = useRouter();
@@ -24,7 +25,7 @@ export function DemoText() {
     } else {
       messageApi.destroy();
       messageApi.success("Logging you in...");
-      router.push("/lifthouse");
+      redirectToHome(router);
     }
 
     setCreating(false);

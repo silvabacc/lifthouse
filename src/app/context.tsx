@@ -33,7 +33,7 @@ const AppContextProvider = ({ children }: any) => {
     if (!user) {
       fetchUser();
     }
-  }, [setUser, user]);
+  }, []);
 
   if (!user) {
     return (

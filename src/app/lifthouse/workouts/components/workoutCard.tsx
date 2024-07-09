@@ -8,9 +8,10 @@ import WorkoutFormDrawer, {
 } from "./workoutDrawerForm";
 import { useWorkout } from "../hooks/useWorkout";
 import { Workout } from "@/lib/supabase/db/types";
+import getConfig from "@/config";
 
+const { pageUrl } = getConfig();
 const { confirm } = Modal;
-
 const { Paragraph } = Typography;
 
 type WorkoutCardProps = {
@@ -46,7 +47,7 @@ export default function WorkoutCard({
   };
 
   const onCardClick = () => {
-    router.push(`/lifthouse/workouts/${workoutId}?name=${name}`);
+    router.push(`/${pageUrl}/workouts/${workoutId}?name=${name}`);
   };
 
   const onFinish = async (info: ExerciseFormDrawerField) => {

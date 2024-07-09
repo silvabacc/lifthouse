@@ -4,61 +4,58 @@ import { Layout, Menu } from "antd";
 import Image from "next/image";
 import LifthouseLogo from "@/app/assets/lifthouse_logo_black.png";
 import { usePathname, useRouter } from "next/navigation";
+import { pageConfig } from "./constants";
+import { useEffect, useState } from "react";
+import { useLocalStorage } from "@/app/hooks/useLocalStorage";
+import { redirectToHome } from "@/lib/utils";
 
 const { Sider } = Layout;
 
 export default function SiderNav() {
+  const { collapsedStorage } = useLocalStorage();
+  const collapsedStorageValue = collapsedStorage.get();
+
   const router = useRouter();
   const pathName = usePathname();
+  const [collapsed, setCollapsed] = useState<boolean>(collapsedStorageValue);
 
-  const items = [
-    {
-      key: "1",
-      icon: <div>🏋️</div>,
-      label: "Workouts",
-      onClick: () => router.push("/lifthouse/workouts"),
-      path: "/lifthouse/workouts",
-    },
-    {
-      key: "2",
-      icon: <div>⛰️</div>,
-      label: "Exercises",
-      onClick: () => router.push("/lifthouse/exercises"),
-      path: "/lifthouse/exercises",
-    },
-    {
-      key: "3",
-      icon: <div>🦾</div>,
-      label: "531",
-      onClick: () => router.push("/lifthouse/531"),
-      path: "/lifthouse/531",
-    },
-    {
-      key: "4",
-      icon: <div>🥑</div>,
-      label: "Meals",
-      onClick: () => router.push("/lifthouse/meals"),
-      path: "/lifthouse/meals",
-    },
-    {
-      key: "5",
-      icon: <div>⚖️</div>,
-      onClick: () => router.push("/lifthouse/weight"),
-      label: "Weight",
-      path: "/lifthouse/weight",
-    },
-  ];
+  useEffect(() => {
+    setCollapsed(collapsedStorageValue);
+  }, [collapsedStorage, collapsedStorageValue]);
+
+  const items = pageConfig.map((item, index) => ({
+    key: `${index + 1}`,
+    icon: <div>{item.icon}</div>,
+    label: item.title,
+    onClick: () => router.push(item.route),
+    path: item.route,
+  }));
+
+  const onCollapse = (value: boolean) => {
+    setCollapsed(value);
+    collapsedStorage.set(value);
+  };
 
   const activeKey =
     items.find((item) => pathName.startsWith(item.path))?.key || "1";
 
   return (
-    <Sider collapsedWidth={40} breakpoint="sm" theme="light" trigger={null}>
-      <Image
-        className="hidden sm:block p-2 w-full h-20"
-        src={LifthouseLogo}
-        alt=""
-      />
+    <Sider
+      collapsed={collapsed}
+      collapsible
+      collapsedWidth={40}
+      onCollapse={onCollapse}
+      breakpoint="sm"
+      theme="light"
+    >
+      {!collapsed && (
+        <Image
+          className="hidden sm:block p-2 w-full h-20 cursor-pointer"
+          src={LifthouseLogo}
+          alt=""
+          onClick={() => redirectToHome(router)}
+        />
+      )}
       <Menu theme="light" defaultSelectedKeys={[activeKey]} items={items} />
     </Sider>
   );
