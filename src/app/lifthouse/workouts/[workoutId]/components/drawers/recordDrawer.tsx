@@ -76,7 +76,7 @@ export function Record({ show, onCancel }: Props) {
 
     setSaving(false);
     clearCacheLogInfo(workout.exercises.map((e) => e.exerciseId));
-    router.push(`/${pageUrl}/workouts`);
+    router.push(`${pageUrl}/workouts`);
     messageApi.success("Saved!");
   };
 

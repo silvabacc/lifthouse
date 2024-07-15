@@ -39,7 +39,7 @@ export default function Header() {
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     switch (e.key) {
       case "1":
-        router.push(`/${pageUrl}/update-password`);
+        router.push(`${pageUrl}/update-password`);
         break;
       case "2":
         supabase.auth.signOut();

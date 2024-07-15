@@ -12,7 +12,7 @@ import {
   Steps,
   Tooltip,
 } from "antd";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import {
   CheckCircleOutlined,
   DeleteOutlined,
@@ -94,11 +94,7 @@ export function Complete({ exercise }: Props) {
       });
     }
     const newSet = info.length + 1;
-    setInfo((prev) => [...prev, { set: newSet, reps: 0, weight: 0 }]);
-
-    cacheLogInfo(exercise.exerciseId, {
-      info: { set: newSet, reps: 0, weight: 0 },
-    });
+    setInfo((prev) => [...prev, { set: newSet, reps: -1, weight: -1 }]);
   };
 
   const onChangeNoes = (value: string, exerciseId: number) => {
@@ -158,11 +154,6 @@ function StepRow({
     (i) => i.set === step + 1
   );
   const [noRepsWarning, setNoRepsWarning] = useState(false);
-
-  useEffect(() => {
-    setWeight(info.weight);
-    setReps(info.reps);
-  }, [info]);
 
   const onNext = () => {
     const currentReps = reps ? !reps : !cachedInfo?.reps;

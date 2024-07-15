@@ -9,7 +9,7 @@ type Props = {
 };
 export default function ExerciseDrawer({ exercise, show, onClose }: Props) {
   return (
-    <Drawer width={"100%"} open={show} onClose={onClose}>
+    <Drawer width={"100%"} open={show} onClose={onClose} closable>
       {exercise && (
         <LogVisual showExerciseName allowNewEntry exercise={exercise} />
       )}

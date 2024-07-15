@@ -20,6 +20,7 @@ export function RecordEntry({ exercise, setLogs }: RecordEntryProps) {
       title: "Record an entry",
       icon: <></>,
       okText: `${saving ? "Saving" : "Finish"}`,
+      closable: true,
       onOk: onFinish,
       content: exercise ? <Complete exercise={exercise} /> : <></>,
     });

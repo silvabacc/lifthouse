@@ -47,7 +47,7 @@ export default function WorkoutCard({
   };
 
   const onCardClick = () => {
-    router.push(`/${pageUrl}/workouts/${workoutId}?name=${name}`);
+    router.push(`${pageUrl}/workouts/${workoutId}?name=${name}`);
   };
 
   const onFinish = async (info: ExerciseFormDrawerField) => {
