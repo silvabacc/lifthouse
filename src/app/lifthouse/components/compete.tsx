@@ -1,8 +1,4 @@
-import {
-  LogInfo,
-  ExerciseConfiguration,
-  Exercise,
-} from "@/lib/supabase/db/types";
+import { LogInfo, Exercise } from "@/lib/supabase/db/types";
 import {
   Button,
   Input,
@@ -12,7 +8,7 @@ import {
   Steps,
   Tooltip,
 } from "antd";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   CheckCircleOutlined,
   DeleteOutlined,
@@ -22,6 +18,8 @@ import {
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 
 const { TextArea } = Input;
+
+const defaultLogInfo = [{ set: 1, reps: 0, weight: 0 }];
 
 type Props = {
   exercise: Exercise;
@@ -33,9 +31,7 @@ export function Complete({ exercise }: Props) {
   const latestLogInfo = cachedLogInfo?.info;
   const highestSet = getHighestSet(latestLogInfo || []);
   const [currentSet, setCurrentSet] = useState((highestSet || 1) - 1);
-  const [info, setInfo] = useState<LogInfo[]>(
-    latestLogInfo || [{ set: 1, reps: 0, weight: 0 }]
-  );
+  const [info, setInfo] = useState<LogInfo[]>(latestLogInfo || defaultLogInfo);
 
   const onChange = (current: number) => {
     if (current < currentSet) {
@@ -142,17 +138,16 @@ function StepRow({
   disabled,
   warningEnabled,
   placeHolder,
-  info,
   setInfo,
   onContinue,
   onDelete,
 }: StepRowProps) {
-  const [weight, setWeight] = useState<number>();
-  const [reps, setReps] = useState<number>();
   const { getCachedLogInfo, cacheLogInfo } = useLocalStorage();
   const cachedInfo = getCachedLogInfo(exerciseId)?.info.find(
     (i) => i.set === step + 1
   );
+  const [reps, setReps] = useState<number | undefined>(cachedInfo?.reps);
+  const [weight, setWeight] = useState<number | undefined>(cachedInfo?.weight);
   const [noRepsWarning, setNoRepsWarning] = useState(false);
 
   const onNext = () => {

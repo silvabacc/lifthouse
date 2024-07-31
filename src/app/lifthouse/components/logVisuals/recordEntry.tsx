@@ -1,7 +1,7 @@
 import { useFetch } from "@/app/hooks/useFetch";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { Exercise, LogEntry } from "@/lib/supabase/db/types";
-import { Button, Modal } from "antd";
+import { Button, Modal, notification } from "antd";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Complete } from "../compete";
 
@@ -12,18 +12,13 @@ type RecordEntryProps = {
 export function RecordEntry({ exercise, setLogs }: RecordEntryProps) {
   const { fetch } = useFetch();
   const { clearCacheLogInfo, getCachedLogInfo } = useLocalStorage();
-  const [modal, contextHolder] = Modal.useModal();
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [notificationApi, notificationContextHolder] =
+    notification.useNotification();
   const [saving, setSaving] = useState(false);
 
   const onClick = () => {
-    modal.info({
-      title: "Record an entry",
-      icon: <></>,
-      okText: `${saving ? "Saving" : "Finish"}`,
-      closable: true,
-      onOk: onFinish,
-      content: exercise ? <Complete exercise={exercise} /> : <></>,
-    });
+    setModalOpen(true);
   };
 
   const onFinish = async () => {
@@ -42,20 +37,42 @@ export function RecordEntry({ exercise, setLogs }: RecordEntryProps) {
 
     setSaving(true);
 
-    const response: LogEntry[] = await fetch("/api/logs/create", {
+    const response = await fetch("/api/logs/create", {
       method: "POST",
       body: JSON.stringify(exerciseLog),
     });
 
+    if (response.error) {
+      notificationApi.error({
+        message: "Error saving log",
+        description: response.error,
+      });
+      setSaving(false);
+      return;
+    }
+
     setLogs((prev) => [...prev, ...response]);
 
     setSaving(false);
+    setModalOpen(false);
     clearCacheLogInfo([exercise.exerciseId]);
   };
 
   return (
     <>
-      {contextHolder}
+      {isModalOpen && (
+        <Modal
+          title="Record an entry"
+          open={isModalOpen}
+          onOk={onFinish}
+          okText={saving ? "Saving..." : "Finish"}
+          onCancel={() => setModalOpen(false)}
+        >
+          <Complete exercise={exercise} />
+        </Modal>
+      )}
+
+      {notificationContextHolder}
       <Button type="dashed" danger onClick={onClick}>
         Record an entry
       </Button>
