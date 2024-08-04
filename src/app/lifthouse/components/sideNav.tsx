@@ -56,7 +56,12 @@ export default function SiderNav() {
           onClick={() => redirectToHome(router)}
         />
       )}
-      <Menu theme="light" defaultSelectedKeys={[activeKey]} items={items} />
+      <Menu
+        theme="light"
+        key={activeKey}
+        defaultSelectedKeys={[activeKey]}
+        items={items}
+      />
     </Sider>
   );
 }
