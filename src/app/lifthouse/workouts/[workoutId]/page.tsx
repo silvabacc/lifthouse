@@ -23,8 +23,12 @@ export default function WorkoutPlanPage() {
   const [showRecord, setShowRecord] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showTemplate, setShowTemplate] = useState(false);
+  const [savingExercise, setSavingExercise] = useState(false);
 
   const onAddExerciseClick = async (exerciseId: number) => {
+    if (savingExercise) return;
+
+    setSavingExercise(true);
     const defaultExerciseSetup = { exerciseId, sets: 3, reps: "8-12" };
     await updateWorkoutPlan({
       workoutId: workout.workoutId,
@@ -39,6 +43,8 @@ export default function WorkoutPlanPage() {
         };
       }
     });
+
+    setSavingExercise(false);
   };
 
   return (

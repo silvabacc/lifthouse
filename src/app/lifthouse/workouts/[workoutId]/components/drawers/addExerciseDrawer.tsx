@@ -58,7 +58,7 @@ export default function AddExerciseDrawer({
       {filteredPrimaryMuscleGroups.map((muscle) => {
         return (
           <div key={muscle}>
-            <p className="text-xs text-gray-500 py-2">{muscle}</p>
+            <p className="text-xs text-gray-500">{muscle}</p>
             <Space direction="vertical">
               {filteredExercises
                 .filter((e) => e.primaryMuscleGroup === muscle)
