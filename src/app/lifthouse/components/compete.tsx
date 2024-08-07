@@ -19,6 +19,8 @@ import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 
 const { TextArea } = Input;
 
+const defaultLogInfo = [{ set: 1, reps: 0, weight: 0 }];
+
 type Props = {
   exercise: Exercise;
 };
@@ -29,9 +31,7 @@ export function Complete({ exercise }: Props) {
   const latestLogInfo = cachedLogInfo?.info;
   const highestSet = getHighestSet(latestLogInfo || []);
   const [currentSet, setCurrentSet] = useState((highestSet || 1) - 1);
-  const [info, setInfo] = useState<LogInfo[]>(
-    latestLogInfo || [{ set: 1, reps: 0, weight: 0 }]
-  );
+  const [info, setInfo] = useState<LogInfo[]>(latestLogInfo || defaultLogInfo);
 
   const onChange = (current: number) => {
     if (current < currentSet) {
@@ -90,11 +90,7 @@ export function Complete({ exercise }: Props) {
       });
     }
     const newSet = info.length + 1;
-    setInfo((prev) => [...prev, { set: newSet, reps: 0, weight: 0 }]);
-
-    cacheLogInfo(exercise.exerciseId, {
-      info: { set: newSet, reps: 0, weight: 0 },
-    });
+    setInfo((prev) => [...prev, { set: newSet, reps: -1, weight: -1 }]);
   };
 
   const onChangeNoes = (value: string, exerciseId: number) => {
@@ -142,23 +138,17 @@ function StepRow({
   disabled,
   warningEnabled,
   placeHolder,
-  info,
   setInfo,
   onContinue,
   onDelete,
 }: StepRowProps) {
-  const [weight, setWeight] = useState<number>();
-  const [reps, setReps] = useState<number>();
   const { getCachedLogInfo, cacheLogInfo } = useLocalStorage();
   const cachedInfo = getCachedLogInfo(exerciseId)?.info.find(
     (i) => i.set === step + 1
   );
+  const [reps, setReps] = useState<number | undefined>(cachedInfo?.reps);
+  const [weight, setWeight] = useState<number | undefined>(cachedInfo?.weight);
   const [noRepsWarning, setNoRepsWarning] = useState(false);
-
-  useEffect(() => {
-    setWeight(info.weight);
-    setReps(info.reps);
-  }, [info]);
 
   const onNext = () => {
     const currentReps = reps ? !reps : !cachedInfo?.reps;
@@ -240,7 +230,7 @@ function StepRow({
               <Button
                 type="link"
                 className="p-0 m-0 text-orange-400"
-                icon={<WarningOutlined className="" />}
+                icon={<WarningOutlined />}
               />
             </Tooltip>
           </div>

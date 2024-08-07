@@ -1,5 +1,6 @@
 import { Skeleton } from "antd";
 
+//Remve this!!!!
 export default function ChartsSkeleton() {
   return (
     <div className="p-4 h-full">

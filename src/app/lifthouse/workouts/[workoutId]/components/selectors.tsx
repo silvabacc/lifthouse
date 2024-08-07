@@ -1,6 +1,7 @@
 import {
   Exercise,
   ExerciseConfiguration,
+  PrimaryMuscleGroup,
   WorkoutTemplate,
 } from "@/lib/supabase/db/types";
 import {
@@ -63,11 +64,18 @@ export function SelectExercise({
       disabled: currentExercises.includes(e.exerciseId),
       message: "This exercise is already in the workout",
     },
+    filterItemKey: e.primaryMuscleGroup,
   }));
+
+  const filterTagOptions =
+    workout.template === WorkoutTemplate.custom
+      ? Object.keys(PrimaryMuscleGroup)
+      : [];
 
   return (
     <SelectElement
       value={defaultExercise.exerciseId}
+      filterTagsOptions={filterTagOptions}
       options={options}
       onChange={(value) =>
         onChange(defaultExercise.exerciseId, value as number)
@@ -86,7 +94,7 @@ export function SelectRepsScheme({
 }: SelectRepsSchemeProps) {
   const { workout } = useWorkoutIdContext();
 
-  const repSchemeOptions = getRepScheme(workout.template).map((r, index) => ({
+  const repSchemeOptions = getRepScheme(workout.template).map((r) => ({
     label: `${r.sets} x ${r.reps}`,
     value: formatValue(r.sets, r.reps),
   }));

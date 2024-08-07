@@ -3,6 +3,7 @@
 import Thinking from "./assets/thinking.png";
 import { Button, Divider, Space } from "antd";
 import { useRouter } from "next/navigation";
+import { redirectToHome } from "@/lib/utils";
 
 export default function NotFound() {
   const router = useRouter();
@@ -26,7 +27,7 @@ export default function NotFound() {
               Sorry about that.
             </p>
             <div className="flex justify-center">
-              <Button onClick={() => router.push("/lifthouse")}>Go home</Button>
+              <Button onClick={() => redirectToHome(router)}>Go home</Button>
             </div>
           </Space>
           <Divider />

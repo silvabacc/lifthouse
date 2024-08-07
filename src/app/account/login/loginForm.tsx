@@ -8,12 +8,14 @@ import {
   PasswordField,
 } from "../components/form";
 import { Alert, Button, Divider, Form, message } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { signInWithEmail } from "./actions";
 import { useRouter } from "next/navigation";
 import { DemoText } from "@/app/components/demo/demo";
+import getConfig from "@/config";
+import { redirectToHome } from "@/lib/utils";
 
 enum Provider {
   Google = "google",
@@ -60,7 +62,7 @@ export default function LoginForm() {
       setErrorMessage(error);
       messageApi.destroy();
     } else {
-      router.push("/lifthouse");
+      redirectToHome(router);
     }
   };
 

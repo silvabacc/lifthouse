@@ -1,5 +1,5 @@
 import { Button, Drawer, Space } from "antd";
-import { Reorder, useDragControls } from "framer-motion";
+import { Reorder } from "framer-motion";
 import { useWorkoutIdContext } from "../../context";
 import { useEffect, useState } from "react";
 import { SelectExercise, SelectRepsScheme } from "../selectors";

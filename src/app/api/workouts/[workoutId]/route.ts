@@ -29,7 +29,7 @@ export async function PUT(
   try {
     const schema = Joi.object({
       name: Joi.string().optional(),
-      description: Joi.string().optional(),
+      description: Joi.string().allow("").optional(),
       exercises: Joi.array()
         .items(
           Joi.object({

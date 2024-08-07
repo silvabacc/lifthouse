@@ -1,7 +1,7 @@
 "use client";
 
 import { LogInfo } from "@/lib/supabase/db/types";
-import { View } from "../lifthouse/types";
+import { View } from "../lifthouse/components/logVisuals/types";
 
 interface CacheLogInfo {
   info: LogInfo[];
@@ -40,6 +40,15 @@ export function useLocalStorage() {
     } else {
       window.localStorage.removeItem(STORAGE_KEYS.TUTORIAL);
     }
+  };
+
+  const collapsedStorage = {
+    get: () => {
+      return window.localStorage.getItem("collapsed") === "true";
+    },
+    set: (collapsed: boolean) => {
+      window.localStorage.setItem("collapsed", collapsed.toString());
+    },
   };
 
   const cacheLogInfo = (
@@ -165,5 +174,6 @@ export function useLocalStorage() {
     clearFiveThreeOne,
     getTutorialFlag,
     setTutorialFlag,
+    collapsedStorage,
   };
 }

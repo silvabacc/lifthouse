@@ -16,9 +16,11 @@ import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { useFetch } from "@/app/hooks/useFetch";
 import { LogEntry } from "@/lib/supabase/db/types";
 import { useRouter } from "next/navigation";
+import getConfig from "@/config";
 
 const { TextArea } = Input;
 const { Text } = Typography;
+const { pageUrl } = getConfig();
 
 type Props = {
   show: boolean;
@@ -74,7 +76,7 @@ export function Record({ show, onCancel }: Props) {
 
     setSaving(false);
     clearCacheLogInfo(workout.exercises.map((e) => e.exerciseId));
-    router.push("/lifthouse/workouts");
+    router.push(`${pageUrl}/workouts`);
     messageApi.success("Saved!");
   };
 

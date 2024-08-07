@@ -12,12 +12,27 @@ export async function POST(request: Request) {
       exerciseId: Joi.number().required(),
       notes: Joi.string().allow(null, "").optional(),
       info: Joi.array()
-        .items({
-          set: Joi.number().required(),
-          reps: Joi.number().required(),
-          weight: Joi.number().required(),
-        })
-        .required(),
+        .items(
+          Joi.object({
+            set: Joi.number().required().messages({
+              "any.required": "Set number is required.",
+              "number.base": "Set must be a number.",
+            }),
+            reps: Joi.number().required().messages({
+              "any.required": "Reps are required.",
+              "number.base": "Reps must be a number.",
+            }),
+            weight: Joi.number().required().messages({
+              "any.required": "Weight is required.",
+              "number.base": "Weight must be a number.",
+            }),
+          })
+        )
+        .required()
+        .messages({
+          "array.base": "Info must be an array.",
+          "any.required": "Please record atleast one set",
+        }),
       date: Joi.date().required(),
     });
 

@@ -1,6 +1,9 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
+import getConfig from "./config";
+
+const { pageUrl } = getConfig();
 
 async function AuthMiddleware(
   request: NextRequest,
@@ -12,7 +15,7 @@ async function AuthMiddleware(
   } = await supabase.auth.getUser();
 
   if (user && request.nextUrl.pathname === "/") {
-    response = NextResponse.redirect(new URL("/lifthouse", request.url));
+    response = NextResponse.redirect(new URL(pageUrl, request.url));
   }
 
   // if user is not signed in and the current path is not / redirect the user to /
@@ -27,7 +30,9 @@ async function AuthMiddleware(
   // Checks if the user is requesting their own workout plan, and not someone else's
   if (
     user &&
-    /^\/lifthouse\/workouts\/(\d+)$/.test(request.nextUrl.pathname) &&
+    new RegExp(`^\/${pageUrl}\/workouts\/(\\d+)$`).test(
+      request.nextUrl.pathname
+    ) &&
     request.method === "GET"
   ) {
     const workoutId = request.nextUrl.pathname.split("/").pop();
@@ -42,7 +47,7 @@ async function AuthMiddleware(
 
       if (error) {
         response = NextResponse.redirect(
-          `${request.nextUrl.origin}/lifthouse/workouts`
+          `${request.nextUrl.origin}${pageUrl}/workouts`
         );
       }
     }
@@ -108,7 +113,7 @@ export async function middleware(request: NextRequest) {
     next = await AuthMiddleware(request, next, supabase);
   }
 
-  if (request.nextUrl.pathname.startsWith("/lifthouse")) {
+  if (request.nextUrl.pathname.startsWith(pageUrl)) {
     next = await AuthMiddleware(request, next, supabase);
   }
 
