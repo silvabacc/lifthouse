@@ -65,22 +65,6 @@ export const templateName = {
   [WorkoutTemplate.custom]: "Custom",
 };
 
-export const templateInfo = {
-  [WorkoutTemplate.upper_intensity]:
-    "Focuses on working out well rounded upper body, hitting all muscle groups in the upper body equally in one session. Primiarily lifting heavy weights and prioritising the compound movements",
-  [WorkoutTemplate.upper_volume]:
-    "Focuses on working out well rounded upper body, hitting all muscle grups in the upper body equally in one session. Primarily focuses on lifting lighter weights but with the mission of having a high amount of volume, so more sets and reps",
-  [WorkoutTemplate.lower_intensity]:
-    "Focuses on working out well rounded lower body, hitting all muscle groups in the upper body equally in one session. Primiarily lifting heavy weights and prioritising the compound movements",
-  [WorkoutTemplate.lower_volume]:
-    "Focuses on working out well rounded lower body, hitting all muscle grups in the upper body equally in one session. Primarily focuses on lifting lighter weights but with the mission of having a high amount of volume, so more sets and reps",
-  [WorkoutTemplate.push]: "Primarily focus on the pushing movements",
-  [WorkoutTemplate.pull]: "Primarily focus on the pulling movements",
-  [WorkoutTemplate.legs]: "Primarily focus on the leg movements",
-  [WorkoutTemplate.custom]:
-    "Create your own custom workout with your own chosen exercises and rep schemes",
-};
-
 export function acceptedExerciseTypesForExercises(template: WorkoutTemplate) {
   switch (template) {
     case WorkoutTemplate.upper_intensity:

@@ -2,8 +2,7 @@ import { Alert, Divider, Drawer, Modal, Radio, Space, Tooltip } from "antd";
 import { useWorkout } from "../../../hooks/useWorkout";
 import { useWorkoutIdContext } from "../../context";
 import { WorkoutTemplate } from "@/lib/supabase/db/types";
-import { templateInfo, templateName } from "../../utils";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { templateName } from "../../utils";
 import TemplateInfo from "../templateInfo";
 
 type TemplateDrawerProps = {
@@ -34,7 +33,6 @@ export default function TemplateDrawer({
   return (
     <Drawer title={"Workout Templates"} open={show} onClose={onCancel}>
       <Space direction="vertical">
-        {/* <Alert className="m-0 pb-2 text-gray-500"> */}
         <Alert
           message="You can apply workout templates by clicking on the template buttons
           below. This will overwrite all of the exercises for this current
