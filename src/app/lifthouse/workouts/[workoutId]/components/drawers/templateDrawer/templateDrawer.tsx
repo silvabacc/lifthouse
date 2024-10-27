@@ -1,17 +1,16 @@
 import { Alert, Divider, Drawer, Modal, Radio, Space, Tooltip } from "antd";
-import { useWorkout } from "../../../hooks/useWorkout";
-import { useWorkoutIdContext } from "../../context";
+import { useWorkout } from "../../../../hooks/useWorkout";
+import { useWorkoutIdContext } from "../../../context";
 import { WorkoutTemplate } from "@/lib/supabase/db/types";
-import { templateName } from "../../utils";
-import TemplateInfo from "../templateInfo";
+import { templateName } from "../../../utils";
+import TemplateInfo from "../../templateInfo";
+import CreateTemplateCollapse from "./createTemplateCollapse";
 
 type TemplateDrawerProps = {
-  template: string;
   show: boolean;
   onCancel: () => void;
 };
 export default function TemplateDrawer({
-  template,
   show,
   onCancel,
 }: TemplateDrawerProps) {
@@ -56,6 +55,7 @@ export default function TemplateDrawer({
             })}
           </Space>
         </Radio.Group>
+        <CreateTemplateCollapse />
       </Space>
       <Divider />
       <TemplateInfo />

@@ -11,7 +11,7 @@ import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 import { Record } from "./components/drawers/recordDrawer";
 import { useWorkoutIdContext } from "./context";
 import ChangeExercisesDrawer from "./components/drawers/changeExercisesDrawer";
-import TemplateDrawer from "./components/drawers/templateDrawer";
+import TemplateDrawer from "./components/drawers/templateDrawer/templateDrawer";
 import Charts from "./charts";
 
 const { Content, Footer } = Layout;
@@ -67,16 +67,12 @@ export default function WorkoutPlanPage() {
             drawOpen={drawOpen}
             setDrawOpen={setDrawOpen}
             onClickMuscle={onAddExerciseClick}
-            filterOutExercisesIds={
-              workout.exercises.map((e) => e.exerciseId) || []
-            }
           />
           <ChangeExercisesDrawer
             show={showEdit}
             onCancel={() => setShowEdit(false)}
           />
           <TemplateDrawer
-            template={workout.template}
             show={showTemplate}
             onCancel={() => setShowTemplate(false)}
           />

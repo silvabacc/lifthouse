@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { SelectExercise, SelectRepsScheme } from "../selectors";
 import { MenuOutlined, SaveOutlined } from "@ant-design/icons";
 import { useWorkout } from "../../../hooks/useWorkout";
+import ReorderComponent from "./common/ReorderComponent";
+import ReorderItem from "./common/ReorderItem";
 
 type Props = {
   show: boolean;
@@ -84,43 +86,31 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
       title="Change exercises"
       extra={<ExtraIcon saving={saving} onClick={onClose} />}
     >
-      <Reorder.Group
-        className="p-0"
-        axis="y"
+      <ReorderComponent
         values={updatedWorkoutExercises}
         onReorder={setUpdatedWorkoutExercises}
       >
-        <Space size="large" className="w-full" direction="vertical">
+        <Space className="w-full" direction="vertical">
           {updatedWorkoutExercises.map((item, idx) => (
-            //Do not put this in a child component, as ReOrder.Item is buggy when the state is updated
-            <Reorder.Item
-              className="p-2 shadow rounded flex justify-between items-center w-full bg-white"
-              key={item?.exerciseId}
-              value={item}
-              dragListener={draggable}
-              onDragEnd={() => setDraggable(false)}
+            <ReorderItem
+              key={item?.exerciseId.toString()}
+              item={item}
+              draggable={draggable}
+              onDragEnd={(value) => setDraggable(value)}
             >
-              <Space direction="vertical" className="w-full">
-                <SelectExercise
-                  items={updatedWorkoutExercises}
-                  defaultExercise={item}
-                  onChange={onChangeExercise}
-                />
-                <SelectRepsScheme
-                  defaultExercise={item}
-                  onChange={onChangeReps}
-                />
-              </Space>
-              <MenuOutlined
-                onMouseEnter={() => setDraggable(true)}
-                onMouseLeave={() => setDraggable(false)}
-                onTouchStart={() => setDraggable(true)}
-                className="m-4"
+              <SelectExercise
+                items={updatedWorkoutExercises}
+                defaultExercise={item}
+                onChange={onChangeExercise}
               />
-            </Reorder.Item>
+              <SelectRepsScheme
+                defaultExercise={item}
+                onChange={onChangeReps}
+              />
+            </ReorderItem>
           ))}
         </Space>
-      </Reorder.Group>
+      </ReorderComponent>
     </Drawer>
   );
 }

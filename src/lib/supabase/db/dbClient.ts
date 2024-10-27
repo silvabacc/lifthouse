@@ -56,6 +56,44 @@ export default class DatabaseClient {
     }));
   }
 
+  async createTemplateSetup(): Promise<TemplateSetup> {
+    const userId = await this.getUserId();
+
+    const { data, error } = await this.supabase
+      .from("template_setups")
+      .insert([{ user_id: userId }])
+      .select();
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      setupId: data[0].id,
+      template: data[0].template,
+      exercises: data[0].exercises,
+    };
+  }
+
+  async getTemplates(): Promise<TemplateSetup[]> {
+    const userId = await this.getUserId();
+
+    const { data, error } = await this.supabase
+      .from("template_setups")
+      .select("*")
+      .eq("user_id", userId);
+
+    if (error) {
+      throw error;
+    }
+
+    return data.map((data) => ({
+      setupId: data.id,
+      template: data.template,
+      exercises: data.exercises,
+    }));
+  }
+
   async getWorkouts(): Promise<Workout[]> {
     const userId = await this.getUserId();
 
@@ -175,6 +213,7 @@ export default class DatabaseClient {
       setupId: data[0].id,
       template: data[0].template,
       exercises: data[0].exercises,
+      exerciseTypes: data[0].exercise_types,
     };
   }
 
