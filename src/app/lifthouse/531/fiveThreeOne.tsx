@@ -50,7 +50,7 @@ export default function FiveThreeOne() {
           </span>
         }
       />
-      <Drawer open={setupOpen} onClose={() => setSetupOpen(false)}>
+      <Drawer size="large" open={setupOpen} onClose={() => setSetupOpen(false)}>
         <Setup open={setupOpen} onClose={() => setSetupOpen(false)} />
       </Drawer>
       <div className="grid lg:grid-cols-4 gap-4">

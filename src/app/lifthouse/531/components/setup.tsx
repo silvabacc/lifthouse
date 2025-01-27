@@ -53,7 +53,7 @@ export function Setup({ open, onClose }: Props) {
   ];
 
   return (
-    <div className="grid lg:grid-cols-2 gap-4 items-start">
+    <div className="overflow-hidden grid lg:grid-cols-2 gap-4 items-start">
       <Card>
         <h1 className="m-0 mb-2">1RM (one rep max) for SBD</h1>
         <span>
