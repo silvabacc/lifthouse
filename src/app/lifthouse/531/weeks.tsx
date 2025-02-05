@@ -53,7 +53,7 @@ export default function FiveThreeOneWeeks() {
     ),
     collapsible: index + 1 !== week ? "disabled" : undefined,
   }));
-  return <Collapse activeKey={week} className="mt-4" items={items} />;
+  return <Collapse activeKey={week} className="mt-4 lg:w-fit" items={items} />;
 }
 
 type ExerciseRowProps = {
