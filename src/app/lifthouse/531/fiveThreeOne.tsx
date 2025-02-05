@@ -100,8 +100,8 @@ type Props = {
 };
 function CardContent({ title, value, isLoading }: Props) {
   return (
-    <div className="flex items-center justify-between">
-      <h2>{title}</h2>
+    <div className="flex justify-between">
+      <h2 className="p-0 m-0">{title}</h2>
       {isLoading ? (
         <Skeleton.Button active />
       ) : (
