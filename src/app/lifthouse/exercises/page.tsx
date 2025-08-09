@@ -38,9 +38,10 @@ export default function Exercises() {
 
   return (
     <PageAnimation>
-      <div className="sticky top-0 w-full bg-white p-2 mb-4 shadow">
+      <div className="sticky top-0 w-full py-2 mb-4 shadow">
         <SearchElement
           filterTagOptions={Object.keys(PrimaryMuscleGroup)}
+          placerHolder="Search exercises"
           selectedTags={selectedTags}
           setSelectedTags={(tags) =>
             setSelectedTags(tags as PrimaryMuscleGroup[])

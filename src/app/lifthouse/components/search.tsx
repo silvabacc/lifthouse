@@ -8,12 +8,14 @@ const { CheckableTag } = Tag;
 type SearchExerciseProps = {
   selectedTags?: string[];
   filterTagOptions?: string[];
+  placerHolder?: string;
   setSelectedTags?: (tags: string[]) => void;
   setSearchQuery: (query: string) => void;
 };
 export default function SearchElement({
   selectedTags = [],
   filterTagOptions,
+  placerHolder,
   setSearchQuery,
   setSelectedTags,
 }: SearchExerciseProps) {
@@ -31,12 +33,12 @@ export default function SearchElement({
       <div className="flex justify-between w-full pb-2">
         <Search
           className="w-full"
+          placeholder={placerHolder}
           onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
         />
         {filterTagOptions?.length !== 0 && (
           <Button
-            type={selectedTags.length === 0 ? "default" : "primary"}
-            className="mx-1"
+            type={selectedTags.length === 0 ? "link" : "primary"}
             onClick={() => setExpandedFilter((prev) => !prev)}
           >
             <FilterOutlined />

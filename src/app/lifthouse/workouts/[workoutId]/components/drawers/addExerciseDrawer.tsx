@@ -67,7 +67,7 @@ export default function AddExerciseDrawer({
                   <div
                     key={e.exerciseId}
                     onClick={() => onClickMuscle(e.exerciseId)}
-                    className="font-medium cursor-pointer hover:text-gray-500"
+                    className="font-medium py-4 cursor-pointer hover:text-gray-500"
                   >
                     {e.name}
                   </div>
