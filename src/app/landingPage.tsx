@@ -50,6 +50,7 @@ export default function LandingPage({ quote, author }: Props) {
         }`}
         style={{
           backgroundImage,
+          backgroundSize: "contain",
         }}
       >
         <div className={`${!isSmallScreen ? "w-1/2" : ""}`}>

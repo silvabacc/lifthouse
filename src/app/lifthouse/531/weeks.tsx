@@ -53,7 +53,7 @@ export default function FiveThreeOneWeeks() {
     ),
     collapsible: index + 1 !== week ? "disabled" : undefined,
   }));
-  return <Collapse activeKey={week} className="mt-4 lg:w-fit" items={items} />;
+  return <Collapse activeKey={week} className="mt-4 w-full" items={items} />;
 }
 
 type ExerciseRowProps = {
@@ -91,7 +91,7 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
   };
 
   return (
-    <div>
+    <div className="w-full">
       {[bench, ohp, squat, deadlift].map((pb) => {
         const isCompleted = completed.includes(pb?.exercise?.exerciseId);
         return (
