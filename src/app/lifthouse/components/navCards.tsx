@@ -17,12 +17,14 @@ export default function NavigationCard({ config }: NavigationCardProps) {
       <Card
         className="cursor-pointer hover:bg-sky-100"
         cover={
-          <Image
-            className="object-cover"
-            src={config.cover}
-            alt={config.title}
-            height={200}
-          />
+          <div className="h-48 w-full relative">
+            <Image
+              src={config.cover}
+              alt={config.title}
+              fill
+              className="object-cover"
+            />
+          </div>
         }
       >
         <Meta

@@ -1,6 +1,6 @@
 import WeightCalendar from "./components/weightCalendar";
 import WeightAlert from "./components/weightAlert";
-import { PageInfoPortal } from "../components/pageInfo";
+import { PageInfoPortal } from "../components/pageInfo/pageInfo";
 import dynamic from "next/dynamic";
 
 const WeightLine = dynamic(() => import("./components/weightLine"));

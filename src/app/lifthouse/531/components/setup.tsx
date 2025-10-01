@@ -1,4 +1,6 @@
-import { InputNumber, Button, Card, Space, Form } from "antd";
+"use client";
+
+import { InputNumber, Button, Card, Form } from "antd";
 import Calculator from "../calculator";
 import { useFetch } from "../../../../../hooks/useFetch";
 import { FiveThreeOne } from "@/lib/supabase/db/types";
@@ -11,11 +13,7 @@ type FieldType = {
   ohp: number;
 };
 
-type Props = {
-  open: boolean;
-  onClose: () => void;
-};
-export function Setup({ open, onClose }: Props) {
+export function Setup() {
   const { fiveThreeOneInfo, setFiveThreeOneInfo } = useFiveThreeOneContext();
   const { fetch } = useFetch();
 
@@ -25,7 +23,6 @@ export function Setup({ open, onClose }: Props) {
       body: JSON.stringify(values),
     });
     setFiveThreeOneInfo(response);
-    onClose();
   };
 
   const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;

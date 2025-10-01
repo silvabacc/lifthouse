@@ -1,6 +1,6 @@
 import { Layout } from "antd";
 import Header from "./components/header";
-import PageInfo from "./components/pageInfo";
+import PageInfo from "./components/pageInfo/pageInfo";
 import SideNav from "./components/sideNav";
 import { LayoutAnimation } from "../aniamtions/layoutAnimation";
 

@@ -1,7 +1,6 @@
 "use client";
 
 import { Button, Layout, Space } from "antd";
-import { PageInfoPortal } from "../../components/pageInfo";
 import { useState } from "react";
 import AddButton from "../components/addButton";
 import AddExerciseDrawer from "./components/drawers/addExerciseDrawer";
@@ -13,6 +12,7 @@ import { useWorkoutIdContext } from "./context";
 import ChangeExercisesDrawer from "./components/drawers/changeExercisesDrawer";
 import TemplateDrawer from "./components/drawers/templateDrawer";
 import Charts from "./charts";
+import PageInfoPortal from "../../components/pageInfo/portal";
 
 const { Content, Footer } = Layout;
 

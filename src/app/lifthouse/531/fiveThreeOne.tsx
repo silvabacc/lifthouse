@@ -2,7 +2,7 @@
 
 import { Alert, Button, Card, Drawer, Skeleton } from "antd";
 import { useState } from "react";
-import { PageInfoPortal } from "../components/pageInfo";
+import { PageInfoPortal } from "../components/pageInfo/pageInfo";
 import { Setup } from "./components/setup";
 import Weeks from "./weeks";
 import { useFiveThreeOneContext } from "./context";

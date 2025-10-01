@@ -1,10 +1,8 @@
 "use client";
 
-import { Breadcrumb, Button } from "antd";
+import { Breadcrumb } from "antd";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 
 export default function PageInfo() {
   const pathName = usePathname();
@@ -37,46 +35,10 @@ export default function PageInfo() {
   );
 }
 
-type Props = {
-  children?: JSX.Element;
-  extra?: JSX.Element;
-  title?: string;
-};
-export function PageInfoPortal({ children, extra, title }: Props) {
-  const [mounted, setMounted] = useState(false);
-  const [showInfo, setShowInfo] = useState(false);
-
-  useEffect(() => setMounted(true), []);
-
-  const element = document.getElementById("page-info");
-
-  return mounted && element
-    ? createPortal(
-        <div className="pt-1">
-          <h1 className="text-2xl font-bold">{title}</h1>
-          <div className={`${showInfo ? "block" : "hidden"} sm:block`}>
-            {children}
-          </div>
-          <div className="w-full overflow-x-auto">{extra}</div>
-          {children && (
-            <Button
-              onClick={() => setShowInfo(!showInfo)}
-              className={"block sm:hidden p-0 mt-2"}
-              type="link"
-            >
-              {showInfo ? "Show less" : "Show More"}
-            </Button>
-          )}
-        </div>,
-        element
-      )
-    : null;
-}
-
 function generateBreadcrumbs(pathname: string, name?: string) {
   const segments = pathname
     .split("/")
-    .filter((segment) => segment.trim() !== ""); // Remove empty segments
+    .filter((segment) => segment.trim() !== "");
 
   let breadcrumbs = [];
   let currentPath = "";

@@ -13,11 +13,12 @@ interface CachedFiveThreeOneInfo {
   completed: number[];
 }
 
+const isBrowser = typeof window !== "undefined";
+
 export function useLocalStorage() {
   const collapsedStorage = {
-    get: () => {
-      return window.localStorage.getItem("collapsed") === "true";
-    },
+    get: () =>
+      isBrowser ? window.localStorage.getItem("collapsed") === "true" : false,
     set: (collapsed: boolean) => {
       window.localStorage.setItem("collapsed", collapsed.toString());
     },

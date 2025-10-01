@@ -20,9 +20,9 @@ const FiveThreeOneContext = createContext<FiveThreeOneContextType>(
   {} as FiveThreeOneContextType
 );
 
-const useFiveThreeOneContext = () => useContext(FiveThreeOneContext);
+export const useFiveThreeOneContext = () => useContext(FiveThreeOneContext);
 
-const FiveThreeOneContextProvider = ({ children }: any) => {
+export default function FiveThreeOneContextProvider({ children }: any) {
   const [fiveThreeOneInfo, setFiveThreeOneInfo] = useState<FiveThreeOne>();
   const { getCachedFiveThreeOneInfo } = useLocalStorage();
   const [week, setWeek] = useState(1);
@@ -65,6 +65,4 @@ const FiveThreeOneContextProvider = ({ children }: any) => {
       {children}
     </FiveThreeOneContext.Provider>
   );
-};
-
-export { FiveThreeOneContextProvider, useFiveThreeOneContext };
+}
