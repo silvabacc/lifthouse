@@ -1,15 +1,13 @@
 import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 import Introduction from "./components/intro";
-import { getFiveThreeOneData } from "./utils";
-import { Alert, Card, Skeleton } from "antd";
+import { Card, Skeleton } from "antd";
 import DatabaseClient from "@/lib/supabase/db/dbClient";
 import Info from "./components/info";
 import Weeks from "./weeks";
+import { getFiveThreeOneData } from "./actions";
 
 export default async function FiveThreeOnePage() {
-  const database = new DatabaseClient();
-  const data = await database.getFiveThreeOne();
-
+  const data = await getFiveThreeOneData();
   const { bench, squat, deadlift, ohp } = data;
 
   const exercises = [bench, squat, deadlift, ohp];

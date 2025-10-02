@@ -1,10 +1,12 @@
 "use client";
 
-import { InputNumber, Button, Card, Form } from "antd";
+import { InputNumber, Button, Card, Form, Skeleton } from "antd";
 import Calculator from "../calculator";
 import { useFetch } from "../../../../../hooks/useFetch";
 import { FiveThreeOne } from "@/lib/supabase/db/types";
 import { useFiveThreeOneContext } from "../context";
+import { useEffect, useState } from "react";
+import { getFiveThreeOneData } from "../actions";
 
 type FieldType = {
   bench: number;
@@ -14,40 +16,53 @@ type FieldType = {
 };
 
 export function Setup() {
-  const { fiveThreeOneInfo, setFiveThreeOneInfo } = useFiveThreeOneContext();
-  const { fetch } = useFetch();
+  const [fiveThreeOneInfo, setFiveThreeOneInfo] = useState<FiveThreeOne>();
+  const [loading, setLoading] = useState(false);
+  // const onFinish = async (values: FieldType) => {
+  //   const response: FiveThreeOne = await fetch("/api/531", {
+  //     method: "POST",
+  //     body: JSON.stringify(values),
+  //   });
+  //   setFiveThreeOneInfo(response);
+  // };
 
-  const onFinish = async (values: FieldType) => {
-    const response: FiveThreeOne = await fetch("/api/531", {
-      method: "POST",
-      body: JSON.stringify(values),
-    });
-    setFiveThreeOneInfo(response);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const data = await getFiveThreeOneData();
+      setFiveThreeOneInfo(data);
+      setLoading(false);
+    };
 
-  const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;
+    fetchData();
+  }, []);
+
   const formItems = [
     {
-      pb: bench.pb,
-      exercise: bench.exercise,
+      pb: fiveThreeOneInfo?.bench.pb,
+      exercise: fiveThreeOneInfo?.bench.exercise,
       key: "bench",
     },
     {
-      pb: squat.pb,
-      exercise: squat.exercise,
+      pb: fiveThreeOneInfo?.squat.pb,
+      exercise: fiveThreeOneInfo?.squat.exercise,
       key: "squat",
     },
     {
-      pb: deadlift.pb,
-      exercise: deadlift.exercise,
+      pb: fiveThreeOneInfo?.deadlift.pb,
+      exercise: fiveThreeOneInfo?.deadlift.exercise,
       key: "deadlift",
     },
     {
-      pb: ohp.pb,
-      exercise: ohp.exercise,
+      pb: fiveThreeOneInfo?.ohp.pb,
+      exercise: fiveThreeOneInfo?.ohp.exercise,
       key: "ohp",
     },
   ];
+
+  if (loading) {
+    return <Skeleton />;
+  }
 
   return (
     <div className="overflow-hidden grid lg:grid-cols-2 gap-4 items-start">
@@ -60,16 +75,17 @@ export function Setup() {
           realistic, you don&apos;t have to train at your one rep max for this
           program to be effective
         </span>
-        <Form className="mt-4" onFinish={onFinish}>
+        {/* Finish onFinish for Form */}
+        <Form className="mt-4">
           {formItems.map((lift) => (
-            <div key={lift.exercise.name} className="flex items-center">
+            <div key={lift.exercise?.name} className="flex items-center">
               <div className="w-full">
                 <span className="text-left font-bold">
-                  {lift.exercise.name}
+                  {lift.exercise?.name}
                 </span>
                 <Form.Item name={lift.key} colon={false}>
                   <InputNumber
-                    placeholder={lift.pb.toString()}
+                    placeholder={lift.pb?.toString()}
                     required
                     className="w-full mt-4"
                     suffix="kg"

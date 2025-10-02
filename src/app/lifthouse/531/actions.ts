@@ -2,6 +2,11 @@
 
 import DatabaseClient from "@/lib/supabase/db/dbClient";
 
+export const getFiveThreeOneData = async () => {
+  const database = new DatabaseClient();
+  return database.getFiveThreeOne();
+};
+
 export const resetWeeks = async () => {
   const database = new DatabaseClient();
   // const data = await database.getFiveThreeOne();

@@ -15,8 +15,6 @@ export default function Introduction({ info }: IntroductionProps) {
 
   const { bench, squat, deadlift, ohp } = info;
 
-  const exercises = [bench, squat, deadlift, ohp];
-
   const hasValues = !bench.pb || !squat.pb || !deadlift.pb || !ohp.pb;
 
   return (

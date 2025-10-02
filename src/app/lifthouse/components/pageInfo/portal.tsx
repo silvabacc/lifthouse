@@ -15,7 +15,10 @@ export default function PageInfoPortal({ children, extra, title }: Props) {
 
   useEffect(() => setMounted(true), []);
 
-  const element = document.getElementById("page-info");
+  let element;
+  if (typeof document !== "undefined") {
+    element = document.getElementById("page-info");
+  }
 
   return mounted && element ? (
     createPortal(
