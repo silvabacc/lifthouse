@@ -52,7 +52,9 @@ export function Setup() {
   return (
     <div className="overflow-hidden grid lg:grid-cols-2 gap-4 items-start">
       <Card>
-        <h1 className="m-0 mb-2">1RM (one rep max) for SBD</h1>
+        <h1 className="text-2xl font-bold m-0 mb-2">
+          1RM (one rep max) for SBD
+        </h1>
         <span>
           Enter your 1 rep max. You don&apos;t have to be accurate and be
           realistic, you don&apos;t have to train at your one rep max for this

@@ -1,3 +1,5 @@
+"use client";
+
 import { Alert, Button, Card, Form, InputNumber, Table } from "antd";
 import { useEffect, useRef, useState } from "react";
 
@@ -51,7 +53,7 @@ export default function Calculator() {
   return (
     <div>
       <Card>
-        <h1 className="font-bold m-0 mb-2">1RM calculator</h1>
+        <h1 className="text-2xl font-bold m-0 mb-2">1RM calculator</h1>
         <span>
           Using the Brzycki formula, we can estimate your maximum load for a
           weight training exercise. All you need to input is your best weight

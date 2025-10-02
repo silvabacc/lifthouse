@@ -6,6 +6,7 @@ import {
   LogEntry,
   Meal,
   TemplateSetup,
+  UpdateFivethreeOne,
   Weight,
   Workout,
   WorkoutTemplate,
@@ -450,34 +451,35 @@ export default class DatabaseClient {
 
     if (data.length === 0) {
       return {
-        bench: { exercise: exercieData[1], pb: 0 },
-        squat: { exercise: exercieData[0], pb: 0 },
-        deadlift: { exercise: exercieData[2], pb: 0 },
-        ohp: { exercise: exercieData[3], pb: 0 },
+        bench: { exercise: exercieData[1], pb: 0, progress: 0 },
+        squat: { exercise: exercieData[0], pb: 0, progress: 0 },
+        deadlift: { exercise: exercieData[2], pb: 0, progress: 0 },
+        ohp: { exercise: exercieData[3], pb: 0, progress: 0 },
+        current_week: 1,
+        completed: [] as number[],
       } as FiveThreeOne;
     }
 
     return this.transformDataToFiveThreeOne(exercieData, data);
   }
 
-  async setFiveThreeOne(info: {
-    bench: number;
-    squat: number;
-    deadlift: number;
-    ohp: number;
-  }): Promise<FiveThreeOne> {
+  async setFiveThreeOne(info: UpdateFivethreeOne): Promise<FiveThreeOne> {
     const userId = await this.getUserId();
+
+    const cleanData = Object.fromEntries(
+      Object.entries(info).filter(([_, v]) => v !== undefined)
+    );
 
     const { data, error } = await this.supabase
       .from("five_three_one")
-      .upsert({ ...info, user_id: userId }, { onConflict: "user_id" })
+      .upsert({ ...cleanData, user_id: userId }, { onConflict: "user_id" })
       .select();
-
-    const exercieData = await this.getFiveThreeOneExercises();
 
     if (error) {
       throw error;
     }
+
+    const exercieData = await this.getFiveThreeOneExercises();
 
     return this.transformDataToFiveThreeOne(exercieData, data);
   }
@@ -494,10 +496,28 @@ export default class DatabaseClient {
   ): FiveThreeOne {
     return {
       id: data[0].id,
-      bench: { exercise: exercieData[1], pb: data[0].bench },
-      squat: { exercise: exercieData[0], pb: data[0].squat },
-      deadlift: { exercise: exercieData[2], pb: data[0].deadlift },
-      ohp: { exercise: exercieData[3], pb: data[0].ohp },
+      bench: {
+        exercise: exercieData[1],
+        pb: data[0].bench,
+        progress: data[0].bench_progress,
+      },
+      squat: {
+        exercise: exercieData[0],
+        pb: data[0].squat,
+        progress: data[0].squat_progress,
+      },
+      deadlift: {
+        exercise: exercieData[2],
+        pb: data[0].deadlift,
+        progress: data[0].deadlift_progress,
+      },
+      ohp: {
+        exercise: exercieData[3],
+        pb: data[0].ohp,
+        progress: data[0].ohp_progress,
+      },
+      current_week: data[0].current_week,
+      completed: data[0].completed,
     } as FiveThreeOne;
   }
 }

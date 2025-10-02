@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Button,
   Collapse,
@@ -10,7 +12,7 @@ import {
 import CompleteFiveThreeOneModal from "./components/complete531";
 import { useEffect, useState } from "react";
 import { useFiveThreeOneContext } from "./context";
-import { LogEntry, PersonalBest } from "@/lib/supabase/db/types";
+import { FiveThreeOne, LogEntry, PersonalBest } from "@/lib/supabase/db/types";
 import { CheckCircleTwoTone } from "@ant-design/icons";
 import { useFetch } from "../../../../hooks/useFetch";
 import { useLocalStorage } from "../../../../hooks/useLocalStorage";
@@ -20,9 +22,11 @@ import {
   NotificationMessage,
 } from "./components/notification";
 
-export default function FiveThreeOneWeeks() {
-  const { week } = useFiveThreeOneContext();
-
+type FiveThreeOneWeeksProps = {
+  info: FiveThreeOne;
+};
+export default function FiveThreeOneWeeks({ info }: FiveThreeOneWeeksProps) {
+  const { current_week: week } = info;
   const items: CollapseProps["items"] = [
     {
       title: <WeekTitle week={1} currentWeek={week} />,
@@ -54,6 +58,7 @@ export default function FiveThreeOneWeeks() {
     showArrow: false,
     children: (
       <ExerciseRow
+        info={info}
         sets={item.sets}
         reps={item.reps}
         intensity={item.intensity}
@@ -91,18 +96,18 @@ export default function FiveThreeOneWeeks() {
 }
 
 type ExerciseRowProps = {
+  info: FiveThreeOne;
   sets: number;
   reps: number[];
   intensity: number[];
 };
-function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
+function ExerciseRow({ sets, reps, intensity, info }: ExerciseRowProps) {
   const [open, setOpen] = useState(false);
-  const { fiveThreeOneInfo, completed } = useFiveThreeOneContext();
   const [exerciseSelected, setExerciseSelected] = useState<PersonalBest>();
   const [latestLogs, setLatestLogs] = useState<LogEntry[]>([]);
   const { fetch } = useFetch();
 
-  const { bench, ohp, squat, deadlift } = fiveThreeOneInfo;
+  const { bench, ohp, squat, deadlift, completed } = info;
   const exercises = [bench, ohp, squat, deadlift];
 
   useEffect(() => {
@@ -137,6 +142,8 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
                   <CheckCircleTwoTone
                     className="text-2xl"
                     twoToneColor="#52c41a"
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
                   />
                 ) : (
                   <Button type="primary" onClick={() => handleOpen(pb)}>

@@ -19,7 +19,7 @@ export default function PageInfoPortal({ children, extra, title }: Props) {
 
   return mounted && element ? (
     createPortal(
-      <div className="pt-1">
+      <div className="pt-4">
         <h1 className="text-2xl font-bold">{title}</h1>
         <div className={`${showInfo ? "block" : "hidden"} sm:block`}>
           {children}

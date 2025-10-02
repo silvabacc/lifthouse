@@ -60,6 +60,7 @@ export type Meal = {
 export type PersonalBest = {
   exercise: Exercise;
   pb: number;
+  progress: number;
 };
 
 export type FiveThreeOne = {
@@ -68,6 +69,21 @@ export type FiveThreeOne = {
   squat: PersonalBest;
   deadlift: PersonalBest;
   ohp: PersonalBest;
+  completed: number[];
+  current_week: number;
+};
+
+export type UpdateFivethreeOne = {
+  bench?: number;
+  squat?: number;
+  deadlift?: number;
+  ohp?: number;
+  bench_progress?: number;
+  squat_progress?: number;
+  oh_progress?: number;
+  deadlift_progress?: number;
+  current_week?: number;
+  completed?: number[];
 };
 
 export enum WorkoutTemplate {
