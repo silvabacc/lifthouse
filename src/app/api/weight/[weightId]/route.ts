@@ -20,7 +20,7 @@ export async function PUT(
   }
 
   const { weight } = body;
-  const db = new DatabaseClient();
+  const db = const dbClient = await DatabaseClient.build();
 
   const data = await db.updateWeight(params.weightId, weight);
   return NextResponse.json(data);
@@ -30,7 +30,7 @@ export async function DELETE(
   _request: NextRequest,
   { params }: { params: { weightId: number } }
 ) {
-  const db = new DatabaseClient();
+  const db = const dbClient = await DatabaseClient.build();
   await db.deleteWeight(params.weightId);
   return NextResponse.json({ success: true });
 }

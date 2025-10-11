@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
 
-  const dbClient = new DatabaseClient();
+  const dbClient = await DatabaseClient.build();
 
   const month = searchParams.get("month");
   const year = searchParams.get("year");
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
   }
 
   const { weight, date } = body;
-  const db = new DatabaseClient();
+  const db = const dbClient = await DatabaseClient.build();
   const data = await db.createWeight(weight, date);
   return NextResponse.json(data);
 }

@@ -12,11 +12,12 @@ import {
   WorkoutTemplate,
 } from "./types";
 import { cookies } from "next/headers";
+import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 export default class DatabaseClient {
   private supabase: SupabaseClient;
 
-  constructor() {
+  constructor(cookies: ReadonlyRequestCookies) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -24,9 +25,12 @@ export default class DatabaseClient {
       throw new Error("Missing Supabase URL or key");
     }
 
-    const cookieStore = cookies();
+    this.supabase = createSupabaseServer(cookies);
+  }
 
-    this.supabase = createSupabaseServer(cookieStore);
+  public static async build(): Promise<DatabaseClient> {
+    const cookiesStore = await cookies();
+    return new DatabaseClient(cookiesStore);
   }
 
   async getExercises(exerciseIds?: number[]): Promise<Exercise[]> {
@@ -244,7 +248,7 @@ export default class DatabaseClient {
       info: data.info,
       notes: data.notes,
       date: data.date,
-    }));
+    })) as LogEntry[];
   }
 
   async setLogs(logs: LogEntry[]): Promise<LogEntry[]> {
@@ -469,6 +473,8 @@ export default class DatabaseClient {
     const cleanData = Object.fromEntries(
       Object.entries(info).filter(([_, v]) => v !== undefined)
     );
+
+    console.log("in db client");
 
     const { data, error } = await this.supabase
       .from("five_three_one")

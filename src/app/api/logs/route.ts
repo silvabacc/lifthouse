@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
   const { exerciseIds, rows, startFrom, endOn } = body;
 
-  const dbClient = new DatabaseClient();
+  const dbClient = await DatabaseClient.build();
   const data = await dbClient.getLogs(exerciseIds, rows, startFrom, endOn);
   return NextResponse.json(data);
 }

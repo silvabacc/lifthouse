@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import AntdStyledComponentsRegistry from "./components/antd";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { AppContextProvider } from "./context";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Providers from "./lifthouse/providers";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   description: "A workout tracker for the modern lifter",
 };
 
+const queryClient = new QueryClient();
+
 export default function RootLayout({
   children,
 }: {
@@ -27,13 +29,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         {
-          <AppContextProvider>
-            <AntdStyledComponentsRegistry>
-              {children}
-              <Analytics />
-              <SpeedInsights />
-            </AntdStyledComponentsRegistry>
-          </AppContextProvider>
+          <Providers>
+            {children}
+            <Analytics />
+            <SpeedInsights />
+          </Providers>
         }
       </body>
     </html>

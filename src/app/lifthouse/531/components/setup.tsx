@@ -2,11 +2,11 @@
 
 import { InputNumber, Button, Card, Form, Skeleton } from "antd";
 import Calculator from "../calculator";
-import { useFetch } from "../../../../../hooks/useFetch";
 import { FiveThreeOne } from "@/lib/supabase/db/types";
-import { useFiveThreeOneContext } from "../context";
 import { useEffect, useState } from "react";
 import { getFiveThreeOneData } from "../actions";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 type FieldType = {
   bench: number;
@@ -16,8 +16,11 @@ type FieldType = {
 };
 
 export function Setup() {
-  const [fiveThreeOneInfo, setFiveThreeOneInfo] = useState<FiveThreeOne>();
-  const [loading, setLoading] = useState(false);
+  const { data, isLoading } = useQuery({
+    queryKey: ["531Data"],
+    queryFn: fetchFiveThreeOneData,
+  });
+
   // const onFinish = async (values: FieldType) => {
   //   const response: FiveThreeOne = await fetch("/api/531", {
   //     method: "POST",
@@ -26,41 +29,30 @@ export function Setup() {
   //   setFiveThreeOneInfo(response);
   // };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const data = await getFiveThreeOneData();
-      setFiveThreeOneInfo(data);
-      setLoading(false);
-    };
-
-    fetchData();
-  }, []);
-
   const formItems = [
     {
-      pb: fiveThreeOneInfo?.bench.pb,
-      exercise: fiveThreeOneInfo?.bench.exercise,
+      pb: data?.bench.pb,
+      exercise: data?.bench.exercise,
       key: "bench",
     },
     {
-      pb: fiveThreeOneInfo?.squat.pb,
-      exercise: fiveThreeOneInfo?.squat.exercise,
+      pb: data?.squat.pb,
+      exercise: data?.squat.exercise,
       key: "squat",
     },
     {
-      pb: fiveThreeOneInfo?.deadlift.pb,
-      exercise: fiveThreeOneInfo?.deadlift.exercise,
+      pb: data?.deadlift.pb,
+      exercise: data?.deadlift.exercise,
       key: "deadlift",
     },
     {
-      pb: fiveThreeOneInfo?.ohp.pb,
-      exercise: fiveThreeOneInfo?.ohp.exercise,
+      pb: data?.ohp.pb,
+      exercise: data?.ohp.exercise,
       key: "ohp",
     },
   ];
 
-  if (loading) {
+  if (isLoading) {
     return <Skeleton />;
   }
 
@@ -105,3 +97,7 @@ export function Setup() {
     </div>
   );
 }
+
+const fetchFiveThreeOneData = async () => {
+  return (await axios.get<FiveThreeOne>("/api/531")).data;
+};

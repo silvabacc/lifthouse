@@ -9,8 +9,6 @@ import FiveThreeOneSkeleton from "./fiveThreeOne.skeleton";
 type FiveThreeOneContextType = {
   fiveThreeOneInfo: FiveThreeOne;
   setFiveThreeOneInfo: (info: FiveThreeOne) => void;
-  week: number;
-  setWeek: (week: number) => void;
   loading: boolean;
   completed: number[];
   setCompleted: (completed: number[]) => void;
@@ -25,7 +23,6 @@ export const useFiveThreeOneContext = () => useContext(FiveThreeOneContext);
 export default function FiveThreeOneContextProvider({ children }: any) {
   const [fiveThreeOneInfo, setFiveThreeOneInfo] = useState<FiveThreeOne>();
   const { getCachedFiveThreeOneInfo } = useLocalStorage();
-  const [week, setWeek] = useState(1);
   const [completed, setCompleted] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
   const { fetch } = useFetch();
@@ -41,7 +38,6 @@ export default function FiveThreeOneContextProvider({ children }: any) {
 
     const cachedInfo = getCachedFiveThreeOneInfo();
     if (cachedInfo) {
-      setWeek(cachedInfo.week);
       setCompleted(cachedInfo.completed);
     }
   }, []);
@@ -55,8 +51,6 @@ export default function FiveThreeOneContextProvider({ children }: any) {
       value={{
         fiveThreeOneInfo,
         setFiveThreeOneInfo,
-        week,
-        setWeek,
         completed,
         setCompleted,
         loading,

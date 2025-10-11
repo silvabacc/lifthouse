@@ -7,7 +7,7 @@ export async function GET(
   _request: Request,
   { params }: { params: { workoutId: string } }
 ) {
-  const dbClient = new DatabaseClient();
+  const dbClient = await DatabaseClient.build();
   const workout = await dbClient.getWorkoutData(params.workoutId);
   return NextResponse.json(workout);
 }
@@ -16,7 +16,7 @@ export async function DELETE(
   _request: Request,
   { params }: { params: { workoutId: string } }
 ) {
-  const dbClient = new DatabaseClient();
+  const dbClient = await DatabaseClient.build();
   await dbClient.deleteWorkout(params.workoutId);
   return NextResponse.json({ success: true });
 }
@@ -50,7 +50,7 @@ export async function PUT(
     return NextResponse.json({ error: err.message }, { status: 400 });
   }
 
-  const dbClient = new DatabaseClient();
+  const dbClient = await DatabaseClient.build();
   const { name, description, exercises, template, updateTemplate } = body;
 
   let updatedExercises = exercises;

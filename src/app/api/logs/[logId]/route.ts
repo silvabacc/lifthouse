@@ -5,7 +5,7 @@ export async function DELETE(
   _request: Request,
   { params }: { params: { logId: string } }
 ) {
-  const dbClient = new DatabaseClient();
+  const dbClient = await DatabaseClient.build();
   await dbClient.deleteLog(parseInt(params.logId));
   return NextResponse.json({ success: true });
 }

@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: err.message }, { status: 400 });
   }
 
-  const dbClient = new DatabaseClient();
+  const dbClient = await DatabaseClient.build();
   const { name, description } = body;
   const result = await dbClient.createWorkout(name, description);
   return NextResponse.json(result);

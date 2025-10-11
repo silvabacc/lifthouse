@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const dbClient = new DatabaseClient();
+  const dbClient = await DatabaseClient.build();
 
   const schema = Joi.date().required();
   const { error } = schema.validate(day);
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: e.message }, { status: 400 });
   }
 
-  const dbClient = new DatabaseClient();
+  const dbClient = await DatabaseClient.build();
   const data = await dbClient.addMeal(body.mealTitle, {
     protein: body.protein,
     fat: body.fat,
