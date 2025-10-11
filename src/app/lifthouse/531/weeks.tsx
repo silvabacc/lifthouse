@@ -20,6 +20,7 @@ import {
 import { goNextWeek, increasePersonalBests } from "./actions";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 type FiveThreeOneWeeksProps = {
   info: FiveThreeOne;
@@ -72,7 +73,7 @@ export default function FiveThreeOneWeeks({ info }: FiveThreeOneWeeksProps) {
         className="mt-4 w-full lg:hidden"
         items={items}
       />
-      <div className="hidden lg:grid lg:grid-cols-4 gap-12 mt-6">
+      <div className="hidden lg:grid lg:grid-cols-4 gap-12 mt-2">
         {items.map((item) => (
           <Space
             direction="vertical"
@@ -167,6 +168,7 @@ type WeekTitleProps = {
 function WeekTitle({ week, currentWeek, info }: WeekTitleProps) {
   const [api, contextHolder] = notification.useNotification();
   const [modal, modalContextHolder] = Modal.useModal();
+  const router = useRouter();
 
   const showWeek = week === currentWeek;
   const onClickSkip = async () => {
@@ -192,9 +194,10 @@ function WeekTitle({ week, currentWeek, info }: WeekTitleProps) {
         description: <NotificationDescription exercises={exercises} />,
       });
     } else {
-      console.log("here!!!");
       goNextWeek(week);
     }
+
+    router.refresh();
   };
 
   return (

@@ -474,8 +474,6 @@ export default class DatabaseClient {
       Object.entries(info).filter(([_, v]) => v !== undefined)
     );
 
-    console.log("in db client");
-
     const { data, error } = await this.supabase
       .from("five_three_one")
       .upsert({ ...cleanData, user_id: userId }, { onConflict: "user_id" })

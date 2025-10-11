@@ -1,6 +1,6 @@
 import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 import Introduction from "./components/intro";
-import { Card, Skeleton } from "antd";
+import { Card, Skeleton, Space } from "antd";
 import Info from "./components/info";
 import Weeks from "./weeks";
 import DatabaseClient from "@/lib/supabase/db/dbClient";
@@ -23,8 +23,10 @@ export default async function FiveThreeOnePage() {
           </Card>
         ))}
       </div>
-      <Info />
-      <Weeks info={data} />
+      <Space className="mt-2" direction="vertical">
+        <Info />
+        <Weeks info={data} />
+      </Space>
     </PageAnimation>
   );
 }
