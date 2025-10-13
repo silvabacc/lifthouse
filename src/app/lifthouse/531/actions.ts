@@ -1,8 +1,12 @@
 "use server";
 
 import DatabaseClient from "@/lib/supabase/db/dbClient";
+import { UpdateFivethreeOne } from "@/lib/supabase/db/types";
 
-export const setFiveThreeOne = async () => {};
+export const setFiveThreeOne = async (update: UpdateFivethreeOne) => {
+  const client = await DatabaseClient.build();
+  client.setFiveThreeOne(update);
+};
 
 export const resetWeeks = async () => {
   const database = await DatabaseClient.build();
@@ -26,6 +30,7 @@ export const increasePersonalBests = async () => {
   return client.setFiveThreeOne(newPersonalBests);
 };
 
+//Don't use this
 export const getLatestLogs = async (exerciseIds: number[]) => {
   const database = await DatabaseClient.build();
   return database.getLatestLogs(exerciseIds);
@@ -34,4 +39,9 @@ export const getLatestLogs = async (exerciseIds: number[]) => {
 export const goNextWeek = async (week: number) => {
   const database = await DatabaseClient.build();
   database.setFiveThreeOne({ current_week: week + 1, completed: [] });
+};
+
+export const setCompletedExercises = async (exerciseIds: number[]) => {
+  const database = await DatabaseClient.build();
+  database.setFiveThreeOne({ completed: exerciseIds });
 };

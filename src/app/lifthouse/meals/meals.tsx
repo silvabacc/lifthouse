@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import DateMover from "./components/dateMover";
 import MealCard from "./components/mealCard";
 import dynamic from "next/dynamic";
+import { deleteMeal } from "./actions";
 
 const MacroNutrients = dynamic(() => import("./components/macroNutrients"));
 
@@ -25,13 +26,9 @@ export default function Meals() {
   };
 
   const onDeleteCard = async (id: number) => {
-    const deleteMealResponse = await fetch(`/api/meals/${id}`, {
-      method: "DELETE",
-    });
+    deleteMeal(`${id}`);
 
-    if (deleteMealResponse.success) {
-      setMealData(mealData.filter((meal) => meal.id !== id));
-    }
+    setMealData(mealData.filter((meal) => meal.id !== id));
   };
 
   const fetchMeals = async () => {

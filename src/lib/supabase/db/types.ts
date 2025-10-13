@@ -60,7 +60,7 @@ export type Meal = {
 export type PersonalBest = {
   exercise: Exercise;
   pb: number;
-  progress: number;
+  progress: number; //may have to remove
 };
 
 export type FiveThreeOne = {
@@ -78,10 +78,10 @@ export type UpdateFivethreeOne = {
   squat?: number;
   deadlift?: number;
   ohp?: number;
-  bench_progress?: number;
-  squat_progress?: number;
-  oh_progress?: number;
-  deadlift_progress?: number;
+  bench_progress?: number; //may have to remove
+  squat_progress?: number; //may have to remove
+  oh_progress?: number; //may have to remove
+  deadlift_progress?: number; //may have to remove
   current_week?: number;
   completed?: number[];
 };

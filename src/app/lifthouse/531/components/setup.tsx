@@ -3,10 +3,10 @@
 import { InputNumber, Button, Card, Form, Skeleton } from "antd";
 import Calculator from "../calculator";
 import { FiveThreeOne } from "@/lib/supabase/db/types";
-import { useEffect, useState } from "react";
-import { getFiveThreeOneData } from "../actions";
+import { setFiveThreeOne } from "../actions";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 type FieldType = {
   bench: number;
@@ -15,19 +15,21 @@ type FieldType = {
   ohp: number;
 };
 
-export function Setup() {
+type SetupProps = {
+  onFinish?: () => void;
+};
+export function Setup({ onFinish }: SetupProps) {
   const { data, isLoading } = useQuery({
     queryKey: ["531Data"],
     queryFn: fetchFiveThreeOneData,
   });
+  const router = useRouter();
 
-  // const onFinish = async (values: FieldType) => {
-  //   const response: FiveThreeOne = await fetch("/api/531", {
-  //     method: "POST",
-  //     body: JSON.stringify(values),
-  //   });
-  //   setFiveThreeOneInfo(response);
-  // };
+  const onFinishForm = async (values: FieldType) => {
+    await setFiveThreeOne(values);
+    router.refresh();
+    onFinish();
+  };
 
   const formItems = [
     {
@@ -68,7 +70,7 @@ export function Setup() {
           program to be effective
         </span>
         {/* Finish onFinish for Form */}
-        <Form className="mt-4">
+        <Form className="mt-4" onFinish={onFinishForm}>
           {formItems.map((lift) => (
             <div key={lift.exercise?.name} className="flex items-center">
               <div className="w-full">

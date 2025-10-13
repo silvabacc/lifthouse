@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
   }
 
   const { weight, date } = body;
-  const db = const dbClient = await DatabaseClient.build();
+  const db = await DatabaseClient.build();
   const data = await db.createWeight(weight, date);
   return NextResponse.json(data);
 }

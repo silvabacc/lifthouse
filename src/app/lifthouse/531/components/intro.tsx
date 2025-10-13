@@ -48,7 +48,7 @@ export default function Introduction({ info }: IntroductionProps) {
         open={!hasValues && setupOpen}
         onClose={() => setSetupOpen(false)}
       >
-        <Setup />
+        <Setup onFinish={() => setSetupOpen(false)} />
       </Drawer>
     </div>
   );

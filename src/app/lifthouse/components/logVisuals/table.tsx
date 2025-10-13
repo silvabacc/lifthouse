@@ -3,6 +3,7 @@ import { Table as AntDTable, Button, Popconfirm, TableColumnsType } from "antd";
 import React, { useEffect, useState } from "react";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useFetch } from "../../../../../hooks/useFetch";
+import { deleteLog } from "../../actions";
 
 interface TableDataType {
   key: React.Key;
@@ -24,20 +25,17 @@ type Props = {
 export default function Table({ data, setLogs }: Props) {
   const [expandedKeys, setExpandedKeys] = useState<number[]>([]);
   const [dataSource, setDataSource] = useState<TableDataType[]>([]);
-  const { fetch } = useFetch();
 
   useEffect(() => {
     setDataSource(transformData(data));
   }, [data]);
 
   const handleDelete = async (key: React.Key) => {
-    const response = await fetch(`/api/logs/${key}`, { method: "DELETE" });
+    await deleteLog(parseInt(key.toString()));
 
-    if (response.success) {
-      const newData = dataSource.filter((item) => item.key !== key);
-      setDataSource(newData);
-      setLogs && setLogs(data.filter((item) => item.logId !== key));
-    }
+    const newData = dataSource.filter((item) => item.key !== key);
+    setDataSource(newData);
+    setLogs && setLogs(data.filter((item) => item.logId !== key));
   };
 
   const columns: TableColumnsType<TableDataType> = [

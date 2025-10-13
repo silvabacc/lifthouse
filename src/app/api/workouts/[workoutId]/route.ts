@@ -1,30 +1,38 @@
 import DatabaseClient from "@/lib/supabase/db/dbClient";
 import { WorkoutTemplate } from "@/lib/supabase/db/types";
 import Joi from "joi";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(
-  _request: Request,
-  { params }: { params: { workoutId: string } }
-) {
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl;
+  const params = searchParams.searchParams.get("workoutId");
+
+  if (!params) {
+    return NextResponse.json("workoutId is undefined", { status: 400 });
+  }
+
   const dbClient = await DatabaseClient.build();
-  const workout = await dbClient.getWorkoutData(params.workoutId);
+  const workout = await dbClient.getWorkoutData(params);
   return NextResponse.json(workout);
 }
 
-export async function DELETE(
-  _request: Request,
-  { params }: { params: { workoutId: string } }
-) {
+export async function DELETE(request: NextRequest) {
+  const searchParams = request.nextUrl;
+  const params = searchParams.searchParams.get("workoutId");
+
+  if (!params) {
+    return NextResponse.json("workoutId is undefined", { status: 400 });
+  }
+
   const dbClient = await DatabaseClient.build();
-  await dbClient.deleteWorkout(params.workoutId);
+  await dbClient.deleteWorkout(params);
   return NextResponse.json({ success: true });
 }
 
-export async function PUT(
-  request: Request,
-  { params }: { params: { workoutId: string } }
-) {
+export async function PUT(request: NextRequest) {
+  const searchParams = request.nextUrl;
+  const params = searchParams.searchParams.get("workoutId");
+
   const body = await request.json();
   try {
     const schema = Joi.object({
@@ -45,6 +53,10 @@ export async function PUT(
       updateTemplate: Joi.boolean().optional(),
     });
 
+    if (!params) {
+      throw new Error("weightId is undefined");
+    }
+
     await schema.validateAsync(body);
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 400 });
@@ -63,7 +75,7 @@ export async function PUT(
     name,
     description,
     updatedExercises,
-    params.workoutId,
+    params,
     template
   );
 

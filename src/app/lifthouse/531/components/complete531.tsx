@@ -1,5 +1,7 @@
+"use client";
+
 import { useLocalStorage } from "../../../../../hooks/useLocalStorage";
-import { LogEntry, PersonalBest } from "@/lib/supabase/db/types";
+import { FiveThreeOne, LogEntry, PersonalBest } from "@/lib/supabase/db/types";
 import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import {
   Alert,
@@ -15,12 +17,15 @@ import {
   notification,
 } from "antd";
 import { useEffect, useState } from "react";
-import { useFiveThreeOneContext } from "../context";
 import Warmup from "./warmup";
-import { useFetch } from "../../../../../hooks/useFetch";
-import { useFiveThreeOne } from "../useFiveThreeOne";
 import { NotificationDescription, NotificationMessage } from "./notification";
 import { LogVisual } from "../../components/logVisuals/logVisual";
+import {
+  goNextWeek,
+  increasePersonalBests,
+  setCompletedExercises,
+} from "../actions";
+import { useRouter } from "next/navigation";
 
 const { TextArea } = Input;
 
@@ -32,6 +37,7 @@ type Props = {
   reps: number[];
   intensity: number[];
   latestLog?: LogEntry;
+  info: FiveThreeOne;
 };
 export default function CompleteFiveThreeOneModal({
   open,
@@ -41,6 +47,7 @@ export default function CompleteFiveThreeOneModal({
   reps,
   intensity,
   latestLog,
+  info: fiveThreeOneInfo,
 }: Props) {
   const {
     getCachedLogInfo,
@@ -50,14 +57,13 @@ export default function CompleteFiveThreeOneModal({
     cacheLogInfo,
     clearFiveThreeOne,
   } = useLocalStorage();
-  const { increasePersonalBests } = useFiveThreeOne();
   const [currentSet, setCurrentSet] = useState(0);
   const [showWarning, setShowWarning] = useState(false);
   const [saving, setSaving] = useState(false);
-  const { setWeek, setCompleted, fiveThreeOneInfo } = useFiveThreeOneContext();
   const [notes, setNotes] = useState<string>();
   const [api, contextHolder] = notification.useNotification();
   const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;
+  const router = useRouter();
 
   const exercises = [bench, squat, deadlift, ohp];
 
@@ -137,30 +143,26 @@ export default function CompleteFiveThreeOneModal({
 
       if (cachedFiveThreeOneInfo?.week === 4) {
         clearFiveThreeOne();
-        setWeek(1);
         await increasePersonalBests();
         api.info({
           message: <NotificationMessage />,
           description: <NotificationDescription exercises={exercises} />,
         });
       } else {
-        setWeek(cachedFiveThreeOneInfo?.week + 1);
+        goNextWeek(cachedFiveThreeOneInfo?.week);
       }
-
-      setCompleted([]);
     } else {
-      cacheFiveThreeOneInfo({
-        week: cachedFiveThreeOneInfo?.week || 1,
-        completed: [
-          ...(cachedFiveThreeOneInfo?.completed || []),
-          exercise.exerciseId,
-        ],
-      });
-      setWeek(cachedFiveThreeOneInfo?.week || 1);
-      setCompleted([
-        ...(cachedFiveThreeOneInfo?.completed || []),
+      setCompletedExercises([
+        ...fiveThreeOneInfo.completed,
         exercise.exerciseId,
       ]);
+      // cacheFiveThreeOneInfo({
+      //   week: cachedFiveThreeOneInfo?.week || 1,
+      //   completed: [
+      //     ...(cachedFiveThreeOneInfo?.completed || []),
+      //     exercise.exerciseId,
+      //   ],
+      // });
     }
 
     setSaving(false);
@@ -169,6 +171,8 @@ export default function CompleteFiveThreeOneModal({
 
     setShowWarning(false);
     setNotes("");
+
+    router.refresh();
 
     onClose();
   };
@@ -332,13 +336,23 @@ function Row({
         type="link"
         disabled={disabled}
         className="p-0 m-0"
-        icon={<CheckCircleOutlined className="p-0 m-0" />}
+        icon={
+          <CheckCircleOutlined
+            className="p-0 m-0"
+            onPointerEnterCapture={undefined}
+            onPointerLeaveCapture={undefined}
+          />
+        }
         onClick={onNext}
       />
       {showWarning && (
         <div className="mt-1" onClick={(e) => e.stopPropagation()}>
           <Tooltip trigger={"click"} title="Reps is missing!">
-            <WarningOutlined className="text-orange-400" />
+            <WarningOutlined
+              className="text-orange-400"
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+            />
           </Tooltip>
         </div>
       )}

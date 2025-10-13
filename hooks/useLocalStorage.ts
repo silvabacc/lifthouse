@@ -108,6 +108,7 @@ export function useLocalStorage() {
     window.localStorage.clear();
   };
 
+  //May not need this anymore
   const cacheFiveThreeOneInfo = ({
     week,
     completed,
