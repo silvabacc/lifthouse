@@ -12,6 +12,6 @@ jobs:
       - name: Ping Supabase
         run: |
           curl -X GET \
-            'https://<your-project-ref>.supabase.co/rest/v1/' \
+            '${{ secrets.SUPABASE_URL }}' \
             -H 'apikey: ${{ secrets.SUPABASE_ANON_KEY }}' \
             -H 'Content-Type: application/json'
