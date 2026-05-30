@@ -2,7 +2,7 @@
 
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { Alert, message, Spin } from "antd";
+import { Spin } from "antd";
 import { createContext, useContext, useEffect, useState } from "react";
 import LifthouseLogo from "@/app/assets/lifthouse_logo_black.png";
 import Image from "next/image";

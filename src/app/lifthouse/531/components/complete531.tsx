@@ -3,6 +3,7 @@ import { LogEntry, PersonalBest } from "@/lib/supabase/db/types";
 import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import {
   Alert,
+  App,
   Button,
   Collapse,
   Divider,
@@ -12,7 +13,6 @@ import {
   StepsProps,
   Steps,
   Tooltip,
-  notification,
 } from "antd";
 import { useEffect, useState } from "react";
 import { useFiveThreeOneContext } from "../context";
@@ -56,7 +56,7 @@ export default function CompleteFiveThreeOneModal({
   const [saving, setSaving] = useState(false);
   const { setWeek, setCompleted, fiveThreeOneInfo } = useFiveThreeOneContext();
   const [notes, setNotes] = useState<string>();
-  const [api, contextHolder] = notification.useNotification();
+  const { notification: api } = App.useApp();
   const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;
 
   const exercises = [bench, squat, deadlift, ohp];
@@ -186,7 +186,6 @@ export default function CompleteFiveThreeOneModal({
         onClose();
       }}
     >
-      {contextHolder}
       <div className="flex flex-col">
         <div className="mb-4">
           <span className="text-xs ml-2 mr-6">Set</span>

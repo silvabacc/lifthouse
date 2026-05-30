@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, message } from "antd";
+import { Alert, App } from "antd";
 import {
   ConfirmPasswordField,
   EmailField,
@@ -24,7 +24,7 @@ interface FieldType {
 }
 
 export default function SignupForm() {
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message: messageApi } = App.useApp();
   const [alert, setAlert] = useState<string>();
   const router = useRouter();
 
@@ -47,7 +47,6 @@ export default function SignupForm() {
 
   return (
     <>
-      {contextHolder}
       <FormWrapper onFinish={onFinish}>
         {alert && (
           <Alert

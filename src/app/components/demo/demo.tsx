@@ -2,14 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import { createDemoAccount } from "./actions";
-import { message } from "antd";
+import { App } from "antd";
 import { useState } from "react";
 import { redirectToHome } from "@/lib/utils";
 
 export function DemoText() {
   const router = useRouter();
   const [creating, setCreating] = useState(false);
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message: messageApi } = App.useApp();
 
   const onClick = async () => {
     if (creating) {
@@ -33,7 +33,6 @@ export function DemoText() {
 
   return (
     <div className="text-sm text-gray-600 mt-4">
-      {contextHolder}
       Want to try out Lifthouse? Use our{" "}
       <span
         className="text-blue-500 cursor-pointer"

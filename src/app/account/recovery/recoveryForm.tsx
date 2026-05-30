@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, message } from "antd";
+import { Alert, App } from "antd";
 import { EmailField, FormButton, FormWrapper } from "../components/form";
 import { useState } from "react";
 import { createSupabaseClient } from "@/lib/supabase/client";
@@ -12,7 +12,7 @@ interface FieldType {
 
 export default function RecoveryForm() {
   const supabase = createSupabaseClient();
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message: messageApi } = App.useApp();
   const [alert, setAlert] = useState("");
   const [disabled, setDisabled] = useState(false);
 
@@ -36,7 +36,6 @@ export default function RecoveryForm() {
 
   return (
     <>
-      {contextHolder}
       <FormWrapper name="reset-password-form" onFinish={onFinish}>
         {alert && (
           <Alert

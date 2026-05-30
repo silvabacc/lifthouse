@@ -7,7 +7,7 @@ import {
   FormWrapper,
   PasswordField,
 } from "../components/form";
-import { Alert, Button, Divider, Form, message } from "antd";
+import { Alert, App, Button, Divider, Form } from "antd";
 import { useState } from "react";
 import Link from "next/link";
 import { createSupabaseClient } from "@/lib/supabase/client";
@@ -30,7 +30,7 @@ type FieldType = {
 };
 
 export default function LoginForm() {
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message: messageApi } = App.useApp();
   const [errorMessage, setErrorMessage] = useState<string>();
   const router = useRouter();
 
@@ -67,7 +67,6 @@ export default function LoginForm() {
 
   return (
     <>
-      {contextHolder}
       <FormWrapper onFinish={onFinish}>
         {errorMessage && (
           <Alert

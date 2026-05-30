@@ -1,4 +1,4 @@
-import { Button, Divider, Modal, Typography } from "antd";
+import { App, Button, Divider, Typography } from "antd";
 import { useState } from "react";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
@@ -11,7 +11,6 @@ import getConfig from "@/config";
 import Link from "next/link";
 
 const { pageUrl } = getConfig();
-const { confirm } = Modal;
 const { Paragraph } = Typography;
 
 type WorkoutCardProps = {
@@ -30,9 +29,10 @@ export default function WorkoutCard({
 }: WorkoutCardProps) {
   const [drawOpen, setDrawOpen] = useState<boolean>(false);
   const { updateWorkoutPlan } = useWorkout();
+  const { modal } = App.useApp();
 
   const showDeleteConfirm = () => {
-    confirm({
+    modal.confirm({
       title: "Are you sure delete this workout plan?",
       icon: <ExclamationCircleFilled />,
       okText: "Yes",

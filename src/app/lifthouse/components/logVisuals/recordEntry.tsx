@@ -1,7 +1,7 @@
 import { useFetch } from "../../../../../hooks/useFetch";
 import { useLocalStorage } from "../../../../../hooks/useLocalStorage";
 import { Exercise, LogEntry } from "@/lib/supabase/db/types";
-import { Button, Modal, notification } from "antd";
+import { App, Button, Modal } from "antd";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Complete } from "../compete";
 
@@ -13,8 +13,7 @@ export function RecordEntry({ exercise, setLogs }: RecordEntryProps) {
   const { fetch } = useFetch();
   const { clearCacheLogInfo, getCachedLogInfo } = useLocalStorage();
   const [isModalOpen, setModalOpen] = useState(false);
-  const [notificationApi, notificationContextHolder] =
-    notification.useNotification();
+  const { notification: notificationApi } = App.useApp();
   const [saving, setSaving] = useState(false);
 
   const onClick = () => {
@@ -72,7 +71,6 @@ export function RecordEntry({ exercise, setLogs }: RecordEntryProps) {
         </Modal>
       )}
 
-      {notificationContextHolder}
       <Button type="dashed" danger onClick={onClick}>
         Record an entry
       </Button>

@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 import {
+  App,
   Button,
   Divider,
   Drawer,
   Input,
   Space,
   Typography,
-  message,
 } from "antd";
 import { useWorkoutIdContext } from "../../context";
 import { Complete } from "./complete";
@@ -34,7 +34,7 @@ export function Record({ show, onCancel }: Props) {
   const [latestLogs, setLatestLogs] = useState<LogEntry[]>();
   const [saving, setSaving] = useState(false);
   const router = useRouter();
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message: messageApi } = App.useApp();
 
   const onChangeNoes = (value: string, exerciseId: number) => {
     cacheLogInfo(exerciseId, { notes: value });
@@ -92,7 +92,6 @@ export function Record({ show, onCancel }: Props) {
       }
     >
       <Space direction="vertical" className="w-full">
-        {contextHolder}
         {workout.exercises.map((exercise, index) => {
           const notes = getCachedLogInfo(exercise.exerciseId)?.notes;
           const exerciseInfo = exercises.find(

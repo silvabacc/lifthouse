@@ -1,4 +1,4 @@
-import { Alert, Divider, Drawer, Modal, Radio, Space, Tooltip } from "antd";
+import { Alert, App, Divider, Drawer, Radio, Space, Tooltip } from "antd";
 import { useWorkout } from "../../../hooks/useWorkout";
 import { useWorkoutIdContext } from "../../context";
 import { WorkoutTemplate } from "@/lib/supabase/db/types";
@@ -17,9 +17,10 @@ export default function TemplateDrawer({
 }: TemplateDrawerProps) {
   const { workout, setWorkout } = useWorkoutIdContext();
   const { updateTemplate } = useWorkout();
+  const { modal } = App.useApp();
 
   const onClickWorkoutType = (value: WorkoutTemplate) => {
-    Modal.confirm({
+    modal.confirm({
       title: "Are you sure?",
       content: "This may overwrite your current workout plan",
       cancelText: "No",

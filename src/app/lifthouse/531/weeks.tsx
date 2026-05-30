@@ -1,10 +1,9 @@
 import {
+  App,
   Button,
   Collapse,
   CollapseProps,
   Divider,
-  Modal,
-  notification,
   Space,
 } from "antd";
 import CompleteFiveThreeOneModal from "./components/complete531";
@@ -173,8 +172,7 @@ function WeekTitle({ week, currentWeek }: WeekTitleProps) {
   const { increasePersonalBests } = useFiveThreeOne();
   const { setWeek, setCompleted, fiveThreeOneInfo } = useFiveThreeOneContext();
   const { cacheFiveThreeOneInfo } = useLocalStorage();
-  const [api, contextHolder] = notification.useNotification();
-  const [modal, modalContextHolder] = Modal.useModal();
+  const { notification: api, modal } = App.useApp();
 
   const showWeek = week === currentWeek;
   const onClickSkip = async () => {
@@ -211,8 +209,6 @@ function WeekTitle({ week, currentWeek }: WeekTitleProps) {
 
   return (
     <div className="flex justify-between font-bold m-0">
-      {contextHolder}
-      {modalContextHolder}
       <span>Week {week}</span>
       {showWeek && (
         <Button onClick={onClickSkip} type="link">
