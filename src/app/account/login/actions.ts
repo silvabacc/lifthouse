@@ -4,7 +4,7 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 
 export async function signInWithEmail(email: string, password: string) {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const supabase = createSupabaseServer(cookieStore);
 
   const { error } = await supabase.auth.signInWithPassword({

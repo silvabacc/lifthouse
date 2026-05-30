@@ -1,4 +1,4 @@
-import DatabaseClient from "@/lib/supabase/db/dbClient";
+import { createDatabaseClient } from "@/lib/supabase/db/dbClient";
 import Joi from "joi";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const dbClient = new DatabaseClient();
+  const dbClient = await createDatabaseClient();
 
   const schema = Joi.date().required();
   const { error } = schema.validate(day);
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: e.message }, { status: 400 });
   }
 
-  const dbClient = new DatabaseClient();
+  const dbClient = await createDatabaseClient();
   const data = await dbClient.addMeal(body.mealTitle, {
     protein: body.protein,
     fat: body.fat,

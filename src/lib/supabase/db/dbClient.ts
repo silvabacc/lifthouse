@@ -12,18 +12,21 @@ import {
 } from "./types";
 import { cookies } from "next/headers";
 
+export async function createDatabaseClient() {
+  const cookieStore = await cookies();
+  return new DatabaseClient(cookieStore);
+}
+
 export default class DatabaseClient {
   private supabase: SupabaseClient;
 
-  constructor() {
+  constructor(cookieStore: Awaited<ReturnType<typeof cookies>>) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
       throw new Error("Missing Supabase URL or key");
     }
-
-    const cookieStore = cookies();
 
     this.supabase = createSupabaseServer(cookieStore);
   }

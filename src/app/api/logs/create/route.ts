@@ -1,4 +1,4 @@
-import DatabaseClient from "@/lib/supabase/db/dbClient";
+import { createDatabaseClient } from "@/lib/supabase/db/dbClient";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import Joi, { date } from "joi";
 import { NextResponse } from "next/server";
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: err.message }, { status: 400 });
   }
 
-  const dbClient = new DatabaseClient();
+  const dbClient = await createDatabaseClient();
   const data = await dbClient.setLogs(body as LogEntry[]);
   return NextResponse.json(data);
 }

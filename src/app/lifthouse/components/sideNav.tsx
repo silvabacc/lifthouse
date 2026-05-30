@@ -13,15 +13,14 @@ const { Sider } = Layout;
 
 export default function SiderNav() {
   const { collapsedStorage } = useLocalStorage();
-  const collapsedStorageValue = collapsedStorage.get();
 
   const router = useRouter();
   const pathName = usePathname();
-  const [collapsed, setCollapsed] = useState<boolean>(collapsedStorageValue);
+  const [collapsed, setCollapsed] = useState<boolean>(false);
 
   useEffect(() => {
-    setCollapsed(collapsedStorageValue);
-  }, [collapsedStorage, collapsedStorageValue]);
+    setCollapsed(collapsedStorage.get());
+  }, []);
 
   const items = pageConfig.map((item, index) => ({
     key: `${index + 1}`,

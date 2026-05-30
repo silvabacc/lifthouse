@@ -11,7 +11,7 @@ import AddMeal from "./components/addMeal";
 import dynamic from "next/dynamic";
 import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 
-const MacroNutrients = dynamic(() => import("./components/macroNutrients"));
+const MacroNutrients = dynamic(() => import("./components/macroNutrients"), { ssr: false });
 
 export default function MealsPage() {
   const [activeTab, setActivetab] = useState("1");

@@ -1,9 +1,11 @@
+"use client";
+
 import WeightCalendar from "./components/weightCalendar";
 import WeightAlert from "./components/weightAlert";
 import { PageInfoPortal } from "../components/pageInfo";
 import dynamic from "next/dynamic";
 
-const WeightLine = dynamic(() => import("./components/weightLine"));
+const WeightLine = dynamic(() => import("./components/weightLine"), { ssr: false });
 
 export default function WeightPage() {
   return (

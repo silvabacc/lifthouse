@@ -1,13 +1,18 @@
 import { LayoutAnimation } from "@/app/aniamtions/layoutAnimation";
 import { WorkoutIdContextProvider } from "./context";
 
-export default function WorkoutIdLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { workoutId: number };
-}) {
+export default async function WorkoutIdLayout(
+  props: {
+    children: React.ReactNode;
+    params: Promise<{ workoutId: string }>;
+  }
+) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   return (
     <LayoutAnimation>
       <WorkoutIdContextProvider workoutId={params.workoutId}>

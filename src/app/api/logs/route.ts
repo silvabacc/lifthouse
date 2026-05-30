@@ -1,4 +1,4 @@
-import DatabaseClient from "@/lib/supabase/db/dbClient";
+import { createDatabaseClient } from "@/lib/supabase/db/dbClient";
 import Joi from "joi";
 import { NextResponse } from "next/server";
 
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
   const { exerciseIds, rows, startFrom, endOn } = body;
 
-  const dbClient = new DatabaseClient();
+  const dbClient = await createDatabaseClient();
   const data = await dbClient.getLogs(exerciseIds, rows, startFrom, endOn);
   return NextResponse.json(data);
 }

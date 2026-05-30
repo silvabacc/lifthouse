@@ -37,7 +37,7 @@ export function SelectExercise({
   }, [items]);
 
   // Find common exercise types
-  const commonType = findExercise?.exerciseType.find((type) =>
+  const commonType = findExercise?.exerciseType.filter((type) =>
     acceptedExerciseTypesForExercises(workout.template).includes(type)
   );
 
@@ -46,7 +46,7 @@ export function SelectExercise({
   const filteredExercisesWithType = exercises
     .filter((e) => {
       if (!commonType) return false;
-      return e.exerciseType.includes(commonType);
+      return e.exerciseType.find((v) => commonType.includes(v));
     })
     .filter((e) =>
       intersection(e.exerciseType, findExercise?.exerciseType ?? [])

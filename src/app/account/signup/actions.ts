@@ -4,8 +4,8 @@ import { cookies, headers } from "next/headers";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
 export async function signUp(email: string, password: string) {
-  const cookieStore = cookies();
-  const origin = headers().get("origin");
+  const cookieStore = await cookies();
+  const origin = (await headers()).get("origin");
   const supabase = createSupabaseServer(cookieStore);
 
   const { error } = await supabase.auth.signUp({

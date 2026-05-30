@@ -31,7 +31,7 @@ export default function Table({ data, setLogs }: Props) {
   }, [data]);
 
   const handleDelete = async (key: React.Key) => {
-    const response = await fetch(`/api/logs/${key}`, { method: "DELETE" });
+    const response = await fetch(`/api/logs/${String(key)}`, { method: "DELETE" });
 
     if (response.success) {
       const newData = dataSource.filter((item) => item.key !== key);

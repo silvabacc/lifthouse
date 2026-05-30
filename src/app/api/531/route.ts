@@ -1,9 +1,9 @@
-import DatabaseClient from "@/lib/supabase/db/dbClient";
+import { createDatabaseClient } from "@/lib/supabase/db/dbClient";
 import Joi from "joi";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-  const dbClient = new DatabaseClient();
+  const dbClient = await createDatabaseClient();
   const data = await dbClient.getFiveThreeOne();
   return NextResponse.json(data);
 }
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: err.message }, { status: 400 });
   }
 
-  const dbClient = new DatabaseClient();
+  const dbClient = await createDatabaseClient();
   const data = await dbClient.setFiveThreeOne(body);
   return NextResponse.json(data);
 }

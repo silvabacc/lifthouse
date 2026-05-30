@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { View } from "./types";
 import { useLocalStorage } from "../../../../../hooks/useLocalStorage";
@@ -13,9 +15,9 @@ const DEFAULT_LIMIT = 60;
 
 const { RangePicker } = DatePicker;
 
-const StackedChart = dynamic(() => import("./stacked"));
-const LineChart = dynamic(() => import("./line"));
-const Table = dynamic(() => import("./table"));
+const StackedChart = dynamic(() => import("./stacked"), { ssr: false });
+const LineChart = dynamic(() => import("./line"), { ssr: false });
+const Table = dynamic(() => import("./table"), { ssr: false });
 
 type LogVisualProps = {
   exercise: Exercise;
