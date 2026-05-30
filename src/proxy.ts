@@ -5,7 +5,7 @@ import getConfig from "./config";
 
 const { pageUrl } = getConfig();
 
-async function AuthMiddleware(
+async function authProxy(
   request: NextRequest,
   response: NextResponse,
   supabase: SupabaseClient
@@ -56,7 +56,7 @@ async function AuthMiddleware(
   return response;
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let next = NextResponse.next({
     request: {
       headers: request.headers,
@@ -110,28 +110,16 @@ export async function middleware(request: NextRequest) {
   );
 
   if (request.nextUrl.pathname === "/") {
-    next = await AuthMiddleware(request, next, supabase);
+    next = await authProxy(request, next, supabase);
   }
 
   if (request.nextUrl.pathname.startsWith(pageUrl)) {
-    next = await AuthMiddleware(request, next, supabase);
+    next = await authProxy(request, next, supabase);
   }
 
   return next;
 }
 
-// export const config = {
-//   matcher: [
-//     /*
-//      * Match all request paths except for the ones starting with:
-//      * - _next/static (static files)
-//      * - _next/image (image optimization files)
-//      * - favicon.ico (favicon file)
-//      * Feel free to modify this pattern to include more paths.
-//      */
-//     // "/((?!_next/static|_next/image|favicon.ico|account/|auth/).*)",
-//     "/",
-//     "/lifthouse/:path*",
-//     "/api/:path*",
-//   ],
-// };
+export const config = {
+  matcher: ["/", "/lifthouse/:path*"],
+};

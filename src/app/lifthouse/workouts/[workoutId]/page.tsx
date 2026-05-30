@@ -35,14 +35,10 @@ export default function WorkoutPlanPage() {
       exercises: [...(workout?.exercises || []), defaultExerciseSetup],
     });
 
-    setWorkout((prev) => {
-      if (prev) {
-        return {
-          ...prev,
-          exercises: [...(prev?.exercises || []), defaultExerciseSetup],
-        };
-      }
-    });
+    setWorkout((prev) => ({
+      ...prev,
+      exercises: [...(prev.exercises || []), defaultExerciseSetup],
+    }));
 
     setSavingExercise(false);
   };

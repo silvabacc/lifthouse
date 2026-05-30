@@ -11,18 +11,22 @@ const { Paragraph } = Typography;
 type NavigationCardProps = {
   config: PageConfig;
 };
+
 export default function NavigationCard({ config }: NavigationCardProps) {
   return (
     <Link href={config.route} key={config.title}>
       <Card
         className="cursor-pointer hover:bg-sky-100"
         cover={
-          <Image
-            className="object-cover"
-            src={config.cover}
-            alt={config.title}
-            height={200}
-          />
+          <div className="relative h-48 w-full overflow-hidden">
+            <Image
+              src={config.cover}
+              alt={config.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            />
+          </div>
         }
       >
         <Meta

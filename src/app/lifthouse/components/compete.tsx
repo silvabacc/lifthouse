@@ -4,7 +4,7 @@ import {
   Input,
   InputNumber,
   Space,
-  StepProps,
+  StepsProps,
   Steps,
   Tooltip,
 } from "antd";
@@ -57,7 +57,7 @@ export function Complete({ exercise }: Props) {
     });
   };
 
-  const items: StepProps[] = [];
+  const items: NonNullable<StepsProps["items"]> = [];
   for (let i = 0; i < info.length; i++) {
     const latestLog = latestLogInfo?.find((l) => l.set === i + 1);
 

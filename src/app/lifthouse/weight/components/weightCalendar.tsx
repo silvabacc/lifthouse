@@ -4,7 +4,7 @@ import { Button, Calendar, InputNumber, Space, Tooltip } from "antd";
 import dayjs from "dayjs";
 import { useWeightInContext } from "../context";
 import type { Dayjs } from "dayjs";
-import { CellRenderInfo } from "rc-picker/lib/interface";
+import type { CellRenderInfo } from "@rc-component/picker/interface";
 import { useState } from "react";
 import { useFetch } from "../../../../../hooks/useFetch";
 import { Weight } from "@/lib/supabase/db/types";

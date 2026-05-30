@@ -1,5 +1,5 @@
 import { LogInfo, ExerciseConfiguration } from "@/lib/supabase/db/types";
-import { Button, InputNumber, Space, StepProps, Steps, Tooltip } from "antd";
+import { Button, InputNumber, Space, StepsProps, Steps, Tooltip } from "antd";
 import { useState } from "react";
 import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import { useLocalStorage } from "../../../../../../../hooks/useLocalStorage";
@@ -22,7 +22,7 @@ export function Complete({ exercise, latestLogInfo }: Props) {
     }
   };
 
-  const items: StepProps[] = [];
+  const items: NonNullable<StepsProps["items"]> = [];
   for (let i = 0; i < exercise.sets; i++) {
     const latestLog = latestLogInfo?.find((l) => l.set === i + 1);
 

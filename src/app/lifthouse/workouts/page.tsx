@@ -1,6 +1,14 @@
 import { PageAnimation } from "@/app/aniamtions/pageAnimation";
+import { createDatabaseClient } from "@/lib/supabase/db/dbClient";
 import Workouts from "./workouts";
 
 export default async function WorkoutsPage() {
-  return <PageAnimation>{<Workouts />}</PageAnimation>;
+  const db = await createDatabaseClient();
+  const workouts = await db.getWorkouts();
+
+  return (
+    <PageAnimation>
+      <Workouts initialWorkouts={workouts} />
+    </PageAnimation>
+  );
 }

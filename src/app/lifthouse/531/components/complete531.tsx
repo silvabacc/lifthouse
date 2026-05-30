@@ -9,7 +9,7 @@ import {
   Drawer,
   Input,
   InputNumber,
-  StepProps,
+  StepsProps,
   Steps,
   Tooltip,
   notification,
@@ -72,7 +72,7 @@ export default function CompleteFiveThreeOneModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedExercise]);
 
-  const items: StepProps[] = [];
+  const items: NonNullable<StepsProps["items"]> = [];
   for (let i = 0; i < sets; i++) {
     items.push({
       description: (

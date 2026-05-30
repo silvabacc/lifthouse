@@ -1,4 +1,5 @@
 import { LayoutAnimation } from "@/app/aniamtions/layoutAnimation";
+import { createDatabaseClient } from "@/lib/supabase/db/dbClient";
 import { WorkoutIdContextProvider } from "./context";
 
 export default async function WorkoutIdLayout(
@@ -8,14 +9,17 @@ export default async function WorkoutIdLayout(
   }
 ) {
   const params = await props.params;
+  const { children } = props;
 
-  const {
-    children
-  } = props;
+  const db = await createDatabaseClient();
+  const [workout, exercises] = await Promise.all([
+    db.getWorkoutData(params.workoutId),
+    db.getExercises(),
+  ]);
 
   return (
     <LayoutAnimation>
-      <WorkoutIdContextProvider workoutId={params.workoutId}>
+      <WorkoutIdContextProvider initialWorkout={workout} initialExercises={exercises}>
         {children}
       </WorkoutIdContextProvider>
     </LayoutAnimation>
