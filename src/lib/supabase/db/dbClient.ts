@@ -52,7 +52,7 @@ export default class DatabaseClient {
       name: data.exercise_name,
       notes: data.notes,
       exerciseType: JSON.parse(
-        data.exercise_type.replace(/[\u201C\u201D]/g, '"')
+        data.exercise_type.replace(/[\u201C\u201D]/g, '"'),
       ),
       youtubeId: data.youtube_id,
       primaryMuscleGroup: data.primary_muscle_group,
@@ -143,7 +143,7 @@ export default class DatabaseClient {
     description: string,
     exercises: number[],
     workoutId: string,
-    template: WorkoutTemplate
+    template: WorkoutTemplate,
   ): Promise<Workout> {
     const { data, error } = await this.supabase
       .from("workouts")
@@ -212,7 +212,7 @@ export default class DatabaseClient {
     exerciseIds: number[],
     rows: number = 20,
     startFrom?: number,
-    endOn?: number
+    endOn?: number,
   ) {
     const userId = await this.getUserId();
 
@@ -403,7 +403,13 @@ export default class DatabaseClient {
 
   async addMeal(
     mealTitle: string,
-    nutrients: { calories: number; protein: number; fat: number; carbs: number }
+    nutrients: {
+      calories: number;
+      protein: number;
+      fat: number;
+      carbs: number;
+    },
+    date?: string,
   ): Promise<Meal> {
     const userId = await this.getUserId();
 
@@ -417,7 +423,7 @@ export default class DatabaseClient {
           carbs: nutrients.carbs,
           fat: nutrients.fat,
           user_id: userId,
-          date: new Date().toDateString(),
+          date: date ?? new Date().toDateString(),
         },
       ])
       .select();
@@ -493,7 +499,7 @@ export default class DatabaseClient {
   //* Helper functions *//
   transformDataToFiveThreeOne(
     exercieData: Exercise[],
-    data: any
+    data: any,
   ): FiveThreeOne {
     return {
       id: data[0].id,

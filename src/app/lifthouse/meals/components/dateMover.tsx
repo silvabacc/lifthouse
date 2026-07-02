@@ -1,9 +1,13 @@
 "use client";
 
 import React from "react";
-import type { Dayjs } from "dayjs";
+import dayjs, { type Dayjs } from "dayjs";
 import { Button, Calendar, Tooltip, Typography } from "antd";
-import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
+import {
+  CalendarOutlined,
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
+} from "@ant-design/icons";
 import { DateUtils } from "@/lib/dateUtils";
 
 const { Title } = Typography;
@@ -22,10 +26,12 @@ const DateMover: React.FC<DateMoverProps> = ({
   const onLeftArrowClick = () => setSelectedDay(selectedDay.subtract(1, "day"));
   const onRightArrowClick = () => setSelectedDay(selectedDay.add(1, "day"));
   const onSelect = (date: Dayjs) => setSelectedDay(date);
+  const onGoToToday = () => setSelectedDay(dayjs());
 
+  const isToday = DateUtils.isToday(selectedDay);
   let title = selectedDay.format("dddd");
 
-  if (DateUtils.isToday(selectedDay)) {
+  if (isToday) {
     title = "Today";
   }
   if (DateUtils.isYesterday(selectedDay)) {
@@ -65,7 +71,20 @@ const DateMover: React.FC<DateMoverProps> = ({
           icon={<ArrowRightOutlined />}
         />
       </div>
-      <h3 className="m-0">{selectedDay.format("DD/MM/YYYY")}</h3>
+      <div className="flex justify-center items-center gap-2">
+        <h3 className="m-0">{selectedDay.format("DD/MM/YYYY")}</h3>
+        {!isToday && (
+          <Tooltip title="Go to today">
+            <Button
+              type="primary"
+              size="small"
+              shape="circle"
+              onClick={onGoToToday}
+              icon={<CalendarOutlined />}
+            />
+          </Tooltip>
+        )}
+      </div>
     </div>
   );
 };

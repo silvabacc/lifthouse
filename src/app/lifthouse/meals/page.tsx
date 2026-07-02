@@ -71,7 +71,7 @@ export default function MealsPage() {
     {
       key: "2",
       label: `Add Entry`,
-      children: <AddMeal goToMealTab={goToMealTab} />,
+      children: <AddMeal goToMealTab={goToMealTab} selectedDay={selectedDay} />,
     },
   ];
 

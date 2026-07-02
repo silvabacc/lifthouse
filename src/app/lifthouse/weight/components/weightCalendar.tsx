@@ -21,6 +21,7 @@ export default function WeightCalendar() {
     isLoading,
   } = useWeightInContext();
   const [weight, setWeight] = useState(0);
+  const [openDate, setOpenDate] = useState<Dayjs | null>(null);
   const { fetch } = useFetch();
 
   const onPanelChange = (date: Dayjs) => {
@@ -35,6 +36,7 @@ export default function WeightCalendar() {
           method: "DELETE",
         });
         setWeightData((prev) => prev.filter((day) => day.id !== weightId));
+        setOpenDate(null);
         return;
       }
 
@@ -57,11 +59,13 @@ export default function WeightCalendar() {
         { ...newWeight, date: dayjs(newWeight.date) },
       ]);
     }
+
+    setOpenDate(null);
   };
 
   const fullCellRender = (date: Dayjs, info: CellRenderInfo<Dayjs>) => {
     const cellDayWeighIn = weightData?.find((day) =>
-      day.date.isSame(date, "day")
+      day.date.isSame(date, "day"),
     );
 
     const tooltipElement = (
@@ -72,6 +76,7 @@ export default function WeightCalendar() {
           min={0}
           value={weight}
           onChange={(value) => setWeight(value || 0)}
+          onFocus={(e) => e.target.select()}
           prefix="kg"
         />
         <Button type="primary" onClick={() => handleOk(cellDayWeighIn?.id)}>
@@ -88,7 +93,11 @@ export default function WeightCalendar() {
       <Tooltip
         trigger={"click"}
         color="white"
-        onOpenChange={() => setWeight(0)}
+        open={!!openDate && openDate.isSame(date, "day")}
+        onOpenChange={(open) => {
+          setOpenDate(open ? date : null);
+          setWeight(0);
+        }}
         title={tooltipElement}
         autoAdjustOverflow
       >

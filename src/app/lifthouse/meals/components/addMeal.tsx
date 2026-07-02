@@ -1,11 +1,13 @@
 import { useFetch } from "../../../../../hooks/useFetch";
 import { Card, Input, Alert, Button, InputNumber } from "antd";
 import { useState, useRef, Dispatch, SetStateAction, useEffect } from "react";
+import type { Dayjs } from "dayjs";
 
 type AddMealProps = {
   goToMealTab: () => void;
+  selectedDay: Dayjs;
 };
-export default function AddMeal({ goToMealTab }: AddMealProps) {
+export default function AddMeal({ goToMealTab, selectedDay }: AddMealProps) {
   const { fetch } = useFetch();
   const [mealTitle, setMealTitle] = useState("");
   const [caloriesPer, setCaloriesPer] = useState<number>();
@@ -29,6 +31,7 @@ export default function AddMeal({ goToMealTab }: AddMealProps) {
       body: JSON.stringify({
         mealTitle: mealTitle,
         ...nutrients,
+        date: selectedDay.toDate().toDateString(),
       }),
     });
   };
