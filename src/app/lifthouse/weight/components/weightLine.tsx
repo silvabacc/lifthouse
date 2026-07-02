@@ -7,7 +7,7 @@ export default function WeightLine() {
   const { weightData } = useWeightInContext();
 
   if (weightData.length === 0) {
-    return null;
+    return <div style={{ height: 350 }} />;
   }
 
   const transformData = weightData.map((weight) => {
@@ -18,28 +18,30 @@ export default function WeightLine() {
   });
 
   return (
-    <Line
-      height={350}
-      tooltip={false}
-      className="w-full pointer-events-none"
-      data={transformData}
-      xField="date"
-      yField="weight"
-      axis={{
-        y: {
-          labelFormatter: (v: string) => `${v} kg`,
-          style: {
-            labelTransform: "rotate(360)",
+    <div style={{ height: 350 }}>
+      <Line
+        height={350}
+        tooltip={false}
+        className="w-full pointer-events-none"
+        data={transformData}
+        xField="date"
+        yField="weight"
+        axis={{
+          y: {
+            labelFormatter: (v: string) => `${v} kg`,
+            style: {
+              labelTransform: "rotate(360)",
+            },
           },
-        },
-        x: {
-          labelFormatter: (v: string) =>
-            new Date(v).toLocaleDateString("en-GB", {
-              day: "numeric",
-              month: "short",
-            }),
-        },
-      }}
-    />
+          x: {
+            labelFormatter: (v: string) =>
+              new Date(v).toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "short",
+              }),
+          },
+        }}
+      />
+    </div>
   );
 }
