@@ -54,7 +54,10 @@ export default function WorkoutPlanPage() {
             onClickMuscle={onAddExercise}
             filterOutExercisesIds={workout.exercises.map((e) => e.exerciseId)}
           />
-          <ChangeExercisesDrawer show={showEdit} onCancel={() => setShowEdit(false)} />
+          <ChangeExercisesDrawer
+            show={showEdit}
+            onCancel={() => setShowEdit(false)}
+          />
           <TemplateDrawer
             template={workout.template}
             show={showTemplate}
@@ -63,9 +66,12 @@ export default function WorkoutPlanPage() {
           <Record show={showRecord} onCancel={() => setShowRecord(false)} />
           <Charts />
         </Content>
-        <Footer className="p-0 mt-4">
+        <Footer className="mt-4" style={{ padding: 0 }}>
           {workout?.template === WorkoutTemplate.custom && (
-            <AddButton title="+ Add Exercise" onClick={() => setDrawOpen(true)} />
+            <AddButton
+              title="+ Add Exercise"
+              onClick={() => setDrawOpen(true)}
+            />
           )}
         </Footer>
       </Layout>
@@ -79,13 +85,17 @@ type PageInfoExtraProps = {
   onClickWorkoutTemplate: () => void;
 };
 
-function PageInfoExtra({ onClickRecord, onClickEdit, onClickWorkoutTemplate }: PageInfoExtraProps) {
+function PageInfoExtra({
+  onClickRecord,
+  onClickEdit,
+  onClickWorkoutTemplate,
+}: PageInfoExtraProps) {
   return (
     <Space className="pb-4">
       <Button type="dashed" danger onClick={onClickRecord}>
         Record a workout
       </Button>
-      <Button type="dashed" className="text-sky-500" onClick={onClickEdit}>
+      <Button type="dashed" style={{ color: "#0ea5e9" }} onClick={onClickEdit}>
         Change exercises
       </Button>
       <Button type="dashed" onClick={onClickWorkoutTemplate}>

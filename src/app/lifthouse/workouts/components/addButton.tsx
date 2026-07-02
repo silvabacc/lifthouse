@@ -10,7 +10,8 @@ export default function AddButton({ title, onClick }: AddExerciseButtonProps) {
       <Button
         onClick={onClick}
         type="link"
-        className="flex text-sky-400 text-base w-full flex-col items-center justify-center"
+        style={{ color: "#0ea5e9" }}
+        className="flex text-base w-full flex-col items-center justify-center"
       >
         {title}
       </Button>
