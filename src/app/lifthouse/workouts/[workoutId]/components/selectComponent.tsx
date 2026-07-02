@@ -26,6 +26,8 @@ type SelectProps = {
   filterTagsOptions?: string[];
   onChange?: (value: string | number) => void;
 };
+const DROPDOWN_HEIGHT = 256;
+
 export default function SelectElement({
   value,
   options,
@@ -34,6 +36,7 @@ export default function SelectElement({
   onChange,
 }: SelectProps) {
   const [expanded, setExpnaded] = useState(false);
+  const [openUpward, setOpenUpward] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const [search, setSearch] = useState("");
   const [tags, setTags] = useState<string[]>([]);
@@ -43,10 +46,23 @@ export default function SelectElement({
 
   //This may cause bugs...
   const [optionSelected, setOptionSelected] = useState(
-    (findOption(defaultValue) || findOption(value)) ?? options[0]
+    (findOption(defaultValue) || findOption(value)) ?? options[0],
   );
 
-  const onClick = () => setExpnaded(!expanded);
+  const filteredOptions = options
+    .filter((o) => o.label.toLocaleLowerCase().includes(search))
+    .filter((exercise) =>
+      tags.length ? tags.includes(exercise.filterItemKey ?? "") : true,
+    );
+
+  const onClick = () => {
+    if (!expanded && ref.current) {
+      const { bottom } = ref.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - bottom;
+      setOpenUpward(spaceBelow < DROPDOWN_HEIGHT);
+    }
+    setExpnaded(!expanded);
+  };
 
   const handleOutsideClick = (e: MouseEvent) => {
     if (ref.current && !ref.current.contains(e.target as Node)) {
@@ -90,23 +106,28 @@ export default function SelectElement({
       {expanded && (
         <BottomFadeInAnimation
           animationDuration={0.1}
-          animationHeight={256}
-          className="absolute z-10 bg-white border-solid border-slate-200 overflow-auto w-full shadow-2xl pb-4 rounded-lg"
+          animationHeight={DROPDOWN_HEIGHT}
+          className={`absolute z-10 bg-white border-solid border-slate-200 overflow-auto w-full shadow-2xl rounded-lg flex flex-col ${
+            openUpward ? "bottom-full" : "top-full mt-1 pb-4"
+          }`}
         >
-          <div className="bg-white sticky top-0">
-            <SearchElement
-              selectedTags={tags}
-              filterTagOptions={filterTagsOptions}
-              setSearchQuery={setSearch}
-              setSelectedTags={setTags}
-            />
-          </div>
-          {options
-            .filter((o) => o.label.toLocaleLowerCase().includes(search))
-            .filter((exercise) =>
-              tags.length ? tags.includes(exercise.filterItemKey ?? "") : true
-            )
-            .map((o, index) => {
+          {!openUpward && (
+            <div className="bg-white sticky top-0 order-1">
+              <SearchElement
+                selectedTags={tags}
+                filterTagOptions={filterTagsOptions}
+                setSearchQuery={setSearch}
+                setSelectedTags={setTags}
+              />
+            </div>
+          )}
+          <div className="h-full order-2">
+            {filteredOptions.length === 0 && (
+              <div className="h-full flex items-center justify-center text-lg text-center text-slate-400">
+                No results found 😢
+              </div>
+            )}
+            {filteredOptions.map((o, index) => {
               const showDisabled =
                 o.disabledOptions?.disabled && o.value !== optionSelected.value;
 
@@ -135,6 +156,17 @@ export default function SelectElement({
                 </div>
               );
             })}
+          </div>
+          {openUpward && (
+            <div className="bg-white sticky bottom-0 order-3">
+              <SearchElement
+                selectedTags={tags}
+                filterTagOptions={filterTagsOptions}
+                setSearchQuery={setSearch}
+                setSelectedTags={setTags}
+              />
+            </div>
+          )}
         </BottomFadeInAnimation>
       )}
     </div>

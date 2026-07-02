@@ -30,7 +30,7 @@ export default function SearchElement({
 
   return (
     <>
-      <div className="flex justify-between w-full pb-2">
+      <div className="flex justify-between w-full">
         <Search
           className="w-full"
           placeholder={placerHolder}

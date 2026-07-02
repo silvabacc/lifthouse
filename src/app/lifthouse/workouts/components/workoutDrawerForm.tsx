@@ -37,10 +37,15 @@ export default function WorkoutFormDrawer({
 }: Props) {
   return (
     <Drawer open={open} onClose={onClose} title={title}>
-      <Form onFinish={onFinish}>
+      <Form
+        onFinish={onFinish}
+        initialValues={{
+          name: defaultTitleFieldValue,
+          description: defaultDescriptionFieldValue,
+        }}
+      >
         <Form.Item name="name">
           <Input
-            defaultValue={defaultTitleFieldValue}
             required={options.nameRequired}
             size="large"
             placeholder="Edit plan name"
@@ -48,7 +53,6 @@ export default function WorkoutFormDrawer({
         </Form.Item>
         <Form.Item name="description">
           <TextArea
-            defaultValue={defaultDescriptionFieldValue}
             showCount
             required={options.descriptionRequired}
             maxLength={100}
