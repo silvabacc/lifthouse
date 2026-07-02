@@ -1,16 +1,16 @@
+"use client";
+
 import { App, Button, Divider, Typography } from "antd";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
 import WorkoutFormDrawer, {
   ExerciseFormDrawerField,
 } from "./workoutDrawerForm";
-import { useWorkout } from "../hooks/useWorkout";
 import { Workout } from "@/lib/supabase/db/types";
-import getConfig from "@/config";
 import Link from "next/link";
+import { updateWorkoutMeta } from "../actions";
 
-const { pageUrl } = getConfig();
 const { Paragraph } = Typography;
 
 type WorkoutCardProps = {
@@ -18,8 +18,9 @@ type WorkoutCardProps = {
   description: string;
   workoutId: number;
   onDelete: (id: number) => void;
-  onWorkoutUpdate: (workout: Workout) => void;
+  onWorkoutUpdate: () => void;
 };
+
 export default function WorkoutCard({
   name,
   description,
@@ -27,8 +28,8 @@ export default function WorkoutCard({
   onDelete,
   onWorkoutUpdate,
 }: WorkoutCardProps) {
-  const [drawOpen, setDrawOpen] = useState<boolean>(false);
-  const { updateWorkoutPlan } = useWorkout();
+  const [drawOpen, setDrawOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const { modal } = App.useApp();
 
   const showDeleteConfirm = () => {
@@ -39,23 +40,18 @@ export default function WorkoutCard({
       okType: "danger",
       centered: true,
       cancelText: "No",
-      async onOk() {
+      onOk() {
         onDelete(workoutId);
       },
     });
   };
 
-  const onFinish = async (info: ExerciseFormDrawerField) => {
-    const log = await updateWorkoutPlan({
-      workoutId,
-      name: info.name,
-      description: info.description,
+  const onFinish = (info: ExerciseFormDrawerField) => {
+    startTransition(async () => {
+      await updateWorkoutMeta(workoutId, info.name, info.description);
+      onWorkoutUpdate();
+      setDrawOpen(false);
     });
-
-    if (log) {
-      onWorkoutUpdate(log);
-    }
-    setDrawOpen(false);
   };
 
   return (
@@ -63,29 +59,32 @@ export default function WorkoutCard({
       <WorkoutFormDrawer
         title="Edit workout plan"
         open={drawOpen}
-        onClose={() => setDrawOpen(!drawOpen)}
+        onClose={() => setDrawOpen(false)}
         onFinish={onFinish}
         options={{ nameRequired: false, descriptionRequired: false }}
         defaultTitleFieldValue={name}
         defaultDescriptionFieldValue={description}
       />
-      <Link href={`${pageUrl}/workouts/${workoutId}?name=${name}`}>
-        <div className="relative p-6 ">
+      <Link href={`/lifthouse/workouts/${workoutId}?name=${name}`}>
+        <div className="relative p-6">
           <h1 className="text-black text-base font-medium pb-2">{name}</h1>
-          <Description text={description} />
+          <Paragraph ellipsis={{ rows: 2, expandable: true, symbol: "more" }}>
+            {description}
+          </Paragraph>
         </div>
       </Link>
       <div className="flex items-center justify-between py-2 bg-gray-50">
         <Button
           className="flex-1 text-gray-400"
           type="link"
+          loading={isPending}
           onClick={() => setDrawOpen(true)}
         >
           Edit
         </Button>
-        <Divider type="vertical" />
+        <Divider orientation="vertical" />
         <Button
-          onClick={() => showDeleteConfirm()}
+          onClick={showDeleteConfirm}
           className="flex-1 text-gray-400"
           type="link"
         >
@@ -93,24 +92,5 @@ export default function WorkoutCard({
         </Button>
       </div>
     </BottomFadeInAnimation>
-  );
-}
-
-type DescriptionProps = {
-  text: string;
-};
-function Description({ text }: DescriptionProps) {
-  return (
-    <div>
-      <Paragraph
-        ellipsis={{
-          rows: 2,
-          expandable: true,
-          symbol: "more",
-        }}
-      >
-        {text}
-      </Paragraph>
-    </div>
   );
 }

@@ -272,7 +272,7 @@ export default function AddMeal({ goToMealTab }: AddMealProps) {
       {error && (
         <Alert
           style={{ marginTop: 16 }}
-          message="Please add a title"
+          title="Please add a title"
           type="error"
           showIcon
         />

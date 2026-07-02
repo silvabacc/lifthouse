@@ -50,10 +50,9 @@ export default function SignupForm() {
       <FormWrapper onFinish={onFinish}>
         {alert && (
           <Alert
-            closable
-            onClose={() => setAlert("")}
+            closable={{ onClose: () => setAlert("") }}
             style={{ marginBottom: 12 }}
-            message={alert}
+            title={alert}
             type="error"
           />
         )}

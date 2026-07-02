@@ -1,61 +1,39 @@
 "use client";
 
 import { Button, Dropdown, Layout, MenuProps } from "antd";
-import { SettingOutlined } from "@ant-design/icons";
-import { useAppContext } from "@/app/context";
-import { UnlockOutlined, LogoutOutlined } from "@ant-design/icons";
+import { SettingOutlined, UnlockOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import { createSupabaseClient } from "@/lib/supabase/client";
+import { useTransition } from "react";
 import { useLocalStorage } from "../../../../hooks/useLocalStorage";
-import getConfig from "@/config";
+import { signOut } from "../actions";
 
 const { Header: AntDHeader } = Layout;
 
-const { pageUrl } = getConfig();
+type Props = {
+  email: string;
+};
 
-export default function Header() {
-  const { user } = useAppContext();
+export default function Header({ email }: Props) {
   const { clearAllLocalStorage } = useLocalStorage();
   const router = useRouter();
-  const supabase = createSupabaseClient();
+  const [, startTransition] = useTransition();
 
   const items: MenuProps["items"] = [
-    {
-      label: user?.email,
-      key: "0",
-    },
-    {
-      label: "Update Password",
-      key: "1",
-      icon: <UnlockOutlined />,
-    },
-    {
-      label: "Logout",
-      key: "2",
-      icon: <LogoutOutlined />,
-    },
+    { label: email, key: "0" },
+    { label: "Update Password", key: "1", icon: <UnlockOutlined /> },
+    { label: "Logout", key: "2", icon: <LogoutOutlined /> },
   ];
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
-    switch (e.key) {
-      case "1":
-        router.push(`${pageUrl}/update-password`);
-        break;
-      case "2":
-        supabase.auth.signOut();
-        clearAllLocalStorage();
-        router.push("/");
-        break;
+    if (e.key === "1") {
+      router.push("/lifthouse/update-password");
+    } else if (e.key === "2") {
+      clearAllLocalStorage();
+      startTransition(() => signOut());
     }
   };
 
-  const menuProps = {
-    items,
-    onClick: handleMenuClick,
-  };
-
   return (
-    //Tailwind doesn't apply to AntD components
     <AntDHeader
       style={{
         background: "white",
@@ -65,7 +43,7 @@ export default function Header() {
         direction: "rtl",
       }}
     >
-      <Dropdown menu={menuProps}>
+      <Dropdown menu={{ items, onClick: handleMenuClick }}>
         <Button shape="circle">
           <div className="flex items-center justify-center text-md">
             <SettingOutlined />

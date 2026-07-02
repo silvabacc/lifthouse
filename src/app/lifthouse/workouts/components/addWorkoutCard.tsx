@@ -1,36 +1,22 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useWorkout } from "../hooks/useWorkout";
-import { Workout } from "@/lib/supabase/db/types";
+"use client";
+
+import { useState, useTransition } from "react";
 import AddButton from "./addButton";
 import WorkoutFormDrawer from "./workoutDrawerForm";
-import getConfig from "@/config";
-
-const { pageUrl } = getConfig();
+import { createWorkout } from "../actions";
 
 type FieldType = {
   name: string;
   description: string;
 };
 
-type AddWorkoutCardProps = {
-  setWorkouts: Dispatch<SetStateAction<Workout[]>>;
-};
-
-export default function AddWorkoutCard({ setWorkouts }: AddWorkoutCardProps) {
+export default function AddWorkoutCard() {
   const [drawOpen, setDrawOpen] = useState(false);
-  const [disable, setDisabled] = useState(false);
-  const { createWorkoutPlan } = useWorkout();
-  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
-  const onFinish = async (info: FieldType) => {
-    setDisabled(true);
-    const response = await createWorkoutPlan(info.name, info.description);
-    router.push(`${pageUrl}/workouts/${response.workoutId}`);
-
-    setWorkouts((prev) => [...prev, response]);
-    setDrawOpen(false);
-    setDisabled(false);
+  const onFinish = (info: FieldType) => {
+    startTransition(() => createWorkout(info.name, info.description));
+    // redirect happens server-side — component unmounts automatically
   };
 
   return (
@@ -41,6 +27,7 @@ export default function AddWorkoutCard({ setWorkouts }: AddWorkoutCardProps) {
         open={drawOpen}
         onClose={() => setDrawOpen(false)}
         onFinish={onFinish}
+        isLoading={isPending}
       />
     </>
   );

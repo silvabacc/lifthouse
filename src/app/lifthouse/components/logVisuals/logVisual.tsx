@@ -35,7 +35,7 @@ export function LogVisual({
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [view, setView] = useState<View>(View.stacked);
   const [firstDate, setFirstDate] = useState(
-    dayjs().subtract(DEFAULT_LIMIT, "day")
+    dayjs().subtract(DEFAULT_LIMIT, "day"),
   );
   const [secondDate, setSecondDate] = useState(dayjs());
 
@@ -92,7 +92,7 @@ export function LogVisual({
               >
                 {v.charAt(0).toUpperCase() + v.slice(1)}
               </Button>
-              <Divider type="vertical" />
+              <Divider orientation="vertical" />
             </div>
           ))}
         </Space>

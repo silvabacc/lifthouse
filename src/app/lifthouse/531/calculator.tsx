@@ -103,7 +103,7 @@ export default function Calculator() {
       <Alert
         className="mt-4"
         showIcon
-        message="References"
+        title="References"
         description="BRZYCKI, M. (1993) Strength testing-Predicting a one-rep max from reps-to-fatigue. JOPERD, 68, p. 88-90"
         type="info"
       />

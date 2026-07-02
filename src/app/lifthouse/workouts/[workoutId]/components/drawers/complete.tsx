@@ -28,7 +28,7 @@ export function Complete({ exercise, latestLogInfo }: Props) {
 
     items.push({
       title: `Set ${i + 1}`,
-      description: (
+      content: (
         <StepRow
           exerciseId={exercise.exerciseId}
           step={i}
@@ -47,7 +47,7 @@ export function Complete({ exercise, latestLogInfo }: Props) {
     <div style={{ minWidth: 260 }} className="flex h-full flex-col mt-4">
       <Steps
         onChange={onChange}
-        direction="vertical"
+        orientation="vertical"
         items={items}
         size="small"
         current={currentSet}

@@ -18,7 +18,7 @@ export default function ExercisesView({ initialExercises }: Props) {
   const filtered = initialExercises
     .filter((e) => e.name.toLocaleLowerCase().includes(searchQuery))
     .filter((e) =>
-      selectedTags.length ? selectedTags.includes(e.primaryMuscleGroup) : true
+      selectedTags.length ? selectedTags.includes(e.primaryMuscleGroup) : true,
     );
 
   return (

@@ -1,14 +1,15 @@
+"use client";
+
 import { LogInfo, Exercise } from "@/lib/supabase/db/types";
 import {
   Button,
   Input,
   InputNumber,
-  Space,
   StepsProps,
   Steps,
   Tooltip,
 } from "antd";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useState } from "react";
 import {
   CheckCircleOutlined,
   DeleteOutlined,
@@ -19,89 +20,98 @@ import { useLocalStorage } from "../../../../hooks/useLocalStorage";
 
 const { TextArea } = Input;
 
-const defaultLogInfo = [{ set: 1, reps: 0, weight: 0 }];
+type SetInput = { reps?: number; weight?: number };
 
 type Props = {
   exercise: Exercise;
 };
+
 export function Complete({ exercise }: Props) {
-  const { getCachedLogInfo, cacheLogInfo, clearCacheLogInfo } =
-    useLocalStorage();
+  const { getCachedLogInfo, cacheLogInfo, clearCacheLogInfo } = useLocalStorage();
   const cachedLogInfo = getCachedLogInfo(exercise.exerciseId);
-  const latestLogInfo = cachedLogInfo?.info;
-  const highestSet = getHighestSet(latestLogInfo || []);
-  const [currentSet, setCurrentSet] = useState((highestSet || 1) - 1);
-  const [info, setInfo] = useState<LogInfo[]>(latestLogInfo || defaultLogInfo);
+  const initialInfo: LogInfo[] = cachedLogInfo?.info ?? [{ set: 1, reps: 0, weight: 0 }];
 
-  const onChange = (current: number) => {
-    if (current < currentSet) {
-      setCurrentSet(current);
-    }
+  const [info, setInfo] = useState<LogInfo[]>(initialInfo);
+  const [inputs, setInputs] = useState<SetInput[]>(() =>
+    initialInfo.map((i) => ({
+      reps: i.reps > 0 ? i.reps : undefined,
+      weight: i.weight > 0 ? i.weight : undefined,
+    }))
+  );
+  const completedSets = info.filter((i) => i.reps > 0 || i.weight > 0).length;
+  const [currentSet, setCurrentSet] = useState(completedSets);
+
+  const onStepChange = (current: number) => {
+    if (current < currentSet) setCurrentSet(current);
   };
 
-  const onDelete = (set: number) => {
+  const onInputChange = (index: number, field: "reps" | "weight", value: number) => {
+    setInputs((prev) => prev.map((inp, i) => (i === index ? { ...inp, [field]: value } : inp)));
+  };
+
+  const onNext = (index: number) => {
+    const { reps } = inputs[index] ?? {};
+    if (!reps) return false;
+
+    const set = index + 1;
+    cacheLogInfo(exercise.exerciseId, {
+      info: { set, reps: reps ?? 0, weight: inputs[index]?.weight ?? 0 },
+    });
+    setCurrentSet(currentSet + 1);
+    return true;
+  };
+
+  const onDelete = (index: number) => {
     const newInfo = info
-      .filter((i) => i.set !== set)
-      .map((info) => {
-        if (info.set > set) {
-          return { ...info, set: info.set - 1 };
-        }
-        return info;
-      });
+      .filter((_, i) => i !== index)
+      .map((item, i) => ({ ...item, set: i + 1 }));
+    const newInputs = inputs.filter((_, i) => i !== index);
+
     setInfo(newInfo);
+    setInputs(newInputs);
+    if (currentSet > index) setCurrentSet((s) => s - 1);
+
     clearCacheLogInfo([exercise.exerciseId]);
-    newInfo.forEach((info) => {
-      cacheLogInfo(exercise.exerciseId, {
-        info: { set: info.set, reps: info.reps, weight: info.weight },
-      });
+    newInfo.forEach((item, i) => {
+      const inp = newInputs[i];
+      if (inp?.reps || inp?.weight) {
+        cacheLogInfo(exercise.exerciseId, {
+          info: { set: item.set, reps: inp.reps ?? 0, weight: inp.weight ?? 0 },
+        });
+      }
     });
   };
-
-  const items: NonNullable<StepsProps["items"]> = [];
-  for (let i = 0; i < info.length; i++) {
-    const latestLog = latestLogInfo?.find((l) => l.set === i + 1);
-
-    items.push({
-      title: `Set ${i + 1}`,
-      description: (
-        <StepRow
-          exerciseId={exercise.exerciseId}
-          step={i}
-          placeHolder={{
-            reps: latestLog?.reps.toString(),
-            weight: latestLog?.weight.toString(),
-          }}
-          info={info[i]}
-          disabled={currentSet !== i}
-          warningEnabled={currentSet > i}
-          setInfo={setInfo}
-          onContinue={() => setCurrentSet(currentSet + 1)}
-          onDelete={() => onDelete(i + 1)}
-        />
-      ),
-    });
-  }
 
   const addSet = () => {
-    //Incase there is no first set recoreded when adding set
-    if (info.length === 1 && !latestLogInfo?.find((log) => log.set === 1)) {
-      cacheLogInfo(exercise.exerciseId, {
-        info: { set: 1, reps: 0, weight: 0 },
-      });
-    }
-    const newSet = info.length + 1;
-    setInfo((prev) => [...prev, { set: newSet, reps: -1, weight: -1 }]);
+    setInfo((prev) => [...prev, { set: prev.length + 1, reps: -1, weight: -1 }]);
+    setInputs((prev) => [...prev, {}]);
   };
 
-  const onChangeNoes = (value: string, exerciseId: number) => {
-    cacheLogInfo(exerciseId, { notes: value });
+  const onChangeNotes = (value: string) => {
+    cacheLogInfo(exercise.exerciseId, { notes: value });
   };
+
+  const items: NonNullable<StepsProps["items"]> = info.map((_, index) => ({
+    title: `Set ${index + 1}`,
+    content: (
+      <StepRow
+        key={index}
+        index={index}
+        disabled={currentSet !== index}
+        warningEnabled={currentSet > index}
+        inputValue={inputs[index] ?? {}}
+        onInputChange={onInputChange}
+        onNext={onNext}
+        onDelete={onDelete}
+      />
+    ),
+  }));
 
   return (
     <div style={{ minWidth: 260 }} className="flex h-full flex-col mt-4">
       <Steps
-        onChange={onChange}
-        direction="vertical"
+        onChange={onStepChange}
+        orientation="vertical"
         items={items}
         size="small"
         current={currentSet}
@@ -111,135 +121,84 @@ export function Complete({ exercise }: Props) {
       </div>
       <h3 className="m-0">Notes</h3>
       <TextArea
-        autoSize={true}
+        autoSize
         defaultValue={cachedLogInfo?.notes}
-        placeholder={cachedLogInfo?.notes}
         className="mt-4"
-        onChange={(e) => onChangeNoes(e.target.value, exercise.exerciseId)}
+        onChange={(e) => onChangeNotes(e.target.value)}
       />
     </div>
   );
 }
 
 type StepRowProps = {
-  exerciseId: number;
-  step: number;
+  index: number;
   disabled: boolean;
-  warningEnabled: boolean; //Warnings can only appear if the current set is less than the rendered set
-  placeHolder?: { reps?: string; weight?: string };
-  info: LogInfo;
-  setInfo: Dispatch<SetStateAction<LogInfo[]>>;
-  onContinue: () => void;
-  onDelete: () => void;
+  warningEnabled: boolean;
+  inputValue: SetInput;
+  onInputChange: (index: number, field: "reps" | "weight", value: number) => void;
+  onNext: (index: number) => boolean;
+  onDelete: (index: number) => void;
 };
+
 function StepRow({
-  exerciseId,
-  step,
+  index,
   disabled,
   warningEnabled,
-  placeHolder,
-  setInfo,
-  onContinue,
+  inputValue,
+  onInputChange,
+  onNext,
   onDelete,
 }: StepRowProps) {
-  const { getCachedLogInfo, cacheLogInfo } = useLocalStorage();
-  const cachedInfo = getCachedLogInfo(exerciseId)?.info.find(
-    (i) => i.set === step + 1
-  );
-  const [reps, setReps] = useState<number | undefined>(cachedInfo?.reps);
-  const [weight, setWeight] = useState<number | undefined>(cachedInfo?.weight);
   const [noRepsWarning, setNoRepsWarning] = useState(false);
 
-  const onNext = () => {
-    const currentReps = reps ? !reps : !cachedInfo?.reps;
-    if (currentReps) {
-      setNoRepsWarning(true);
-      return;
-    }
-
-    setNoRepsWarning(false);
-
-    setInfo((prev) => {
-      const newInfo = prev.map((info) => {
-        if (info.set === step + 1) {
-          return { set: step + 1, reps: reps || 0, weight: weight || 0 };
-        }
-        return info;
-      });
-      return newInfo;
-    });
-
-    // +1 for the set
-    cacheLogInfo(exerciseId, {
-      info: {
-        set: step + 1,
-        reps: reps || 0,
-        weight: weight || 0,
-      },
-    });
-    onContinue();
+  const handleNext = () => {
+    const ok = onNext(index);
+    setNoRepsWarning(!ok);
   };
 
-  const showWarning =
-    noRepsWarning || (warningEnabled && (reps ? !reps : !cachedInfo?.reps));
+  const showWarning = noRepsWarning || (warningEnabled && !inputValue.reps);
 
   return (
-    <div className="flex w-full justify-between">
-      <Space>
-        <InputNumber
-          disabled={disabled}
-          inputMode="decimal"
-          placeholder={placeHolder?.weight}
-          value={weight}
-          onChange={(weight) => setWeight(weight ?? 0)}
-          defaultValue={cachedInfo?.weight}
-          min={0}
-          prefix="kg"
-        />
-        <InputNumber
-          disabled={disabled}
-          inputMode="decimal"
-          value={reps}
-          placeholder={placeHolder?.reps}
-          defaultValue={cachedInfo?.reps}
-          min={0}
-          onChange={(reps) => setReps(reps ?? 0)}
-          prefix="reps"
-        />
-      </Space>
-      <div className="flex flex-wrap flex-row justify-center">
-        <Button
-          type="link"
-          disabled={disabled}
-          className="p-0 m-0"
-          icon={<CheckCircleOutlined className="p-0 m-0" />}
-          onClick={onNext}
-        />
-        <Button
-          danger
-          type="link"
-          icon={<DeleteOutlined />}
-          onClick={(e) => {
-            e.preventDefault();
-            onDelete();
-          }}
-        />
-        {showWarning && (
-          <div onClick={(e) => e.stopPropagation()}>
-            <Tooltip trigger={"click"} title="Reps is missing!">
-              <Button
-                type="link"
-                className="p-0 m-0 text-orange-400"
-                icon={<WarningOutlined />}
-              />
-            </Tooltip>
-          </div>
-        )}
-      </div>
+    <div className="flex w-full items-center gap-2">
+      <InputNumber
+        className="flex-1"
+        disabled={disabled}
+        inputMode="decimal"
+        value={inputValue.weight}
+        onChange={(v) => onInputChange(index, "weight", v ?? 0)}
+        min={0}
+        prefix="kg"
+      />
+      <InputNumber
+        className="flex-1"
+        disabled={disabled}
+        inputMode="decimal"
+        value={inputValue.reps}
+        onChange={(v) => onInputChange(index, "reps", v ?? 0)}
+        min={0}
+        prefix="reps"
+      />
+      <Button
+        type="link"
+        disabled={disabled}
+        className="p-0 m-0 shrink-0"
+        icon={<CheckCircleOutlined />}
+        onClick={handleNext}
+      />
+      <Button
+        danger
+        type="link"
+        className="p-0 m-0 shrink-0"
+        icon={<DeleteOutlined />}
+        onClick={(e) => { e.preventDefault(); onDelete(index); }}
+      />
+      {showWarning && (
+        <div onClick={(e) => e.stopPropagation()} className="shrink-0">
+          <Tooltip trigger="click" title="Reps is missing!">
+            <Button type="link" className="p-0 m-0 text-orange-400" icon={<WarningOutlined />} />
+          </Tooltip>
+        </div>
+      )}
     </div>
   );
-}
-
-function getHighestSet(info: LogInfo[]) {
-  return info.reduce((acc, curr) => (curr.set > acc ? curr.set : acc), 0);
 }

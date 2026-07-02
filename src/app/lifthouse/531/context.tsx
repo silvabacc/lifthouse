@@ -1,17 +1,14 @@
 "use client";
 
-import { useFetch } from "../../../../hooks/useFetch";
 import { useLocalStorage } from "../../../../hooks/useLocalStorage";
 import { FiveThreeOne } from "@/lib/supabase/db/types";
-import { createContext, useContext, useEffect, useState } from "react";
-import FiveThreeOneSkeleton from "./fiveThreeOne.skeleton";
+import { createContext, useContext, useState } from "react";
 
 type FiveThreeOneContextType = {
   fiveThreeOneInfo: FiveThreeOne;
   setFiveThreeOneInfo: (info: FiveThreeOne) => void;
   week: number;
   setWeek: (week: number) => void;
-  loading: boolean;
   completed: number[];
   setCompleted: (completed: number[]) => void;
 };
@@ -22,45 +19,22 @@ const FiveThreeOneContext = createContext<FiveThreeOneContextType>(
 
 const useFiveThreeOneContext = () => useContext(FiveThreeOneContext);
 
-const FiveThreeOneContextProvider = ({ children }: any) => {
-  const [fiveThreeOneInfo, setFiveThreeOneInfo] = useState<FiveThreeOne>();
+type Props = {
+  children: React.ReactNode;
+  initialFiveThreeOne: FiveThreeOne;
+};
+
+const FiveThreeOneContextProvider = ({ children, initialFiveThreeOne }: Props) => {
   const { getCachedFiveThreeOneInfo } = useLocalStorage();
-  const [week, setWeek] = useState(1);
-  const [completed, setCompleted] = useState<number[]>([]);
-  const [loading, setLoading] = useState(false);
-  const { fetch } = useFetch();
+  const cached = getCachedFiveThreeOneInfo();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const response: FiveThreeOne = await fetch("/api/531");
-      setLoading(false);
-      setFiveThreeOneInfo(response);
-    };
-    fetchData();
-
-    const cachedInfo = getCachedFiveThreeOneInfo();
-    if (cachedInfo) {
-      setWeek(cachedInfo.week);
-      setCompleted(cachedInfo.completed);
-    }
-  }, []);
-
-  if (loading || !fiveThreeOneInfo) {
-    return <FiveThreeOneSkeleton />;
-  }
+  const [fiveThreeOneInfo, setFiveThreeOneInfo] = useState(initialFiveThreeOne);
+  const [week, setWeek] = useState(cached?.week ?? 1);
+  const [completed, setCompleted] = useState<number[]>(cached?.completed ?? []);
 
   return (
     <FiveThreeOneContext.Provider
-      value={{
-        fiveThreeOneInfo,
-        setFiveThreeOneInfo,
-        week,
-        setWeek,
-        completed,
-        setCompleted,
-        loading,
-      }}
+      value={{ fiveThreeOneInfo, setFiveThreeOneInfo, week, setWeek, completed, setCompleted }}
     >
       {children}
     </FiveThreeOneContext.Provider>

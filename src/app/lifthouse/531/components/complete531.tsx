@@ -1,6 +1,13 @@
+import React from "react";
 import { useLocalStorage } from "../../../../../hooks/useLocalStorage";
 import { LogEntry, PersonalBest } from "@/lib/supabase/db/types";
-import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
+import {
+  CheckCircleOutlined,
+  WarningOutlined as WarningOutlinedRaw,
+} from "@ant-design/icons";
+const WarningOutlined = WarningOutlinedRaw as unknown as React.FC<{
+  className?: string;
+}>;
 import {
   Alert,
   App,
@@ -14,13 +21,13 @@ import {
   Steps,
   Tooltip,
 } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useFiveThreeOneContext } from "../context";
 import Warmup from "./warmup";
-import { useFetch } from "../../../../../hooks/useFetch";
 import { useFiveThreeOne } from "../useFiveThreeOne";
 import { NotificationDescription, NotificationMessage } from "./notification";
 import { LogVisual } from "../../components/logVisuals/logVisual";
+import { saveLogs } from "../../actions";
 
 const { TextArea } = Input;
 
@@ -53,7 +60,7 @@ export default function CompleteFiveThreeOneModal({
   const { increasePersonalBests } = useFiveThreeOne();
   const [currentSet, setCurrentSet] = useState(0);
   const [showWarning, setShowWarning] = useState(false);
-  const [saving, setSaving] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const { setWeek, setCompleted, fiveThreeOneInfo } = useFiveThreeOneContext();
   const [notes, setNotes] = useState<string>();
   const { notification: api } = App.useApp();
@@ -65,7 +72,7 @@ export default function CompleteFiveThreeOneModal({
     const highestSet =
       getCachedLogInfo(selectedExercise.exercise.exerciseId)?.info.reduce(
         (acc, curr) => (curr.set > acc ? curr.set : acc),
-        0
+        0,
       ) || 0;
 
     setCurrentSet(highestSet);
@@ -75,7 +82,7 @@ export default function CompleteFiveThreeOneModal({
   const items: NonNullable<StepsProps["items"]> = [];
   for (let i = 0; i < sets; i++) {
     items.push({
-      description: (
+      content: (
         <Row
           info={selectedExercise}
           step={i}
@@ -102,83 +109,72 @@ export default function CompleteFiveThreeOneModal({
     setNotes(value);
   };
 
-  const onOk = async () => {
+  const onOk = () => {
     const info = getCachedLogInfo(selectedExercise.exercise.exerciseId)?.info;
     const cachedFiveThreeOneInfo = getCachedFiveThreeOneInfo();
 
-    const completed = info?.length === sets;
-    if (!completed) {
+    if (info?.length !== sets) {
       setShowWarning(true);
       return;
     }
 
     const { exercise } = selectedExercise;
-
-    const cached = getCachedLogInfo(selectedExercise.exercise.exerciseId);
-    const logs = {
+    const cached = getCachedLogInfo(exercise.exerciseId);
+    const log = {
       exerciseId: exercise.exerciseId,
       info: cached?.info,
       notes: cached?.notes,
       date: new Date(),
     };
 
-    setSaving(true);
+    startTransition(async () => {
+      await saveLogs([log as any]);
 
-    await fetch("/api/logs/create", {
-      method: "POST",
-      body: JSON.stringify([logs]),
-    });
-
-    if (cachedFiveThreeOneInfo?.completed.length === 3) {
-      cacheFiveThreeOneInfo({
-        week: cachedFiveThreeOneInfo?.week + 1,
-        completed: [],
-      });
-
-      if (cachedFiveThreeOneInfo?.week === 4) {
-        clearFiveThreeOne();
-        setWeek(1);
-        await increasePersonalBests();
-        api.info({
-          message: <NotificationMessage />,
-          description: <NotificationDescription exercises={exercises} />,
+      if (cachedFiveThreeOneInfo?.completed.length === 3) {
+        cacheFiveThreeOneInfo({
+          week: cachedFiveThreeOneInfo.week + 1,
+          completed: [],
         });
+        if (cachedFiveThreeOneInfo.week === 4) {
+          clearFiveThreeOne();
+          setWeek(1);
+          await increasePersonalBests();
+          api.info({
+            title: <NotificationMessage />,
+            description: <NotificationDescription exercises={exercises} />,
+          });
+        } else {
+          setWeek(cachedFiveThreeOneInfo.week + 1);
+        }
+        setCompleted([]);
       } else {
-        setWeek(cachedFiveThreeOneInfo?.week + 1);
-      }
-
-      setCompleted([]);
-    } else {
-      cacheFiveThreeOneInfo({
-        week: cachedFiveThreeOneInfo?.week || 1,
-        completed: [
+        const newCompleted = [
           ...(cachedFiveThreeOneInfo?.completed || []),
           exercise.exerciseId,
-        ],
-      });
-      setWeek(cachedFiveThreeOneInfo?.week || 1);
-      setCompleted([
-        ...(cachedFiveThreeOneInfo?.completed || []),
-        exercise.exerciseId,
-      ]);
-    }
+        ];
+        cacheFiveThreeOneInfo({
+          week: cachedFiveThreeOneInfo?.week || 1,
+          completed: newCompleted,
+        });
+        setWeek(cachedFiveThreeOneInfo?.week || 1);
+        setCompleted(newCompleted);
+      }
 
-    setSaving(false);
-
-    clearCacheLogInfo([exercise.exerciseId]);
-
-    setShowWarning(false);
-    setNotes("");
-
-    onClose();
+      clearCacheLogInfo([exercise.exerciseId]);
+      setShowWarning(false);
+      setNotes("");
+      onClose();
+    });
   };
 
   const latestReps = latestLog?.info?.at(-1)?.reps || 0;
-  const improvement = (latestReps || 0) - reps[0];
+  // Compare against this week's last-set target (Week 1=5, Week 2=3, Week 3=1, Week 4=5)
+  const lastSetTarget = reps[reps.length - 1];
+  const improvement = latestReps - lastSetTarget;
 
   return (
     <Drawer
-      width={"100%"}
+      styles={{ wrapper: { width: "100%" } }}
       title={selectedExercise.exercise.name}
       open={open}
       onClose={() => {
@@ -194,7 +190,7 @@ export default function CompleteFiveThreeOneModal({
         </div>
         <Steps
           onChange={onChange}
-          direction="vertical"
+          orientation="vertical"
           items={items}
           current={currentSet}
         />
@@ -202,7 +198,7 @@ export default function CompleteFiveThreeOneModal({
           <Alert
             showIcon
             type="info"
-            message={
+            title={
               <div>
                 Last set you did{" "}
                 <span className="font-bold">
@@ -223,18 +219,17 @@ export default function CompleteFiveThreeOneModal({
         />
         {showWarning && (
           <Alert
-            className="mt-2"
+            className="my-2"
             showIcon
             type="error"
-            message={
-              "You haven't finished submitted all the reps for each the sets"
-            }
+            title="You haven't finished submitted all the reps for each the sets"
           />
         )}
       </div>
       <Collapse
         items={[
           {
+            key: "warmup",
             label: "Warmup",
             children: <Warmup selectedExercise={selectedExercise} />,
           },
@@ -250,9 +245,9 @@ export default function CompleteFiveThreeOneModal({
             className="mt-2"
             type="primary"
             onClick={onOk}
-            loading={saving}
+            loading={isPending}
           >
-            {saving ? "Saving" : "Finish"}
+            {isPending ? "Saving" : "Finish"}
           </Button>
         </div>
       </div>
@@ -281,7 +276,7 @@ function Row({
   const [reps, setReps] = useState<number>();
   const { getCachedLogInfo, cacheLogInfo } = useLocalStorage();
   const cachedInfo = getCachedLogInfo(info.exercise.exerciseId)?.info.find(
-    (i) => i.set === step + 1
+    (i) => i.set === step + 1,
   );
   const [noRepsWarning, setNoRepsWarning] = useState(false);
 

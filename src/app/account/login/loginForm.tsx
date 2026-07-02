@@ -70,10 +70,9 @@ export default function LoginForm() {
       <FormWrapper onFinish={onFinish}>
         {errorMessage && (
           <Alert
-            closable
-            onClose={() => setErrorMessage("")}
+            closable={{ onClose: () => setErrorMessage("") }}
             style={{ marginBottom: 12 }}
-            message={errorMessage}
+            title={errorMessage}
             type="error"
           />
         )}

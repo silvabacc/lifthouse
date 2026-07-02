@@ -47,7 +47,7 @@ const DateMover: React.FC<DateMoverProps> = ({
           icon={<ArrowLeftOutlined />}
         />
         <Tooltip
-          overlayInnerStyle={{ width: 300 }}
+          styles={{ container: { width: 300 } }}
           color="white"
           title={ToolTipCalendar}
         >

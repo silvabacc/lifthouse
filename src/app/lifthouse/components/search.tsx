@@ -46,7 +46,7 @@ export default function SearchElement({
         )}
       </div>
       {expandedFilter && filterTagOptions && (
-        <div className="flex pb-4 px-2 overflow-auto ">
+        <div className="flex px-2 overflow-auto gap-2">
           {filterTagOptions.map((tag) => (
             <CheckableTag
               key={tag}

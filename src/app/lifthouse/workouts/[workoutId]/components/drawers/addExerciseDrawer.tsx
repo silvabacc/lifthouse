@@ -50,7 +50,7 @@ export default function AddExerciseDrawer({
         />
       }
       onClose={() => setDrawOpen(false)}
-      width={500}
+      styles={{ wrapper: { width: 500 } }}
     >
       {filteredPrimaryMuscleGroups.length === 0 && (
         <span className="text-lg">No exercises with that name is found 😢</span>
@@ -59,7 +59,7 @@ export default function AddExerciseDrawer({
         return (
           <div key={muscle}>
             <p className="text-xs text-gray-500">{muscle}</p>
-            <Space direction="vertical">
+            <Space orientation="vertical">
               {filteredExercises
                 .filter((e) => e.primaryMuscleGroup === muscle)
                 .filter((e) => !filterOutExercisesIds.includes(e.exerciseId))

@@ -1,5 +1,5 @@
 import { PersonalBest } from "@/lib/supabase/db/types";
-import { Space, Typography, notification } from "antd";
+import { Space, Typography } from "antd";
 
 const { Text } = Typography;
 
@@ -18,7 +18,7 @@ export function NotificationDescription({
   exercises,
 }: NotificationDescriptionProps) {
   return (
-    <Space direction="vertical">
+    <Space orientation="vertical">
       {exercises.map((info) => (
         <div className="flex justify-between " key={info.exercise.exerciseId}>
           <Text className="w-36" ellipsis={{ tooltip: "I am ellipsis now!" }}>

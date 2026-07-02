@@ -1,60 +1,54 @@
+"use client";
+
 import { Alert, App, Divider, Drawer, Radio, Space, Tooltip } from "antd";
-import { useWorkout } from "../../../hooks/useWorkout";
+import { useTransition } from "react";
 import { useWorkoutIdContext } from "../../context";
 import { WorkoutTemplate } from "@/lib/supabase/db/types";
 import { templateName } from "../../utils";
 import TemplateInfo from "../templateInfo";
+import { applyWorkoutTemplate } from "../../../actions";
 
 type TemplateDrawerProps = {
   template: string;
   show: boolean;
   onCancel: () => void;
 };
-export default function TemplateDrawer({
-  template,
-  show,
-  onCancel,
-}: TemplateDrawerProps) {
+
+export default function TemplateDrawer({ template, show, onCancel }: TemplateDrawerProps) {
   const { workout, setWorkout } = useWorkoutIdContext();
-  const { updateTemplate } = useWorkout();
   const { modal } = App.useApp();
+  const [, startTransition] = useTransition();
 
   const onClickWorkoutType = (value: WorkoutTemplate) => {
     modal.confirm({
       title: "Are you sure?",
       content: "This may overwrite your current workout plan",
       cancelText: "No",
-      onOk: async () => {
-        const updatedData = await updateTemplate(workout.workoutId, value);
-        setWorkout(updatedData);
-        onCancel();
+      onOk: () => {
+        startTransition(async () => {
+          const updated = await applyWorkoutTemplate(workout.workoutId, value);
+          setWorkout(updated);
+          onCancel();
+        });
       },
     });
   };
+
   return (
-    <Drawer title={"Workout Templates"} open={show} onClose={onCancel}>
-      <Space direction="vertical">
-        <Alert
-          message="You can apply workout templates by clicking on the template buttons
-          below. This will overwrite all of the exercises for this current
-          workout plan, or you can stick with your custom workout plan"
-        ></Alert>
+    <Drawer title="Workout Templates" open={show} onClose={onCancel}>
+      <Space orientation="vertical">
+        <Alert title="You can apply workout templates by clicking on the template buttons below. This will overwrite all of the exercises for this current workout plan, or you can stick with your custom workout plan" />
         <Radio.Group
           value={workout.template}
           buttonStyle="solid"
-          onChange={(value) =>
-            onClickWorkoutType(value.target.value as WorkoutTemplate)
-          }
+          onChange={(e) => onClickWorkoutType(e.target.value as WorkoutTemplate)}
         >
-          <Space direction="vertical">
-            {/* Can add more templates */}
-            {Object.values(WorkoutTemplate).map((template) => {
-              return (
-                <Radio key={template} value={template}>
-                  {templateName[template] || template}
-                </Radio>
-              );
-            })}
+          <Space orientation="vertical">
+            {Object.values(WorkoutTemplate).map((t) => (
+              <Radio key={t} value={t}>
+                {templateName[t] || t}
+              </Radio>
+            ))}
           </Space>
         </Radio.Group>
       </Space>

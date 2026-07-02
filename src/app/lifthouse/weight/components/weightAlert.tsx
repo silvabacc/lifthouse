@@ -33,7 +33,7 @@ export default function WeightAlert() {
         <Alert
           type="warning"
           closable
-          message="No weekly goal set. Weekly goals are set when a weigh in is
+          title="No weekly goal set. Weekly goals are set when a weigh in is
 entered on the Sunday of the current week"
         />
       ) : (
@@ -41,7 +41,7 @@ entered on the Sunday of the current week"
           type="info"
           showIcon
           style={{ width: "100%" }}
-          message={`This Week's Weight Goal is ${(
+          title={`This Week's Weight Goal is ${(
             weeklyGoal -
             weeklyGoal * 0.01
           ).toFixed(1)} kg`}

@@ -22,7 +22,7 @@ export default function AntdStyledComponentsRegistry({
   return (
     <StyleProvider cache={cache}>
       <ConfigProvider>
-        <App>{children}</App>
+        <App className="h-full">{children}</App>
       </ConfigProvider>
     </StyleProvider>
   );

@@ -2,10 +2,9 @@
 
 import { Button, Layout, Space } from "antd";
 import { PageInfoPortal } from "../../components/pageInfo";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import AddButton from "../components/addButton";
 import AddExerciseDrawer from "./components/drawers/addExerciseDrawer";
-import { useWorkout } from "../hooks/useWorkout";
 import { WorkoutTemplate } from "@/lib/supabase/db/types";
 import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 import { Record } from "./components/drawers/recordDrawer";
@@ -13,40 +12,30 @@ import { useWorkoutIdContext } from "./context";
 import ChangeExercisesDrawer from "./components/drawers/changeExercisesDrawer";
 import TemplateDrawer from "./components/drawers/templateDrawer";
 import Charts from "./charts";
+import { updateWorkoutExercises } from "../actions";
 
 const { Content, Footer } = Layout;
 
 export default function WorkoutPlanPage() {
   const { workout, setWorkout } = useWorkoutIdContext();
   const [drawOpen, setDrawOpen] = useState(false);
-  const { updateWorkoutPlan } = useWorkout();
   const [showRecord, setShowRecord] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showTemplate, setShowTemplate] = useState(false);
-  const [savingExercise, setSavingExercise] = useState(false);
+  const [, startTransition] = useTransition();
 
-  const onAddExerciseClick = async (exerciseId: number) => {
-    if (savingExercise) return;
-
-    setSavingExercise(true);
-    const defaultExerciseSetup = { exerciseId, sets: 3, reps: "8-12" };
-    await updateWorkoutPlan({
-      workoutId: workout.workoutId,
-      exercises: [...(workout?.exercises || []), defaultExerciseSetup],
+  const onAddExercise = (exerciseId: number) => {
+    const defaultSetup = { exerciseId, sets: 3, reps: "8-12" };
+    const newExercises = [...(workout.exercises || []), defaultSetup];
+    startTransition(async () => {
+      setWorkout({ ...workout, exercises: newExercises });
+      await updateWorkoutExercises(workout.workoutId, newExercises);
     });
-
-    setWorkout((prev) => ({
-      ...prev,
-      exercises: [...(prev.exercises || []), defaultExerciseSetup],
-    }));
-
-    setSavingExercise(false);
+    setDrawOpen(false);
   };
 
   return (
-    <PageAnimation
-      className={`${workout.exercises.length === 0 ? "" : "h-full"}`}
-    >
+    <PageAnimation className={workout.exercises.length === 0 ? "" : "h-full"}>
       <Layout className="relative h-full">
         <Content className="h-full bg-white rounded-sm p-4">
           <PageInfoPortal
@@ -62,36 +51,21 @@ export default function WorkoutPlanPage() {
           <AddExerciseDrawer
             drawOpen={drawOpen}
             setDrawOpen={setDrawOpen}
-            onClickMuscle={onAddExerciseClick}
-            filterOutExercisesIds={
-              workout.exercises.map((e) => e.exerciseId) || []
-            }
+            onClickMuscle={onAddExercise}
+            filterOutExercisesIds={workout.exercises.map((e) => e.exerciseId)}
           />
-          <ChangeExercisesDrawer
-            show={showEdit}
-            onCancel={() => setShowEdit(false)}
-          />
+          <ChangeExercisesDrawer show={showEdit} onCancel={() => setShowEdit(false)} />
           <TemplateDrawer
             template={workout.template}
             show={showTemplate}
             onCancel={() => setShowTemplate(false)}
           />
-          {
-            <Record
-              show={showRecord}
-              onCancel={() => {
-                setShowRecord(false);
-              }}
-            />
-          }
+          <Record show={showRecord} onCancel={() => setShowRecord(false)} />
           <Charts />
         </Content>
         <Footer className="p-0 mt-4">
           {workout?.template === WorkoutTemplate.custom && (
-            <AddButton
-              title="+ Add Exercise"
-              onClick={() => setDrawOpen(true)}
-            />
+            <AddButton title="+ Add Exercise" onClick={() => setDrawOpen(true)} />
           )}
         </Footer>
       </Layout>
@@ -99,16 +73,13 @@ export default function WorkoutPlanPage() {
   );
 }
 
-type Props = {
+type PageInfoExtraProps = {
   onClickRecord: () => void;
   onClickEdit: () => void;
   onClickWorkoutTemplate: () => void;
 };
-function PageInfoExtra({
-  onClickRecord,
-  onClickEdit,
-  onClickWorkoutTemplate,
-}: Props) {
+
+function PageInfoExtra({ onClickRecord, onClickEdit, onClickWorkoutTemplate }: PageInfoExtraProps) {
   return (
     <Space className="pb-4">
       <Button type="dashed" danger onClick={onClickRecord}>

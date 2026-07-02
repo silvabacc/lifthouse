@@ -4,7 +4,6 @@ import "./globals.css";
 import AntdStyledComponentsRegistry from "./components/antd";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { AppContextProvider } from "./context";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,15 +25,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {
-          <AppContextProvider>
-            <AntdStyledComponentsRegistry>
-              {children}
-              <Analytics />
-              <SpeedInsights />
-            </AntdStyledComponentsRegistry>
-          </AppContextProvider>
-        }
+        <AntdStyledComponentsRegistry>
+          {children}
+          <Analytics />
+          <SpeedInsights />
+        </AntdStyledComponentsRegistry>
       </body>
     </html>
   );

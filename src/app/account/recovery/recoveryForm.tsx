@@ -39,10 +39,9 @@ export default function RecoveryForm() {
       <FormWrapper name="reset-password-form" onFinish={onFinish}>
         {alert && (
           <Alert
-            closable
-            onClose={() => setAlert("")}
+            closable={{ onClose: () => setAlert("") }}
             style={{ marginBottom: 12 }}
-            message={alert}
+            title={alert}
             type="error"
           />
         )}

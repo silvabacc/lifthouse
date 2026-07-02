@@ -1,8 +1,9 @@
-import { InputNumber, Button, Card, Space, Form } from "antd";
+import { InputNumber, Button, Card, Form } from "antd";
 import Calculator from "../calculator";
-import { useFetch } from "../../../../../hooks/useFetch";
 import { FiveThreeOne } from "@/lib/supabase/db/types";
 import { useFiveThreeOneContext } from "../context";
+import { updateFiveThreeOnePersonalBests } from "../actions";
+import { useTransition } from "react";
 
 type FieldType = {
   bench: number;
@@ -17,15 +18,14 @@ type Props = {
 };
 export function Setup({ open, onClose }: Props) {
   const { fiveThreeOneInfo, setFiveThreeOneInfo } = useFiveThreeOneContext();
-  const { fetch } = useFetch();
+  const [isPending, startTransition] = useTransition();
 
-  const onFinish = async (values: FieldType) => {
-    const response: FiveThreeOne = await fetch("/api/531", {
-      method: "POST",
-      body: JSON.stringify(values),
+  const onFinish = (values: FieldType) => {
+    startTransition(async () => {
+      const response: FiveThreeOne = await updateFiveThreeOnePersonalBests(values);
+      setFiveThreeOneInfo(response);
+      onClose();
     });
-    setFiveThreeOneInfo(response);
-    onClose();
   };
 
   const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;
@@ -80,8 +80,8 @@ export function Setup({ open, onClose }: Props) {
             </div>
           ))}
           <div className="flex justify-center mt-4">
-            <Button type="primary" className="w-64" htmlType="submit">
-              Finish
+            <Button type="primary" className="w-64" htmlType="submit" loading={isPending}>
+              {isPending ? "Saving..." : "Finish"}
             </Button>
           </div>
         </Form>

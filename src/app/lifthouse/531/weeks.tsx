@@ -1,23 +1,18 @@
-import {
-  App,
-  Button,
-  Collapse,
-  CollapseProps,
-  Divider,
-  Space,
-} from "antd";
+"use client";
+
+import { App, Button, Collapse, CollapseProps, Divider, Space } from "antd";
 import CompleteFiveThreeOneModal from "./components/complete531";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useFiveThreeOneContext } from "./context";
 import { LogEntry, PersonalBest } from "@/lib/supabase/db/types";
 import { CheckCircleTwoTone } from "@ant-design/icons";
-import { useFetch } from "../../../../hooks/useFetch";
 import { useLocalStorage } from "../../../../hooks/useLocalStorage";
 import { useFiveThreeOne } from "./useFiveThreeOne";
 import {
   NotificationDescription,
   NotificationMessage,
 } from "./components/notification";
+import { getWeekSpecificLog } from "../actions";
 
 export default function FiveThreeOneWeeks() {
   const { week } = useFiveThreeOneContext();
@@ -60,6 +55,7 @@ export default function FiveThreeOneWeeks() {
     ),
     collapsible: index + 1 !== week ? "disabled" : undefined,
   }));
+
   return (
     <div>
       <Collapse
@@ -70,14 +66,9 @@ export default function FiveThreeOneWeeks() {
       <div className="hidden lg:grid lg:grid-cols-4 gap-12 mt-6">
         {items.map((item) => (
           <Space
-            direction="vertical"
+            orientation="vertical"
             key={item.key}
-            className={`
-              ${
-                item.collapsible === "disabled"
-                  ? "bg-grey-500 opacity-25 pointer-events-none"
-                  : ""
-              } bg-white rounded-lg p-6`}
+            className={`${item.collapsible === "disabled" ? "opacity-25 pointer-events-none" : ""} bg-white rounded-lg p-6`}
           >
             <div>{item.label}</div>
             <Divider className="mt-1" />
@@ -94,38 +85,35 @@ type ExerciseRowProps = {
   reps: number[];
   intensity: number[];
 };
+
 function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
   const [open, setOpen] = useState(false);
   const { fiveThreeOneInfo, completed } = useFiveThreeOneContext();
   const [exerciseSelected, setExerciseSelected] = useState<PersonalBest>();
-  const [latestLogs, setLatestLogs] = useState<LogEntry[]>([]);
-  const { fetch } = useFetch();
+  const [latestLog, setLatestLog] = useState<LogEntry | undefined>();
 
   const { bench, ohp, squat, deadlift } = fiveThreeOneInfo;
   const exercises = [bench, ohp, squat, deadlift];
 
-  useEffect(() => {
-    const fetchLatestLog = async () => {
-      const response: LogEntry[] = await fetch("/api/logs/latest", {
-        method: "POST",
-        body: JSON.stringify({
-          exerciseIds: exercises.map((e) => e?.exercise?.exerciseId),
-        }),
-      });
-      setLatestLogs(response);
-    };
-
-    fetchLatestLog();
-  }, []);
-
-  const handleOpen = (exercise: PersonalBest) => {
+  const handleOpen = async (exercise: PersonalBest) => {
     setExerciseSelected(exercise);
     setOpen(true);
+    // The last set weight uniquely identifies which 531 week a log belongs to.
+    // e.g. Week 1 last set = intensity[2] (0.85) × 0.9 × pb
+    const lastIntensity = intensity[intensity.length - 1];
+    const expectedWeight = parseFloat(
+      (lastIntensity * 0.9 * exercise.pb).toFixed(0),
+    );
+    const log = await getWeekSpecificLog(
+      exercise.exercise.exerciseId,
+      expectedWeight,
+    );
+    setLatestLog(log);
   };
 
   return (
     <div className="w-full">
-      {[bench, ohp, squat, deadlift].map((pb) => {
+      {exercises.map((pb) => {
         const isCompleted = completed.includes(pb?.exercise?.exerciseId);
         return (
           <div key={pb?.exercise?.name}>
@@ -155,9 +143,7 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
           sets={sets}
           reps={reps}
           intensity={intensity}
-          latestLog={latestLogs.find(
-            (l) => l.exerciseId === exerciseSelected.exercise.exerciseId
-          )}
+          latestLog={latestLog}
         />
       )}
     </div>
@@ -168,6 +154,7 @@ type WeekTitleProps = {
   week: number;
   currentWeek: number;
 };
+
 function WeekTitle({ week, currentWeek }: WeekTitleProps) {
   const { increasePersonalBests } = useFiveThreeOne();
   const { setWeek, setCompleted, fiveThreeOneInfo } = useFiveThreeOneContext();
@@ -175,36 +162,33 @@ function WeekTitle({ week, currentWeek }: WeekTitleProps) {
   const { notification: api, modal } = App.useApp();
 
   const showWeek = week === currentWeek;
-  const onClickSkip = async () => {
+
+  const onClickSkip = () => {
     modal.confirm({
       title: "Are you sure you want to skip this week?",
-      onOk: async () => {
-        await skipWeek();
-      },
       okText: "Yes",
       cancelText: "No",
+      onOk: async () => {
+        if (week >= 4) {
+          setWeek(1);
+          cacheFiveThreeOneInfo({ week: 1, completed: [] });
+          await increasePersonalBests();
+          const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;
+          api.info({
+            title: <NotificationMessage />,
+            description: (
+              <NotificationDescription
+                exercises={[bench, squat, deadlift, ohp]}
+              />
+            ),
+          });
+        } else {
+          setWeek(week + 1);
+          cacheFiveThreeOneInfo({ week: week + 1, completed: [] });
+        }
+        setCompleted([]);
+      },
     });
-  };
-
-  const skipWeek = async () => {
-    const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;
-    const exercises = [bench, squat, deadlift, ohp];
-
-    if (week >= 4) {
-      setWeek(1);
-      cacheFiveThreeOneInfo({ week: 1, completed: [] });
-      await increasePersonalBests();
-
-      api.info({
-        message: <NotificationMessage />,
-        description: <NotificationDescription exercises={exercises} />,
-      });
-    } else {
-      setWeek(week + 1);
-      cacheFiveThreeOneInfo({ week: week + 1, completed: [] });
-    }
-
-    setCompleted([]);
   };
 
   return (

@@ -1,28 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useOptimistic, useTransition } from "react";
 import AddWorkoutCard from "./components/addWorkoutCard";
 import WorkoutCard from "./components/workoutCard";
-import { useWorkout } from "./hooks/useWorkout";
 import { Workout } from "@/lib/supabase/db/types";
+import { deleteWorkout } from "./actions";
 
 type Props = {
   initialWorkouts: Workout[];
 };
 
 export default function Workouts({ initialWorkouts }: Props) {
-  const { deleteWorkoutPlan } = useWorkout();
-  const [workouts, setWorkouts] = useState<Workout[]>(initialWorkouts);
+  const [, startTransition] = useTransition();
+  const [workouts, optimisticDelete] = useOptimistic(
+    initialWorkouts,
+    (state, deletedId: number) => state.filter((w) => w.workoutId !== deletedId)
+  );
 
-  const onDelete = async (workoutId: number) => {
-    await deleteWorkoutPlan(workoutId);
-    setWorkouts((prev) => prev.filter((w) => w.workoutId !== workoutId));
+  const onDelete = (workoutId: number) => {
+    startTransition(async () => {
+      optimisticDelete(workoutId);
+      await deleteWorkout(workoutId);
+    });
   };
 
-  const onWorkoutUpdate = (workout: Workout) => {
-    setWorkouts((prev) =>
-      prev.map((w) => (w.workoutId === workout.workoutId ? workout : w))
-    );
+  const onWorkoutUpdate = () => {
+    // revalidatePath in the server action re-fetches from the server;
+    // callback kept so WorkoutCard can close its drawer.
   };
 
   return (
@@ -35,7 +39,7 @@ export default function Workouts({ initialWorkouts }: Props) {
           onWorkoutUpdate={onWorkoutUpdate}
         />
       ))}
-      <AddWorkoutCard setWorkouts={setWorkouts} />
+      <AddWorkoutCard />
     </div>
   );
 }

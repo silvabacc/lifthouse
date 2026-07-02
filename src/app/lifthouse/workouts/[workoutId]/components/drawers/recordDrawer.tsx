@@ -1,60 +1,41 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  App,
-  Button,
-  Divider,
-  Drawer,
-  Input,
-  Space,
-  Typography,
-} from "antd";
+import { useEffect, useState, useTransition } from "react";
+import { App, Button, Divider, Drawer, Input, Space, Typography } from "antd";
 import { useWorkoutIdContext } from "../../context";
-import { Complete } from "./complete";
 import { useLocalStorage } from "../../../../../../../hooks/useLocalStorage";
-import { useFetch } from "../../../../../../../hooks/useFetch";
 import { LogEntry } from "@/lib/supabase/db/types";
 import { useRouter } from "next/navigation";
-import getConfig from "@/config";
+import { Complete } from "./complete";
+import { getLatestLogs, saveLogs } from "../../../../actions";
 
 const { TextArea } = Input;
 const { Text } = Typography;
-const { pageUrl } = getConfig();
 
 type Props = {
   show: boolean;
   onCancel: () => void;
 };
+
 export function Record({ show, onCancel }: Props) {
   const { workout, exercises } = useWorkoutIdContext();
-  const { cacheLogInfo, getCachedLogInfo, clearCacheLogInfo } =
-    useLocalStorage();
-  const { fetch } = useFetch();
+  const { cacheLogInfo, getCachedLogInfo, clearCacheLogInfo } = useLocalStorage();
   const [latestLogs, setLatestLogs] = useState<LogEntry[]>();
-  const [saving, setSaving] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const { message } = App.useApp();
   const router = useRouter();
-  const { message: messageApi } = App.useApp();
 
-  const onChangeNoes = (value: string, exerciseId: number) => {
+  const onChangeNotes = (value: string, exerciseId: number) => {
     cacheLogInfo(exerciseId, { notes: value });
   };
 
-  const fetchLatestLog = async () => {
-    const response: LogEntry[] = await fetch("/api/logs/latest", {
-      method: "POST",
-      body: JSON.stringify({
-        exerciseIds: workout.exercises.map((e) => e.exerciseId),
-      }),
-    });
-    setLatestLogs(response);
-  };
-
   useEffect(() => {
-    fetchLatestLog();
-  }, [workout.exercises]);
+    if (!show) return;
+    const ids = workout.exercises.map((e) => e.exerciseId);
+    getLatestLogs(ids).then(setLatestLogs);
+  }, [show, workout.exercises]);
 
-  const onFinish = async () => {
+  const onFinish = () => {
     const logs = workout.exercises
       .map((exercise) => {
         const cached = getCachedLogInfo(exercise.exerciseId);
@@ -65,46 +46,37 @@ export function Record({ show, onCancel }: Props) {
           date: new Date(),
         };
       })
-      .filter((log) => log.info);
+      .filter((log) => log.info) as LogEntry[];
 
-    setSaving(true);
-
-    await fetch("/api/logs/create", {
-      method: "POST",
-      body: JSON.stringify(logs),
+    startTransition(async () => {
+      await saveLogs(logs);
+      clearCacheLogInfo(workout.exercises.map((e) => e.exerciseId));
+      message.success("Saved!");
+      router.push("/lifthouse/workouts");
     });
-
-    setSaving(false);
-    clearCacheLogInfo(workout.exercises.map((e) => e.exerciseId));
-    router.push(`${pageUrl}/workouts`);
-    messageApi.success("Saved!");
   };
 
   return (
     <Drawer
-      width={350}
+      styles={{ wrapper: { width: 350 } }}
       open={show}
       onClose={onCancel}
       footer={
-        <Button onClick={onFinish} disabled={saving} className="w-full my-2">
-          {saving ? "Saving" : "Finish workout!"}
+        <Button onClick={onFinish} loading={isPending} className="w-full my-2">
+          {isPending ? "Saving" : "Finish workout!"}
         </Button>
       }
     >
-      <Space direction="vertical" className="w-full">
+      <Space orientation="vertical" className="w-full">
         {workout.exercises.map((exercise, index) => {
           const notes = getCachedLogInfo(exercise.exerciseId)?.notes;
-          const exerciseInfo = exercises.find(
-            (e) => e.exerciseId === exercise.exerciseId
-          );
+          const exerciseInfo = exercises.find((e) => e.exerciseId === exercise.exerciseId);
 
           return (
-            <div key={`${exercise.exerciseId}-${index} w-full`}>
+            <div key={`${exercise.exerciseId}-${index}`}>
               <div className="flex flex-wrap justify-between">
                 <Space className="flex-wrap">
-                  <h1 className="text-base font-medium">
-                    {exerciseInfo?.name}
-                  </h1>
+                  <h1 className="text-base font-medium">{exerciseInfo?.name}</h1>
                   <Text className="text-sm" keyboard>
                     {exercise.sets} x {exercise.reps}
                   </Text>
@@ -113,24 +85,19 @@ export function Record({ show, onCancel }: Props) {
               <div className="flex flex-wrap sm:flex-nowrap">
                 <div>
                   <TextArea
-                    autoSize={true}
+                    autoSize
                     defaultValue={notes}
                     placeholder={
-                      latestLogs?.find(
-                        (l) => l.exerciseId === exercise.exerciseId
-                      )?.notes || "Notes"
+                      latestLogs?.find((l) => l.exerciseId === exercise.exerciseId)?.notes ||
+                      "Notes"
                     }
                     className="mt-4"
-                    onChange={(e) =>
-                      onChangeNoes(e.target.value, exercise.exerciseId)
-                    }
+                    onChange={(e) => onChangeNotes(e.target.value, exercise.exerciseId)}
                   />
                   <Complete
                     exercise={exercise}
                     latestLogInfo={
-                      latestLogs?.find(
-                        (l) => l.exerciseId === exercise.exerciseId
-                      )?.info
+                      latestLogs?.find((l) => l.exerciseId === exercise.exerciseId)?.info
                     }
                   />
                 </div>
