@@ -44,20 +44,23 @@ export default function WeightCalendar() {
         method: "PUT",
         body: JSON.stringify({ weight }),
       });
-      setWeightData((prev) => [
-        ...prev.filter((w) => w.id !== weightId),
-        { ...updatedWeight, date: dayjs(updatedWeight.date) },
-      ]);
+      setWeightData((prev) =>
+        [
+          ...prev.filter((w) => w.id !== weightId),
+          { ...updatedWeight, date: dayjs(updatedWeight.date) },
+        ].sort((a, b) => a.date.valueOf() - b.date.valueOf()),
+      );
     } else {
       const newWeight: Weight = await fetch(`/api/weight`, {
         method: "POST",
         body: JSON.stringify({ weight, date: selectedValue }),
       });
 
-      setWeightData((prev) => [
-        ...prev,
-        { ...newWeight, date: dayjs(newWeight.date) },
-      ]);
+      setWeightData((prev) =>
+        [...prev, { ...newWeight, date: dayjs(newWeight.date) }].sort(
+          (a, b) => a.date.valueOf() - b.date.valueOf(),
+        ),
+      );
     }
 
     setOpenDate(null);
