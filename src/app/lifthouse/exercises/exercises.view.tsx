@@ -35,7 +35,12 @@ export default function ExercisesView({ initialExercises }: Props) {
         />
       </div>
       <div className="h-screen">
-        <div className="h-full overflow-auto grid lg:grid-cols-3 gap-4">
+        {filtered.length === 0 && (
+          <div className="flex justify-center">
+            No exercises found with this name
+          </div>
+        )}
+        <div className="h-full overflow-auto grid lg:grid-cols-3 gap-4 content-start">
           {filtered.map((exercise) => (
             <div
               key={exercise.exerciseId}

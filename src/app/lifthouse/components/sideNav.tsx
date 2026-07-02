@@ -49,9 +49,11 @@ export default function SiderNav() {
     >
       {!collapsed && (
         <Image
-          className="hidden sm:block p-2 w-full h-20 cursor-pointer"
+          className="hidden sm:block p-2 w-full h-20 object-contain cursor-pointer"
           src={LifthouseLogo}
-          alt=""
+          alt="Lifthouse"
+          quality={100}
+          sizes="200px"
           onClick={() => redirectToHome(router)}
         />
       )}

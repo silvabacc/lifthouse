@@ -14,9 +14,9 @@ type NavigationCardProps = {
 
 export default function NavigationCard({ config }: NavigationCardProps) {
   return (
-    <Link href={config.route} key={config.title}>
+    <Link href={config.route} key={config.title} className="block w-full">
       <Card
-        className="cursor-pointer hover:bg-sky-100"
+        className="w-full cursor-pointer hover:bg-sky-100"
         cover={
           <div className="relative h-48 w-full overflow-hidden">
             <Image

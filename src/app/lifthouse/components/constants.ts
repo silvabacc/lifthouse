@@ -40,8 +40,7 @@ export const pageConfig = [
     title: "Weight",
     icon: "⚖️",
     route: `${MainRoute}/weight`,
-    description:
-      "Track your weight and progress on a weeky, monthly and yearly progress",
+    description: "Track your weight and progress",
     cover: WeightCoverImage,
   },
 ];
