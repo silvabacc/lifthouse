@@ -23,7 +23,7 @@ export default function ExercisesView({ initialExercises }: Props) {
 
   return (
     <>
-      <div className="w-full py-2 mb-4 shadow">
+      <div className="w-full py-2 mb-3 shadow">
         <SearchElement
           filterTagOptions={Object.keys(PrimaryMuscleGroup)}
           placerHolder="Search exercises"
