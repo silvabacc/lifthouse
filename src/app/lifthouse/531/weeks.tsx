@@ -51,6 +51,7 @@ export default function FiveThreeOneWeeks() {
         sets={item.sets}
         reps={item.reps}
         intensity={item.intensity}
+        isActiveWeek={index + 1 === week}
       />
     ),
     collapsible: index + 1 !== week ? "disabled" : undefined,
@@ -84,9 +85,10 @@ type ExerciseRowProps = {
   sets: number;
   reps: number[];
   intensity: number[];
+  isActiveWeek: boolean;
 };
 
-function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
+function ExerciseRow({ sets, reps, intensity, isActiveWeek }: ExerciseRowProps) {
   const [open, setOpen] = useState(false);
   const { fiveThreeOneInfo, completed } = useFiveThreeOneContext();
   const [exerciseSelected, setExerciseSelected] = useState<PersonalBest>();
@@ -114,7 +116,8 @@ function ExerciseRow({ sets, reps, intensity }: ExerciseRowProps) {
   return (
     <div className="w-full">
       {exercises.map((pb) => {
-        const isCompleted = completed.includes(pb?.exercise?.exerciseId);
+        const isCompleted =
+          isActiveWeek && completed.includes(pb?.exercise?.exerciseId);
         return (
           <div key={pb?.exercise?.name}>
             <div className="flex mb-2 justify-between">

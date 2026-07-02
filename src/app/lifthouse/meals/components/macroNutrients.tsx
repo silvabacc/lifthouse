@@ -30,7 +30,7 @@ const MacroNutrients: React.FC<MacroNutrientsProps> = ({
     colorField: "type",
     tooltip: false,
     label: {
-      text: "value",
+      text: (datum: { value: number }) => datum.value.toFixed(2),
       position: "inside",
     },
     legend: {

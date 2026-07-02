@@ -19,10 +19,12 @@ type Props = {
 export function Setup({ open, onClose }: Props) {
   const { fiveThreeOneInfo, setFiveThreeOneInfo } = useFiveThreeOneContext();
   const [isPending, startTransition] = useTransition();
+  const [form] = Form.useForm<FieldType>();
 
   const onFinish = (values: FieldType) => {
     startTransition(async () => {
       const response: FiveThreeOne = await updateFiveThreeOnePersonalBests(values);
+      form.resetFields();
       setFiveThreeOneInfo(response);
       onClose();
     });
@@ -61,7 +63,7 @@ export function Setup({ open, onClose }: Props) {
           realistic, you don&apos;t have to train at your one rep max for this
           program to be effective
         </span>
-        <Form className="mt-4" onFinish={onFinish}>
+        <Form form={form} className="mt-4" onFinish={onFinish}>
           {formItems.map((lift) => (
             <div key={lift.exercise.name} className="flex items-center">
               <div className="w-full">
