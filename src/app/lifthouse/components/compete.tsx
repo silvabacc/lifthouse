@@ -9,7 +9,7 @@ import {
   Steps,
   Tooltip,
 } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CheckCircleOutlined,
   DeleteOutlined,
@@ -26,20 +26,32 @@ type Props = {
   exercise: Exercise;
 };
 
+const DEFAULT_INFO: LogInfo[] = [{ set: 1, reps: 0, weight: 0 }];
+
+const toInputs = (info: LogInfo[]): SetInput[] =>
+  info.map((i) => ({
+    reps: i.reps > 0 ? i.reps : undefined,
+    weight: i.weight > 0 ? i.weight : undefined,
+  }));
+
 export function Complete({ exercise }: Props) {
   const { getCachedLogInfo, cacheLogInfo, clearCacheLogInfo } = useLocalStorage();
-  const cachedLogInfo = getCachedLogInfo(exercise.exerciseId);
-  const initialInfo: LogInfo[] = cachedLogInfo?.info ?? [{ set: 1, reps: 0, weight: 0 }];
+  const [cachedNotes, setCachedNotes] = useState<string>();
 
-  const [info, setInfo] = useState<LogInfo[]>(initialInfo);
-  const [inputs, setInputs] = useState<SetInput[]>(() =>
-    initialInfo.map((i) => ({
-      reps: i.reps > 0 ? i.reps : undefined,
-      weight: i.weight > 0 ? i.weight : undefined,
-    }))
-  );
+  const [info, setInfo] = useState<LogInfo[]>(DEFAULT_INFO);
+  const [inputs, setInputs] = useState<SetInput[]>(() => toInputs(DEFAULT_INFO));
   const completedSets = info.filter((i) => i.reps > 0 || i.weight > 0).length;
   const [currentSet, setCurrentSet] = useState(completedSets);
+
+  useEffect(() => {
+    const cachedLogInfo = getCachedLogInfo(exercise.exerciseId);
+    const initialInfo = cachedLogInfo?.info ?? DEFAULT_INFO;
+    setInfo(initialInfo);
+    setInputs(toInputs(initialInfo));
+    setCurrentSet(initialInfo.filter((i) => i.reps > 0 || i.weight > 0).length);
+    setCachedNotes(cachedLogInfo?.notes);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exercise.exerciseId]);
 
   const onStepChange = (current: number) => {
     if (current < currentSet) setCurrentSet(current);
@@ -89,6 +101,7 @@ export function Complete({ exercise }: Props) {
 
   const onChangeNotes = (value: string) => {
     cacheLogInfo(exercise.exerciseId, { notes: value });
+    setCachedNotes(value);
   };
 
   const items: NonNullable<StepsProps["items"]> = info.map((_, index) => ({
@@ -122,7 +135,7 @@ export function Complete({ exercise }: Props) {
       <h3 className="m-0">Notes</h3>
       <TextArea
         autoSize
-        defaultValue={cachedLogInfo?.notes}
+        value={cachedNotes}
         className="mt-4"
         onChange={(e) => onChangeNotes(e.target.value)}
       />

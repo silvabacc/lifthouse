@@ -21,18 +21,26 @@ export function Record({ show, onCancel }: Props) {
   const { workout, exercises } = useWorkoutIdContext();
   const { cacheLogInfo, getCachedLogInfo, clearCacheLogInfo } = useLocalStorage();
   const [latestLogs, setLatestLogs] = useState<LogEntry[]>();
+  const [cachedNotes, setCachedNotes] = useState<Record<number, string | undefined>>({});
   const [isPending, startTransition] = useTransition();
   const { message } = App.useApp();
   const router = useRouter();
 
   const onChangeNotes = (value: string, exerciseId: number) => {
     cacheLogInfo(exerciseId, { notes: value });
+    setCachedNotes((prev) => ({ ...prev, [exerciseId]: value }));
   };
 
   useEffect(() => {
     if (!show) return;
     const ids = workout.exercises.map((e) => e.exerciseId);
     getLatestLogs(ids).then(setLatestLogs);
+
+    const notes: Record<number, string | undefined> = {};
+    workout.exercises.forEach((exercise) => {
+      notes[exercise.exerciseId] = getCachedLogInfo(exercise.exerciseId)?.notes;
+    });
+    setCachedNotes(notes);
   }, [show, workout.exercises]);
 
   const onFinish = () => {
@@ -69,7 +77,7 @@ export function Record({ show, onCancel }: Props) {
     >
       <Space orientation="vertical" className="w-full">
         {workout.exercises.map((exercise, index) => {
-          const notes = getCachedLogInfo(exercise.exerciseId)?.notes;
+          const notes = cachedNotes[exercise.exerciseId];
           const exerciseInfo = exercises.find((e) => e.exerciseId === exercise.exerciseId);
 
           return (
@@ -86,7 +94,7 @@ export function Record({ show, onCancel }: Props) {
                 <div>
                   <TextArea
                     autoSize
-                    defaultValue={notes}
+                    value={notes}
                     placeholder={
                       latestLogs?.find((l) => l.exerciseId === exercise.exerciseId)?.notes ||
                       "Notes"

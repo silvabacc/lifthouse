@@ -1,6 +1,6 @@
 import { LogInfo, ExerciseConfiguration } from "@/lib/supabase/db/types";
 import { Button, InputNumber, Space, StepsProps, Steps, Tooltip } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import { useLocalStorage } from "../../../../../../../hooks/useLocalStorage";
 
@@ -10,11 +10,16 @@ type Props = {
 };
 export function Complete({ exercise, latestLogInfo }: Props) {
   const { getCachedLogInfo } = useLocalStorage();
-  const highestSet = getCachedLogInfo(exercise.exerciseId)?.info.reduce(
-    (acc, curr) => (curr.set > acc ? curr.set : acc),
-    0
-  );
-  const [currentSet, setCurrentSet] = useState(highestSet || 0);
+  const [currentSet, setCurrentSet] = useState(0);
+
+  useEffect(() => {
+    const highestSet = getCachedLogInfo(exercise.exerciseId)?.info.reduce(
+      (acc, curr) => (curr.set > acc ? curr.set : acc),
+      0
+    );
+    setCurrentSet(highestSet || 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exercise.exerciseId]);
 
   const onChange = (current: number) => {
     if (current < currentSet) {
@@ -75,13 +80,19 @@ function StepRow({
   const [weight, setWeight] = useState<number>();
   const [reps, setReps] = useState<number>();
   const { getCachedLogInfo, cacheLogInfo } = useLocalStorage();
-  const cachedInfo = getCachedLogInfo(exerciseId)?.info.find(
-    (i) => i.set === step + 1
-  );
   const [noRepsWarning, setNoRepsWarning] = useState(false);
 
+  useEffect(() => {
+    const cachedInfo = getCachedLogInfo(exerciseId)?.info.find(
+      (i) => i.set === step + 1
+    );
+    setWeight(cachedInfo?.weight);
+    setReps(cachedInfo?.reps);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exerciseId, step]);
+
   const onNext = () => {
-    const currentReps = reps ? !reps : !cachedInfo?.reps;
+    const currentReps = !reps;
     if (currentReps) {
       setNoRepsWarning(true);
       return;
@@ -100,8 +111,7 @@ function StepRow({
     onContinue();
   };
 
-  const showWarning =
-    noRepsWarning || (warningEnabled && (reps ? !reps : !cachedInfo?.reps));
+  const showWarning = noRepsWarning || (warningEnabled && !reps);
 
   return (
     <Space>
@@ -111,7 +121,6 @@ function StepRow({
         placeholder={placeHolder?.weight}
         value={weight}
         onChange={(weight) => setWeight(weight ?? 0)}
-        defaultValue={cachedInfo?.weight}
         min={0}
         prefix="kg"
       />
@@ -120,7 +129,6 @@ function StepRow({
         inputMode="decimal"
         value={reps}
         placeholder={placeHolder?.reps}
-        defaultValue={cachedInfo?.reps}
         min={0}
         onChange={(reps) => setReps(reps ?? 0)}
         prefix="reps"

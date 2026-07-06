@@ -2,7 +2,7 @@
 
 import { useLocalStorage } from "../../../../hooks/useLocalStorage";
 import { FiveThreeOne } from "@/lib/supabase/db/types";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 type FiveThreeOneContextType = {
   fiveThreeOneInfo: FiveThreeOne;
@@ -26,11 +26,18 @@ type Props = {
 
 const FiveThreeOneContextProvider = ({ children, initialFiveThreeOne }: Props) => {
   const { getCachedFiveThreeOneInfo } = useLocalStorage();
-  const cached = getCachedFiveThreeOneInfo();
 
   const [fiveThreeOneInfo, setFiveThreeOneInfo] = useState(initialFiveThreeOne);
-  const [week, setWeek] = useState(cached?.week ?? 1);
-  const [completed, setCompleted] = useState<number[]>(cached?.completed ?? []);
+  const [week, setWeek] = useState(1);
+  const [completed, setCompleted] = useState<number[]>([]);
+
+  useEffect(() => {
+    const cached = getCachedFiveThreeOneInfo();
+    if (!cached) return;
+    setWeek(cached.week);
+    setCompleted(cached.completed);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <FiveThreeOneContext.Provider

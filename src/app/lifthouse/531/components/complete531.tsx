@@ -275,19 +275,20 @@ function Row({
 }: RowProps) {
   const [reps, setReps] = useState<number>();
   const { getCachedLogInfo, cacheLogInfo } = useLocalStorage();
-  const cachedInfo = getCachedLogInfo(info.exercise.exerciseId)?.info.find(
-    (i) => i.set === step + 1,
-  );
   const [noRepsWarning, setNoRepsWarning] = useState(false);
 
   useEffect(() => {
+    const cachedInfo = getCachedLogInfo(info.exercise.exerciseId)?.info.find(
+      (i) => i.set === step + 1,
+    );
     setReps(cachedInfo?.reps);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [info]);
 
   const weight = (intensity * 0.9 * info.pb).toFixed(0);
 
   const onNext = () => {
-    const currentReps = reps ? !reps : !cachedInfo?.reps;
+    const currentReps = !reps;
     if (currentReps) {
       setNoRepsWarning(true);
       return;
@@ -306,8 +307,7 @@ function Row({
     onContinue();
   };
 
-  const showWarning =
-    noRepsWarning || (warningEnabled && (reps ? !reps : !cachedInfo?.reps));
+  const showWarning = noRepsWarning || (warningEnabled && !reps);
   return (
     <div className="flex mb-4">
       <span className="mx-3 w-16 font-bold">{weight}</span>
@@ -317,7 +317,6 @@ function Row({
         disabled={disabled}
         inputMode="decimal"
         value={reps}
-        defaultValue={cachedInfo?.reps}
         min={0}
         onChange={(reps) => setReps(reps ?? 0)}
         prefix="reps"
