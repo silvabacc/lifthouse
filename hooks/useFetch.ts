@@ -1,12 +1,9 @@
-import getConfig from "@/config";
 import { LogEntry } from "@/lib/supabase/db/types";
 import dayjs from "dayjs";
 
-const { baseUrl } = getConfig();
-
 export function useFetch() {
   const api = async (pathName: string, options?: RequestInit) => {
-    const response = await fetch(`${baseUrl}${pathName}`, options);
+    const response = await fetch(pathName, options);
     return response.json();
   };
 
