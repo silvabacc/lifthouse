@@ -65,7 +65,7 @@ export function ConfirmPasswordField() {
               return Promise.resolve();
             }
             return Promise.reject(
-              new Error("The new password that you entered do not match!")
+              new Error("The new password that you entered do not match!"),
             );
           },
         }),

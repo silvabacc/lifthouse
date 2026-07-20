@@ -112,8 +112,9 @@ export default function SelectElement({
           }`}
         >
           {!openUpward && (
-            <div className="bg-white sticky top-0 order-1">
+            <div className="bg-white sticky top-0">
               <SearchElement
+                variant="underlined"
                 selectedTags={tags}
                 filterTagOptions={filterTagsOptions}
                 setSearchQuery={setSearch}
@@ -121,7 +122,7 @@ export default function SelectElement({
               />
             </div>
           )}
-          <div className="h-full order-2">
+          <div className="h-full">
             {filteredOptions.length === 0 && (
               <div className="h-full flex items-center justify-center text-lg text-center text-slate-400">
                 No results found 😢
@@ -158,8 +159,9 @@ export default function SelectElement({
             })}
           </div>
           {openUpward && (
-            <div className="bg-white sticky bottom-0 order-3">
+            <div className="bg-white sticky bottom-0">
               <SearchElement
+                variant="underlined"
                 selectedTags={tags}
                 filterTagOptions={filterTagsOptions}
                 setSearchQuery={setSearch}

@@ -1,13 +1,15 @@
-import { FilterOutlined } from "@ant-design/icons";
-import { Button, Input, Tag } from "antd";
+import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, Input, Tag, type InputProps } from "antd";
 import { useState } from "react";
 
-const { Search } = Input;
 const { CheckableTag } = Tag;
+
+type Variant = InputProps["variant"];
 
 type SearchExerciseProps = {
   selectedTags?: string[];
   filterTagOptions?: string[];
+  variant?: Variant;
   placerHolder?: string;
   setSelectedTags?: (tags: string[]) => void;
   setSearchQuery: (query: string) => void;
@@ -16,6 +18,7 @@ export default function SearchElement({
   selectedTags = [],
   filterTagOptions,
   placerHolder,
+  variant,
   setSearchQuery,
   setSelectedTags,
 }: SearchExerciseProps) {
@@ -28,12 +31,16 @@ export default function SearchElement({
     setSelectedTags?.(nextSelectedTags);
   };
 
+  console.log(variant);
+
   return (
     <>
-      <div className="flex justify-between w-full">
-        <Search
-          className="w-full"
+      <div className="flex justify-between w-full ml-2">
+        <Input
+          variant={variant}
+          className={`w-full ${variant === "underlined" && "p-0"} `}
           placeholder={placerHolder}
+          prefix={variant !== "underlined" && <SearchOutlined />}
           onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
         />
         {filterTagOptions?.length !== 0 && (
