@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { DownOutlined } from "@ant-design/icons";
-import { Tooltip } from "antd";
+import { InputProps, Tooltip } from "antd";
 import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
 import { WarningOutlined } from "@ant-design/icons";
 import SearchElement from "@/app/lifthouse/components/search";
 
 const WARNING_COLOR = "text-orange-600";
+
+type Variant = InputProps["variant"];
 
 type DisabledOptions = {
   disabled: boolean;
@@ -23,6 +25,8 @@ type SelectProps = {
   value?: string | number;
   options: Options[];
   defaultValue?: string | number;
+  variant?: Variant;
+  placeHolder?: string;
   filterTagsOptions?: string[];
   onChange?: (value: string | number) => void;
 };
@@ -32,6 +36,8 @@ export default function SelectElement({
   value,
   options,
   defaultValue,
+  variant,
+  placeHolder,
   filterTagsOptions = [],
   onChange,
 }: SelectProps) {
@@ -112,9 +118,10 @@ export default function SelectElement({
           }`}
         >
           {!openUpward && (
-            <div className="bg-white sticky top-0">
+            <div className="bg-white sticky top-0 inset-shadow-sm py-2">
               <SearchElement
-                variant="underlined"
+                variant={variant}
+                placerHolder={placeHolder}
                 selectedTags={tags}
                 filterTagOptions={filterTagsOptions}
                 setSearchQuery={setSearch}
@@ -122,7 +129,7 @@ export default function SelectElement({
               />
             </div>
           )}
-          <div className="h-full">
+          <div className="flex-1">
             {filteredOptions.length === 0 && (
               <div className="h-full flex items-center justify-center text-lg text-center text-slate-400">
                 No results found 😢
@@ -159,9 +166,10 @@ export default function SelectElement({
             })}
           </div>
           {openUpward && (
-            <div className="bg-white sticky bottom-0">
+            <div className="bg-white sticky bottom-0 inset-shadow-sm py-2">
               <SearchElement
-                variant="underlined"
+                variant={variant}
+                placerHolder="e.g. 3x3"
                 selectedTags={tags}
                 filterTagOptions={filterTagsOptions}
                 setSearchQuery={setSearch}

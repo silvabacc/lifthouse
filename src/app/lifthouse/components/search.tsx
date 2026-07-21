@@ -1,5 +1,5 @@
 import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Tag, type InputProps } from "antd";
+import { Button, Divider, Input, Tag, type InputProps } from "antd";
 import { useState } from "react";
 
 const { CheckableTag } = Tag;
@@ -31,14 +31,12 @@ export default function SearchElement({
     setSelectedTags?.(nextSelectedTags);
   };
 
-  console.log(variant);
-
   return (
     <>
-      <div className="flex justify-between w-full ml-2">
+      <div className="flex justify-between w-full">
         <Input
           variant={variant}
-          className={`w-full ${variant === "underlined" && "p-0"} `}
+          className={`w-full ${variant === "underlined" && "mx-2 p-0"} `}
           placeholder={placerHolder}
           prefix={variant !== "underlined" && <SearchOutlined />}
           onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
@@ -53,17 +51,20 @@ export default function SearchElement({
         )}
       </div>
       {expandedFilter && filterTagOptions && (
-        <div className="flex px-2 overflow-auto gap-2 mt-2">
-          {filterTagOptions.map((tag) => (
-            <CheckableTag
-              key={tag}
-              checked={selectedTags?.includes(tag) ?? false}
-              onChange={(checked) => handleChange(tag, checked)}
-            >
-              {tag}
-            </CheckableTag>
-          ))}
-        </div>
+        <>
+          <div className="flex px-2 overflow-auto gap-2 mt-2 pb-3">
+            {filterTagOptions.map((tag) => (
+              <CheckableTag
+                key={tag}
+                checked={selectedTags?.includes(tag) ?? false}
+                onChange={(checked) => handleChange(tag, checked)}
+              >
+                {tag}
+              </CheckableTag>
+            ))}
+          </div>
+          <Divider style={{ margin: 2 }} />
+        </>
       )}
     </>
   );

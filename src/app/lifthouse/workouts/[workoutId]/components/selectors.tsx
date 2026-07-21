@@ -26,10 +26,10 @@ export function SelectExercise({
 }: SelectExerciseProps) {
   const { exercises, workout } = useWorkoutIdContext();
   const findExercise = exercises.find(
-    (e) => e.exerciseId === defaultExercise.exerciseId
+    (e) => e.exerciseId === defaultExercise.exerciseId,
   );
   const [currentExercises, setCurrentExercises] = useState<number[]>(
-    items.map((e) => e.exerciseId)
+    items.map((e) => e.exerciseId),
   );
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export function SelectExercise({
 
   // Find common exercise types
   const commonType = findExercise?.exerciseType.filter((type) =>
-    acceptedExerciseTypesForExercises(workout.template).includes(type)
+    acceptedExerciseTypesForExercises(workout.template).includes(type),
   );
 
   //With the current exercise selection, find all relevant exercises
@@ -49,7 +49,7 @@ export function SelectExercise({
       return e.exerciseType.find((v) => commonType.includes(v));
     })
     .filter((e) =>
-      intersection(e.exerciseType, findExercise?.exerciseType ?? [])
+      intersection(e.exerciseType, findExercise?.exerciseType ?? []),
     );
 
   //We only want to apply the exercises if a template is applied
@@ -74,6 +74,8 @@ export function SelectExercise({
 
   return (
     <SelectElement
+      variant="underlined"
+      placeHolder="e.g. Lat Pulldown"
       value={defaultExercise.exerciseId}
       filterTagsOptions={filterTagOptions}
       options={options}
@@ -101,6 +103,8 @@ export function SelectRepsScheme({
 
   return (
     <SelectElement
+      variant="underlined"
+      placeHolder="e.g. 3x3"
       options={repSchemeOptions}
       onChange={(value) =>
         onChange(defaultExercise.exerciseId, value as string)
