@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import { InputProps, Tooltip } from "antd";
-import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
+import { BottomFadeInAnimation } from "@/app/animations/bottomFadeInAnimation";
 import { WarningOutlined } from "@ant-design/icons";
 import SearchElement from "@/app/lifthouse/components/search";
 
@@ -121,7 +121,7 @@ export default function SelectElement({
             <div className="bg-white sticky top-0 inset-shadow-sm py-2">
               <SearchElement
                 variant={variant}
-                placerHolder={placeHolder}
+                placeHolder={placeHolder}
                 selectedTags={tags}
                 filterTagOptions={filterTagsOptions}
                 setSearchQuery={setSearch}
@@ -169,7 +169,7 @@ export default function SelectElement({
             <div className="bg-white sticky bottom-0 inset-shadow-sm py-2">
               <SearchElement
                 variant={variant}
-                placerHolder="e.g. 3x3"
+                placeHolder="e.g. 3x3"
                 selectedTags={tags}
                 filterTagOptions={filterTagsOptions}
                 setSearchQuery={setSearch}

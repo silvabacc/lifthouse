@@ -28,9 +28,11 @@ async function authProxy(
   }
 
   // Checks if the user is requesting their own workout plan, and not someone else's
+  // Note: pageUrl already starts with "/" — don't prepend another slash, or the
+  // regex becomes ^//lifthouse/... and never matches (making this check dead code)
   if (
     user &&
-    new RegExp(`^\/${pageUrl}\/workouts\/(\\d+)$`).test(
+    new RegExp(`^${pageUrl}/workouts/(\\d+)$`).test(
       request.nextUrl.pathname
     ) &&
     request.method === "GET"

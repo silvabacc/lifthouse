@@ -44,7 +44,15 @@ export default function FiveThreeOneWeeks() {
     },
   ].map((item, index) => ({
     key: index + 1,
-    label: <h3 className="font-bold m-0">{item.title}</h3>,
+    label: (
+      <div>
+        <h3 className="font-bold m-0">{item.title}</h3>
+        <p className="m-0 text-xs font-normal text-gray-400">
+          {item.reps.join(" / ")} reps ·{" "}
+          {item.intensity.map((i) => `${i * 100}%`).join(" / ")}
+        </p>
+      </div>
+    ),
     showArrow: false,
     children: (
       <ExerciseRow
@@ -69,7 +77,11 @@ export default function FiveThreeOneWeeks() {
           <Space
             orientation="vertical"
             key={item.key}
-            className={`${item.collapsible === "disabled" ? "opacity-25 pointer-events-none" : ""} bg-white rounded-lg p-6`}
+            className={`${
+              item.collapsible === "disabled"
+                ? "opacity-40 pointer-events-none border-gray-100"
+                : "border-indigo-200 shadow-sm"
+            } bg-white rounded-xl border border-solid p-6`}
           >
             <div>{item.label}</div>
             <Divider className="mt-1" />
@@ -119,21 +131,23 @@ function ExerciseRow({ sets, reps, intensity, isActiveWeek }: ExerciseRowProps) 
         const isCompleted =
           isActiveWeek && completed.includes(pb?.exercise?.exerciseId);
         return (
-          <div key={pb?.exercise?.name}>
-            <div className="flex mb-2 justify-between">
-              <span className="truncate">{pb?.exercise?.name}</span>
-              <div className="ml-4">
-                {isCompleted ? (
-                  <CheckCircleTwoTone
-                    className="text-2xl"
-                    twoToneColor="#52c41a"
-                  />
-                ) : (
-                  <Button type="primary" onClick={() => handleOpen(pb)}>
-                    Start
-                  </Button>
-                )}
-              </div>
+          <div
+            key={pb?.exercise?.name}
+            className="mb-2 flex items-center justify-between rounded-lg px-2 py-1.5 hover:bg-gray-50"
+          >
+            <span className="truncate text-sm font-medium text-gray-800">
+              {pb?.exercise?.name}
+            </span>
+            <div className="ml-4">
+              {isCompleted ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-600">
+                  <CheckCircleTwoTone twoToneColor="#16a34a" /> Done
+                </span>
+              ) : (
+                <Button size="small" type="primary" onClick={() => handleOpen(pb)}>
+                  Start
+                </Button>
+              )}
             </div>
           </div>
         );
@@ -198,8 +212,8 @@ function WeekTitle({ week, currentWeek }: WeekTitleProps) {
     <div className="flex justify-between font-bold m-0">
       <span>Week {week}</span>
       {showWeek && (
-        <Button onClick={onClickSkip} type="link">
-          Skip
+        <Button onClick={onClickSkip} size="small" type="link">
+          Skip week
         </Button>
       )}
     </div>

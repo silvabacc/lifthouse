@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { View } from "./types";
 import { useLocalStorage } from "../../../../../hooks/useLocalStorage";
-import { Button, DatePicker, Divider, Space } from "antd";
+import { Button, DatePicker, Segmented } from "antd";
 import dayjs from "dayjs";
 import { useFetch } from "../../../../../hooks/useFetch";
 import { Exercise, LogEntry } from "@/lib/supabase/db/types";
@@ -80,22 +80,15 @@ export function LogVisual({
           </div>
         )}
       </div>
-      <div className="flex flex-wrap justify-between">
-        <Space>
-          {Object.values(View).map((v, idx) => (
-            <div key={`${v}-${idx}`}>
-              <Button
-                key={v}
-                className="p-0"
-                type={getButtonType(view, v)}
-                onClick={() => onClickView(v)}
-              >
-                {v.charAt(0).toUpperCase() + v.slice(1)}
-              </Button>
-              <Divider orientation="vertical" />
-            </div>
-          ))}
-        </Space>
+      <div className="flex flex-wrap justify-between gap-2">
+        <Segmented
+          value={view}
+          onChange={(v) => onClickView(v as View)}
+          options={Object.values(View).map((v) => ({
+            label: v.charAt(0).toUpperCase() + v.slice(1),
+            value: v,
+          }))}
+        />
         <RangePicker
           inputReadOnly
           value={[firstDate, secondDate]}
@@ -118,6 +111,3 @@ export function LogVisual({
   );
 }
 
-function getButtonType(currentView: View, targetView: View) {
-  return currentView === targetView ? "link" : "text";
-}

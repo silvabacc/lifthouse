@@ -36,27 +36,46 @@ export default function WorkoutFormDrawer({
   isLoading,
 }: Props) {
   return (
-    <Drawer open={open} onClose={onClose} title={title}>
+    <Drawer
+      open={open}
+      onClose={onClose}
+      title={title}
+      width="min(420px, 100vw)"
+    >
       <Form
+        layout="vertical"
         onFinish={onFinish}
         initialValues={{
           name: defaultTitleFieldValue,
           description: defaultDescriptionFieldValue,
         }}
       >
-        <Form.Item name="name">
-          <Input
-            required={options.nameRequired}
-            size="large"
-            placeholder="Edit plan name"
-          />
+        <Form.Item
+          name="name"
+          label="Name"
+          rules={[
+            {
+              required: options.nameRequired,
+              message: "Give your workout plan a name",
+            },
+          ]}
+        >
+          <Input size="large" placeholder="e.g. Upper Body A" />
         </Form.Item>
-        <Form.Item name="description">
+        <Form.Item
+          name="description"
+          label="Description"
+          rules={[
+            {
+              required: options.descriptionRequired,
+              message: "Add a short description",
+            },
+          ]}
+        >
           <TextArea
             showCount
-            required={options.descriptionRequired}
             maxLength={100}
-            placeholder="Edit description"
+            placeholder="e.g. Heavy pressing day — OHP focus"
             style={{ height: 120, resize: "none" }}
           />
         </Form.Item>
@@ -66,7 +85,7 @@ export default function WorkoutFormDrawer({
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" loading={isLoading}>
-              {isLoading ? "Saving" : "Ok"}
+              {isLoading ? "Saving" : "Save"}
             </Button>
           </Form.Item>
         </Space>

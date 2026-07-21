@@ -21,13 +21,7 @@ export default class DatabaseClient {
   private supabase: SupabaseClient;
 
   constructor(cookieStore: Awaited<ReturnType<typeof cookies>>) {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-    if (!supabaseUrl || !supabaseKey) {
-      throw new Error("Missing Supabase URL or key");
-    }
-
+    // Env validation happens centrally in getConfig() via createSupabaseServer
     this.supabase = createSupabaseServer(cookieStore);
   }
 

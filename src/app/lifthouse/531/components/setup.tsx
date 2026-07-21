@@ -57,33 +57,38 @@ export function Setup({ open, onClose }: Props) {
   return (
     <div className="overflow-hidden grid lg:grid-cols-2 gap-4 items-start">
       <Card>
-        <h1 className="m-0 mb-2">1RM (one rep max) for SBD</h1>
-        <span>
-          Enter your 1 rep max. You don&apos;t have to be accurate and be
-          realistic, you don&apos;t have to train at your one rep max for this
-          program to be effective
+        <h2 className="m-0 mb-2 text-lg font-semibold">
+          One-rep maxes
+        </h2>
+        <span className="text-gray-500">
+          Enter your one-rep max for each lift. A realistic estimate is fine —
+          you won&apos;t train at your max for this program to be effective.
         </span>
-        <Form form={form} className="mt-4" onFinish={onFinish}>
+        <Form form={form} layout="vertical" className="mt-4" onFinish={onFinish}>
           {formItems.map((lift) => (
-            <div key={lift.exercise.name} className="flex items-center">
-              <div className="w-full">
-                <span className="text-left font-bold">
-                  {lift.exercise.name}
-                </span>
-                <Form.Item name={lift.key} colon={false}>
-                  <InputNumber
-                    placeholder={lift.pb.toString()}
-                    required
-                    className="w-full mt-4"
-                    suffix="kg"
-                  />
-                </Form.Item>
-              </div>
-            </div>
+            <Form.Item
+              key={lift.exercise.name}
+              name={lift.key}
+              label={lift.exercise.name}
+              rules={[
+                {
+                  required: true,
+                  message: `Enter your ${lift.exercise.name} one-rep max`,
+                },
+              ]}
+            >
+              <InputNumber
+                placeholder={lift.pb.toString()}
+                inputMode="decimal"
+                min={1}
+                className="w-full"
+                suffix="kg"
+              />
+            </Form.Item>
           ))}
           <div className="flex justify-center mt-4">
             <Button type="primary" className="w-64" htmlType="submit" loading={isPending}>
-              {isPending ? "Saving..." : "Finish"}
+              {isPending ? "Saving" : "Save"}
             </Button>
           </div>
         </Form>

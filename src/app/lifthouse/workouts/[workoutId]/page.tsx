@@ -1,12 +1,17 @@
 "use client";
 
 import { Button, Layout, Space } from "antd";
+import {
+  PlayCircleFilled,
+  SwapOutlined,
+  AppstoreOutlined,
+} from "@ant-design/icons";
 import { PageInfoPortal } from "../../components/pageInfo";
 import { useState, useTransition } from "react";
 import AddButton from "../components/addButton";
 import AddExerciseDrawer from "./components/drawers/addExerciseDrawer";
 import { WorkoutTemplate } from "@/lib/supabase/db/types";
-import { PageAnimation } from "@/app/aniamtions/pageAnimation";
+import { PageAnimation } from "@/app/animations/pageAnimation";
 import { Record } from "./components/drawers/recordDrawer";
 import { useWorkoutIdContext } from "./context";
 import ChangeExercisesDrawer from "./components/drawers/changeExercisesDrawer";
@@ -37,11 +42,12 @@ export default function WorkoutPlanPage() {
   return (
     <PageAnimation className={workout.exercises.length === 0 ? "" : "h-full"}>
       <Layout className="relative h-full">
-        <Content className="h-full bg-white rounded-sm p-4">
+        <Content className="h-full bg-white rounded-xl p-4">
           <PageInfoPortal
             title={workout.name}
             extra={
               <PageInfoExtra
+                hasExercises={workout.exercises.length > 0}
                 onClickRecord={() => setShowRecord(!showRecord)}
                 onClickEdit={() => setShowEdit(!showEdit)}
                 onClickWorkoutTemplate={() => setShowTemplate(!showTemplate)}
@@ -80,26 +86,33 @@ export default function WorkoutPlanPage() {
 }
 
 type PageInfoExtraProps = {
+  hasExercises: boolean;
   onClickRecord: () => void;
   onClickEdit: () => void;
   onClickWorkoutTemplate: () => void;
 };
 
 function PageInfoExtra({
+  hasExercises,
   onClickRecord,
   onClickEdit,
   onClickWorkoutTemplate,
 }: PageInfoExtraProps) {
   return (
-    <Space className="pb-4">
-      <Button type="dashed" danger onClick={onClickRecord}>
-        Record a workout
+    <Space className="pb-4" wrap>
+      <Button
+        type="primary"
+        icon={<PlayCircleFilled />}
+        disabled={!hasExercises}
+        onClick={onClickRecord}
+      >
+        Start workout
       </Button>
-      <Button type="dashed" style={{ color: "#0ea5e9" }} onClick={onClickEdit}>
-        Change exercises
+      <Button icon={<SwapOutlined />} onClick={onClickEdit}>
+        Edit exercises
       </Button>
-      <Button type="dashed" onClick={onClickWorkoutTemplate}>
-        Workout templates
+      <Button icon={<AppstoreOutlined />} onClick={onClickWorkoutTemplate}>
+        Templates
       </Button>
     </Space>
   );

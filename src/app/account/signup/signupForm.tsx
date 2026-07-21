@@ -59,8 +59,13 @@ export default function SignupForm() {
         <EmailField />
         <PasswordField />
         <ConfirmPasswordField />
-        <FormButton text={"Sign Up"} />
-        <Link href="/account/login">Already a user?</Link>
+        <FormButton text={"Create account"} />
+        <p className="mb-0 mt-2 text-center text-sm text-gray-500">
+          Already have an account?{" "}
+          <Link href="/account/login" className="font-medium">
+            Log in
+          </Link>
+        </p>
       </FormWrapper>
     </>
   );

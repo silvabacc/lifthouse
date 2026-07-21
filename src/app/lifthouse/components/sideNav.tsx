@@ -11,7 +11,7 @@ import { redirectToHome } from "@/lib/utils";
 
 const { Sider } = Layout;
 
-export default function SiderNav() {
+export default function SideNav() {
   const { collapsedStorage } = useLocalStorage();
 
   const router = useRouter();
@@ -20,14 +20,16 @@ export default function SiderNav() {
 
   useEffect(() => {
     setCollapsed(collapsedStorage.get());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const items = pageConfig.map((item, index) => ({
-    key: `${index + 1}`,
+  // Key items by their route so the selected state derives directly from the
+  // URL — no remount hack needed when the path changes.
+  const items = pageConfig.map((item) => ({
+    key: item.route,
     icon: <div>{item.icon}</div>,
     label: item.title,
     onClick: () => router.push(item.route),
-    path: item.route,
   }));
 
   const onCollapse = (value: boolean) => {
@@ -35,11 +37,13 @@ export default function SiderNav() {
     collapsedStorage.set(value);
   };
 
-  const activeKey =
-    items.find((item) => pathName.startsWith(item.path))?.key || "1";
+  const selectedKey =
+    pageConfig.find((item) => pathName.startsWith(item.route))?.route ??
+    pageConfig[0].route;
 
   return (
     <Sider
+      className="hidden sm:block"
       collapsed={collapsed}
       collapsible
       collapsedWidth={40}
@@ -57,12 +61,7 @@ export default function SiderNav() {
           onClick={() => redirectToHome(router)}
         />
       )}
-      <Menu
-        theme="light"
-        key={activeKey}
-        defaultSelectedKeys={[activeKey]}
-        items={items}
-      />
+      <Menu theme="light" selectedKeys={[selectedKey]} items={items} />
     </Sider>
   );
 }

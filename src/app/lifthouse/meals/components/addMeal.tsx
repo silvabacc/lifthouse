@@ -54,9 +54,13 @@ export default function AddMeal({ goToMealTab, selectedDay }: AddMealProps) {
   const fatRow = [{ state: fatsPer, set: setFatsPer }];
 
   useEffect(() => {
-    window.addEventListener("resize", () => {
-      scrollToCard();
-    });
+    const onResize = () => {
+      if (cardRef.current) {
+        cardRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, []);
 
   //Refactor this

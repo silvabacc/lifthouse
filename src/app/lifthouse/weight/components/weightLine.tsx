@@ -7,7 +7,19 @@ export default function WeightLine() {
   const { weightData } = useWeightInContext();
 
   if (weightData.length === 0) {
-    return <div style={{ height: 350 }} />;
+    return (
+      <div
+        style={{ height: 350 }}
+        className="flex flex-col items-center justify-center text-center"
+      >
+        <p className="m-0 text-base font-medium text-gray-700">
+          No weigh-ins this month
+        </p>
+        <p className="m-0 mt-1 text-sm text-gray-400">
+          Tap a day on the calendar to add one
+        </p>
+      </div>
+    );
   }
 
   const transformData = weightData.map((weight) => {

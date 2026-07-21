@@ -1,4 +1,4 @@
-import { LayoutAnimation } from "../aniamtions/layoutAnimation";
+import { LayoutAnimation } from "../animations/layoutAnimation";
 
 export default function AccountLayout({
   children,
@@ -7,9 +7,9 @@ export default function AccountLayout({
 }) {
   return (
     <LayoutAnimation>
-      <section className="flex flex-col justify-center items-center h-full w-full">
-        <h1 className="text-4xl font-bold">LiftHouse 🏋</h1>
-        <span className="text-gray-500 text-sm">
+      <section className="flex h-full w-full flex-col items-center justify-center px-4">
+        <h1 className="m-0 text-3xl font-bold">LiftHouse 🏋</h1>
+        <span className="mt-1 text-sm text-gray-400">
           Enjoy the journey, not the destination
         </span>
         {children}

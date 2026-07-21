@@ -23,13 +23,13 @@ export default function RecoveryForm() {
 
     const { error } = await supabase.auth.signInWithOtp({
       email: email,
-      options: { emailRedirectTo: `${location.origin}/profile` },
+      options: { emailRedirectTo: `${location.origin}/lifthouse` },
     });
 
     if (error) {
       setAlert(error.message);
     } else {
-      messageApi.success("Recovery email sent!");
+      messageApi.success("Check your inbox for a sign-in link");
     }
     setDisabled(false);
   };
@@ -46,7 +46,11 @@ export default function RecoveryForm() {
           />
         )}
         <EmailField />
-        <FormButton text={"Send Recovery Email"} disabled={disabled} />
+        <FormButton text={"Email me a sign-in link"} disabled={disabled} />
+        <p className="mb-0 mt-2 text-center text-xs text-gray-400">
+          We&apos;ll email you a link that signs you in — you can then set a
+          new password from the account menu.
+        </p>
       </FormWrapper>
     </>
   );

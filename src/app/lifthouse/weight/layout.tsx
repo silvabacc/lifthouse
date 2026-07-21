@@ -1,4 +1,4 @@
-import { LayoutAnimation } from "@/app/aniamtions/layoutAnimation";
+import { LayoutAnimation } from "@/app/animations/layoutAnimation";
 import { WeightContextProvider } from "./context";
 
 export default function WeightLayout({

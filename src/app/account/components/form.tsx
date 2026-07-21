@@ -11,8 +11,10 @@ interface FormWrapperProps extends FormProps {
 export function FormWrapper({ title, children, ...props }: FormWrapperProps) {
   return (
     <>
-      <h2 className="text-xl mt-4 font-bold text-center">{title}</h2>
-      <div className="w-72 m-4 p-4 bg-gray-50 rounded-lg">
+      {title && (
+        <h2 className="mt-4 text-center text-xl font-bold">{title}</h2>
+      )}
+      <div className="m-4 w-full max-w-sm rounded-xl border border-solid border-gray-100 bg-white p-6">
         <Form {...props}>{children}</Form>
       </div>
     </>
@@ -28,7 +30,7 @@ export function EmailField() {
         { type: "email", message: "Please input your email" },
       ]}
     >
-      <Input prefix={<UserOutlined />} placeholder="Email" />
+      <Input size="large" prefix={<UserOutlined className="text-gray-400" />} placeholder="Email" />
     </Form.Item>
   );
 }
@@ -40,7 +42,8 @@ export function PasswordField() {
       rules={[{ required: true, message: "Please input your Password" }]}
     >
       <Input.Password
-        prefix={<LockOutlined />}
+        size="large"
+        prefix={<LockOutlined className="text-gray-400" />}
         type="password"
         placeholder={"Password"}
         visibilityToggle
@@ -72,7 +75,8 @@ export function ConfirmPasswordField() {
       ]}
     >
       <Input.Password
-        prefix={<LockOutlined />}
+        size="large"
+        prefix={<LockOutlined className="text-gray-400" />}
         placeholder="Confirm Password"
       />
     </Form.Item>
@@ -86,7 +90,7 @@ interface FormButtonProps extends ButtonProps {
 export function FormButton({ text, ...props }: FormButtonProps) {
   return (
     <Form.Item>
-      <Button {...props} type="primary" htmlType="submit" block>
+      <Button {...props} size="large" type="primary" htmlType="submit" block>
         {text}
       </Button>
     </Form.Item>

@@ -4,7 +4,7 @@ import { useLocalStorage } from "../../../../../hooks/useLocalStorage";
 import { Exercise, LogEntry } from "@/lib/supabase/db/types";
 import { App, Button, Modal } from "antd";
 import { Dispatch, SetStateAction, useState, useTransition } from "react";
-import { Complete } from "../compete";
+import { SetLogger } from "../setLogger";
 import { saveLogs } from "../../actions";
 
 type RecordEntryProps = {
@@ -46,14 +46,14 @@ export function RecordEntry({ exercise, setLogs }: RecordEntryProps) {
           title="Record an entry"
           open={isModalOpen}
           onOk={onFinish}
-          okText={isPending ? "Saving..." : "Finish"}
+          okText={isPending ? "Saving" : "Save entry"}
           confirmLoading={isPending}
           onCancel={() => setModalOpen(false)}
         >
-          <Complete exercise={exercise} />
+          <SetLogger exercise={exercise} />
         </Modal>
       )}
-      <Button type="dashed" danger onClick={() => setModalOpen(true)}>
+      <Button type="primary" onClick={() => setModalOpen(true)}>
         Record an entry
       </Button>
     </>

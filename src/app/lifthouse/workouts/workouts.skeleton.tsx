@@ -1,12 +1,15 @@
 import { Skeleton } from "antd";
 
 export default function WorkoutSkeleton() {
-  const CardSkeleton = () => <Skeleton className="bg-white p-4" active />;
-
   return (
-    <div className="grid lg:grid-cols-3 gap-4">
-      {Array.from({ length: 24 }).map((_, i) => (
-        <CardSkeleton key={i} />
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div
+          key={i}
+          className="rounded-xl border border-solid border-gray-100 bg-white p-5"
+        >
+          <Skeleton active paragraph={{ rows: 2 }} />
+        </div>
       ))}
     </div>
   );

@@ -1,4 +1,4 @@
-import { PageAnimation } from "@/app/aniamtions/pageAnimation";
+import { PageAnimation } from "@/app/animations/pageAnimation";
 import FiveThreeOne from "./fiveThreeOne";
 
 export default function FiveThreeOnePage() {

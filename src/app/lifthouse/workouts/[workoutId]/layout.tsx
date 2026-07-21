@@ -1,4 +1,4 @@
-import { LayoutAnimation } from "@/app/aniamtions/layoutAnimation";
+import { LayoutAnimation } from "@/app/animations/layoutAnimation";
 import { createDatabaseClient } from "@/lib/supabase/db/dbClient";
 import { WorkoutIdContextProvider } from "./context";
 

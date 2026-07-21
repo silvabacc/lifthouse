@@ -1,16 +1,18 @@
 import { createDatabaseClient } from "@/lib/supabase/db/dbClient";
 import Joi from "joi";
 import { NextRequest, NextResponse } from "next/server";
+import { apiRoute } from "@/lib/api";
 
-export async function GET(request: NextRequest) {
+export const GET = apiRoute(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
 
   const day = searchParams.get("day");
 
   if (day === null) {
-    return NextResponse.json({
-      error: "Must contain both month and year in search params",
-    });
+    return NextResponse.json(
+      { error: "Missing required 'day' search param" },
+      { status: 400 }
+    );
   }
 
   const dbClient = await createDatabaseClient();
@@ -24,9 +26,9 @@ export async function GET(request: NextRequest) {
 
   const data = await dbClient.getMeals(day);
   return NextResponse.json(data);
-}
+});
 
-export async function POST(request: NextRequest) {
+export const POST = apiRoute(async (request: NextRequest) => {
   const body = await request.json();
 
   try {
@@ -55,4 +57,4 @@ export async function POST(request: NextRequest) {
     body.date
   );
   return NextResponse.json(data);
-}
+});

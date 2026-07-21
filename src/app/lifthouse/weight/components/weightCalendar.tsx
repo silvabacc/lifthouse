@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Calendar, InputNumber, Space, Tooltip } from "antd";
+import { Button, Calendar, InputNumber, Popover, Space } from "antd";
 import dayjs from "dayjs";
 import { useWeightInContext } from "../context";
 import type { Dayjs } from "dayjs";
@@ -71,21 +71,28 @@ export default function WeightCalendar() {
       day.date.isSame(date, "day"),
     );
 
-    const tooltipElement = (
-      <Space className="p-2">
-        <p className="text-black">Weight:</p>
-        <InputNumber
-          inputMode="decimal"
-          min={0}
-          value={weight}
-          onChange={(value) => setWeight(value || 0)}
-          onFocus={(e) => e.target.select()}
-          prefix="kg"
-        />
-        <Button type="primary" onClick={() => handleOk(cellDayWeighIn?.id)}>
-          Ok
-        </Button>
-      </Space>
+    const popoverContent = (
+      <div className="p-1">
+        <Space>
+          <InputNumber
+            inputMode="decimal"
+            min={0}
+            value={weight}
+            onChange={(value) => setWeight(value || 0)}
+            onFocus={(e) => e.target.select()}
+            suffix="kg"
+            autoFocus
+          />
+          <Button type="primary" onClick={() => handleOk(cellDayWeighIn?.id)}>
+            Save
+          </Button>
+        </Space>
+        {cellDayWeighIn && (
+          <p className="m-0 mt-2 text-xs text-gray-400">
+            Set to 0 to remove this weigh-in
+          </p>
+        )}
+      </div>
     );
 
     if (isLoading) {
@@ -93,22 +100,26 @@ export default function WeightCalendar() {
     }
 
     return (
-      <Tooltip
-        trigger={"click"}
-        color="white"
+      <Popover
+        trigger="click"
         open={!!openDate && openDate.isSame(date, "day")}
         onOpenChange={(open) => {
           setOpenDate(open ? date : null);
-          setWeight(0);
+          setWeight(cellDayWeighIn?.weight ?? 0);
         }}
-        title={tooltipElement}
-        autoAdjustOverflow
+        content={popoverContent}
       >
-        <div className="flex flex-col m-6">
+        <div className="m-4 flex flex-col items-center sm:m-6">
           {info.originNode}
-          <p className="text-xs text-blue-600">{cellDayWeighIn?.weight}</p>
+          {cellDayWeighIn ? (
+            <span className="mt-0.5 rounded-full bg-indigo-50 px-1.5 text-xs font-medium text-indigo-600">
+              {cellDayWeighIn.weight}
+            </span>
+          ) : (
+            <span className="mt-0.5 h-4 text-xs text-transparent">–</span>
+          )}
         </div>
-      </Tooltip>
+      </Popover>
     );
   };
 

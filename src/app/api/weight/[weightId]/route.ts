@@ -3,8 +3,9 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import Joi from "joi";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { apiRoute } from "@/lib/api";
 
-export async function PUT(request: NextRequest, props: { params: Promise<{ weightId: string }> }) {
+export const PUT = apiRoute(async (request: NextRequest, props: { params: Promise<{ weightId: string }> }) => {
   const params = await props.params;
   const body = await request.json();
 
@@ -22,11 +23,11 @@ export async function PUT(request: NextRequest, props: { params: Promise<{ weigh
 
   const data = await db.updateWeight(parseInt(params.weightId), weight);
   return NextResponse.json(data);
-}
+});
 
-export async function DELETE(_request: NextRequest, props: { params: Promise<{ weightId: string }> }) {
+export const DELETE = apiRoute(async (_request: NextRequest, props: { params: Promise<{ weightId: string }> }) => {
   const params = await props.params;
   const db = await createDatabaseClient();
   await db.deleteWeight(parseInt(params.weightId));
   return NextResponse.json({ success: true });
-}
+});

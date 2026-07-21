@@ -2,7 +2,8 @@ import { Layout } from "antd";
 import Header from "./components/header";
 import PageInfo from "./components/pageInfo";
 import SideNav from "./components/sideNav";
-import { LayoutAnimation } from "../aniamtions/layoutAnimation";
+import MobileNav from "./components/mobileNav";
+import { LayoutAnimation } from "../animations/layoutAnimation";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 
@@ -25,9 +26,12 @@ export default async function LiftHouseLayout({
           <Header email={user?.email ?? ""} />
           <PageInfo />
           <Layout>
-            <div className="m-6 h-full overflow-auto rounded-lg">{children}</div>
+            <div className="m-4 h-full overflow-auto rounded-lg pb-20 sm:m-6 sm:pb-0">
+              {children}
+            </div>
           </Layout>
         </Layout>
+        <MobileNav />
       </Layout>
     </LayoutAnimation>
   );

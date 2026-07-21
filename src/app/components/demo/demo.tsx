@@ -32,17 +32,16 @@ export function DemoText() {
   };
 
   return (
-    <div className="text-sm text-gray-600 mt-4">
-      Want to try out Lifthouse? Use our{" "}
-      <span
-        className="text-blue-500 cursor-pointer"
-        onClick={() => {
-          onClick();
-        }}
+    <div className="mt-4 text-center text-sm text-gray-500">
+      Just looking around?{" "}
+      <button
+        type="button"
+        disabled={creating}
+        onClick={onClick}
+        className="cursor-pointer border-0 bg-transparent p-0 font-medium text-indigo-600 hover:text-indigo-500 disabled:cursor-wait disabled:opacity-60"
       >
-        demo
-      </span>{" "}
-      to get started!
+        {creating ? "Setting up a demo…" : "Try the demo"}
+      </button>
     </div>
   );
 }

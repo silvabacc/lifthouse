@@ -1,25 +1,15 @@
 import React from "react";
 import { useLocalStorage } from "../../../../../hooks/useLocalStorage";
 import { LogEntry, PersonalBest } from "@/lib/supabase/db/types";
-import {
-  CheckCircleOutlined,
-  WarningOutlined as WarningOutlinedRaw,
-} from "@ant-design/icons";
-const WarningOutlined = WarningOutlinedRaw as unknown as React.FC<{
-  className?: string;
-}>;
+import { CheckOutlined } from "@ant-design/icons";
 import {
   Alert,
   App,
   Button,
   Collapse,
-  Divider,
   Drawer,
   Input,
   InputNumber,
-  StepsProps,
-  Steps,
-  Tooltip,
 } from "antd";
 import { useEffect, useState, useTransition } from "react";
 import { useFiveThreeOneContext } from "../context";
@@ -40,6 +30,7 @@ type Props = {
   intensity: number[];
   latestLog?: LogEntry;
 };
+
 export default function CompleteFiveThreeOneModal({
   open,
   onClose,
@@ -79,30 +70,7 @@ export default function CompleteFiveThreeOneModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedExercise]);
 
-  const items: NonNullable<StepsProps["items"]> = [];
-  for (let i = 0; i < sets; i++) {
-    items.push({
-      content: (
-        <Row
-          info={selectedExercise}
-          step={i}
-          target={reps[i]}
-          intensity={intensity[i]}
-          disabled={currentSet !== i}
-          warningEnabled={currentSet > i}
-          onContinue={() => setCurrentSet(currentSet + 1)}
-        />
-      ),
-    });
-  }
-
-  const onChange = (current: number) => {
-    if (current < currentSet) {
-      setCurrentSet(current);
-    }
-  };
-
-  const onChangeNoes = (value: string) => {
+  const onChangeNotes = (value: string) => {
     cacheLogInfo(selectedExercise.exercise.exerciseId, {
       notes: value,
     });
@@ -174,81 +142,94 @@ export default function CompleteFiveThreeOneModal({
 
   return (
     <Drawer
-      styles={{ wrapper: { width: "100%" } }}
-      title={selectedExercise.exercise.name}
+      width="min(480px, 100vw)"
+      title={
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-base font-semibold">
+            {selectedExercise.exercise.name}
+          </span>
+          <span className="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-600">
+            {reps.join(" / ")} reps
+          </span>
+        </div>
+      }
       open={open}
       onClose={() => {
         setShowWarning(false);
         onClose();
       }}
+      footer={
+        <Button
+          type="primary"
+          size="large"
+          block
+          icon={<CheckOutlined />}
+          onClick={onOk}
+          loading={isPending}
+          className="my-1"
+        >
+          {isPending ? "Saving" : "Finish"}
+        </Button>
+      }
     >
-      <div className="flex flex-col">
-        <div className="mb-4">
-          <span className="text-xs ml-2 mr-6">Set</span>
-          <span className="text-xs mr-6">Weight</span>
-          <span className="text-xs ml-2">Target</span>
-        </div>
-        <Steps
-          onChange={onChange}
-          orientation="vertical"
-          items={items}
-          current={currentSet}
-        />
+      <div className="flex flex-col gap-2">
+        {Array.from({ length: sets }).map((_, i) => (
+          <Row
+            key={i}
+            info={selectedExercise}
+            step={i}
+            target={reps[i]}
+            intensity={intensity[i]}
+            state={
+              i === currentSet ? "active" : i < currentSet ? "completed" : "locked"
+            }
+            onReopen={() => setCurrentSet(i)}
+            onContinue={() => setCurrentSet(currentSet + 1)}
+          />
+        ))}
         {latestLog && (
           <Alert
+            className="mt-2"
             showIcon
             type="info"
             title={
               <div>
-                Last set you did{" "}
+                Last time your final set was{" "}
                 <span className="font-bold">
-                  {latestLog.info?.at(-1)?.weight} kg x {latestReps}
+                  {latestLog.info?.at(-1)?.weight} kg × {latestReps}
                 </span>{" "}
                 ({improvement <= 0 ? "" : "+"}
-                {improvement})
+                {improvement} vs target)
               </div>
             }
           />
         )}
         <TextArea
-          autoSize={true}
+          autoSize
           value={notes}
-          placeholder={latestLog?.notes || "Notes"}
+          placeholder={latestLog?.notes || "Notes (optional)"}
           className="my-2"
-          onChange={(e) => onChangeNoes(e.target.value)}
+          onChange={(e) => onChangeNotes(e.target.value)}
         />
         {showWarning && (
           <Alert
-            className="my-2"
+            className="mb-2"
             showIcon
             type="error"
-            title="You haven't finished submitted all the reps for each the sets"
+            title="Confirm the reps for every set before finishing"
           />
         )}
-      </div>
-      <Collapse
-        items={[
-          {
-            key: "warmup",
-            label: "Warmup",
-            children: <Warmup selectedExercise={selectedExercise} />,
-          },
-        ]}
-      />
-      <div className="mt-4">
-        <LogVisual exercise={selectedExercise.exercise} />
-      </div>
-      <div className="fixed bottom-0 pb-2 bg-white w-full">
-        <Divider className="m-0" />
-        <div className="flex justify-end pr-12">
-          <Button
-            className="mt-2"
-            type="primary"
-            onClick={onOk}
-            loading={isPending}
-          >
-            {isPending ? "Saving" : "Finish"}
-          </Button>
+        <Collapse
+          items={[
+            {
+              key: "warmup",
+              label: "Warmup",
+              children: <Warmup selectedExercise={selectedExercise} />,
+            },
+          ]}
+        />
+        <div className="mt-4">
+          <LogVisual exercise={selectedExercise.exercise} />
         </div>
       </div>
     </Drawer>
@@ -260,17 +241,18 @@ type RowProps = {
   step: number;
   target: number;
   intensity: number;
-  disabled: boolean;
-  warningEnabled: boolean;
+  state: "active" | "completed" | "locked";
+  onReopen: () => void;
   onContinue: () => void;
 };
+
 function Row({
   info,
   step,
   target,
   intensity,
-  disabled,
-  warningEnabled,
+  state,
+  onReopen,
   onContinue,
 }: RowProps) {
   const [reps, setReps] = useState<number>();
@@ -287,15 +269,13 @@ function Row({
 
   const weight = (intensity * 0.9 * info.pb).toFixed(0);
 
-  const onNext = () => {
-    const currentReps = !reps;
-    if (currentReps) {
+  const onConfirm = () => {
+    if (!reps) {
       setNoRepsWarning(true);
       return;
     }
 
     setNoRepsWarning(false);
-
     // +1 for the set
     cacheLogInfo(info.exercise.exerciseId, {
       info: {
@@ -307,33 +287,65 @@ function Row({
     onContinue();
   };
 
-  const showWarning = noRepsWarning || (warningEnabled && !reps);
+  const disabled = state !== "active";
+  const showWarning = noRepsWarning || (state === "completed" && !reps);
+
   return (
-    <div className="flex mb-4">
-      <span className="mx-3 w-16 font-bold">{weight}</span>
-      <span className="w-16 font-bold">{target}</span>
-      <InputNumber
-        className="mr-4"
-        disabled={disabled}
-        inputMode="decimal"
-        value={reps}
-        min={0}
-        onChange={(reps) => setReps(reps ?? 0)}
-        prefix="reps"
-      />
-      <Button
-        type="link"
-        disabled={disabled}
-        className="p-0 m-0"
-        icon={<CheckCircleOutlined className="p-0 m-0" />}
-        onClick={onNext}
-      />
+    <div>
+      <div
+        className={`flex items-center gap-2 rounded-lg p-2 transition-colors ${
+          state === "active"
+            ? "bg-indigo-50/60"
+            : state === "completed"
+              ? "cursor-pointer hover:bg-gray-50"
+              : "opacity-50"
+        }`}
+        onClick={state === "completed" ? onReopen : undefined}
+      >
+        <span
+          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
+            state === "completed"
+              ? "bg-green-100 text-green-600"
+              : state === "active"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-400"
+          }`}
+        >
+          {state === "completed" ? <CheckOutlined /> : step + 1}
+        </span>
+        <span className="w-20 shrink-0 text-sm font-semibold text-gray-900">
+          {weight} kg
+        </span>
+        <span className="w-16 shrink-0 text-xs text-gray-400">
+          {target}+ reps
+        </span>
+        <InputNumber
+          className="w-full"
+          disabled={disabled}
+          inputMode="decimal"
+          value={reps}
+          min={0}
+          onChange={(r) => setReps(r ?? 0)}
+          suffix="reps"
+        />
+        <Button
+          type={state === "active" ? "primary" : "text"}
+          shape="circle"
+          disabled={disabled}
+          icon={<CheckOutlined />}
+          onClick={(e) => {
+            e.stopPropagation();
+            onConfirm();
+          }}
+          aria-label={`Confirm set ${step + 1}`}
+        />
+      </div>
       {showWarning && (
-        <div className="mt-1" onClick={(e) => e.stopPropagation()}>
-          <Tooltip trigger={"click"} title="Reps is missing!">
-            <WarningOutlined className="text-orange-400" />
-          </Tooltip>
-        </div>
+        <p className="m-0 mt-1 pl-11 text-xs text-amber-600">
+          {state === "active"
+            ? "Enter your reps to confirm this set"
+            : "This set has no reps recorded"}
+        </p>
       )}
     </div>
   );

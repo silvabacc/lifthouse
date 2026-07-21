@@ -53,6 +53,7 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
       open={show}
       onClose={onCancel}
       title="Change exercises"
+      width="min(440px, 100vw)"
       extra={
         <Button
           icon={<SaveOutlined />}
@@ -60,7 +61,7 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
           loading={isPending}
           onClick={onSave}
         >
-          {isPending ? "Saving 🚀" : "Save"}
+          {isPending ? "Saving" : "Save"}
         </Button>
       }
     >
@@ -73,7 +74,7 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
         <Space size="large" className="w-full" orientation="vertical">
           {updatedExercises.map((item) => (
             <Reorder.Item
-              className="p-2 shadow rounded flex justify-between items-center w-full bg-white"
+              className="p-3 rounded-xl border border-solid border-gray-100 shadow-sm flex justify-between items-center w-full bg-white"
               key={item?.exerciseId}
               value={item}
               dragListener={draggable}
@@ -88,10 +89,11 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
                 <SelectRepsScheme defaultExercise={item} onChange={onChangeReps} />
               </Space>
               <MenuOutlined
+                aria-label="Drag to reorder"
                 onMouseEnter={() => setDraggable(true)}
                 onMouseLeave={() => setDraggable(false)}
                 onTouchStart={() => setDraggable(true)}
-                className="m-4"
+                className="m-3 cursor-grab text-gray-400 active:cursor-grabbing"
               />
             </Reorder.Item>
           ))}

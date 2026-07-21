@@ -10,14 +10,14 @@ type SearchExerciseProps = {
   selectedTags?: string[];
   filterTagOptions?: string[];
   variant?: Variant;
-  placerHolder?: string;
+  placeHolder?: string;
   setSelectedTags?: (tags: string[]) => void;
   setSearchQuery: (query: string) => void;
 };
 export default function SearchElement({
   selectedTags = [],
   filterTagOptions,
-  placerHolder,
+  placeHolder,
   variant,
   setSearchQuery,
   setSelectedTags,
@@ -37,7 +37,7 @@ export default function SearchElement({
         <Input
           variant={variant}
           className={`w-full ${variant === "underlined" && "mx-2 p-0"} `}
-          placeholder={placerHolder}
+          placeholder={placeHolder}
           prefix={variant !== "underlined" && <SearchOutlined />}
           onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
         />

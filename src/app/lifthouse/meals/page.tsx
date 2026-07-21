@@ -9,7 +9,7 @@ import DateMover from "./components/dateMover";
 import MealCard from "./components/mealCard";
 import AddMeal from "./components/addMeal";
 import dynamic from "next/dynamic";
-import { PageAnimation } from "@/app/aniamtions/pageAnimation";
+import { PageAnimation } from "@/app/animations/pageAnimation";
 
 const MacroNutrients = dynamic(() => import("./components/macroNutrients"), { ssr: false });
 
@@ -26,9 +26,10 @@ export default function MealsPage() {
   };
 
   const onDeleteCard = async (id: number) => {
-    const deleteMealResponse = await fetch(`/api/meals/${id}`, {
-      method: "DELETE",
-    });
+    const deleteMealResponse = await fetch<{ success: boolean }>(
+      `/api/meals/${id}`,
+      { method: "DELETE" }
+    );
 
     if (deleteMealResponse.success) {
       setMealData(mealData.filter((meal) => meal.id !== id));
@@ -37,7 +38,7 @@ export default function MealsPage() {
 
   const fetchMeals = async () => {
     setLoading(true);
-    const data = await fetch(`/api/meals?day=${selectedDay}`);
+    const data = await fetch<Meal[]>(`/api/meals?day=${selectedDay}`);
     setMealData(data);
     setLoading(false);
   };
@@ -65,12 +66,12 @@ export default function MealsPage() {
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: `Meals`,
+      label: "Meals",
       children: Cards(),
     },
     {
       key: "2",
-      label: `Add Entry`,
+      label: "Add entry",
       children: <AddMeal goToMealTab={goToMealTab} selectedDay={selectedDay} />,
     },
   ];
@@ -81,7 +82,7 @@ export default function MealsPage() {
   const carbs = mealData?.reduce((acc, curr) => acc + curr.carbs, 0) || 0;
 
   return (
-    <PageAnimation className="flex flex-col items-center bg-white h-full overflow-y-auto">
+    <PageAnimation className="flex flex-col items-center rounded-xl bg-white h-full overflow-y-auto">
       <DateMover selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
       <MacroNutrients
         isLoading={isLoading}
@@ -91,9 +92,7 @@ export default function MealsPage() {
         carbs={carbs}
       />
       <Tabs
-        type="card"
-        className="p-4"
-        style={{ width: "100%" }}
+        className="w-full max-w-2xl px-4"
         activeKey={activeTab}
         onChange={setActivetab}
         centered

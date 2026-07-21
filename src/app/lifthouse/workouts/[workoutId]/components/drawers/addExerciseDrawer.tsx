@@ -1,7 +1,7 @@
 import { PrimaryMuscleGroup } from "@/lib/supabase/db/types";
-import { Button, Drawer, Input, Modal, Space } from "antd";
+import { Drawer, Input } from "antd";
 import { useState } from "react";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
 import { useWorkoutIdContext } from "../../context";
 
 type Props = {
@@ -10,6 +10,7 @@ type Props = {
   onClickMuscle: (exerciseId: number) => void;
   filterOutExercisesIds?: number[];
 };
+
 export default function AddExerciseDrawer({
   drawOpen,
   setDrawOpen,
@@ -17,7 +18,6 @@ export default function AddExerciseDrawer({
   filterOutExercisesIds = [],
 }: Props) {
   const { exercises } = useWorkoutIdContext();
-  const [search, setSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredExercises = exercises.filter((e) =>
@@ -30,49 +30,49 @@ export default function AddExerciseDrawer({
 
   return (
     <Drawer
-      title={
-        search ? (
-          <Input
-            onChange={(value) => setSearchQuery(value.currentTarget.value)}
-            placeholder="Search exercises"
-          />
-        ) : (
-          "Add exercises"
-        )
-      }
+      title="Add exercise"
       open={drawOpen}
-      extra={
-        <Button
-          className="ml-2"
-          onClick={() => setSearch(!search)}
-          type="dashed"
-          icon={<SearchOutlined />}
-        />
-      }
       onClose={() => setDrawOpen(false)}
-      styles={{ wrapper: { width: 500 } }}
+      width="min(480px, 100vw)"
     >
+      <Input
+        allowClear
+        size="large"
+        prefix={<SearchOutlined className="text-gray-400" />}
+        onChange={(value) => setSearchQuery(value.currentTarget.value)}
+        placeholder="Search exercises"
+        className="mb-4"
+      />
       {filteredPrimaryMuscleGroups.length === 0 && (
-        <span className="text-lg">No exercises with that name is found 😢</span>
+        <p className="text-base text-gray-500">
+          No exercises match &ldquo;{searchQuery}&rdquo; 😢
+        </p>
       )}
       {filteredPrimaryMuscleGroups.map((muscle) => {
+        const group = filteredExercises
+          .filter((e) => e.primaryMuscleGroup === muscle)
+          .filter((e) => !filterOutExercisesIds.includes(e.exerciseId));
+
+        if (group.length === 0) return null;
+
         return (
-          <div key={muscle}>
-            <p className="text-xs text-gray-500">{muscle}</p>
-            <Space orientation="vertical">
-              {filteredExercises
-                .filter((e) => e.primaryMuscleGroup === muscle)
-                .filter((e) => !filterOutExercisesIds.includes(e.exerciseId))
-                .map((e) => (
-                  <div
-                    key={e.exerciseId}
-                    onClick={() => onClickMuscle(e.exerciseId)}
-                    className="font-medium py-4 cursor-pointer hover:text-gray-500"
-                  >
-                    {e.name}
-                  </div>
-                ))}
-            </Space>
+          <div key={muscle} className="mb-4">
+            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-400">
+              {muscle}
+            </p>
+            <div className="flex flex-col">
+              {group.map((e) => (
+                <button
+                  key={e.exerciseId}
+                  type="button"
+                  onClick={() => onClickMuscle(e.exerciseId)}
+                  className="group flex w-full cursor-pointer items-center justify-between rounded-lg border-0 bg-transparent px-3 py-3 text-left text-base font-medium text-gray-800 transition-colors hover:bg-indigo-50/60"
+                >
+                  {e.name}
+                  <PlusOutlined className="text-gray-300 transition-colors group-hover:text-indigo-500" />
+                </button>
+              ))}
+            </div>
           </div>
         );
       })}
