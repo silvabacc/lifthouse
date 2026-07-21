@@ -57,6 +57,9 @@ export const theme: ThemeConfig = {
       itemSelectedBg: "#eef2ff",
       itemSelectedColor: colors.primary,
       itemBorderRadius: 8,
+      // Light vertical menus draw a border-inline-end divider by default;
+      // the sider/content background contrast already separates them.
+      activeBarBorderWidth: 0,
     },
     Card: {
       borderRadiusLG: 14,
