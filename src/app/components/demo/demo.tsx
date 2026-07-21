@@ -34,7 +34,12 @@ export function DemoText() {
   return (
     <div className="mt-4 text-center text-sm text-gray-500">
       Just looking around?{" "}
-      <Button variant="link" disabled={creating} onClick={onClick}>
+      <Button
+        style={{ padding: 0 }}
+        type="link"
+        disabled={creating}
+        onClick={onClick}
+      >
         {creating ? "Setting up a demo…" : "Try the demo"}
       </Button>
     </div>
