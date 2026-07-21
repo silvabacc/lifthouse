@@ -1,4 +1,3 @@
-import { PageAnimation } from "../animations/pageAnimation";
 import { pageConfig } from "./components/constants";
 import NavigationCard from "./components/navCards";
 
@@ -11,7 +10,7 @@ function getGreeting() {
 
 export default function Lifthouse() {
   return (
-    <PageAnimation>
+    <div>
       <div className="pb-6">
         <h1 className="m-0 text-2xl font-bold">{getGreeting()} 💪</h1>
         <p className="m-0 mt-1 text-base text-gray-500">
@@ -23,6 +22,6 @@ export default function Lifthouse() {
           <NavigationCard key={config.route} config={config} />
         ))}
       </div>
-    </PageAnimation>
+    </div>
   );
 }

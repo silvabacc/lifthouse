@@ -1,4 +1,3 @@
-import { LayoutAnimation } from "@/app/animations/layoutAnimation";
 import { createDatabaseClient } from "@/lib/supabase/db/dbClient";
 import { WorkoutIdContextProvider } from "./context";
 
@@ -18,10 +17,10 @@ export default async function WorkoutIdLayout(
   ]);
 
   return (
-    <LayoutAnimation>
+    <div className="h-full">
       <WorkoutIdContextProvider initialWorkout={workout} initialExercises={exercises}>
         {children}
       </WorkoutIdContextProvider>
-    </LayoutAnimation>
+    </div>
   );
 }

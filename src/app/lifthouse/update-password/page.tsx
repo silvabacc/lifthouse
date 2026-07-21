@@ -10,7 +10,6 @@ import {
   PasswordField,
 } from "@/app/account/components/form";
 import { createSupabaseClient } from "@/lib/supabase/client";
-import { PageAnimation } from "@/app/animations/pageAnimation";
 
 interface FieldType {
   password: string;
@@ -42,7 +41,7 @@ export default function UpdatePasswordPage() {
   };
 
   return (
-    <PageAnimation>
+    <div>
       <div className="flex flex-col items-center pt-8">
         <h1 className="m-0 text-2xl font-bold">Update password</h1>
         <p className="m-0 mt-1 text-sm text-gray-400">
@@ -65,6 +64,6 @@ export default function UpdatePasswordPage() {
           />
         </FormWrapper>
       </div>
-    </PageAnimation>
+    </div>
   );
 }

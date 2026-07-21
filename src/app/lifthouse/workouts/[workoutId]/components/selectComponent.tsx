@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import { InputProps, Tooltip } from "antd";
-import { BottomFadeInAnimation } from "@/app/animations/bottomFadeInAnimation";
 import { WarningOutlined } from "@ant-design/icons";
 import SearchElement from "@/app/lifthouse/components/search";
 
@@ -110,13 +109,7 @@ export default function SelectElement({
         <DownOutlined />
       </div>
       {expanded && (
-        <BottomFadeInAnimation
-          animationDuration={0.1}
-          animationHeight={DROPDOWN_HEIGHT}
-          className={`absolute z-10 bg-white border-solid border-slate-200 overflow-auto w-full shadow-2xl rounded-lg flex flex-col ${
-            openUpward ? "bottom-full" : "top-full mt-1 pb-4"
-          }`}
-        >
+        <div>
           {!openUpward && (
             <div className="bg-white sticky top-0 inset-shadow-sm py-2">
               <SearchElement
@@ -177,7 +170,7 @@ export default function SelectElement({
               />
             </div>
           )}
-        </BottomFadeInAnimation>
+        </div>
       )}
     </div>
   );

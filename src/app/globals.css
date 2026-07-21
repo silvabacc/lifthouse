@@ -52,8 +52,7 @@ body {
   animation: fade-in 0.25s ease-out both;
 }
 
-/* Respect users who prefer reduced motion — framer-motion picks this up,
-   but this also covers CSS transitions in antd */
+/* Respect users who prefer reduced motion (covers antd CSS transitions) */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

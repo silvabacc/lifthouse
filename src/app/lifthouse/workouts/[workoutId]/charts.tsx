@@ -1,5 +1,4 @@
 import { WorkoutTemplate } from "@/lib/supabase/db/types";
-import { BottomFadeInAnimation } from "@/app/animations/bottomFadeInAnimation";
 import { useWorkoutIdContext } from "./context";
 import DeleteExerciseButton from "./components/deleteExerciseButton";
 import { LogVisual } from "../../components/logVisuals/logVisual";
@@ -11,7 +10,7 @@ export default function Charts() {
   const isCustomWorkout = workout.template === WorkoutTemplate.custom;
 
   return (
-    <BottomFadeInAnimation className="flex flex-col h-full w-full">
+    <div className="flex flex-col h-full w-full">
       <div className="overflow-y-auto flex flex-col gap-4 pb-4">
         {workout.exercises.map((exercise, index) => {
           const exerciseInfo = exercises.find(
@@ -38,6 +37,6 @@ export default function Charts() {
           );
         })}
       </div>
-    </BottomFadeInAnimation>
+    </div>
   );
 }

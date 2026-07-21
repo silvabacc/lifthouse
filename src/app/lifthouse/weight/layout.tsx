@@ -1,4 +1,3 @@
-import { LayoutAnimation } from "@/app/animations/layoutAnimation";
 import { WeightContextProvider } from "./context";
 
 export default function WeightLayout({
@@ -7,8 +6,8 @@ export default function WeightLayout({
   children: React.ReactNode;
 }) {
   return (
-    <LayoutAnimation>
+    <div className="h-full">
       <WeightContextProvider>{children}</WeightContextProvider>
-    </LayoutAnimation>
+    </div>
   );
 }

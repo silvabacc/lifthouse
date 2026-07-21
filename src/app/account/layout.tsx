@@ -1,4 +1,3 @@
-import { LayoutAnimation } from "../animations/layoutAnimation";
 
 export default function AccountLayout({
   children,
@@ -6,7 +5,7 @@ export default function AccountLayout({
   children: React.ReactNode;
 }) {
   return (
-    <LayoutAnimation>
+    <div className="h-full">
       <section className="flex h-full w-full flex-col items-center justify-center px-4">
         <h1 className="m-0 text-3xl font-bold">LiftHouse 🏋</h1>
         <span className="mt-1 text-sm text-gray-400">
@@ -14,6 +13,6 @@ export default function AccountLayout({
         </span>
         {children}
       </section>
-    </LayoutAnimation>
+    </div>
   );
 }

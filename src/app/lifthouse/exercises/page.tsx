@@ -1,4 +1,3 @@
-import { PageAnimation } from "@/app/animations/pageAnimation";
 import { createDatabaseClient } from "@/lib/supabase/db/dbClient";
 import ExercisesView from "./exercises.view";
 
@@ -7,8 +6,8 @@ export default async function ExercisesPage() {
   const exercises = await db.getExercises();
 
   return (
-    <PageAnimation>
+    <div>
       <ExercisesView initialExercises={exercises} />
-    </PageAnimation>
+    </div>
   );
 }

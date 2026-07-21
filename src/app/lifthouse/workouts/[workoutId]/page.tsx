@@ -11,7 +11,6 @@ import { useState, useTransition } from "react";
 import AddButton from "../components/addButton";
 import AddExerciseDrawer from "./components/drawers/addExerciseDrawer";
 import { WorkoutTemplate } from "@/lib/supabase/db/types";
-import { PageAnimation } from "@/app/animations/pageAnimation";
 import { Record } from "./components/drawers/recordDrawer";
 import { useWorkoutIdContext } from "./context";
 import ChangeExercisesDrawer from "./components/drawers/changeExercisesDrawer";
@@ -40,7 +39,7 @@ export default function WorkoutPlanPage() {
   };
 
   return (
-    <PageAnimation className={workout.exercises.length === 0 ? "" : "h-full"}>
+    <div className={workout.exercises.length === 0 ? "" : "h-full"}>
       <Layout className="relative h-full">
         <Content className="h-full bg-white rounded-xl p-4">
           <PageInfoPortal
@@ -81,7 +80,7 @@ export default function WorkoutPlanPage() {
           )}
         </Footer>
       </Layout>
-    </PageAnimation>
+    </div>
   );
 }
 

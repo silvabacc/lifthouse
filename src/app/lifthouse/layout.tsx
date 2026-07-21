@@ -4,7 +4,6 @@ import Header from "./components/header";
 import PageInfo from "./components/pageInfo";
 import SideNav from "./components/sideNav";
 import MobileNav from "./components/mobileNav";
-import { LayoutAnimation } from "../animations/layoutAnimation";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 
@@ -30,7 +29,7 @@ export default function LiftHouseLayout({
   children: React.ReactNode;
 }) {
   return (
-    <LayoutAnimation>
+    <div className="h-full">
       <Layout className="h-full">
         <SideNav />
         <Layout className="h-full">
@@ -46,6 +45,6 @@ export default function LiftHouseLayout({
         </Layout>
         <MobileNav />
       </Layout>
-    </LayoutAnimation>
+    </div>
   );
 }

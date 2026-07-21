@@ -7,7 +7,6 @@ import {
   EditOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import { BottomFadeInAnimation } from "@/app/animations/bottomFadeInAnimation";
 import WorkoutFormDrawer, {
   ExerciseFormDrawerField,
 } from "./workoutDrawerForm";
@@ -75,7 +74,7 @@ export default function WorkoutCard({
   const exerciseCount = exercises?.length ?? 0;
 
   return (
-    <BottomFadeInAnimation className="flex h-full flex-col justify-between overflow-hidden rounded-xl border border-solid border-gray-100 bg-white transition-all hover:border-indigo-200 hover:shadow-md">
+    <div className="flex h-full flex-col justify-between overflow-hidden rounded-xl border border-solid border-gray-100 bg-white transition-all hover:border-indigo-200 hover:shadow-md">
       <WorkoutFormDrawer
         title="Edit workout plan"
         open={drawOpen}
@@ -129,6 +128,6 @@ export default function WorkoutCard({
           Delete
         </Button>
       </div>
-    </BottomFadeInAnimation>
+    </div>
   );
 }
