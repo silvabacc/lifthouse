@@ -52,7 +52,11 @@ export function RecordEntry({ exercise, setLogs }: RecordEntryProps) {
       >
         <SetLogger exercise={exercise} />
       </Modal>
-      <Button type="primary" onClick={() => setModalOpen(true)}>
+      <Button
+        color="danger"
+        variant="dashed"
+        onClick={() => setModalOpen(true)}
+      >
         Record an entry
       </Button>
     </>
