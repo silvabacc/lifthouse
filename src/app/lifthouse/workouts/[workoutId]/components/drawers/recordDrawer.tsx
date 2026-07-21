@@ -80,7 +80,7 @@ export function Record({ show, onCancel }: Props) {
           </div>
         </div>
       }
-      width="min(440px, 100vw)"
+      size="min(440px, 100vw)"
       open={show}
       onClose={onCancel}
       footer={
@@ -101,10 +101,10 @@ export function Record({ show, onCancel }: Props) {
         {workout.exercises.map((exercise, index) => {
           const notes = cachedNotes[exercise.exerciseId];
           const latest = latestLogs?.find(
-            (l) => l.exerciseId === exercise.exerciseId
+            (l) => l.exerciseId === exercise.exerciseId,
           );
           const exerciseInfo = exercises.find(
-            (e) => e.exerciseId === exercise.exerciseId
+            (e) => e.exerciseId === exercise.exerciseId,
           );
 
           return (

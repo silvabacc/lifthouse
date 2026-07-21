@@ -17,7 +17,7 @@ export default function ExerciseDrawer({ exercise, show, onClose }: Props) {
 
   return (
     <Drawer
-      width="min(720px, 100vw)"
+      size="min(720px, 100vw)"
       open={show}
       onClose={onClose}
       afterOpenChange={afterOpenChange}

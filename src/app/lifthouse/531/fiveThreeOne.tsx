@@ -67,7 +67,7 @@ export default function FiveThreeOne() {
         }
       />
       <Drawer
-        width="min(880px, 100vw)"
+        size="min(880px, 100vw)"
         open={setupOpen}
         onClose={() => setSetupOpen(false)}
         title="Personal bests"

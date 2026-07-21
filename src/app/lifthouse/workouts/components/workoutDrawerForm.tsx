@@ -40,7 +40,7 @@ export default function WorkoutFormDrawer({
       open={open}
       onClose={onClose}
       title={title}
-      width="min(420px, 100vw)"
+      size="min(420px, 100vw)"
     >
       <Form
         layout="vertical"

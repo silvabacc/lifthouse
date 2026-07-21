@@ -4,7 +4,11 @@ import { Button, Drawer, Space } from "antd";
 import { useWorkoutIdContext } from "../../context";
 import { useEffect, useState, useTransition } from "react";
 import { SelectExercise, SelectRepsScheme } from "../selectors";
-import { ArrowUpOutlined, ArrowDownOutlined, SaveOutlined } from "@ant-design/icons";
+import {
+  ArrowUpOutlined,
+  ArrowDownOutlined,
+  SaveOutlined,
+} from "@ant-design/icons";
 import { updateWorkoutExercises } from "../../../actions";
 
 type Props = {
@@ -15,7 +19,9 @@ type Props = {
 export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
   const { workout, setWorkout } = useWorkoutIdContext();
   const [isPending, startTransition] = useTransition();
-  const [updatedExercises, setUpdatedExercises] = useState(workout.exercises || []);
+  const [updatedExercises, setUpdatedExercises] = useState(
+    workout.exercises || [],
+  );
 
   useEffect(() => {
     setUpdatedExercises(workout.exercises || []);
@@ -23,7 +29,10 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
 
   const onSave = () => {
     startTransition(async () => {
-      const updated = await updateWorkoutExercises(workout.workoutId, updatedExercises);
+      const updated = await updateWorkoutExercises(
+        workout.workoutId,
+        updatedExercises,
+      );
       if (JSON.stringify(updated) !== JSON.stringify(workout)) {
         setWorkout(updated);
       }
@@ -33,7 +42,9 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
 
   const onChangeExercise = (exerciseId: number, value: number) => {
     setUpdatedExercises((prev) =>
-      prev.map((e) => (e.exerciseId === exerciseId ? { ...e, exerciseId: value } : e))
+      prev.map((e) =>
+        e.exerciseId === exerciseId ? { ...e, exerciseId: value } : e,
+      ),
     );
   };
 
@@ -41,8 +52,8 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
     const [sets, reps] = value.split(":");
     setUpdatedExercises((prev) =>
       prev.map((e) =>
-        e.exerciseId === exerciseId ? { ...e, sets: parseInt(sets), reps } : e
-      )
+        e.exerciseId === exerciseId ? { ...e, sets: parseInt(sets), reps } : e,
+      ),
     );
   };
 
@@ -61,7 +72,7 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
       open={show}
       onClose={onCancel}
       title="Change exercises"
-      width="min(440px, 100vw)"
+      size="min(440px, 100vw)"
       extra={
         <Button
           icon={<SaveOutlined />}
@@ -85,7 +96,10 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
                 defaultExercise={item}
                 onChange={onChangeExercise}
               />
-              <SelectRepsScheme defaultExercise={item} onChange={onChangeReps} />
+              <SelectRepsScheme
+                defaultExercise={item}
+                onChange={onChangeReps}
+              />
             </Space>
             <div className="ml-2 flex flex-col">
               <Button
