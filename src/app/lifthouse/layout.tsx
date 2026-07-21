@@ -30,7 +30,7 @@ export default function LiftHouseLayout({
 }) {
   return (
     <div className="h-full">
-      <Layout className="h-full">
+      <Layout className="h-full" hasSider>
         <SideNav />
         <Layout className="h-full">
           <Suspense fallback={<Header email="" />}>
