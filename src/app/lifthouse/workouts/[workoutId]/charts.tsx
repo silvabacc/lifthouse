@@ -11,7 +11,7 @@ export default function Charts() {
 
   return (
     <div className="flex flex-col h-full w-full">
-      <div className="overflow-y-auto flex flex-col gap-4 pb-4">
+      <div className="overflow-y-auto flex flex-col gap-3 pb-4">
         {workout.exercises.map((exercise, index) => {
           const exerciseInfo = exercises.find(
             (e) => e.exerciseId === exercise.exerciseId
@@ -19,7 +19,7 @@ export default function Charts() {
           return (
             <section
               key={`${exercise.exerciseId}-${index}`}
-              className="rounded-xl border border-solid border-gray-100 p-4"
+              className="rounded-xl border border-solid border-gray-100 p-3.5"
             >
               <div className="flex flex-wrap items-center justify-between gap-2 pb-2">
                 <div className="flex items-center gap-3 min-w-0">

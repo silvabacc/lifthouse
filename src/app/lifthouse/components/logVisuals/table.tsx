@@ -78,6 +78,7 @@ export default function Table({ data, setLogs }: Props) {
         {expandedKeys.length === data.length ? "Decollapse all" : "Expand All"}
       </Button>
       <AntDTable
+        size="small"
         pagination={false}
         expandable={{
           expandedRowKeys: expandedKeys,

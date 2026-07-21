@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { View } from "./types";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { Button, DatePicker, Segmented } from "antd";
+import { DatePicker, Popover, Segmented } from "antd";
+import { CalendarOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { useFetch } from "@/hooks/useFetch";
 import { Exercise, LogEntry } from "@/lib/supabase/db/types";
@@ -77,15 +78,17 @@ export function LogVisual({
 
   return (
     <>
-      <div className="flex justify-between pb-2">
-        {showExerciseName && <h1 className="m-0 p-0">{exercise.name}</h1>}
-        {allowNewEntry && (
-          <div className="flex justify-end">
-            <RecordEntry exercise={exercise} setLogs={setLogs} />
-          </div>
-        )}
-      </div>
-      <div className="flex flex-wrap justify-between gap-2">
+      {(showExerciseName || allowNewEntry) && (
+        <div className="flex justify-between pb-2">
+          {showExerciseName && <h1 className="m-0 p-0">{exercise.name}</h1>}
+          {allowNewEntry && (
+            <div className="flex justify-end">
+              <RecordEntry exercise={exercise} setLogs={setLogs} />
+            </div>
+          )}
+        </div>
+      )}
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <Segmented
           value={view}
           onChange={(v) => onClickView(v as View)}
@@ -94,23 +97,42 @@ export function LogVisual({
             value: v,
           }))}
         />
-        <RangePicker
-          inputReadOnly
-          value={[firstDate, secondDate]}
-          onChange={(dates) => {
-            if (dates?.[0] && dates[0] !== firstDate) {
-              setFirstDate(dates?.[0]);
-            }
-            if (dates?.[1] && dates[1] !== secondDate) {
-              setSecondDate(dates?.[1]);
-            }
-          }}
-        />
+        <Popover
+          trigger="click"
+          placement="bottomRight"
+          content={
+            <RangePicker
+              inputReadOnly
+              value={[firstDate, secondDate]}
+              onChange={(dates) => {
+                if (dates?.[0] && dates[0] !== firstDate) {
+                  setFirstDate(dates?.[0]);
+                }
+                if (dates?.[1] && dates[1] !== secondDate) {
+                  setSecondDate(dates?.[1]);
+                }
+              }}
+            />
+          }
+        >
+          <button
+            type="button"
+            className="flex shrink-0 items-center gap-1.5 rounded-lg border border-solid border-gray-100 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:border-indigo-200"
+          >
+            <CalendarOutlined />
+            {firstDate.format("D MMM")} – {secondDate.format("D MMM")}
+          </button>
+        </Popover>
       </div>
       <div className="pb-4">
-        {view === View.stacked && <StackedChart data={logs} />}
-        {view === View.line && <LineChart data={logs} />}
-        {view === View.table && <Table data={logs} setLogs={setLogs} />}
+        {view === View.table ? (
+          <Table data={logs} setLogs={setLogs} />
+        ) : (
+          <div className="h-[400px] sm:h-[480px]">
+            {view === View.stacked && <StackedChart data={logs} />}
+            {view === View.line && <LineChart data={logs} />}
+          </div>
+        )}
       </div>
     </>
   );
