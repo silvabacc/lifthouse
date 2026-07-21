@@ -22,6 +22,36 @@ body {
   background: var(--color-bg-layout);
 }
 
+/* Compositor-friendly entrance animations (opacity/transform only —
+   never layout properties like height) */
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-page-in {
+  animation: page-in 0.25s ease-out both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.25s ease-out both;
+}
+
 /* Respect users who prefer reduced motion — framer-motion picks this up,
    but this also covers CSS transitions in antd */
 @media (prefers-reduced-motion: reduce) {

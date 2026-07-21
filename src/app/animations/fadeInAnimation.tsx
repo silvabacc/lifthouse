@@ -1,23 +1,10 @@
-"use client";
-
-import { motion } from "framer-motion";
-
+/** CSS-based fade-in — see pageAnimation.tsx for rationale. */
 export function FadeInAnimation({
   children,
-  className,
+  className = "",
 }: {
   children: React.ReactNode;
   className?: string;
 }) {
-  return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.25 }}
-    >
-      {children}
-    </motion.div>
-  );
+  return <div className={`animate-fade-in ${className}`}>{children}</div>;
 }

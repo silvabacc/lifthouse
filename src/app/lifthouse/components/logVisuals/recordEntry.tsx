@@ -41,18 +41,17 @@ export function RecordEntry({ exercise, setLogs }: RecordEntryProps) {
 
   return (
     <>
-      {isModalOpen && (
-        <Modal
-          title="Record an entry"
-          open={isModalOpen}
-          onOk={onFinish}
-          okText={isPending ? "Saving" : "Save entry"}
-          confirmLoading={isPending}
-          onCancel={() => setModalOpen(false)}
-        >
-          <SetLogger exercise={exercise} />
-        </Modal>
-      )}
+      <Modal
+        title="Record an entry"
+        open={isModalOpen}
+        onOk={onFinish}
+        okText={isPending ? "Saving" : "Save entry"}
+        confirmLoading={isPending}
+        onCancel={() => setModalOpen(false)}
+        destroyOnHidden
+      >
+        <SetLogger exercise={exercise} />
+      </Modal>
       <Button type="primary" onClick={() => setModalOpen(true)}>
         Record an entry
       </Button>

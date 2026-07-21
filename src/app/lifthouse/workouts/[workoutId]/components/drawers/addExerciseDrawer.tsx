@@ -1,8 +1,9 @@
 import { PrimaryMuscleGroup } from "@/lib/supabase/db/types";
-import { Drawer, Input } from "antd";
-import { useState } from "react";
+import { Drawer, Input, Skeleton } from "antd";
+import { useDeferredValue, useMemo, useState } from "react";
 import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
 import { useWorkoutIdContext } from "../../context";
+import { useDeferredDrawerContent } from "@/hooks/useDeferredDrawerContent";
 
 type Props = {
   drawOpen: boolean;
@@ -19,9 +20,16 @@ export default function AddExerciseDrawer({
 }: Props) {
   const { exercises } = useWorkoutIdContext();
   const [searchQuery, setSearchQuery] = useState("");
+  const { contentReady, afterOpenChange } = useDeferredDrawerContent(drawOpen);
 
-  const filteredExercises = exercises.filter((e) =>
-    e.name.toLocaleLowerCase().includes(searchQuery.toLowerCase())
+  // Deferred so keystrokes stay responsive while the list filters
+  const deferredQuery = useDeferredValue(searchQuery);
+  const filteredExercises = useMemo(
+    () =>
+      exercises.filter((e) =>
+        e.name.toLocaleLowerCase().includes(deferredQuery.toLowerCase())
+      ),
+    [exercises, deferredQuery]
   );
 
   const filteredPrimaryMuscleGroups = Object.values(PrimaryMuscleGroup).filter(
@@ -33,6 +41,7 @@ export default function AddExerciseDrawer({
       title="Add exercise"
       open={drawOpen}
       onClose={() => setDrawOpen(false)}
+      afterOpenChange={afterOpenChange}
       width="min(480px, 100vw)"
     >
       <Input
@@ -43,12 +52,13 @@ export default function AddExerciseDrawer({
         placeholder="Search exercises"
         className="mb-4"
       />
-      {filteredPrimaryMuscleGroups.length === 0 && (
+      {!contentReady && <Skeleton active paragraph={{ rows: 6 }} />}
+      {contentReady && filteredPrimaryMuscleGroups.length === 0 && (
         <p className="text-base text-gray-500">
           No exercises match &ldquo;{searchQuery}&rdquo; 😢
         </p>
       )}
-      {filteredPrimaryMuscleGroups.map((muscle) => {
+      {contentReady && filteredPrimaryMuscleGroups.map((muscle) => {
         const group = filteredExercises
           .filter((e) => e.primaryMuscleGroup === muscle)
           .filter((e) => !filterOutExercisesIds.includes(e.exerciseId));

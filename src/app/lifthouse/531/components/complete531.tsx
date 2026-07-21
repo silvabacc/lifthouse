@@ -17,6 +17,8 @@ import Warmup from "./warmup";
 import { useFiveThreeOne } from "../useFiveThreeOne";
 import { NotificationDescription, NotificationMessage } from "./notification";
 import { LogVisual } from "../../components/logVisuals/logVisual";
+import ChartsSkeleton from "../../components/logVisuals/charts.skeleton";
+import { useDeferredDrawerContent } from "@/hooks/useDeferredDrawerContent";
 import { saveLogs } from "../../actions";
 
 const { TextArea } = Input;
@@ -55,6 +57,7 @@ export default function CompleteFiveThreeOneModal({
   const { setWeek, setCompleted, fiveThreeOneInfo } = useFiveThreeOneContext();
   const [notes, setNotes] = useState<string>();
   const { notification: api } = App.useApp();
+  const { contentReady, afterOpenChange } = useDeferredDrawerContent(open);
   const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;
 
   const exercises = [bench, squat, deadlift, ohp];
@@ -154,6 +157,7 @@ export default function CompleteFiveThreeOneModal({
         </div>
       }
       open={open}
+      afterOpenChange={afterOpenChange}
       onClose={() => {
         setShowWarning(false);
         onClose();
@@ -229,7 +233,11 @@ export default function CompleteFiveThreeOneModal({
           ]}
         />
         <div className="mt-4">
-          <LogVisual exercise={selectedExercise.exercise} />
+          {contentReady ? (
+            <LogVisual exercise={selectedExercise.exercise} />
+          ) : (
+            <ChartsSkeleton />
+          )}
         </div>
       </div>
     </Drawer>

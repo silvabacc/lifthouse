@@ -1,25 +1,10 @@
-"use client";
-
-import { motion, AnimatePresence } from "framer-motion";
-
+/** CSS-based layout entrance — see pageAnimation.tsx for rationale. */
 export function LayoutAnimation({
   children,
-  className,
+  className = "",
 }: {
   children: React.ReactNode;
   className?: string;
 }) {
-  return (
-    <AnimatePresence>
-      <motion.div
-        className={"h-full"}
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 15 }}
-        transition={{ duration: 0.25 }}
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
-  );
+  return <div className={`animate-fade-in h-full ${className}`}>{children}</div>;
 }

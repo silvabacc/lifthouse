@@ -1,27 +1,18 @@
-"use client";
-
-import { motion } from "framer-motion";
-
+/**
+ * Previously animated height 0 -> 100% with framer-motion — height is a
+ * layout-triggering property, so every animation frame forced a reflow of the
+ * entire subtree (the workout page's whole chart list). Now a CSS
+ * opacity/transform entrance. Legacy props are accepted for call-site
+ * compatibility but no longer drive layout animation.
+ */
 export function BottomFadeInAnimation({
   children,
-  className,
-  animationHeight = "100%",
-  animationDuration,
+  className = "",
 }: {
   children: React.ReactNode;
   className?: string;
   animationHeight?: string | number;
   animationDuration?: number;
 }) {
-  return (
-    <motion.div
-      className={className}
-      initial={{ height: 0, opacity: 0 }}
-      animate={{ height: animationHeight as number, opacity: 1 }} //height 256px is equal to h-64 in tailwindcss
-      exit={{ height: 0, opacity: 0 }}
-      transition={{ duration: animationDuration, ease: "easeInOut" }}
-    >
-      {children}
-    </motion.div>
-  );
+  return <div className={`animate-page-in ${className}`}>{children}</div>;
 }
