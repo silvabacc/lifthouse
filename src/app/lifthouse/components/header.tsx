@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { useLocalStorage } from "../../../../hooks/useLocalStorage";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { signOut } from "../actions";
 
 const { Header: AntDHeader } = Layout;

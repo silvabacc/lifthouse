@@ -6,7 +6,7 @@ import LifthouseLogo from "@/app/assets/lifthouse_logo_black.png";
 import { usePathname, useRouter } from "next/navigation";
 import { pageConfig } from "./constants";
 import { useEffect, useState } from "react";
-import { useLocalStorage } from "../../../../hooks/useLocalStorage";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { redirectToHome } from "@/lib/utils";
 
 const { Sider } = Layout;
@@ -56,7 +56,6 @@ export default function SideNav() {
           className="hidden sm:block p-2 w-full h-20 object-contain cursor-pointer"
           src={LifthouseLogo}
           alt="Lifthouse"
-          quality={100}
           sizes="200px"
           onClick={() => redirectToHome(router)}
         />

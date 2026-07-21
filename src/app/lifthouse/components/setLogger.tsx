@@ -4,7 +4,7 @@ import { LogInfo, Exercise } from "@/lib/supabase/db/types";
 import { Button, Input, InputNumber } from "antd";
 import { useEffect, useState } from "react";
 import { CheckOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-import { useLocalStorage } from "../../../../hooks/useLocalStorage";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 const { TextArea } = Input;
 

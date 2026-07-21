@@ -2,7 +2,7 @@ import { LogInfo, ExerciseConfiguration } from "@/lib/supabase/db/types";
 import { Button, InputNumber } from "antd";
 import { useEffect, useState } from "react";
 import { CheckOutlined } from "@ant-design/icons";
-import { useLocalStorage } from "../../../../../../../hooks/useLocalStorage";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 type Props = {
   exercise: ExerciseConfiguration;

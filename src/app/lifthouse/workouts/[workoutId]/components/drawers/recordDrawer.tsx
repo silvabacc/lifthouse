@@ -4,7 +4,7 @@ import { useEffect, useState, useTransition } from "react";
 import { App, Button, Drawer, Input } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 import { useWorkoutIdContext } from "../../context";
-import { useLocalStorage } from "../../../../../../../hooks/useLocalStorage";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { LogEntry } from "@/lib/supabase/db/types";
 import { useRouter } from "next/navigation";
 import { Complete } from "./complete";

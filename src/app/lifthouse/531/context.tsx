@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocalStorage } from "../../../../hooks/useLocalStorage";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { FiveThreeOne } from "@/lib/supabase/db/types";
 import { createContext, useContext, useEffect, useState } from "react";
 

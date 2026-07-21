@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useFiveThreeOneContext } from "./context";
 import { LogEntry, PersonalBest } from "@/lib/supabase/db/types";
 import { CheckCircleTwoTone } from "@ant-design/icons";
-import { useLocalStorage } from "../../../../hooks/useLocalStorage";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useFiveThreeOne } from "./useFiveThreeOne";
 import {
   NotificationDescription,

@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocalStorage } from "../../../../../hooks/useLocalStorage";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { LogEntry, PersonalBest } from "@/lib/supabase/db/types";
 import { CheckOutlined } from "@ant-design/icons";
 import {

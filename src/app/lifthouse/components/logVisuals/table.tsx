@@ -2,7 +2,7 @@ import { LogEntry } from "@/lib/supabase/db/types";
 import { Table as AntDTable, Button, Popconfirm, TableColumnsType } from "antd";
 import React, { useEffect, useState } from "react";
 import { DeleteOutlined } from "@ant-design/icons";
-import { useFetch } from "../../../../../hooks/useFetch";
+import { useFetch } from "@/hooks/useFetch";
 
 interface TableDataType {
   key: React.Key;

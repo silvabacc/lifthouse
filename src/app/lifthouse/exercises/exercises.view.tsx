@@ -1,7 +1,7 @@
 "use client";
 
 import { Exercise, PrimaryMuscleGroup } from "@/lib/supabase/db/types";
-import { useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 import { RightOutlined } from "@ant-design/icons";
 import ExerciseDrawer from "./drawer";
 import SearchElement from "../components/search";
@@ -16,11 +16,20 @@ export default function ExercisesView({ initialExercises }: Props) {
   const [selectedExercise, setSelectedExercise] = useState<Exercise>();
   const [showDrawer, setShowDrawer] = useState(false);
 
-  const filtered = initialExercises
-    .filter((e) => e.name.toLocaleLowerCase().includes(searchQuery))
-    .filter((e) =>
-      selectedTags.length ? selectedTags.includes(e.primaryMuscleGroup) : true
-    );
+  // Defer filtering so keystrokes stay responsive: the input updates
+  // immediately while the list re-renders at deferred priority.
+  const deferredQuery = useDeferredValue(searchQuery);
+  const filtered = useMemo(
+    () =>
+      initialExercises
+        .filter((e) => e.name.toLocaleLowerCase().includes(deferredQuery))
+        .filter((e) =>
+          selectedTags.length
+            ? selectedTags.includes(e.primaryMuscleGroup)
+            : true
+        ),
+    [initialExercises, deferredQuery, selectedTags]
+  );
 
   return (
     <>

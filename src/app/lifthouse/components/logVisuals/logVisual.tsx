@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { View } from "./types";
-import { useLocalStorage } from "../../../../../hooks/useLocalStorage";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { Button, DatePicker, Segmented } from "antd";
 import dayjs from "dayjs";
-import { useFetch } from "../../../../../hooks/useFetch";
+import { useFetch } from "@/hooks/useFetch";
 import { Exercise, LogEntry } from "@/lib/supabase/db/types";
 import dynamic from "next/dynamic";
 import ChartsSkeleton from "./charts.skeleton";
@@ -47,19 +47,24 @@ export function LogVisual({
   }, []);
 
   useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
+    // Stale-response guard for rapid date-range changes
+    let stale = false;
+    setLoading(true);
+    const load = async () => {
       if (secondDate > firstDate) {
         const response = await fetchLogs([exercise.exerciseId], {
           startFrom: firstDate,
           endOn: secondDate,
         });
-        setLogs(response);
+        if (!stale) setLogs(response);
       }
-      setLoading(false);
+      if (!stale) setLoading(false);
     };
-    fetch();
-  }, [firstDate, secondDate, exercise]);
+    load();
+    return () => {
+      stale = true;
+    };
+  }, [firstDate, secondDate, exercise, fetchLogs]);
 
   const onClickView = (view: View) => {
     cacheView(view);

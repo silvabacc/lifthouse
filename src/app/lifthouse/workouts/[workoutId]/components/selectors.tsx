@@ -12,7 +12,6 @@ import {
 } from "../utils";
 import SelectElement, { Options } from "./selectComponent";
 import { useWorkoutIdContext } from "../context";
-import { useEffect, useState } from "react";
 
 type SelectExerciseProps = {
   items: ExerciseConfiguration[];
@@ -28,13 +27,8 @@ export function SelectExercise({
   const findExercise = exercises.find(
     (e) => e.exerciseId === defaultExercise.exerciseId,
   );
-  const [currentExercises, setCurrentExercises] = useState<number[]>(
-    items.map((e) => e.exerciseId),
-  );
-
-  useEffect(() => {
-    setCurrentExercises(items.map((e) => e.exerciseId));
-  }, [items]);
+  // Pure derivation of props — no state/effect sync needed
+  const currentExercises = items.map((e) => e.exerciseId);
 
   // Find common exercise types
   const commonType = findExercise?.exerciseType.filter((type) =>

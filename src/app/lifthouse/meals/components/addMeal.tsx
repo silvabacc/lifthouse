@@ -1,4 +1,4 @@
-import { useFetch } from "../../../../../hooks/useFetch";
+import { useFetch } from "@/hooks/useFetch";
 import { Card, Input, Alert, Button, InputNumber } from "antd";
 import { useState, useRef, Dispatch, SetStateAction, useEffect } from "react";
 import type { Dayjs } from "dayjs";

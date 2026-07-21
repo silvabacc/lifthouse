@@ -29,7 +29,7 @@ export default async function App() {
   const quote = await getQuote();
   return (
     <div className="relative h-full overflow-y-auto overflow-x-hidden">
-      <Image className="w-full h-auto md:hidden" src={BannerImage} alt="" />
+      <Image className="w-full h-auto md:hidden" src={BannerImage} alt="" priority />
       <div
         className={`flex h-full bg-no-repeat bg-right bg-fixed items-start md:items-center`}
       >

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocalStorage } from "../../../../../hooks/useLocalStorage";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { Exercise, LogEntry } from "@/lib/supabase/db/types";
 import { App, Button, Modal } from "antd";
 import { Dispatch, SetStateAction, useState, useTransition } from "react";
