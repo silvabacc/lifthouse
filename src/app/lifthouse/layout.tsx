@@ -38,7 +38,7 @@ export default function LiftHouseLayout({
           </Suspense>
           <PageInfo />
           <Layout>
-            <div className="m-4 h-full overflow-auto rounded-lg pb-20 sm:m-6 sm:pb-0">
+            <div className="m-4 h-full overflow-auto rounded-lg pb-16 sm:m-6 sm:pb-0">
               {children}
             </div>
           </Layout>
