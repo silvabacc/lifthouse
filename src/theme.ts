@@ -12,10 +12,9 @@ import type { ThemeConfig } from "antd";
  * src/app/globals.css so both systems stay in sync.
  */
 
-export const colors = {
+const colors = {
   /** Primary brand color — deep "gym iron" indigo */
   primary: "#4f46e5",
-  primaryHover: "#6366f1",
   /** Success / PR-hit green */
   success: "#16a34a",
   warning: "#d97706",

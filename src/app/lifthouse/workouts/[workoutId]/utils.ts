@@ -1,6 +1,6 @@
 import { ExerciseType, WorkoutTemplate } from "@/lib/supabase/db/types";
 
-export const IntensityRepRange = [
+const IntensityRepRange = [
   { sets: 3, reps: "3" },
   { sets: 3, reps: "5" },
   { sets: 3, reps: "5-8" },
@@ -25,7 +25,7 @@ export const IntensityRepRange = [
   { sets: 3, reps: "30s-60s" },
 ];
 
-export const VolumeRepRange = [
+const VolumeRepRange = [
   { sets: 3, reps: "8-12" },
   { sets: 5, reps: "10" },
   { sets: 5, reps: "8" },

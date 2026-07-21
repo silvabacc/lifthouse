@@ -1,7 +1,7 @@
 import { LogEntry } from "@/lib/supabase/db/types";
 import dayjs from "dayjs";
 
-export class ApiError extends Error {
+class ApiError extends Error {
   status: number;
 
   constructor(status: number, message: string) {

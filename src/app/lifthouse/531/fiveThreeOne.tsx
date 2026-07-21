@@ -92,7 +92,7 @@ export default function FiveThreeOne() {
           </div>
         ))}
       </div>
-      <p className="mt-4 max-w-3xl rounded-xl bg-gray-50 p-4 text-sm text-gray-500">
+      <p className="mt-4 w-full rounded-xl bg-gray-50 p-4 text-sm text-gray-500">
         The 531 program runs in 4-week blocks — progress through each week in
         order without skipping for it to be effective. All working weights are
         based on 90% of your personal bests (your training max).

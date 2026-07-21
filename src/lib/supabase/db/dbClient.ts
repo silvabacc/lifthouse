@@ -17,7 +17,7 @@ export async function createDatabaseClient() {
   return new DatabaseClient(cookieStore);
 }
 
-export default class DatabaseClient {
+class DatabaseClient {
   private supabase: SupabaseClient;
 
   constructor(cookieStore: Awaited<ReturnType<typeof cookies>>) {

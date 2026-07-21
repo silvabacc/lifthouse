@@ -2,7 +2,7 @@
 
 import { useFetch } from "@/hooks/useFetch";
 import { Meal } from "@/lib/supabase/db/types";
-import { Skeleton, TabsProps, Tabs } from "antd";
+import { Skeleton, TabsProps, Tabs, Button } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import DateMover from "./components/dateMover";
@@ -10,7 +10,9 @@ import MealCard from "./components/mealCard";
 import AddMeal from "./components/addMeal";
 import dynamic from "next/dynamic";
 
-const MacroNutrients = dynamic(() => import("./components/macroNutrients"), { ssr: false });
+const MacroNutrients = dynamic(() => import("./components/macroNutrients"), {
+  ssr: false,
+});
 
 export default function MealsPage() {
   const [activeTab, setActivetab] = useState("1");
@@ -27,7 +29,7 @@ export default function MealsPage() {
   const onDeleteCard = async (id: number) => {
     const deleteMealResponse = await fetch<{ success: boolean }>(
       `/api/meals/${id}`,
-      { method: "DELETE" }
+      { method: "DELETE" },
     );
 
     if (deleteMealResponse.success) {
@@ -59,6 +61,20 @@ export default function MealsPage() {
     return (
       <>
         <Skeleton loading={isLoading} />
+        {mealData.length === 0 && (
+          <div className="text-center">
+            <span>
+              You had no meals today, add meals{" "}
+              <Button
+                onClick={() => setActivetab("2")}
+                style={{ padding: 0 }}
+                type="link"
+              >
+                here
+              </Button>
+            </span>
+          </div>
+        )}
         {mealData?.map((meal) => (
           <MealCard
             key={meal.id}
