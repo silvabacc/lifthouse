@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Layout, Space } from "antd";
+import { Button, Layout } from "antd";
 import {
   PlayCircleFilled,
   SwapOutlined,
@@ -98,21 +98,30 @@ function PageInfoExtra({
   onClickWorkoutTemplate,
 }: PageInfoExtraProps) {
   return (
-    <Space className="pb-4" wrap>
+    <div className="flex gap-2 pb-4">
       <Button
         type="primary"
         icon={<PlayCircleFilled />}
         disabled={!hasExercises}
         onClick={onClickRecord}
+        className="shrink-0 snap-start"
       >
         Start workout
       </Button>
-      <Button icon={<SwapOutlined />} onClick={onClickEdit}>
+      <Button
+        icon={<SwapOutlined />}
+        onClick={onClickEdit}
+        className="shrink-0 snap-start"
+      >
         Edit exercises
       </Button>
-      <Button icon={<AppstoreOutlined />} onClick={onClickWorkoutTemplate}>
+      <Button
+        icon={<AppstoreOutlined />}
+        onClick={onClickWorkoutTemplate}
+        className="shrink-0 snap-start"
+      >
         Templates
       </Button>
-    </Space>
+    </div>
   );
 }

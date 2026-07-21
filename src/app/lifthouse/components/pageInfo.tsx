@@ -4,7 +4,7 @@ import React from "react";
 import { Breadcrumb, Button } from "antd";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 export function BreadcrumbNav() {
@@ -56,12 +56,22 @@ export function PageInfoPortal({ children, extra, title }: Props) {
 
   return mounted && element
     ? createPortal(
-        <div>
+        <div className="">
           {title && <h1 className="m-0 mb-2 text-2xl font-bold">{title}</h1>}
           <div className={`${showInfo ? "block" : "hidden"} sm:block`}>
             {children}
           </div>
-          <div className="w-full overflow-x-auto">{extra}</div>
+          <div className="flex snap-x snap-proximity items-center overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div
+              aria-hidden
+              className="scroll-fade__edge scroll-fade__edge--start"
+            />
+            <div className="flex items-center gap-2">{extra}</div>
+            <div
+              aria-hidden
+              className="scroll-fade__edge scroll-fade__edge--end"
+            />
+          </div>
           {children && (
             <Button
               onClick={() => setShowInfo(!showInfo)}
