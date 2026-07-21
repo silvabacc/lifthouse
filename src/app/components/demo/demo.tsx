@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { createDemoAccount } from "./actions";
-import { App } from "antd";
+import { App, Button } from "antd";
 import { useState } from "react";
 import { redirectToHome } from "@/lib/utils";
 
@@ -34,14 +34,9 @@ export function DemoText() {
   return (
     <div className="mt-4 text-center text-sm text-gray-500">
       Just looking around?{" "}
-      <button
-        type="button"
-        disabled={creating}
-        onClick={onClick}
-        className="cursor-pointer border-0 bg-transparent p-0 font-medium text-indigo-600 hover:text-indigo-500 disabled:cursor-wait disabled:opacity-60"
-      >
+      <Button variant="link" disabled={creating} onClick={onClick}>
         {creating ? "Setting up a demo…" : "Try the demo"}
-      </button>
+      </Button>
     </div>
   );
 }
