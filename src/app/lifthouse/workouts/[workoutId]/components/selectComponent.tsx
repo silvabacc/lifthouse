@@ -41,6 +41,7 @@ export default function SelectElement({
   onChange,
 }: SelectProps) {
   const [expanded, setExpnaded] = useState(false);
+  const [openUpward, setOpenUpward] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const [search, setSearch] = useState("");
   const [tags, setTags] = useState<string[]>([]);
@@ -60,6 +61,11 @@ export default function SelectElement({
     );
 
   const onClick = () => {
+    if (!expanded && ref.current) {
+      const { bottom } = ref.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - bottom;
+      setOpenUpward(spaceBelow < DROPDOWN_HEIGHT);
+    }
     setExpnaded(!expanded);
   };
 
@@ -103,17 +109,24 @@ export default function SelectElement({
         <DownOutlined />
       </div>
       {expanded && (
-        <div>
-          <div className="bg-white sticky top-0 inset-shadow-sm py-2">
-            <SearchElement
-              variant={variant}
-              placeHolder={placeHolder}
-              selectedTags={tags}
-              filterTagOptions={filterTagsOptions}
-              setSearchQuery={setSearch}
-              setSelectedTags={setTags}
-            />
-          </div>
+        <div
+          className={`absolute z-10 w-full flex flex-col bg-white border-solid border border-slate-200 overflow-auto rounded-lg shadow-2xl ${
+            openUpward ? "bottom-full mb-1 pt-4" : "top-full mt-1 pb-4"
+          }`}
+          style={{ maxHeight: DROPDOWN_HEIGHT }}
+        >
+          {!openUpward && (
+            <div className="bg-white sticky top-0 inset-shadow-sm py-2">
+              <SearchElement
+                variant={variant}
+                placeHolder={placeHolder}
+                selectedTags={tags}
+                filterTagOptions={filterTagsOptions}
+                setSearchQuery={setSearch}
+                setSelectedTags={setTags}
+              />
+            </div>
+          )}
           <div className="flex-1">
             {filteredOptions.length === 0 && (
               <div className="h-full flex items-center justify-center text-lg text-center text-slate-400">
@@ -150,6 +163,18 @@ export default function SelectElement({
               );
             })}
           </div>
+          {openUpward && (
+            <div className="bg-white sticky bottom-0 inset-shadow-sm py-2">
+              <SearchElement
+                variant={variant}
+                placeHolder={placeHolder}
+                selectedTags={tags}
+                filterTagOptions={filterTagsOptions}
+                setSearchQuery={setSearch}
+                setSelectedTags={setTags}
+              />
+            </div>
+          )}
         </div>
       )}
     </div>
