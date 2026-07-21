@@ -20,7 +20,7 @@ export default function AddWorkoutCard() {
   };
 
   return (
-    <>
+    <div className="pb-4">
       <AddButton title="+ Add Workout Plan" onClick={() => setDrawOpen(true)} />
       <WorkoutFormDrawer
         title="Add workout plan"
@@ -29,6 +29,6 @@ export default function AddWorkoutCard() {
         onFinish={onFinish}
         isLoading={isPending}
       />
-    </>
+    </div>
   );
 }
