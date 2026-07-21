@@ -12,7 +12,7 @@ const WeightLine = dynamic(() => import("./components/weightLine"), {
 
 export default function WeightPage() {
   return (
-    <div className="h-full rounded-xl bg-white p-4">
+    <div className="rounded-xl bg-white p-4">
       <PageInfoPortal extra={<WeightAlert />} />
       <WeightStats />
       <div className="flex flex-col gap-4 xl:flex-row">

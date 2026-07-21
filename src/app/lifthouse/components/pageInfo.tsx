@@ -1,19 +1,19 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React from "react";
 import { Breadcrumb, Button } from "antd";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-function BreadcrumbNav() {
+export function BreadcrumbNav() {
   const pathName = usePathname();
   const searchParams = useSearchParams();
 
   const breadcrumbs = generateBreadcrumbs(
     pathName,
-    searchParams.get("name") || ""
+    searchParams.get("name") || "",
   );
 
   const items = breadcrumbs.map((breadcrumb, index) => {
@@ -35,10 +35,7 @@ function BreadcrumbNav() {
 
 export default function PageInfo() {
   return (
-    <div className="bg-white px-6 pb-4">
-      <Suspense fallback={null}>
-        <BreadcrumbNav />
-      </Suspense>
+    <div className="bg-white px-6 ">
       <div id="page-info" />
     </div>
   );
@@ -59,7 +56,7 @@ export function PageInfoPortal({ children, extra, title }: Props) {
 
   return mounted && element
     ? createPortal(
-        <div className="pt-1">
+        <div>
           <h1 className="text-2xl font-bold">{title}</h1>
           <div className={`${showInfo ? "block" : "hidden"} sm:block`}>
             {children}
@@ -75,7 +72,7 @@ export function PageInfoPortal({ children, extra, title }: Props) {
             </Button>
           )}
         </div>,
-        element
+        element,
       )
     : null;
 }

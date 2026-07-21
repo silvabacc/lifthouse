@@ -7,9 +7,10 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { Suspense, useTransition } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { signOut } from "../actions";
+import { BreadcrumbNav } from "./pageInfo";
 
 const { Header: AntDHeader } = Layout;
 
@@ -51,9 +52,12 @@ export default function Header({ email }: Props) {
         paddingInline: 24,
         display: "flex",
         alignItems: "center",
-        justifyContent: "flex-end",
+        justifyContent: "space-between",
       }}
     >
+      <Suspense fallback={null}>
+        <BreadcrumbNav />
+      </Suspense>
       <Dropdown menu={{ items, onClick: handleMenuClick }} trigger={["click"]}>
         <button
           type="button"
