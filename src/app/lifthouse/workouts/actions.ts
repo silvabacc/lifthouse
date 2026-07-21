@@ -26,7 +26,9 @@ export async function updateWorkoutMeta(
   description: string
 ): Promise<Workout> {
   const db = await createDatabaseClient();
-  return db.updateWorkout(name, description, undefined as any, String(workoutId), undefined as any);
+  const workout = await db.updateWorkout(name, description, undefined as any, String(workoutId), undefined as any);
+  revalidatePath("/lifthouse/workouts");
+  return workout;
 }
 
 export async function updateWorkoutExercises(
@@ -34,7 +36,9 @@ export async function updateWorkoutExercises(
   exercises: ExerciseConfiguration[]
 ): Promise<Workout> {
   const db = await createDatabaseClient();
-  return db.updateWorkout(undefined as any, undefined as any, exercises as any, String(workoutId), undefined as any);
+  const workout = await db.updateWorkout(undefined as any, undefined as any, exercises as any, String(workoutId), undefined as any);
+  revalidatePath("/lifthouse/workouts");
+  return workout;
 }
 
 export async function applyWorkoutTemplate(
@@ -47,5 +51,7 @@ export async function applyWorkoutTemplate(
     const setup = await db.getTemplateSetup(template);
     exercises = setup.exercises;
   }
-  return db.updateWorkout(undefined as any, undefined as any, exercises as any, String(workoutId), template);
+  const workout = await db.updateWorkout(undefined as any, undefined as any, exercises as any, String(workoutId), template);
+  revalidatePath("/lifthouse/workouts");
+  return workout;
 }
