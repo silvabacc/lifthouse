@@ -17,59 +17,84 @@ Most of my training knowledge comes from [Alex Leonidas](https://www.youtube.com
 
 # Screenshots
 
-## Workout Page
+## Dashboard
 
 <table>
   <tr>
-    <td align="center"><img src="/docs/images/workouts_2.png" alt="Image 1" ></td>
-    <td align="center"><img src="docs/images/workouts.png" alt="Image 2" ></td>
-    <td align="center"><img src="docs/images/tables.png" alt="Image 3" ></td>
-    <td align="center"><img src="docs/images/line.png" alt="Image 3" ></td>
-  </tr>
-  <tr>
-    <td align="center"><img src="/docs/images/templates.png" alt="Image 1" ></td>
-    <td align="center"><img src="/docs/images/record.png" alt="Image 2" ></td>
-    <td align="center"><img src="/docs/images/exercises.png" alt="Image 3" ></td>
-    <td align="center"><img src="/docs/images/change.png" alt="Image 4" ></td>
-  </tr>
-  <!-- Add more rows as needed -->
-</table>
-<table>
-  <tr>
-      <tr>
-    <td align="center"><img src="/docs/images/desk_workouts.png" alt="Image 5" ></td>
-      <td align="center"><img src="/docs/images/desk_workouts_2.png" alt="Image 6" ></td>
-  </tr>
+    <td align="center"><img src="/docs/images/dashboard.png" alt="Dashboard with the 5 feature cards on mobile" ></td>
+    <td align="center"><img src="/docs/images/dashboard_desktop.png" alt="Dashboard on desktop with the side nav" ></td>
   </tr>
 </table>
 
-## Weight and Meals Page
+## Workouts
+
+Create workout plans, log sets against them, and review progress as a stacked chart, line chart or raw table.
 
 <table>
   <tr>
-    <td align="center"><img src="/docs/images/meal_1.png" alt="Image 1" ></td>
-    <td align="center"><img src="/docs/images/weight.png" alt="Image 3" ></td>
+    <td align="center"><img src="/docs/images/workouts.png" alt="List of workout plans" ></td>
+    <td align="center"><img src="/docs/images/workout_charts.png" alt="Workout page showing per-exercise progress charts" ></td>
+    <td align="center"><img src="/docs/images/workout_table.png" alt="Logged sets shown in a table view" ></td>
   </tr>
   <tr>
-    <td align="center"><img src="/docs/images/desk_meals.png" alt="Image 2" ></td>
-    <td align="center"><img src="/docs/images/desk_weight.png" alt="Image 4" ></td>
+    <td align="center"><img src="/docs/images/workout_record.png" alt="Recording sets and reps for a workout" ></td>
+    <td align="center"><img src="/docs/images/workout_templates.png" alt="Applying a pre-built workout template" ></td>
+    <td align="center"><img src="/docs/images/workout_edit_exercises.png" alt="Reordering and editing exercises in a plan" ></td>
   </tr>
-  <!-- Add more rows as needed -->
-</table>
-
-## 531 Program Page
-
-<table>
-  <tr>
-    <td align="center"><img src="/docs/images/531_1.png" alt="Image 1" ></td>
-    <td align="center"><img src="/docs/images/531_2.png" alt="Image 2" ></td>
-    <td align="center"><img src="/docs/images/531_record.png" alt="Image 3" ></td>
-  </tr>
-  <!-- Add more rows as needed -->
 </table>
 <table>
-    <tr>
-    <td align="center"><img src="/docs/images/desk_531.png" alt="Image 1" ></td>
+  <tr>
+    <td align="center"><img src="/docs/images/workouts_desktop.png" alt="Workout plans on desktop" ></td>
+    <td align="center"><img src="/docs/images/workout_charts_desktop.png" alt="Workout progress charts on desktop" ></td>
+  </tr>
+</table>
+
+## Exercises
+
+Browse the full exercise library and search by name or muscle group.
+
+<table>
+  <tr>
+    <td align="center"><img src="/docs/images/exercises.png" alt="Exercise library on mobile" ></td>
+    <td align="center"><img src="/docs/images/exercises_desktop.png" alt="Exercise library on desktop" ></td>
+  </tr>
+</table>
+
+## 531 Program
+
+Enter your one-rep maxes and follow the 531 program across its 4-week block, logging each lift as you go.
+
+<table>
+  <tr>
+    <td align="center"><img src="/docs/images/program_531.png" alt="531 program overview with training maxes and week progress" ></td>
+    <td align="center"><img src="/docs/images/program_531_record.png" alt="Recording a 531 lift" ></td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <td align="center"><img src="/docs/images/program_531_desktop.png" alt="531 program on desktop" ></td>
+  </tr>
+</table>
+
+## Meals
+
+Log meals and track calories, protein, carbs and fat for the day.
+
+<table>
+  <tr>
+    <td align="center"><img src="/docs/images/meals.png" alt="Meals page with macro breakdown" ></td>
+    <td align="center"><img src="/docs/images/meals_desktop.png" alt="Meals page on desktop" ></td>
+  </tr>
+</table>
+
+## Weight
+
+Log weigh-ins on a calendar and track your trend over time, with a weekly goal based on your Sunday weigh-in.
+
+<table>
+  <tr>
+    <td align="center"><img src="/docs/images/weight.png" alt="Weight trend and calendar on mobile" ></td>
+    <td align="center"><img src="/docs/images/weight_desktop.png" alt="Weight trend and calendar on desktop" ></td>
   </tr>
 </table>
 
