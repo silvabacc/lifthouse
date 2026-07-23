@@ -8,8 +8,9 @@ type StackedChartProps = {
 export default function StackedChart({ data }: StackedChartProps) {
   if (data.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center">
+      <div className="flex mt-4 items-center justify-center">
         <Alert
+          className="w-full"
           description="No logs have been recorded for this exercise 😢"
           type="info"
           showIcon

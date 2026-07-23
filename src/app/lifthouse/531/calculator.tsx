@@ -35,7 +35,7 @@ export default function Calculator() {
 
   const percentages = Array.from(
     { length: Math.ceil((100 - 45) / 5) },
-    (_, i) => 100 - i * 5
+    (_, i) => 100 - i * 5,
   );
 
   const data = percentages.map((percentage) => {
@@ -52,61 +52,70 @@ export default function Calculator() {
     <div>
       <Card>
         <h1 className="font-bold m-0 mb-2">1RM calculator</h1>
-        <span>
-          Using the Brzycki formula, we can estimate your maximum load for a
-          weight training exercise. All you need to input is your best weight
-          and reps performed for the exercise
-        </span>
-        <Form>
-          {[
-            { title: "Weight", setter: setWeight },
-            { title: "Reps", setter: setReps },
-          ].map((item) => (
-            <div key={item.title} className="flex items-center mt-4">
-              <div className="w-full">
-                <span className="font-bold mr-4 w-16">{item.title}</span>
-                <Form.Item name={item.title.toLowerCase()}>
-                  <InputNumber
-                    required
-                    onChange={(value) => {
-                      setShowTable(false);
-                      item.setter(value as number);
-                    }}
-                    className="w-full mt-4"
-                    suffix="kg"
-                  />
-                </Form.Item>
-              </div>
-            </div>
-          ))}
-          <div className="flex justify-center mt-4">
-            <Button
-              type="primary"
-              className="w-64"
-              onClick={onCalculcate}
-              htmlType="submit"
-            >
-              Calculate
-            </Button>
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 items-start">
+          <div className="flex flex-col gap-2 w-full">
+            <span>
+              Using the Brzycki formula, we can estimate your maximum load for a
+              weight training exercise. All you need to input is your best
+              weight and reps performed for the exercise
+            </span>
+            <Alert
+              showIcon
+              title={<span className="text-sm">References</span>}
+              description={
+                <span className="text-xs">
+                  BRZYCKI, M. (1993) Strength testing-Predicting a one-rep max
+                  from reps-to-fatigue. JOPERD, 68, p. 88-90
+                </span>
+              }
+              type="info"
+            />
           </div>
-        </Form>
-        <div ref={tableRef}>
-          <Table
-            pagination={false}
-            className={`${showTable ? "visible" : "invisible h-0"} mt-4`}
-            columns={columns}
-            bordered={false}
-            dataSource={data}
-          />
+          <Form>
+            {[
+              { title: "Weight", setter: setWeight },
+              { title: "Reps", setter: setReps },
+            ].map((item) => (
+              <div key={item.title} className="flex items-center mt-4">
+                <div className="w-full">
+                  <span className="font-bold mr-4 w-16">{item.title}</span>
+                  <Form.Item name={item.title.toLowerCase()}>
+                    <InputNumber
+                      style={{ width: "100%" }}
+                      required
+                      onChange={(value) => {
+                        setShowTable(false);
+                        item.setter(value as number);
+                      }}
+                      className="w-full mt-4"
+                      suffix="kg"
+                    />
+                  </Form.Item>
+                </div>
+              </div>
+            ))}
+            <div className="flex justify-center mt-4">
+              <Button
+                type="primary"
+                className="w-64"
+                onClick={onCalculcate}
+                htmlType="submit"
+              >
+                Calculate
+              </Button>
+            </div>
+          </Form>
         </div>
       </Card>
-      <Alert
-        className="mt-4"
-        showIcon
-        title="References"
-        description="BRZYCKI, M. (1993) Strength testing-Predicting a one-rep max from reps-to-fatigue. JOPERD, 68, p. 88-90"
-        type="info"
-      />
+      <div ref={tableRef}>
+        <Table
+          pagination={false}
+          className={`${showTable ? "visible" : "invisible h-0"} mt-4`}
+          columns={columns}
+          bordered={false}
+          dataSource={data}
+        />
+      </div>
     </div>
   );
 }

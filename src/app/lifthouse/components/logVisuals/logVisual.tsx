@@ -128,7 +128,7 @@ export function LogVisual({
         {view === View.table ? (
           <Table data={logs} setLogs={setLogs} />
         ) : (
-          <div className="h-[400px] sm:h-[480px]">
+          <div className="max-h-[480px]">
             {view === View.stacked && <StackedChart data={logs} />}
             {view === View.line && <LineChart data={logs} />}
           </div>
@@ -137,4 +137,3 @@ export function LogVisual({
     </>
   );
 }
-

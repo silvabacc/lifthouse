@@ -1,7 +1,11 @@
 "use client";
 
-import { App, Button, Drawer } from "antd";
-import { EditOutlined, UndoOutlined } from "@ant-design/icons";
+import { App, Button } from "antd";
+import {
+  ArrowLeftOutlined,
+  EditOutlined,
+  UndoOutlined,
+} from "@ant-design/icons";
 import { useState } from "react";
 import { PageInfoPortal } from "../components/pageInfo";
 import { Setup } from "./components/setup";
@@ -47,6 +51,30 @@ export default function FiveThreeOne() {
     });
   };
 
+  if (setupOpen) {
+    return (
+      <div>
+        <PageInfoPortal
+          extra={
+            <Button
+              icon={<ArrowLeftOutlined />}
+              onClick={() => setSetupOpen(false)}
+            >
+              Back
+            </Button>
+          }
+        />
+        <div className="rounded-xl bg-white p-6">
+          <h1 className="m-0 text-2xl font-bold">Personal bests</h1>
+          <p className="mt-2 max-w-2xl text-base text-gray-500">
+            Update your one-rep maxes below.
+          </p>
+          <Setup open={setupOpen} onClose={() => setSetupOpen(false)} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <PageInfoPortal
@@ -66,14 +94,6 @@ export default function FiveThreeOne() {
           </div>
         }
       />
-      <Drawer
-        size="min(880px, 100vw)"
-        open={setupOpen}
-        onClose={() => setSetupOpen(false)}
-        title="Personal bests"
-      >
-        <Setup open={setupOpen} onClose={() => setSetupOpen(false)} />
-      </Drawer>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {[bench, squat, deadlift, ohp].map((lift) => (
           <div

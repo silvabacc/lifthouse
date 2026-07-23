@@ -2,15 +2,7 @@ import React from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { LogEntry, PersonalBest } from "@/lib/supabase/db/types";
 import { CheckOutlined } from "@ant-design/icons";
-import {
-  Alert,
-  App,
-  Button,
-  Collapse,
-  Drawer,
-  Input,
-  InputNumber,
-} from "antd";
+import { Alert, App, Button, Collapse, Drawer, Input, InputNumber } from "antd";
 import { useEffect, useState, useTransition } from "react";
 import { useFiveThreeOneContext } from "../context";
 import Warmup from "./warmup";
@@ -145,7 +137,7 @@ export default function CompleteFiveThreeOneModal({
 
   return (
     <Drawer
-      width="min(480px, 100vw)"
+      size="min(480px, 100vw)"
       title={
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-base font-semibold">
@@ -185,7 +177,11 @@ export default function CompleteFiveThreeOneModal({
             target={reps[i]}
             intensity={intensity[i]}
             state={
-              i === currentSet ? "active" : i < currentSet ? "completed" : "locked"
+              i === currentSet
+                ? "active"
+                : i < currentSet
+                  ? "completed"
+                  : "locked"
             }
             onReopen={() => setCurrentSet(i)}
             onContinue={() => setCurrentSet(currentSet + 1)}

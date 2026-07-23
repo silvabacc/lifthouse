@@ -61,7 +61,7 @@ export function PageInfoPortal({ children, extra, title }: Props) {
           <div className={`${showInfo ? "block" : "hidden"} sm:block`}>
             {children}
           </div>
-          <div className="flex snap-x snap-proximity items-center overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex snap-x snap-proximity items-center overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pb-4">
             <div
               aria-hidden
               className="scroll-fade__edge scroll-fade__edge--start"
