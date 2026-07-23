@@ -36,12 +36,17 @@ body {
 
 /*
  * Horizontal scroll-fade for chip/button rows (e.g. the workout page's
- * action buttons). The two edge divs are zero-footprint via a width +
- * matching negative margin, `position: sticky` so they stay pinned to the
- * scrollport edge while remaining real descendants of the scroller (needed
- * for `scroll()` timelines to find it), and default to a static fade so
- * browsers without scroll-driven animation support still see something
- * reasonable instead of nothing.
+ * action buttons). Wrap the scrollable content in two `.scroll-fade__edge`
+ * divs (first child = left edge, last child = right edge) — the side is
+ * inferred structurally so there's only one class to apply. Zero-footprint
+ * via a width + matching negative margin, `position: sticky` so they stay
+ * pinned to the scrollport edge while remaining real descendants of the
+ * scroller (needed for `scroll()` timelines to find it). Both default to
+ * opacity 0 so they only ever appear where `scroll()` timelines are
+ * supported — the right edge reuses the same fade keyframe in reverse, and
+ * its fill-mode "both" animation kicks its opacity up to 1 as soon as the
+ * timeline is active at all (i.e. there's real overflow to scroll), so no
+ * JS overflow detection is needed.
  */
 .scroll-fade__edge {
   position: sticky;
@@ -50,51 +55,41 @@ body {
   width: 24px;
   flex: 0 0 auto;
   pointer-events: none;
-  opacity: 1;
+  opacity: 0;
 }
 
-.scroll-fade__edge--start {
+.scroll-fade__edge:first-child {
   left: 0;
-  margin-right: -24px;
+  margin-left: -24px;
   background: linear-gradient(to right, white, transparent);
 }
 
-.scroll-fade__edge--end {
+.scroll-fade__edge:last-child {
   right: 0;
-  margin-left: -24px;
+  margin-left: 24px;
   background: linear-gradient(to left, white, transparent);
 }
 
 @supports (animation-timeline: scroll()) {
-  .scroll-fade__edge--start {
-    opacity: 0;
-    animation: scroll-fade-in 1ms linear both;
+  .scroll-fade__edge:first-child {
+    animation: scroll-fade 1ms linear both;
     animation-timeline: scroll(nearest x);
     animation-range: 0px 24px;
   }
 
-  .scroll-fade__edge--end {
-    animation: scroll-fade-out 1ms linear both;
+  .scroll-fade__edge:last-child {
+    animation: scroll-fade 1ms linear both reverse;
     animation-timeline: scroll(nearest x);
     animation-range: calc(100% - 24px) 100%;
   }
 }
 
-@keyframes scroll-fade-in {
+@keyframes scroll-fade {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
-  }
-}
-
-@keyframes scroll-fade-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
   }
 }
 
