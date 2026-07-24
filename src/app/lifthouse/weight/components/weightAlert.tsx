@@ -17,7 +17,7 @@ export default function WeightAlert() {
     weightData?.find(
       (weighIn) =>
         weighIn.date.date() === mondayOfCurrentWeek.date() &&
-        weighIn.date.month() === mondayOfCurrentWeek.month()
+        weighIn.date.month() === mondayOfCurrentWeek.month(),
     )?.weight || 0;
 
   if (
@@ -33,6 +33,7 @@ export default function WeightAlert() {
         <Alert
           type="warning"
           closable
+          style={{ width: "100%" }}
           title="No weekly goal set. Weekly goals are set when a weigh in is
 entered on the Sunday of the current week"
         />

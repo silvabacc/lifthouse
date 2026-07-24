@@ -79,4 +79,4 @@ const WeightContextProvider = ({ children }: any) => {
   );
 };
 
-export { WeightContextProvider, useWeightInContext };
+export { WeightContextProvider, useWeightInContext, WeightContext };
