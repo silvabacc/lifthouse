@@ -1,7 +1,6 @@
 "use client";
 
 import WeightCalendar from "./components/weightCalendar";
-import WeightAlert from "./components/weightAlert";
 import WeightStats from "./components/weightStats";
 import dynamic from "next/dynamic";
 
@@ -18,7 +17,6 @@ export default function WeightPage() {
     <div className="rounded-xl bg-white p-4">
       <div className="flex flex-col gap-4 xl:flex-row">
         <div className="flex min-w-0 flex-1 flex-col gap-4">
-          <WeightAlert />
           <WeightStats />
           <WeightLine />
           <div className="min-h-0 flex-1">
