@@ -9,7 +9,7 @@ export default function WeightLine() {
   if (isLoading) {
     return (
       <div
-        style={{ height: 240 }}
+        style={{ height: 260 }}
         className="animate-pulse rounded-lg bg-gray-200"
       />
     );
@@ -18,7 +18,7 @@ export default function WeightLine() {
   if (weightData.length === 0) {
     return (
       <div
-        style={{ height: 240 }}
+        style={{ height: 260 }}
         className="flex flex-col items-center justify-center text-center"
       >
         <p className="m-0 text-base font-medium text-gray-700">
@@ -39,9 +39,9 @@ export default function WeightLine() {
   });
 
   return (
-    <div style={{ height: 240 }}>
+    <div style={{ height: 260 }}>
       <Line
-        height={240}
+        height={260}
         tooltip={false}
         className="w-full pointer-events-none"
         data={transformData}

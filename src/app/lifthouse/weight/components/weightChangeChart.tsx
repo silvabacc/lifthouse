@@ -44,7 +44,7 @@ export default function WeightChangeChart() {
   if (isLoading) {
     return (
       <div
-        style={{ height: 240 }}
+        style={{ height: 260 }}
         className="animate-pulse rounded-lg bg-gray-200"
       />
     );
@@ -64,7 +64,7 @@ export default function WeightChangeChart() {
 
   return (
     <div className="flex flex-col">
-      <div className="min-h-0" style={{ height: 240 }}>
+      <div className="min-h-0" style={{ height: 260 }}>
         <Column
           autoFit
           data={data}
