@@ -60,8 +60,9 @@ export function Setup({ open, onClose }: Props) {
       <Card>
         <h2 className="m-0 mb-2 text-lg font-semibold">One-rep maxes</h2>
         <span className="text-gray-500">
-          Enter your one-rep max for each lift. A realistic estimate is fine —
-          you won&apos;t train at your max for this program to be effective.
+          Enter <span className="font-bold">90%</span> of your one-rep max for
+          each lift. A realistic estimate is fine — you won&apos;t train at your
+          max for this program to be effective.
         </span>
         <Form
           form={form}

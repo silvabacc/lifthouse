@@ -1,15 +1,35 @@
-import { Alert, Button, Card, Form, InputNumber, Table } from "antd";
-import { useEffect, useRef, useState } from "react";
+import { Alert, Button, Card, Form, InputNumber } from "antd";
+import { useEffect, useState } from "react";
+
+const HIGHLIGHT_PERCENTAGES = [90];
+
+type Result = { percentage: number; weight: string };
+
+function calculatePercentages(weight: number, reps: number): Result[] {
+  const percentages = Array.from(
+    { length: (100 - 45) / 5 + 1 },
+    (_, i) => 100 - i * 5,
+  );
+
+  return percentages.map((percentage) => {
+    const second = 0.0278 * reps;
+    const calc = (weight / (1.0278 - second)) * percentage;
+    return {
+      percentage,
+      weight: (calc / 100).toFixed(2),
+    };
+  });
+}
 
 export default function Calculator() {
   const [weight, setWeight] = useState<number>(0);
   const [reps, setReps] = useState<number>(0);
-  const [showTable, setShowTable] = useState(false);
-  const tableRef = useRef<HTMLDivElement>(null);
+  const [showResults, setShowResults] = useState(false);
+  const [result, setResult] = useState<Result[]>([]);
 
   useEffect(() => {
     return () => {
-      setShowTable(false);
+      setShowResults(false);
       setWeight(0);
       setReps(0);
     };
@@ -17,41 +37,55 @@ export default function Calculator() {
 
   const onCalculcate = () => {
     if (weight && reps) {
-      setShowTable(true);
-    } else {
-      setShowTable(false);
+      setResult(calculatePercentages(weight, reps));
+      setShowResults(true);
     }
-    tableRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const columns = [
-    {
-      id: "percentage",
-      dataIndex: "percentage",
-      title: "Percentage",
-    },
-    { id: "weight", dataIndex: "weight", title: "Weight" },
+  const inputs = [
+    { title: "Weight", value: weight, setter: setWeight, suffix: "kg" },
+    { title: "Reps", value: reps, setter: setReps, suffix: undefined },
   ];
 
-  const percentages = Array.from(
-    { length: Math.ceil((100 - 45) / 5) },
-    (_, i) => 100 - i * 5,
-  );
-
-  const data = percentages.map((percentage) => {
-    const second = 0.0278 * reps;
-    const calc = (weight / (1.0278 - second)) * percentage;
-    return {
-      key: percentage,
-      percentage: `${percentage}%`,
-      weight: `${(calc / 100).toFixed(2)} kg`,
-    };
-  });
-
   return (
-    <div>
-      <Card>
-        <h1 className="font-bold m-0 mb-2">1RM calculator</h1>
+    <Card>
+      <h1 className="font-bold m-0 mb-2">1RM calculator</h1>
+      {showResults ? (
+        <div className="flex flex-col gap-2">
+          <div className="flex items-end gap-2">
+            {inputs.map((item) => (
+              <div key={item.title} className="flex-1">
+                <span className="text-xs font-bold">{item.title}</span>
+                <InputNumber
+                  style={{ width: "100%" }}
+                  value={item.value}
+                  onChange={(value) => item.setter((value as number) ?? 0)}
+                  className="w-full mt-1"
+                  suffix={item.suffix}
+                />
+              </div>
+            ))}
+            <Button type="primary" onClick={onCalculcate}>
+              Calculate
+            </Button>
+          </div>
+          <div className="grid grid-cols-3 gap-1">
+            {result.map(({ percentage, weight }) => (
+              <div
+                key={percentage}
+                className={`rounded-lg p-2 text-center ${
+                  HIGHLIGHT_PERCENTAGES.includes(percentage)
+                    ? "bg-indigo-50 text-indigo-600"
+                    : "bg-gray-50 text-gray-500"
+                }`}
+              >
+                <div className="text-xs font-semibold">{percentage}%</div>
+                <div className="text-[11px]">{weight} kg</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 items-start">
           <div className="flex flex-col gap-2 w-full">
             <span>
@@ -72,10 +106,7 @@ export default function Calculator() {
             />
           </div>
           <Form>
-            {[
-              { title: "Weight", setter: setWeight },
-              { title: "Reps", setter: setReps },
-            ].map((item) => (
+            {inputs.map((item) => (
               <div key={item.title} className="flex items-center mt-4">
                 <div className="w-full">
                   <span className="font-bold mr-4 w-16">{item.title}</span>
@@ -83,12 +114,9 @@ export default function Calculator() {
                     <InputNumber
                       style={{ width: "100%" }}
                       required
-                      onChange={(value) => {
-                        setShowTable(false);
-                        item.setter(value as number);
-                      }}
+                      onChange={(value) => item.setter((value as number) ?? 0)}
                       className="w-full mt-4"
-                      suffix="kg"
+                      suffix={item.suffix}
                     />
                   </Form.Item>
                 </div>
@@ -106,16 +134,7 @@ export default function Calculator() {
             </div>
           </Form>
         </div>
-      </Card>
-      <div ref={tableRef}>
-        <Table
-          pagination={false}
-          className={`${showTable ? "visible" : "invisible h-0"} mt-4`}
-          columns={columns}
-          bordered={false}
-          dataSource={data}
-        />
-      </div>
-    </div>
+      )}
+    </Card>
   );
 }
