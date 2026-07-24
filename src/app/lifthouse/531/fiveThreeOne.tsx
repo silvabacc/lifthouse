@@ -6,7 +6,7 @@ import {
   EditOutlined,
   UndoOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PageInfoPortal } from "../components/pageInfo";
 import { Setup } from "./components/setup";
 import Weeks from "./weeks";
@@ -17,9 +17,21 @@ export default function FiveThreeOne() {
   const { clearFiveThreeOne } = useLocalStorage();
   const { fiveThreeOneInfo, setWeek, setCompleted } = useFiveThreeOneContext();
   const [setupOpen, setSetupOpen] = useState(false);
+  const dashboardRef = useRef<HTMLDivElement>(null);
+  const prevSetupOpen = useRef(setupOpen);
   const { modal } = App.useApp();
 
   const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;
+
+  useEffect(() => {
+    if (prevSetupOpen.current && !setupOpen) {
+      dashboardRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+    prevSetupOpen.current = setupOpen;
+  }, [setupOpen]);
 
   if (!bench.pb || !squat.pb || !deadlift.pb || !ohp.pb) {
     return (
@@ -76,7 +88,7 @@ export default function FiveThreeOne() {
   }
 
   return (
-    <div>
+    <div ref={dashboardRef}>
       <PageInfoPortal
         extra={
           <div className="flex gap-2 pb-2">

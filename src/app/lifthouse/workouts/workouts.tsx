@@ -14,7 +14,8 @@ export default function Workouts({ initialWorkouts }: Props) {
   const [, startTransition] = useTransition();
   const [workouts, optimisticDelete] = useOptimistic(
     initialWorkouts,
-    (state, deletedId: number) => state.filter((w) => w.workoutId !== deletedId)
+    (state, deletedId: number) =>
+      state.filter((w) => w.workoutId !== deletedId),
   );
 
   const onDelete = (workoutId: number) => {
@@ -24,20 +25,10 @@ export default function Workouts({ initialWorkouts }: Props) {
     });
   };
 
-  const onWorkoutUpdate = () => {
-    // revalidatePath in the server action re-fetches from the server;
-    // callback kept so WorkoutCard can close its drawer.
-  };
-
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {workouts.map((workout) => (
-        <WorkoutCard
-          key={workout.workoutId}
-          {...workout}
-          onDelete={onDelete}
-          onWorkoutUpdate={onWorkoutUpdate}
-        />
+        <WorkoutCard key={workout.workoutId} {...workout} onDelete={onDelete} />
       ))}
       <AddWorkoutCard />
     </div>
