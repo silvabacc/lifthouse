@@ -15,8 +15,7 @@ import WeightGoalPopoverContent from "./weightGoalPopoverContent";
  * from context data.
  */
 export default function WeightStats() {
-  const { weightData, setWeightData, isLoading, selectedValue } =
-    useWeightInContext();
+  const { weightData, setWeightData, selectedValue } = useWeightInContext();
   const [goalWeight, setGoalWeight] = useState(0);
   const [goalPopoverOpen, setGoalPopoverOpen] = useState(false);
   const { fetch } = useFetch();
