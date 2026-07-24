@@ -9,20 +9,12 @@ import { useWeightInContext } from "../context";
  * month's entries, and entry count. Derived purely from context data.
  */
 export default function WeightStats() {
-  const { weightData, isLoading } = useWeightInContext();
-
-  if (isLoading) {
-    return (
-      <div className="mb-4">
-        <Skeleton.Node active className="!h-20 !w-full" />
-      </div>
-    );
-  }
+  const { weightData } = useWeightInContext();
 
   if (weightData.length === 0) return null;
 
   const sorted = [...weightData].sort(
-    (a, b) => a.date.valueOf() - b.date.valueOf()
+    (a, b) => a.date.valueOf() - b.date.valueOf(),
   );
   const latest = sorted[sorted.length - 1];
   const first = sorted[0];

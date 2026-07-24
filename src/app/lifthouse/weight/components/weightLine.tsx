@@ -4,7 +4,16 @@ import { useWeightInContext } from "../context";
 import { Line } from "@ant-design/plots";
 
 export default function WeightLine() {
-  const { weightData } = useWeightInContext();
+  const { weightData, isLoading } = useWeightInContext();
+
+  if (isLoading) {
+    return (
+      <div
+        style={{ height: 350 }}
+        className="animate-pulse rounded-lg bg-gray-200"
+      />
+    );
+  }
 
   if (weightData.length === 0) {
     return (

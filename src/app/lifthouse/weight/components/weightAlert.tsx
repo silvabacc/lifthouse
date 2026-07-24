@@ -8,7 +8,7 @@ export default function WeightAlert() {
   const { weightData, isLoading, selectedValue } = useWeightInContext();
 
   if (isLoading) {
-    return <Skeleton active />;
+    // return <Skeleton active />;
   }
 
   const mondayOfCurrentWeek = dayjs().day(0);
@@ -28,7 +28,7 @@ export default function WeightAlert() {
   }
 
   return (
-    <div className="pt-2">
+    <div className="pt-2 w-full">
       {weeklyGoal === 0 ? (
         <Alert
           type="warning"

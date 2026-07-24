@@ -41,7 +41,14 @@ const formatKg = (v: number) => `${v > 0 ? "+" : ""}${v.toFixed(1)} kg`;
 export default function WeightChangeChart() {
   const { weightData, isLoading } = useWeightInContext();
 
-  if (isLoading) return null;
+  if (isLoading) {
+    return (
+      <div
+        style={{ height: 350 }}
+        className="animate-pulse rounded-lg bg-gray-200"
+      />
+    );
+  }
 
   const data = buildChangeData(weightData);
 
