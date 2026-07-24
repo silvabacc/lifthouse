@@ -14,7 +14,7 @@ import type { ThemeConfig } from "antd";
 
 const colors = {
   /** Primary brand color — deep "gym iron" indigo */
-  primary: "#4f46e5",
+  primary: "#1777FF",
   /** Success / PR-hit green */
   success: "#16a34a",
   warning: "#d97706",
