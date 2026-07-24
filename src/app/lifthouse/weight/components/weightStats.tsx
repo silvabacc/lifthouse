@@ -21,14 +21,6 @@ export default function WeightStats() {
   const [goalPopoverOpen, setGoalPopoverOpen] = useState(false);
   const { fetch } = useFetch();
 
-  if (isLoading) {
-    return (
-      <div className="mb-4">
-        <Skeleton.Node active className="!h-20 !w-full" />
-      </div>
-    );
-  }
-
   if (weightData.length === 0) return null;
 
   const sorted = [...weightData].sort(
@@ -130,9 +122,7 @@ export default function WeightStats() {
               : "border-transparent bg-gray-50"
           }`}
         >
-          <p className="m-0 text-base font-bold text-gray-900">
-            {stat.value}
-          </p>
+          <p className="m-0 text-base font-bold text-gray-900">{stat.value}</p>
           <p className="m-0 text-xs text-gray-400">{stat.label}</p>
         </div>
       ))}
