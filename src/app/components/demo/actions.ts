@@ -4,8 +4,8 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import { cookies, headers } from "next/headers";
 
 export async function createDemoAccount() {
-  const cookieStore = cookies();
-  const origin = headers().get("origin");
+  const cookieStore = await cookies();
+  const origin = (await headers()).get("origin");
   const supabaseServer = createSupabaseServer(cookieStore);
 
   const email = `demo-${crypto.randomUUID()}@lifthouse.com`;

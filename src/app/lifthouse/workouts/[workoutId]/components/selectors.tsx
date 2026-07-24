@@ -12,7 +12,6 @@ import {
 } from "../utils";
 import SelectElement, { Options } from "./selectComponent";
 import { useWorkoutIdContext } from "../context";
-import { useEffect, useState } from "react";
 
 type SelectExerciseProps = {
   items: ExerciseConfiguration[];
@@ -26,19 +25,14 @@ export function SelectExercise({
 }: SelectExerciseProps) {
   const { exercises, workout } = useWorkoutIdContext();
   const findExercise = exercises.find(
-    (e) => e.exerciseId === defaultExercise.exerciseId
+    (e) => e.exerciseId === defaultExercise.exerciseId,
   );
-  const [currentExercises, setCurrentExercises] = useState<number[]>(
-    items.map((e) => e.exerciseId)
-  );
-
-  useEffect(() => {
-    setCurrentExercises(items.map((e) => e.exerciseId));
-  }, [items]);
+  // Pure derivation of props — no state/effect sync needed
+  const currentExercises = items.map((e) => e.exerciseId);
 
   // Find common exercise types
-  const commonType = findExercise?.exerciseType.find((type) =>
-    acceptedExerciseTypesForExercises(workout.template).includes(type)
+  const commonType = findExercise?.exerciseType.filter((type) =>
+    acceptedExerciseTypesForExercises(workout.template).includes(type),
   );
 
   //With the current exercise selection, find all relevant exercises
@@ -46,10 +40,10 @@ export function SelectExercise({
   const filteredExercisesWithType = exercises
     .filter((e) => {
       if (!commonType) return false;
-      return e.exerciseType.includes(commonType);
+      return e.exerciseType.find((v) => commonType.includes(v));
     })
     .filter((e) =>
-      intersection(e.exerciseType, findExercise?.exerciseType ?? [])
+      intersection(e.exerciseType, findExercise?.exerciseType ?? []),
     );
 
   //We only want to apply the exercises if a template is applied
@@ -74,6 +68,8 @@ export function SelectExercise({
 
   return (
     <SelectElement
+      variant="underlined"
+      placeHolder="e.g. Lat Pulldown"
       value={defaultExercise.exerciseId}
       filterTagsOptions={filterTagOptions}
       options={options}
@@ -101,6 +97,8 @@ export function SelectRepsScheme({
 
   return (
     <SelectElement
+      variant="underlined"
+      placeHolder="e.g. 3x3"
       options={repSchemeOptions}
       onChange={(value) =>
         onChange(defaultExercise.exerciseId, value as string)

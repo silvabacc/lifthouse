@@ -1,11 +1,8 @@
 import { WorkoutTemplate } from "@/lib/supabase/db/types";
-import { Typography } from "antd";
-import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
 import { useWorkoutIdContext } from "./context";
 import DeleteExerciseButton from "./components/deleteExerciseButton";
 import { LogVisual } from "../../components/logVisuals/logVisual";
-
-const { Text } = Typography;
+import { SetRepPill } from "../../components/setRepPill";
 
 export default function Charts() {
   const { workout, exercises } = useWorkoutIdContext();
@@ -13,34 +10,33 @@ export default function Charts() {
   const isCustomWorkout = workout.template === WorkoutTemplate.custom;
 
   return (
-    <BottomFadeInAnimation className="flex flex-col h-full w-full">
-      <div className="overflow-y-auto">
+    <div className="flex flex-col h-full w-full">
+      <div className="overflow-y-auto flex flex-col gap-3 pb-4">
         {workout.exercises.map((exercise, index) => {
           const exerciseInfo = exercises.find(
             (e) => e.exerciseId === exercise.exerciseId
           );
           return (
-            <div key={`${exercise.exerciseId}-${index} flex flex-wrap`}>
-              <div className="flex flex-wrap justify-between items-start z-10 bg-white w-full pb-2">
-                <div className="flex justify-between">
-                  <h1 className="text-lg font-medium m-0">
+            <section
+              key={`${exercise.exerciseId}-${index}`}
+              className="rounded-xl border border-solid border-gray-100 p-3.5"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-2 pb-2">
+                <div className="flex items-center gap-3 min-w-0">
+                  <h2 className="text-lg font-semibold m-0 truncate">
                     {exerciseInfo?.name}
-                  </h1>
-                  <div className="w-12">
-                    {isCustomWorkout && (
-                      <DeleteExerciseButton exerciseId={exercise.exerciseId} />
-                    )}
-                  </div>
+                  </h2>
+                  <SetRepPill sets={exercise.sets} reps={exercise.reps} />
                 </div>
-                <Text className="text-base mt-2" keyboard>
-                  {exercise.sets} x {exercise.reps}
-                </Text>
+                {isCustomWorkout && (
+                  <DeleteExerciseButton exerciseId={exercise.exerciseId} />
+                )}
               </div>
               {exerciseInfo && <LogVisual exercise={exerciseInfo} />}
-            </div>
+            </section>
           );
         })}
       </div>
-    </BottomFadeInAnimation>
+    </div>
   );
 }

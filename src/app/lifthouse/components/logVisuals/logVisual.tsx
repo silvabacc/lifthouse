@@ -1,9 +1,12 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { View } from "./types";
-import { useLocalStorage } from "../../../../../hooks/useLocalStorage";
-import { Button, DatePicker, Divider, Space } from "antd";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { DatePicker, Popover, Segmented } from "antd";
+import { CalendarOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
-import { useFetch } from "../../../../../hooks/useFetch";
+import { useFetch } from "@/hooks/useFetch";
 import { Exercise, LogEntry } from "@/lib/supabase/db/types";
 import dynamic from "next/dynamic";
 import ChartsSkeleton from "./charts.skeleton";
@@ -13,9 +16,9 @@ const DEFAULT_LIMIT = 60;
 
 const { RangePicker } = DatePicker;
 
-const StackedChart = dynamic(() => import("./stacked"));
-const LineChart = dynamic(() => import("./line"));
-const Table = dynamic(() => import("./table"));
+const StackedChart = dynamic(() => import("./stacked"), { ssr: false });
+const LineChart = dynamic(() => import("./line"), { ssr: false });
+const Table = dynamic(() => import("./table"), { ssr: false });
 
 type LogVisualProps = {
   exercise: Exercise;
@@ -33,7 +36,7 @@ export function LogVisual({
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [view, setView] = useState<View>(View.stacked);
   const [firstDate, setFirstDate] = useState(
-    dayjs().subtract(DEFAULT_LIMIT, "day")
+    dayjs().subtract(DEFAULT_LIMIT, "day"),
   );
   const [secondDate, setSecondDate] = useState(dayjs());
 
@@ -45,19 +48,24 @@ export function LogVisual({
   }, []);
 
   useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
+    // Stale-response guard for rapid date-range changes
+    let stale = false;
+    setLoading(true);
+    const load = async () => {
       if (secondDate > firstDate) {
         const response = await fetchLogs([exercise.exerciseId], {
           startFrom: firstDate,
           endOn: secondDate,
         });
-        setLogs(response);
+        if (!stale) setLogs(response);
       }
-      setLoading(false);
+      if (!stale) setLoading(false);
     };
-    fetch();
-  }, [firstDate, secondDate, exercise]);
+    load();
+    return () => {
+      stale = true;
+    };
+  }, [firstDate, secondDate, exercise, fetchLogs]);
 
   const onClickView = (view: View) => {
     cacheView(view);
@@ -70,52 +78,62 @@ export function LogVisual({
 
   return (
     <>
-      <div className="flex justify-between pb-2">
-        {showExerciseName && <h1 className="m-0 p-0">{exercise.name}</h1>}
-        {allowNewEntry && (
-          <div className="flex justify-end">
-            <RecordEntry exercise={exercise} setLogs={setLogs} />
+      {(showExerciseName || allowNewEntry) && (
+        <div className="flex justify-between pb-2">
+          {showExerciseName && <h1 className="m-0 p-0">{exercise.name}</h1>}
+          {allowNewEntry && (
+            <div className="flex justify-end">
+              <RecordEntry exercise={exercise} setLogs={setLogs} />
+            </div>
+          )}
+        </div>
+      )}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <Segmented
+          value={view}
+          onChange={(v) => onClickView(v as View)}
+          options={Object.values(View).map((v) => ({
+            label: v.charAt(0).toUpperCase() + v.slice(1),
+            value: v,
+          }))}
+        />
+        <Popover
+          trigger="click"
+          placement="bottomRight"
+          content={
+            <RangePicker
+              inputReadOnly
+              value={[firstDate, secondDate]}
+              onChange={(dates) => {
+                if (dates?.[0] && dates[0] !== firstDate) {
+                  setFirstDate(dates?.[0]);
+                }
+                if (dates?.[1] && dates[1] !== secondDate) {
+                  setSecondDate(dates?.[1]);
+                }
+              }}
+            />
+          }
+        >
+          <button
+            type="button"
+            className="flex shrink-0 items-center gap-1.5 rounded-lg border border-solid border-gray-100 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:border-indigo-200"
+          >
+            <CalendarOutlined />
+            {firstDate.format("D MMM")} – {secondDate.format("D MMM")}
+          </button>
+        </Popover>
+      </div>
+      <div className="pb-4">
+        {view === View.table ? (
+          <Table data={logs} setLogs={setLogs} />
+        ) : (
+          <div className="max-h-[480px]">
+            {view === View.stacked && <StackedChart data={logs} />}
+            {view === View.line && <LineChart data={logs} />}
           </div>
         )}
       </div>
-      <div className="flex flex-wrap justify-between">
-        <Space>
-          {Object.values(View).map((v, idx) => (
-            <div key={`${v}-${idx}`}>
-              <Button
-                key={v}
-                className="p-0"
-                type={getButtonType(view, v)}
-                onClick={() => onClickView(v)}
-              >
-                {v.charAt(0).toUpperCase() + v.slice(1)}
-              </Button>
-              <Divider type="vertical" />
-            </div>
-          ))}
-        </Space>
-        <RangePicker
-          inputReadOnly
-          value={[firstDate, secondDate]}
-          onChange={(dates) => {
-            if (dates?.[0] && dates[0] !== firstDate) {
-              setFirstDate(dates?.[0]);
-            }
-            if (dates?.[1] && dates[1] !== secondDate) {
-              setSecondDate(dates?.[1]);
-            }
-          }}
-        />
-      </div>
-      <div className="pb-4">
-        {view === View.stacked && <StackedChart data={logs} />}
-        {view === View.line && <LineChart data={logs} />}
-        {view === View.table && <Table data={logs} setLogs={setLogs} />}
-      </div>
     </>
   );
-}
-
-function getButtonType(currentView: View, targetView: View) {
-  return currentView === targetView ? "link" : "text";
 }

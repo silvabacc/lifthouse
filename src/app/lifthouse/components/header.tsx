@@ -1,76 +1,71 @@
 "use client";
 
-import { Button, Dropdown, Layout, MenuProps } from "antd";
-import { SettingOutlined } from "@ant-design/icons";
-import { useAppContext } from "@/app/context";
-import { UnlockOutlined, LogoutOutlined } from "@ant-design/icons";
+import { Dropdown, Layout, MenuProps } from "antd";
+import {
+  UnlockOutlined,
+  LogoutOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import { createSupabaseClient } from "@/lib/supabase/client";
-import { useLocalStorage } from "../../../../hooks/useLocalStorage";
-import getConfig from "@/config";
+import { Suspense, useTransition } from "react";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { signOut } from "../actions";
+import { BreadcrumbNav } from "./pageInfo";
 
 const { Header: AntDHeader } = Layout;
 
-const { pageUrl } = getConfig();
+type Props = {
+  email: string;
+};
 
-export default function Header() {
-  const { user } = useAppContext();
+export default function Header({ email }: Props) {
   const { clearAllLocalStorage } = useLocalStorage();
   const router = useRouter();
-  const supabase = createSupabaseClient();
+  const [, startTransition] = useTransition();
 
   const items: MenuProps["items"] = [
     {
-      label: user?.email,
-      key: "0",
+      label: <span className="text-xs text-gray-400">{email}</span>,
+      key: "email",
+      disabled: true,
     },
-    {
-      label: "Update Password",
-      key: "1",
-      icon: <UnlockOutlined />,
-    },
-    {
-      label: "Logout",
-      key: "2",
-      icon: <LogoutOutlined />,
-    },
+    { type: "divider" },
+    { label: "Update password", key: "update-password", icon: <UnlockOutlined /> },
+    { label: "Log out", key: "logout", icon: <LogoutOutlined />, danger: true },
   ];
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
-    switch (e.key) {
-      case "1":
-        router.push(`${pageUrl}/update-password`);
-        break;
-      case "2":
-        supabase.auth.signOut();
-        clearAllLocalStorage();
-        router.push("/");
-        break;
+    if (e.key === "update-password") {
+      router.push("/lifthouse/update-password");
+    } else if (e.key === "logout") {
+      clearAllLocalStorage();
+      startTransition(() => signOut());
     }
   };
 
-  const menuProps = {
-    items,
-    onClick: handleMenuClick,
-  };
+  const initial = email.charAt(0).toUpperCase() || <UserOutlined />;
 
   return (
-    //Tailwind doesn't apply to AntD components
     <AntDHeader
       style={{
         background: "white",
-        padding: 16,
+        paddingInline: 24,
         display: "flex",
         alignItems: "center",
-        direction: "rtl",
+        justifyContent: "space-between",
       }}
     >
-      <Dropdown menu={menuProps}>
-        <Button shape="circle">
-          <div className="flex items-center justify-center text-md">
-            <SettingOutlined />
-          </div>
-        </Button>
+      <Suspense fallback={null}>
+        <BreadcrumbNav />
+      </Suspense>
+      <Dropdown menu={{ items, onClick: handleMenuClick }} trigger={["click"]}>
+        <button
+          type="button"
+          aria-label="Account menu"
+          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border-0 bg-indigo-50 text-sm font-semibold text-indigo-600 transition-colors hover:bg-indigo-100"
+        >
+          {initial}
+        </button>
       </Dropdown>
     </AntDHeader>
   );

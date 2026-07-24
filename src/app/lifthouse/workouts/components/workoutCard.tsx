@@ -1,116 +1,133 @@
-import { Button, Divider, Modal, Typography } from "antd";
-import { useState } from "react";
-import { ExclamationCircleFilled } from "@ant-design/icons";
-import { BottomFadeInAnimation } from "@/app/aniamtions/bottomFadeInAnimation";
+"use client";
+
+import { App, Button, Typography } from "antd";
+import { useState, useTransition } from "react";
+import {
+  ExclamationCircleFilled,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import WorkoutFormDrawer, {
   ExerciseFormDrawerField,
 } from "./workoutDrawerForm";
-import { useWorkout } from "../hooks/useWorkout";
-import { Workout } from "@/lib/supabase/db/types";
-import getConfig from "@/config";
+import {
+  ExerciseConfiguration,
+  WorkoutTemplate,
+} from "@/lib/supabase/db/types";
 import Link from "next/link";
+import { updateWorkoutMeta } from "../actions";
 
-const { pageUrl } = getConfig();
-const { confirm } = Modal;
 const { Paragraph } = Typography;
 
 type WorkoutCardProps = {
   name: string;
   description: string;
   workoutId: number;
+  exercises?: ExerciseConfiguration[];
+  template?: WorkoutTemplate;
   onDelete: (id: number) => void;
-  onWorkoutUpdate: (workout: Workout) => void;
 };
+
+function templateLabel(template?: WorkoutTemplate) {
+  if (!template || template === WorkoutTemplate.custom) return undefined;
+  return template
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" · ");
+}
+
 export default function WorkoutCard({
   name,
   description,
   workoutId,
+  exercises,
+  template,
   onDelete,
-  onWorkoutUpdate,
 }: WorkoutCardProps) {
-  const [drawOpen, setDrawOpen] = useState<boolean>(false);
-  const { updateWorkoutPlan } = useWorkout();
+  const [drawOpen, setDrawOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const { modal } = App.useApp();
 
   const showDeleteConfirm = () => {
-    confirm({
-      title: "Are you sure delete this workout plan?",
+    modal.confirm({
+      title: "Delete this workout plan?",
+      content: "This can't be undone.",
       icon: <ExclamationCircleFilled />,
-      okText: "Yes",
+      okText: "Delete",
       okType: "danger",
       centered: true,
-      cancelText: "No",
-      async onOk() {
+      cancelText: "Cancel",
+      onOk() {
         onDelete(workoutId);
       },
     });
   };
 
-  const onFinish = async (info: ExerciseFormDrawerField) => {
-    const log = await updateWorkoutPlan({
-      workoutId,
-      name: info.name,
-      description: info.description,
+  const onFinish = (info: ExerciseFormDrawerField) => {
+    startTransition(async () => {
+      await updateWorkoutMeta(workoutId, info.name, info.description);
+      setDrawOpen(false);
     });
-
-    if (log) {
-      onWorkoutUpdate(log);
-    }
-    setDrawOpen(false);
   };
 
+  const badge = templateLabel(template);
+  const exerciseCount = exercises?.length ?? 0;
+
   return (
-    <BottomFadeInAnimation className="flex flex-col justify-between bg-white cursor-pointer">
+    <div className="flex h-full flex-col justify-between overflow-hidden rounded-xl border border-solid border-gray-100 bg-white transition-all hover:border-indigo-200 hover:shadow-md">
       <WorkoutFormDrawer
         title="Edit workout plan"
         open={drawOpen}
-        onClose={() => setDrawOpen(!drawOpen)}
+        onClose={() => setDrawOpen(false)}
         onFinish={onFinish}
         options={{ nameRequired: false, descriptionRequired: false }}
         defaultTitleFieldValue={name}
         defaultDescriptionFieldValue={description}
       />
-      <Link href={`${pageUrl}/workouts/${workoutId}?name=${name}`}>
-        <div className="relative p-6 ">
-          <h1 className="text-black text-base font-medium pb-2">{name}</h1>
-          <Description text={description} />
+      <Link
+        href={`/lifthouse/workouts/${workoutId}?name=${name}`}
+        className="block flex-1"
+      >
+        <div className="p-5">
+          <div className="flex flex-wrap items-center gap-2 pb-1">
+            <h2 className="m-0 text-base font-semibold text-gray-900">
+              {name}
+            </h2>
+            {badge && (
+              <span className="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-600">
+                {badge}
+              </span>
+            )}
+          </div>
+          <Paragraph className="!mb-2 text-gray-500" ellipsis={{ rows: 2 }}>
+            {description}
+          </Paragraph>
+          <p className="m-0 text-xs text-gray-400">
+            {exerciseCount} exercise{exerciseCount === 1 ? "" : "s"}
+          </p>
         </div>
       </Link>
-      <div className="flex items-center justify-between py-2 bg-gray-50">
+      <div className="flex items-center justify-end gap-1 border-0 border-t border-solid border-gray-100 bg-gray-50/60 px-3 py-1.5">
         <Button
-          className="flex-1 text-gray-400"
-          type="link"
+          type="text"
+          size="small"
+          icon={<EditOutlined />}
+          loading={isPending}
+          className="text-gray-500"
           onClick={() => setDrawOpen(true)}
         >
           Edit
         </Button>
-        <Divider type="vertical" />
         <Button
-          onClick={() => showDeleteConfirm()}
-          className="flex-1 text-gray-400"
-          type="link"
+          type="text"
+          size="small"
+          danger
+          icon={<DeleteOutlined />}
+          onClick={showDeleteConfirm}
         >
           Delete
         </Button>
       </div>
-    </BottomFadeInAnimation>
-  );
-}
-
-type DescriptionProps = {
-  text: string;
-};
-function Description({ text }: DescriptionProps) {
-  return (
-    <div>
-      <Paragraph
-        ellipsis={{
-          rows: 2,
-          expandable: true,
-          symbol: "more",
-        }}
-      >
-        {text}
-      </Paragraph>
     </div>
   );
 }

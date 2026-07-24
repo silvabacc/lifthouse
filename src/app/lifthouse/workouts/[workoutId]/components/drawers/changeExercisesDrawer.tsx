@@ -1,80 +1,70 @@
+"use client";
+
 import { Button, Drawer, Space } from "antd";
-import { Reorder } from "framer-motion";
 import { useWorkoutIdContext } from "../../context";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { SelectExercise, SelectRepsScheme } from "../selectors";
-import { MenuOutlined, SaveOutlined } from "@ant-design/icons";
-import { useWorkout } from "../../../hooks/useWorkout";
+import {
+  ArrowUpOutlined,
+  ArrowDownOutlined,
+  SaveOutlined,
+} from "@ant-design/icons";
+import { updateWorkoutExercises } from "../../../actions";
 
 type Props = {
   show: boolean;
   onCancel: () => void;
 };
+
 export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
   const { workout, setWorkout } = useWorkoutIdContext();
-  const { updateWorkoutPlan } = useWorkout();
-  const [saving, setSaving] = useState(false);
-
-  //Could also use useDragControls from framer-motion but this is buggy with having separate ReOrder.Item components
-  //So implemented my own way of doing this
-  const [draggable, setDraggable] = useState(false);
-
-  //State that holds the exercises that are not yet updated
-  const [updatedWorkoutExercises, setUpdatedWorkoutExercises] = useState(
-    workout.exercises || []
+  const [isPending, startTransition] = useTransition();
+  const [updatedExercises, setUpdatedExercises] = useState(
+    workout.exercises || [],
   );
 
   useEffect(() => {
-    setUpdatedWorkoutExercises(workout.exercises || []);
+    setUpdatedExercises(workout.exercises || []);
   }, [show, workout.exercises]);
 
-  const onClose = async () => {
-    setSaving(true);
-    const updatedWorkout = await updateWorkoutPlan({
-      workoutId: workout.workoutId,
-      exercises: updatedWorkoutExercises,
-    });
-
-    if (!updatedWorkout) return;
-
-    // Checks if the exercises has been updated
-    if (JSON.stringify(updatedWorkout) !== JSON.stringify(workout)) {
-      setWorkout(updatedWorkout);
-    }
-
-    setSaving(false);
-    onCancel();
-  };
-
-  const onChangeExercise = async (exerciseId: number, value: number) => {
-    const newExercises = updatedWorkoutExercises.map((e) => {
-      if (e.exerciseId === exerciseId) {
-        return {
-          ...e,
-          exerciseId: value,
-        };
+  const onSave = () => {
+    startTransition(async () => {
+      const updated = await updateWorkoutExercises(
+        workout.workoutId,
+        updatedExercises,
+      );
+      if (JSON.stringify(updated) !== JSON.stringify(workout)) {
+        setWorkout(updated);
       }
-      return e;
+      onCancel();
     });
-
-    setUpdatedWorkoutExercises(newExercises);
   };
 
-  const onChangeReps = async (exerciseId: number, value: string) => {
+  const onChangeExercise = (exerciseId: number, value: number) => {
+    setUpdatedExercises((prev) =>
+      prev.map((e) =>
+        e.exerciseId === exerciseId ? { ...e, exerciseId: value } : e,
+      ),
+    );
+  };
+
+  const onChangeReps = (exerciseId: number, value: string) => {
     const [sets, reps] = value.split(":");
+    setUpdatedExercises((prev) =>
+      prev.map((e) =>
+        e.exerciseId === exerciseId ? { ...e, sets: parseInt(sets), reps } : e,
+      ),
+    );
+  };
 
-    const newExercises = updatedWorkoutExercises.map((e) => {
-      if (e.exerciseId === exerciseId) {
-        return {
-          ...e,
-          sets: parseInt(sets),
-          reps: reps,
-        };
-      }
-      return e;
+  const move = (index: number, direction: -1 | 1) => {
+    setUpdatedExercises((prev) => {
+      const target = index + direction;
+      if (target < 0 || target >= prev.length) return prev;
+      const next = [...prev];
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
     });
-
-    setUpdatedWorkoutExercises(newExercises);
   };
 
   return (
@@ -82,61 +72,56 @@ export default function ChangeExercisesDrawer({ show, onCancel }: Props) {
       open={show}
       onClose={onCancel}
       title="Change exercises"
-      extra={<ExtraIcon saving={saving} onClick={onClose} />}
+      size="min(440px, 100vw)"
+      extra={
+        <Button
+          icon={<SaveOutlined />}
+          type={isPending ? "default" : "primary"}
+          loading={isPending}
+          onClick={onSave}
+        >
+          {isPending ? "Saving" : "Save"}
+        </Button>
+      }
     >
-      <Reorder.Group
-        className="p-0"
-        axis="y"
-        values={updatedWorkoutExercises}
-        onReorder={setUpdatedWorkoutExercises}
-      >
-        <Space size="large" className="w-full" direction="vertical">
-          {updatedWorkoutExercises.map((item, idx) => (
-            //Do not put this in a child component, as ReOrder.Item is buggy when the state is updated
-            <Reorder.Item
-              className="p-2 shadow rounded flex justify-between items-center w-full bg-white"
-              key={item?.exerciseId}
-              value={item}
-              dragListener={draggable}
-              onDragEnd={() => setDraggable(false)}
-            >
-              <Space direction="vertical" className="w-full">
-                <SelectExercise
-                  items={updatedWorkoutExercises}
-                  defaultExercise={item}
-                  onChange={onChangeExercise}
-                />
-                <SelectRepsScheme
-                  defaultExercise={item}
-                  onChange={onChangeReps}
-                />
-              </Space>
-              <MenuOutlined
-                onMouseEnter={() => setDraggable(true)}
-                onMouseLeave={() => setDraggable(false)}
-                onTouchStart={() => setDraggable(true)}
-                className="m-4"
+      <div className="flex flex-col gap-4">
+        {updatedExercises.map((item, index) => (
+          <div
+            key={item?.exerciseId}
+            className="flex w-full items-center justify-between rounded-xl border border-solid border-gray-100 bg-white p-3 shadow-sm"
+          >
+            <Space orientation="vertical" className="w-full">
+              <SelectExercise
+                items={updatedExercises}
+                defaultExercise={item}
+                onChange={onChangeExercise}
               />
-            </Reorder.Item>
-          ))}
-        </Space>
-      </Reorder.Group>
+              <SelectRepsScheme
+                defaultExercise={item}
+                onChange={onChangeReps}
+              />
+            </Space>
+            <div className="ml-2 flex flex-col">
+              <Button
+                type="text"
+                size="small"
+                icon={<ArrowUpOutlined />}
+                disabled={index === 0}
+                onClick={() => move(index, -1)}
+                aria-label="Move exercise up"
+              />
+              <Button
+                type="text"
+                size="small"
+                icon={<ArrowDownOutlined />}
+                disabled={index === updatedExercises.length - 1}
+                onClick={() => move(index, 1)}
+                aria-label="Move exercise down"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
     </Drawer>
-  );
-}
-
-type ExtraIconProps = {
-  saving?: boolean;
-  onClick: () => void;
-};
-function ExtraIcon({ saving, onClick }: ExtraIconProps) {
-  return (
-    <Button
-      icon={<SaveOutlined />}
-      type={saving ? "default" : "primary"}
-      onClick={onClick}
-    >
-      {saving ? "Saving 🚀" : "Save"}
-    </Button>
   );
 }

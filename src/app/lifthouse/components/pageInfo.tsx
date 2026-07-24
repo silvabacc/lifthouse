@@ -1,18 +1,19 @@
 "use client";
 
+import React from "react";
 import { Breadcrumb, Button } from "antd";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-export default function PageInfo() {
+export function BreadcrumbNav() {
   const pathName = usePathname();
   const searchParams = useSearchParams();
 
   const breadcrumbs = generateBreadcrumbs(
     pathName,
-    searchParams.get("name") || ""
+    searchParams.get("name") || "",
   );
 
   const items = breadcrumbs.map((breadcrumb, index) => {
@@ -29,17 +30,20 @@ export default function PageInfo() {
     };
   });
 
+  return <Breadcrumb items={items} />;
+}
+
+export default function PageInfo() {
   return (
-    <div className="bg-white px-6 pb-4">
-      <Breadcrumb items={items} />
+    <div className="bg-white px-6 ">
       <div id="page-info" />
     </div>
   );
 }
 
 type Props = {
-  children?: JSX.Element;
-  extra?: JSX.Element;
+  children?: React.ReactElement;
+  extra?: React.ReactElement;
   title?: string;
 };
 export function PageInfoPortal({ children, extra, title }: Props) {
@@ -48,16 +52,30 @@ export function PageInfoPortal({ children, extra, title }: Props) {
 
   useEffect(() => setMounted(true), []);
 
-  const element = document.getElementById("page-info");
+  const element = mounted ? document.getElementById("page-info") : null;
 
   return mounted && element
     ? createPortal(
-        <div className="pt-1">
-          <h1 className="text-2xl font-bold">{title}</h1>
+        <div>
+          {title && (
+            <h1 className="m-0 mb-2 hidden text-2xl font-bold sm:block">
+              {title}
+            </h1>
+          )}
           <div className={`${showInfo ? "block" : "hidden"} sm:block`}>
             {children}
           </div>
-          <div className="w-full overflow-x-auto">{extra}</div>
+          <div className="flex snap-x snap-proximity items-center overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pb-4">
+            <div
+              aria-hidden
+              className="scroll-fade__edge scroll-fade__edge--start"
+            />
+            <div className="flex items-center gap-2">{extra}</div>
+            <div
+              aria-hidden
+              className="scroll-fade__edge scroll-fade__edge--end"
+            />
+          </div>
           {children && (
             <Button
               onClick={() => setShowInfo(!showInfo)}
@@ -68,7 +86,7 @@ export function PageInfoPortal({ children, extra, title }: Props) {
             </Button>
           )}
         </div>,
-        element
+        element,
       )
     : null;
 }

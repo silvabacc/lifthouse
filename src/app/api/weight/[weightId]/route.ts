@@ -1,13 +1,12 @@
-import DatabaseClient from "@/lib/supabase/db/dbClient";
+import { createDatabaseClient } from "@/lib/supabase/db/dbClient";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import Joi from "joi";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { apiRoute } from "@/lib/api";
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { weightId: number } }
-) {
+export const PUT = apiRoute(async (request: NextRequest, props: { params: Promise<{ weightId: string }> }) => {
+  const params = await props.params;
   const body = await request.json();
 
   try {
@@ -20,17 +19,15 @@ export async function PUT(
   }
 
   const { weight } = body;
-  const db = new DatabaseClient();
+  const db = await createDatabaseClient();
 
-  const data = await db.updateWeight(params.weightId, weight);
+  const data = await db.updateWeight(parseInt(params.weightId), weight);
   return NextResponse.json(data);
-}
+});
 
-export async function DELETE(
-  _request: NextRequest,
-  { params }: { params: { weightId: number } }
-) {
-  const db = new DatabaseClient();
-  await db.deleteWeight(params.weightId);
+export const DELETE = apiRoute(async (_request: NextRequest, props: { params: Promise<{ weightId: string }> }) => {
+  const params = await props.params;
+  const db = await createDatabaseClient();
+  await db.deleteWeight(parseInt(params.weightId));
   return NextResponse.json({ success: true });
-}
+});

@@ -7,7 +7,7 @@ import {
   FormWrapper,
   PasswordField,
 } from "../components/form";
-import { Alert, Button, Divider, Form, message } from "antd";
+import { Alert, App, Button, Divider } from "antd";
 import { useState } from "react";
 import Link from "next/link";
 import { createSupabaseClient } from "@/lib/supabase/client";
@@ -30,7 +30,7 @@ type FieldType = {
 };
 
 export default function LoginForm() {
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message: messageApi } = App.useApp();
   const [errorMessage, setErrorMessage] = useState<string>();
   const router = useRouter();
 
@@ -67,37 +67,40 @@ export default function LoginForm() {
 
   return (
     <>
-      {contextHolder}
       <FormWrapper onFinish={onFinish}>
         {errorMessage && (
           <Alert
-            closable
-            onClose={() => setErrorMessage("")}
+            closable={{ onClose: () => setErrorMessage("") }}
             style={{ marginBottom: 12 }}
-            message={errorMessage}
+            title={errorMessage}
             type="error"
           />
         )}
         <EmailField />
-        <Form.Item>
-          <Link href="/account/signup">New User? Sign up here</Link>
-        </Form.Item>
         <PasswordField />
-        <Form.Item>
-          <Link href="/account/recovery">Forgot password</Link>
-        </Form.Item>
-        <FormButton text={"Login"} />
-        <Divider style={{ borderColor: "black" }}>
-          <span>Or Log in With</span>
-        </Divider>
-        <div className="flex justify-center">
-          <Button
-            icon={<GoogleOutlined />}
-            onClick={() => onSignInWithProivderClick(Provider.Google)}
-          >
-            Google
-          </Button>
+        <div className="-mt-2 mb-4 flex justify-end">
+          <Link className="text-sm" href="/account/recovery">
+            Forgot password?
+          </Link>
         </div>
+        <FormButton text={"Log in"} />
+        <Divider plain>
+          <span className="text-xs text-gray-400">or continue with</span>
+        </Divider>
+        <Button
+          block
+          size="large"
+          icon={<GoogleOutlined />}
+          onClick={() => onSignInWithProivderClick(Provider.Google)}
+        >
+          Google
+        </Button>
+        <p className="mb-0 mt-4 text-center text-sm text-gray-500">
+          New here?{" "}
+          <Link href="/account/signup" className="font-medium">
+            Create an account
+          </Link>
+        </p>
         <DemoText />
       </FormWrapper>
     </>

@@ -21,7 +21,7 @@ export default function NotFound() {
             404 - page not found 😔
           </h1>
           <Divider />
-          <Space className="flex justify-center" direction="vertical">
+          <Space className="flex justify-center" orientation="vertical">
             <p className="text-center">
               The page you are looking for doesn&apos;t exist or has been moved.
               Sorry about that.

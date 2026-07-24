@@ -1,28 +1,24 @@
+"use client";
+
 import { Button } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
+import { useTransition } from "react";
 import { useWorkoutIdContext } from "../context";
-import { useWorkout } from "../../hooks/useWorkout";
+import { updateWorkoutExercises } from "../../actions";
 
 type Props = {
   exerciseId: number;
 };
+
 export default function DeleteExerciseButton({ exerciseId }: Props) {
   const { workout, setWorkout } = useWorkoutIdContext();
-  const { updateWorkoutPlan } = useWorkout();
+  const [isPending, startTransition] = useTransition();
 
-  const onClick = async () => {
-    const newExercises = workout.exercises.filter(
-      (e) => e.exerciseId !== exerciseId
-    );
-
-    await updateWorkoutPlan({
-      workoutId: workout.workoutId,
-      exercises: newExercises,
-    });
-
-    setWorkout({
-      ...workout,
-      exercises: newExercises,
+  const onClick = () => {
+    const newExercises = workout.exercises.filter((e) => e.exerciseId !== exerciseId);
+    startTransition(async () => {
+      setWorkout({ ...workout, exercises: newExercises });
+      await updateWorkoutExercises(workout.workoutId, newExercises);
     });
   };
 
@@ -31,6 +27,7 @@ export default function DeleteExerciseButton({ exerciseId }: Props) {
       type="link"
       className="ml-2"
       onClick={onClick}
+      loading={isPending}
       danger
       icon={<DeleteOutlined className="text-rose-700" />}
     />

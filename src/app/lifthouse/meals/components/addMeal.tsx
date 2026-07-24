@@ -1,11 +1,13 @@
-import { useFetch } from "../../../../../hooks/useFetch";
+import { useFetch } from "@/hooks/useFetch";
 import { Card, Input, Alert, Button, InputNumber } from "antd";
 import { useState, useRef, Dispatch, SetStateAction, useEffect } from "react";
+import type { Dayjs } from "dayjs";
 
 type AddMealProps = {
   goToMealTab: () => void;
+  selectedDay: Dayjs;
 };
-export default function AddMeal({ goToMealTab }: AddMealProps) {
+export default function AddMeal({ goToMealTab, selectedDay }: AddMealProps) {
   const { fetch } = useFetch();
   const [mealTitle, setMealTitle] = useState("");
   const [caloriesPer, setCaloriesPer] = useState<number>();
@@ -29,6 +31,7 @@ export default function AddMeal({ goToMealTab }: AddMealProps) {
       body: JSON.stringify({
         mealTitle: mealTitle,
         ...nutrients,
+        date: selectedDay.toDate().toDateString(),
       }),
     });
   };
@@ -51,9 +54,13 @@ export default function AddMeal({ goToMealTab }: AddMealProps) {
   const fatRow = [{ state: fatsPer, set: setFatsPer }];
 
   useEffect(() => {
-    window.addEventListener("resize", () => {
-      scrollToCard();
-    });
+    const onResize = () => {
+      if (cardRef.current) {
+        cardRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, []);
 
   //Refactor this
@@ -272,7 +279,7 @@ export default function AddMeal({ goToMealTab }: AddMealProps) {
       {error && (
         <Alert
           style={{ marginTop: 16 }}
-          message="Please add a title"
+          title="Please add a title"
           type="error"
           showIcon
         />

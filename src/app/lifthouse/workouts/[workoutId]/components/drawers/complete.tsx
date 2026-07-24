@@ -1,94 +1,95 @@
 import { LogInfo, ExerciseConfiguration } from "@/lib/supabase/db/types";
-import { Button, InputNumber, Space, StepProps, Steps, Tooltip } from "antd";
-import { useState } from "react";
-import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
-import { useLocalStorage } from "../../../../../../../hooks/useLocalStorage";
+import { Button, InputNumber } from "antd";
+import { useEffect, useState } from "react";
+import { CheckOutlined } from "@ant-design/icons";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 type Props = {
   exercise: ExerciseConfiguration;
   latestLogInfo?: LogInfo[];
 };
+
+/**
+ * The set-by-set logger. One row per set: the active row takes input, completed
+ * rows show a green check and can be tapped to re-open for edits, and future
+ * rows stay locked until the previous set is confirmed.
+ */
 export function Complete({ exercise, latestLogInfo }: Props) {
   const { getCachedLogInfo } = useLocalStorage();
-  const highestSet = getCachedLogInfo(exercise.exerciseId)?.info.reduce(
-    (acc, curr) => (curr.set > acc ? curr.set : acc),
-    0
-  );
-  const [currentSet, setCurrentSet] = useState(highestSet || 0);
+  const [currentSet, setCurrentSet] = useState(0);
 
-  const onChange = (current: number) => {
-    if (current < currentSet) {
-      setCurrentSet(current);
-    }
-  };
+  useEffect(() => {
+    const highestSet = getCachedLogInfo(exercise.exerciseId)?.info.reduce(
+      (acc, curr) => (curr.set > acc ? curr.set : acc),
+      0,
+    );
+    setCurrentSet(highestSet || 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exercise.exerciseId]);
 
-  const items: StepProps[] = [];
+  const rows = [];
   for (let i = 0; i < exercise.sets; i++) {
     const latestLog = latestLogInfo?.find((l) => l.set === i + 1);
 
-    items.push({
-      title: `Set ${i + 1}`,
-      description: (
-        <StepRow
-          exerciseId={exercise.exerciseId}
-          step={i}
-          placeHolder={{
-            reps: latestLog?.reps.toString(),
-            weight: latestLog?.weight.toString(),
-          }}
-          disabled={currentSet !== i}
-          warningEnabled={currentSet > i}
-          onContinue={() => setCurrentSet(currentSet + 1)}
-        />
-      ),
-    });
+    rows.push(
+      <SetRow
+        key={i}
+        exerciseId={exercise.exerciseId}
+        step={i}
+        placeHolder={{
+          reps: latestLog?.reps.toString(),
+          weight: latestLog?.weight.toString(),
+        }}
+        state={
+          i === currentSet ? "active" : i < currentSet ? "completed" : "locked"
+        }
+        onReopen={() => setCurrentSet(i)}
+        onContinue={() => setCurrentSet(currentSet + 1)}
+      />,
+    );
   }
-  return (
-    <div style={{ minWidth: 260 }} className="flex h-full flex-col mt-4">
-      <Steps
-        onChange={onChange}
-        direction="vertical"
-        items={items}
-        size="small"
-        current={currentSet}
-      />
-    </div>
-  );
+
+  return <div className="mt-3 flex flex-col gap-2">{rows}</div>;
 }
 
-type StepRowProps = {
+type SetRowProps = {
   exerciseId: number;
   step: number;
-  disabled: boolean;
-  warningEnabled: boolean; //Warnings can only appear if the current set is less than the rendered set
+  state: "active" | "completed" | "locked";
   placeHolder?: { reps?: string; weight?: string };
+  onReopen: () => void;
   onContinue: () => void;
 };
-function StepRow({
+
+function SetRow({
   exerciseId,
   step,
-  disabled,
-  warningEnabled,
+  state,
   placeHolder,
+  onReopen,
   onContinue,
-}: StepRowProps) {
+}: SetRowProps) {
   const [weight, setWeight] = useState<number>();
   const [reps, setReps] = useState<number>();
   const { getCachedLogInfo, cacheLogInfo } = useLocalStorage();
-  const cachedInfo = getCachedLogInfo(exerciseId)?.info.find(
-    (i) => i.set === step + 1
-  );
   const [noRepsWarning, setNoRepsWarning] = useState(false);
 
-  const onNext = () => {
-    const currentReps = reps ? !reps : !cachedInfo?.reps;
-    if (currentReps) {
+  useEffect(() => {
+    const cachedInfo = getCachedLogInfo(exerciseId)?.info.find(
+      (i) => i.set === step + 1,
+    );
+    setWeight(cachedInfo?.weight);
+    setReps(cachedInfo?.reps);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exerciseId, step]);
+
+  const onConfirm = () => {
+    if (!reps) {
       setNoRepsWarning(true);
       return;
     }
 
     setNoRepsWarning(false);
-
     // +1 for the set
     cacheLogInfo(exerciseId, {
       info: {
@@ -100,45 +101,76 @@ function StepRow({
     onContinue();
   };
 
-  const showWarning =
-    noRepsWarning || (warningEnabled && (reps ? !reps : !cachedInfo?.reps));
+  const disabled = state !== "active";
+  const showWarning = noRepsWarning || (state === "completed" && !reps);
 
   return (
-    <Space>
-      <InputNumber
-        disabled={disabled}
-        inputMode="decimal"
-        placeholder={placeHolder?.weight}
-        value={weight}
-        onChange={(weight) => setWeight(weight ?? 0)}
-        defaultValue={cachedInfo?.weight}
-        min={0}
-        prefix="kg"
-      />
-      <InputNumber
-        disabled={disabled}
-        inputMode="decimal"
-        value={reps}
-        placeholder={placeHolder?.reps}
-        defaultValue={cachedInfo?.reps}
-        min={0}
-        onChange={(reps) => setReps(reps ?? 0)}
-        prefix="reps"
-      />
-      <Button
-        type="link"
-        disabled={disabled}
-        className="p-0 m-0"
-        icon={<CheckCircleOutlined className="p-0 m-0" />}
-        onClick={onNext}
-      />
+    <div>
+      <div
+        className={`flex items-center gap-2 rounded-lg p-2 transition-colors ${
+          state === "active"
+            ? "bg-indigo-50/60"
+            : state === "completed"
+              ? "cursor-pointer hover:bg-gray-50"
+              : "opacity-50"
+        }`}
+        onClick={state === "completed" ? onReopen : undefined}
+      >
+        <span
+          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
+            state === "completed"
+              ? "bg-green-100 text-green-600"
+              : state === "active"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-400"
+          }`}
+        >
+          {state === "completed" ? <CheckOutlined /> : step + 1}
+        </span>
+        <InputNumber
+          disabled={disabled}
+          inputMode="decimal"
+          placeholder={placeHolder?.weight}
+          value={weight}
+          onChange={(w) => setWeight(w ?? 0)}
+          min={0}
+          suffix="kg"
+          className="w-full"
+        />
+        <InputNumber
+          disabled={disabled}
+          inputMode="decimal"
+          value={reps}
+          placeholder={placeHolder?.reps}
+          min={0}
+          onChange={(r) => setReps(r ?? 0)}
+          suffix="reps"
+          className="w-full"
+        />
+        <Button
+          type={state === "active" ? "primary" : "text"}
+          shape="circle"
+          disabled={disabled}
+          icon={<CheckOutlined />}
+          onClick={(e) => {
+            e.stopPropagation();
+            onConfirm();
+          }}
+          aria-label={`Confirm set ${step + 1}`}
+        />
+      </div>
       {showWarning && (
-        <div onClick={(e) => e.stopPropagation()}>
-          <Tooltip trigger={"click"} title="Reps is missing!">
-            <WarningOutlined className="text-orange-400" />
-          </Tooltip>
-        </div>
+        <p className="m-0 mt-1 pl-11 text-xs text-amber-600">
+          {state === "active"
+            ? "Enter your reps to confirm this set"
+            : "This set has no reps recorded"}
+        </p>
       )}
-    </Space>
+      {placeHolder?.weight && state === "active" && (
+        <p className="m-0 mt-1 pl-11 text-xs text-gray-400">
+          Last time: {placeHolder.weight}kg × {placeHolder.reps}
+        </p>
+      )}
+    </div>
   );
 }

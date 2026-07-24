@@ -8,12 +8,14 @@ type StackedChartProps = {
 export default function StackedChart({ data }: StackedChartProps) {
   if (data.length === 0) {
     return (
-      <Alert
-        className="mt-12"
-        description="No logs have been recorded for this exercise 😢"
-        type="info"
-        showIcon
-      />
+      <div className="flex mt-4 items-center justify-center">
+        <Alert
+          className="w-full"
+          description="No logs have been recorded for this exercise 😢"
+          type="info"
+          showIcon
+        />
+      </div>
     );
   }
 

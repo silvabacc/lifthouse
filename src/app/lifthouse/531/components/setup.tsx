@@ -1,8 +1,9 @@
-import { InputNumber, Button, Card, Space, Form } from "antd";
+import { InputNumber, Button, Card, Form } from "antd";
 import Calculator from "../calculator";
-import { useFetch } from "../../../../../hooks/useFetch";
 import { FiveThreeOne } from "@/lib/supabase/db/types";
 import { useFiveThreeOneContext } from "../context";
+import { updateFiveThreeOnePersonalBests } from "../actions";
+import { useTransition } from "react";
 
 type FieldType = {
   bench: number;
@@ -17,15 +18,17 @@ type Props = {
 };
 export function Setup({ open, onClose }: Props) {
   const { fiveThreeOneInfo, setFiveThreeOneInfo } = useFiveThreeOneContext();
-  const { fetch } = useFetch();
+  const [isPending, startTransition] = useTransition();
+  const [form] = Form.useForm<FieldType>();
 
-  const onFinish = async (values: FieldType) => {
-    const response: FiveThreeOne = await fetch("/api/531", {
-      method: "POST",
-      body: JSON.stringify(values),
+  const onFinish = (values: FieldType) => {
+    startTransition(async () => {
+      const response: FiveThreeOne =
+        await updateFiveThreeOnePersonalBests(values);
+      form.resetFields();
+      setFiveThreeOneInfo(response);
+      onClose();
     });
-    setFiveThreeOneInfo(response);
-    onClose();
   };
 
   const { bench, squat, deadlift, ohp } = fiveThreeOneInfo;
@@ -55,33 +58,54 @@ export function Setup({ open, onClose }: Props) {
   return (
     <div className="overflow-hidden grid lg:grid-cols-2 gap-4 items-start">
       <Card>
-        <h1 className="m-0 mb-2">1RM (one rep max) for SBD</h1>
-        <span>
-          Enter your 1 rep max. You don&apos;t have to be accurate and be
-          realistic, you don&apos;t have to train at your one rep max for this
-          program to be effective
+        <h2 className="m-0 mb-2 text-lg font-semibold">One-rep maxes</h2>
+        <span className="text-gray-500">
+          Enter <span className="font-bold">90%</span> of your one-rep max for
+          each lift. A realistic estimate is fine — you won&apos;t train at your
+          max for this program to be effective.
         </span>
-        <Form className="mt-4" onFinish={onFinish}>
-          {formItems.map((lift) => (
-            <div key={lift.exercise.name} className="flex items-center">
-              <div className="w-full">
-                <span className="text-left font-bold">
-                  {lift.exercise.name}
-                </span>
-                <Form.Item name={lift.key} colon={false}>
-                  <InputNumber
-                    placeholder={lift.pb.toString()}
-                    required
-                    className="w-full mt-4"
-                    suffix="kg"
-                  />
-                </Form.Item>
-              </div>
-            </div>
-          ))}
+        <Form
+          form={form}
+          layout="vertical"
+          className="mt-4"
+          onFinish={onFinish}
+        >
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-x-4">
+            {formItems.map((lift) => (
+              <Form.Item
+                key={lift.exercise.name}
+                name={lift.key}
+                label={
+                  <span className="block truncate" title={lift.exercise.name}>
+                    {lift.exercise.name}
+                  </span>
+                }
+                rules={[
+                  {
+                    required: true,
+                    message: `Enter your ${lift.exercise.name} one-rep max`,
+                  },
+                ]}
+              >
+                <InputNumber
+                  style={{ width: "100%" }}
+                  placeholder={lift.pb.toString()}
+                  inputMode="decimal"
+                  min={1}
+                  className="w-full"
+                  suffix="kg"
+                />
+              </Form.Item>
+            ))}
+          </div>
           <div className="flex justify-center mt-4">
-            <Button type="primary" className="w-64" htmlType="submit">
-              Finish
+            <Button
+              type="primary"
+              className="w-64"
+              htmlType="submit"
+              loading={isPending}
+            >
+              {isPending ? "Saving" : "Save"}
             </Button>
           </div>
         </Form>

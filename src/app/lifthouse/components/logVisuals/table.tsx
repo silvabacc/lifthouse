@@ -2,7 +2,7 @@ import { LogEntry } from "@/lib/supabase/db/types";
 import { Table as AntDTable, Button, Popconfirm, TableColumnsType } from "antd";
 import React, { useEffect, useState } from "react";
 import { DeleteOutlined } from "@ant-design/icons";
-import { useFetch } from "../../../../../hooks/useFetch";
+import { useFetch } from "@/hooks/useFetch";
 
 interface TableDataType {
   key: React.Key;
@@ -31,7 +31,10 @@ export default function Table({ data, setLogs }: Props) {
   }, [data]);
 
   const handleDelete = async (key: React.Key) => {
-    const response = await fetch(`/api/logs/${key}`, { method: "DELETE" });
+    const response = await fetch<{ success: boolean }>(
+      `/api/logs/${String(key)}`,
+      { method: "DELETE" }
+    );
 
     if (response.success) {
       const newData = dataSource.filter((item) => item.key !== key);
@@ -75,6 +78,7 @@ export default function Table({ data, setLogs }: Props) {
         {expandedKeys.length === data.length ? "Decollapse all" : "Expand All"}
       </Button>
       <AntDTable
+        size="small"
         pagination={false}
         expandable={{
           expandedRowKeys: expandedKeys,

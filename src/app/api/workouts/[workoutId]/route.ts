@@ -1,30 +1,25 @@
-import DatabaseClient from "@/lib/supabase/db/dbClient";
+import { createDatabaseClient } from "@/lib/supabase/db/dbClient";
 import { WorkoutTemplate } from "@/lib/supabase/db/types";
 import Joi from "joi";
 import { NextResponse } from "next/server";
+import { apiRoute } from "@/lib/api";
 
-export async function GET(
-  _request: Request,
-  { params }: { params: { workoutId: string } }
-) {
-  const dbClient = new DatabaseClient();
+export const GET = apiRoute(async (_request: Request, props: { params: Promise<{ workoutId: string }> }) => {
+  const params = await props.params;
+  const dbClient = await createDatabaseClient();
   const workout = await dbClient.getWorkoutData(params.workoutId);
   return NextResponse.json(workout);
-}
+});
 
-export async function DELETE(
-  _request: Request,
-  { params }: { params: { workoutId: string } }
-) {
-  const dbClient = new DatabaseClient();
+export const DELETE = apiRoute(async (_request: Request, props: { params: Promise<{ workoutId: string }> }) => {
+  const params = await props.params;
+  const dbClient = await createDatabaseClient();
   await dbClient.deleteWorkout(params.workoutId);
   return NextResponse.json({ success: true });
-}
+});
 
-export async function PUT(
-  request: Request,
-  { params }: { params: { workoutId: string } }
-) {
+export const PUT = apiRoute(async (request: Request, props: { params: Promise<{ workoutId: string }> }) => {
+  const params = await props.params;
   const body = await request.json();
   try {
     const schema = Joi.object({
@@ -50,7 +45,7 @@ export async function PUT(
     return NextResponse.json({ error: err.message }, { status: 400 });
   }
 
-  const dbClient = new DatabaseClient();
+  const dbClient = await createDatabaseClient();
   const { name, description, exercises, template, updateTemplate } = body;
 
   let updatedExercises = exercises;
@@ -68,4 +63,4 @@ export async function PUT(
   );
 
   return NextResponse.json(workout);
-}
+});

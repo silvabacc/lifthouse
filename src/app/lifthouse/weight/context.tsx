@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 import dayjs from "dayjs";
-import { useFetch } from "../../../../hooks/useFetch";
+import { useFetch } from "@/hooks/useFetch";
 import { Weight } from "@/lib/supabase/db/types";
 
 interface WeightCalendar extends Omit<Weight, "date"> {
@@ -41,22 +41,23 @@ const WeightContextProvider = ({ children }: any) => {
   const [isLoading, setLoading] = useState(false);
   const { fetch } = useFetch();
 
-  //Fetch data here
   useEffect(() => {
-    const fetchWeightData = async () => {
-      setLoading(true);
-      const result: Weight[] = await fetch(
-        `/api/weight?month=${monthSelected}&year=${yearSelected}`
-      );
-      const transform = result.map((r) => {
-        return { ...r, date: dayjs(r.date) };
+    // Stale-response guard: prevents an older month's slow response from
+    // overwriting the currently selected month's data.
+    let stale = false;
+    setLoading(true);
+    fetch<Weight[]>(`/api/weight?month=${monthSelected}&year=${yearSelected}`)
+      .then((result) => {
+        if (stale) return;
+        setWeightData(result.map((r) => ({ ...r, date: dayjs(r.date) })));
+      })
+      .finally(() => {
+        if (!stale) setLoading(false);
       });
-      setWeightData(transform);
-      setLoading(false);
+    return () => {
+      stale = true;
     };
-
-    fetchWeightData();
-  }, [monthSelected, yearSelected]);
+  }, [monthSelected, yearSelected, fetch]);
 
   return (
     <WeightContext.Provider

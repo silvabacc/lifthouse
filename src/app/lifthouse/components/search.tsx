@@ -1,21 +1,24 @@
-import { FilterOutlined } from "@ant-design/icons";
-import { Button, Input, Tag } from "antd";
+import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, Divider, Input, Tag, type InputProps } from "antd";
 import { useState } from "react";
 
-const { Search } = Input;
 const { CheckableTag } = Tag;
+
+type Variant = InputProps["variant"];
 
 type SearchExerciseProps = {
   selectedTags?: string[];
   filterTagOptions?: string[];
-  placerHolder?: string;
+  variant?: Variant;
+  placeHolder?: string;
   setSelectedTags?: (tags: string[]) => void;
   setSearchQuery: (query: string) => void;
 };
 export default function SearchElement({
   selectedTags = [],
   filterTagOptions,
-  placerHolder,
+  placeHolder,
+  variant,
   setSearchQuery,
   setSelectedTags,
 }: SearchExerciseProps) {
@@ -30,10 +33,12 @@ export default function SearchElement({
 
   return (
     <>
-      <div className="flex justify-between w-full pb-2">
-        <Search
-          className="w-full"
-          placeholder={placerHolder}
+      <div className="flex justify-between w-full">
+        <Input
+          variant={variant}
+          className={`w-full ${variant === "underlined" && "mx-2 p-0"} `}
+          placeholder={placeHolder}
+          prefix={variant !== "underlined" && <SearchOutlined />}
           onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
         />
         {filterTagOptions?.length !== 0 && (
@@ -46,17 +51,20 @@ export default function SearchElement({
         )}
       </div>
       {expandedFilter && filterTagOptions && (
-        <div className="flex pb-4 px-2 overflow-auto ">
-          {filterTagOptions.map((tag) => (
-            <CheckableTag
-              key={tag}
-              checked={selectedTags?.includes(tag) ?? false}
-              onChange={(checked) => handleChange(tag, checked)}
-            >
-              {tag}
-            </CheckableTag>
-          ))}
-        </div>
+        <>
+          <div className="flex px-2 overflow-auto gap-2 mt-2 pb-3">
+            {filterTagOptions.map((tag) => (
+              <CheckableTag
+                key={tag}
+                checked={selectedTags?.includes(tag) ?? false}
+                onChange={(checked) => handleChange(tag, checked)}
+              >
+                {tag}
+              </CheckableTag>
+            ))}
+          </div>
+          <Divider style={{ margin: 2 }} />
+        </>
       )}
     </>
   );

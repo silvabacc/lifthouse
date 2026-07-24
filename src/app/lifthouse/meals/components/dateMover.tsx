@@ -1,14 +1,14 @@
 "use client";
 
 import React from "react";
-import type { Dayjs } from "dayjs";
-import { Button, Calendar, Tooltip, Typography } from "antd";
-import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
+import dayjs, { type Dayjs } from "dayjs";
+import { Button, Calendar, Popover, Tooltip } from "antd";
+import {
+  CalendarOutlined,
+  LeftOutlined,
+  RightOutlined,
+} from "@ant-design/icons";
 import { DateUtils } from "@/lib/dateUtils";
-
-const { Title } = Typography;
-
-const ARROW_MARGIN = "m-8";
 
 interface DateMoverProps {
   selectedDay: Dayjs;
@@ -19,53 +19,81 @@ const DateMover: React.FC<DateMoverProps> = ({
   selectedDay,
   setSelectedDay,
 }) => {
+  const [isCalendarOpen, setIsCalendarOpen] = React.useState(false);
+
   const onLeftArrowClick = () => setSelectedDay(selectedDay.subtract(1, "day"));
   const onRightArrowClick = () => setSelectedDay(selectedDay.add(1, "day"));
-  const onSelect = (date: Dayjs) => setSelectedDay(date);
+  const onSelect = (date: Dayjs) => {
+    setSelectedDay(date);
+    setIsCalendarOpen(false);
+  };
+  const onGoToToday = () => setSelectedDay(dayjs());
 
+  const isToday = DateUtils.isToday(selectedDay);
   let title = selectedDay.format("dddd");
 
-  if (DateUtils.isToday(selectedDay)) {
+  if (isToday) {
     title = "Today";
   }
   if (DateUtils.isYesterday(selectedDay)) {
     title = "Yesterday";
   }
 
-  const ToolTipCalendar = (
-    <Calendar value={selectedDay} fullscreen={false} onSelect={onSelect} />
-  );
-
   return (
-    <div className="text-center">
-      <div className="flex justify-center items-center">
+    <div className="flex flex-col items-center pt-2 text-center">
+      <div className="flex items-center gap-3">
         <Button
-          className={ARROW_MARGIN}
           shape="circle"
-          type="primary"
           onClick={onLeftArrowClick}
-          icon={<ArrowLeftOutlined />}
+          icon={<LeftOutlined />}
+          aria-label="Previous day"
         />
-        <Tooltip
-          overlayInnerStyle={{ width: 300 }}
-          color="white"
-          title={ToolTipCalendar}
+        <Popover
+          trigger="click"
+          open={isCalendarOpen}
+          onOpenChange={setIsCalendarOpen}
+          styles={{ container: { width: 300 } }}
+          content={
+            <Calendar
+              value={selectedDay}
+              fullscreen={false}
+              onSelect={onSelect}
+            />
+          }
         >
-          <div className="w-40 rounded bg-blue-500 text-white cursor-pointer px-4">
-            <h1 className="text-xl">{title}</h1>
-          </div>
-        </Tooltip>
+          <button
+            type="button"
+            className="w-44 cursor-pointer rounded-xl border border-solid border-gray-100 bg-white px-4 py-2 transition-colors hover:border-indigo-200"
+          >
+            <span className="block text-lg font-semibold text-gray-900">
+              {title}
+            </span>
+            <span className="block text-xs text-gray-400">
+              {selectedDay.format("DD MMM YYYY")}
+            </span>
+          </button>
+        </Popover>
         <Button
-          className={`${ARROW_MARGIN} ${
-            DateUtils.isToday(selectedDay) ? "invisible" : "visible"
-          }`}
+          className={isToday ? "invisible" : "visible"}
           shape="circle"
-          type="primary"
           onClick={onRightArrowClick}
-          icon={<ArrowRightOutlined />}
+          icon={<RightOutlined />}
+          aria-label="Next day"
         />
       </div>
-      <h3 className="m-0">{selectedDay.format("DD/MM/YYYY")}</h3>
+      {!isToday && (
+        <Tooltip title="Go to today">
+          <Button
+            type="link"
+            size="small"
+            className="mt-1"
+            onClick={onGoToToday}
+            icon={<CalendarOutlined />}
+          >
+            Back to today
+          </Button>
+        </Tooltip>
+      )}
     </div>
   );
 };

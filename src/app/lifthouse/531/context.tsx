@@ -1,17 +1,14 @@
 "use client";
 
-import { useFetch } from "../../../../hooks/useFetch";
-import { useLocalStorage } from "../../../../hooks/useLocalStorage";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { FiveThreeOne } from "@/lib/supabase/db/types";
 import { createContext, useContext, useEffect, useState } from "react";
-import FiveThreeOneSkeleton from "./fiveThreeOne.skeleton";
 
 type FiveThreeOneContextType = {
   fiveThreeOneInfo: FiveThreeOne;
   setFiveThreeOneInfo: (info: FiveThreeOne) => void;
   week: number;
   setWeek: (week: number) => void;
-  loading: boolean;
   completed: number[];
   setCompleted: (completed: number[]) => void;
 };
@@ -22,45 +19,29 @@ const FiveThreeOneContext = createContext<FiveThreeOneContextType>(
 
 const useFiveThreeOneContext = () => useContext(FiveThreeOneContext);
 
-const FiveThreeOneContextProvider = ({ children }: any) => {
-  const [fiveThreeOneInfo, setFiveThreeOneInfo] = useState<FiveThreeOne>();
+type Props = {
+  children: React.ReactNode;
+  initialFiveThreeOne: FiveThreeOne;
+};
+
+const FiveThreeOneContextProvider = ({ children, initialFiveThreeOne }: Props) => {
   const { getCachedFiveThreeOneInfo } = useLocalStorage();
+
+  const [fiveThreeOneInfo, setFiveThreeOneInfo] = useState(initialFiveThreeOne);
   const [week, setWeek] = useState(1);
   const [completed, setCompleted] = useState<number[]>([]);
-  const [loading, setLoading] = useState(false);
-  const { fetch } = useFetch();
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const response: FiveThreeOne = await fetch("/api/531");
-      setLoading(false);
-      setFiveThreeOneInfo(response);
-    };
-    fetchData();
-
-    const cachedInfo = getCachedFiveThreeOneInfo();
-    if (cachedInfo) {
-      setWeek(cachedInfo.week);
-      setCompleted(cachedInfo.completed);
-    }
+    const cached = getCachedFiveThreeOneInfo();
+    if (!cached) return;
+    setWeek(cached.week);
+    setCompleted(cached.completed);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  if (loading || !fiveThreeOneInfo) {
-    return <FiveThreeOneSkeleton />;
-  }
 
   return (
     <FiveThreeOneContext.Provider
-      value={{
-        fiveThreeOneInfo,
-        setFiveThreeOneInfo,
-        week,
-        setWeek,
-        completed,
-        setCompleted,
-        loading,
-      }}
+      value={{ fiveThreeOneInfo, setFiveThreeOneInfo, week, setWeek, completed, setCompleted }}
     >
       {children}
     </FiveThreeOneContext.Provider>

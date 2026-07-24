@@ -1,62 +1,52 @@
 "use client";
 
-import { Button, Layout, Space } from "antd";
+import { Button, Layout } from "antd";
+import {
+  PlayCircleFilled,
+  SwapOutlined,
+  AppstoreOutlined,
+} from "@ant-design/icons";
 import { PageInfoPortal } from "../../components/pageInfo";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import AddButton from "../components/addButton";
 import AddExerciseDrawer from "./components/drawers/addExerciseDrawer";
-import { useWorkout } from "../hooks/useWorkout";
 import { WorkoutTemplate } from "@/lib/supabase/db/types";
-import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 import { Record } from "./components/drawers/recordDrawer";
 import { useWorkoutIdContext } from "./context";
 import ChangeExercisesDrawer from "./components/drawers/changeExercisesDrawer";
 import TemplateDrawer from "./components/drawers/templateDrawer";
 import Charts from "./charts";
+import { updateWorkoutExercises } from "../actions";
 
 const { Content, Footer } = Layout;
 
 export default function WorkoutPlanPage() {
   const { workout, setWorkout } = useWorkoutIdContext();
   const [drawOpen, setDrawOpen] = useState(false);
-  const { updateWorkoutPlan } = useWorkout();
   const [showRecord, setShowRecord] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showTemplate, setShowTemplate] = useState(false);
-  const [savingExercise, setSavingExercise] = useState(false);
+  const [, startTransition] = useTransition();
 
-  const onAddExerciseClick = async (exerciseId: number) => {
-    if (savingExercise) return;
-
-    setSavingExercise(true);
-    const defaultExerciseSetup = { exerciseId, sets: 3, reps: "8-12" };
-    await updateWorkoutPlan({
-      workoutId: workout.workoutId,
-      exercises: [...(workout?.exercises || []), defaultExerciseSetup],
+  const onAddExercise = (exerciseId: number) => {
+    const defaultSetup = { exerciseId, sets: 3, reps: "8-12" };
+    const newExercises = [...(workout.exercises || []), defaultSetup];
+    startTransition(async () => {
+      setWorkout({ ...workout, exercises: newExercises });
+      await updateWorkoutExercises(workout.workoutId, newExercises);
     });
-
-    setWorkout((prev) => {
-      if (prev) {
-        return {
-          ...prev,
-          exercises: [...(prev?.exercises || []), defaultExerciseSetup],
-        };
-      }
-    });
-
-    setSavingExercise(false);
+    setDrawOpen(false);
   };
 
   return (
-    <PageAnimation
-      className={`${workout.exercises.length === 0 ? "" : "h-full"}`}
-    >
+    <div className={workout.exercises.length === 0 ? "" : "h-full"}>
       <Layout className="relative h-full">
-        <Content className="h-full bg-white rounded-sm p-4">
+        <Content className="h-full bg-white rounded-xl p-4">
           <PageInfoPortal
             title={workout.name}
             extra={
               <PageInfoExtra
+                hasExercises={workout.exercises.length > 0}
                 onClickRecord={() => setShowRecord(!showRecord)}
                 onClickEdit={() => setShowEdit(!showEdit)}
                 onClickWorkoutTemplate={() => setShowTemplate(!showTemplate)}
@@ -66,10 +56,8 @@ export default function WorkoutPlanPage() {
           <AddExerciseDrawer
             drawOpen={drawOpen}
             setDrawOpen={setDrawOpen}
-            onClickMuscle={onAddExerciseClick}
-            filterOutExercisesIds={
-              workout.exercises.map((e) => e.exerciseId) || []
-            }
+            onClickMuscle={onAddExercise}
+            filterOutExercisesIds={workout.exercises.map((e) => e.exerciseId)}
           />
           <ChangeExercisesDrawer
             show={showEdit}
@@ -80,17 +68,10 @@ export default function WorkoutPlanPage() {
             show={showTemplate}
             onCancel={() => setShowTemplate(false)}
           />
-          {
-            <Record
-              show={showRecord}
-              onCancel={() => {
-                setShowRecord(false);
-              }}
-            />
-          }
+          <Record show={showRecord} onCancel={() => setShowRecord(false)} />
           <Charts />
         </Content>
-        <Footer className="p-0 mt-4">
+        <Footer className="mt-4" style={{ padding: 0 }}>
           {workout?.template === WorkoutTemplate.custom && (
             <AddButton
               title="+ Add Exercise"
@@ -99,31 +80,48 @@ export default function WorkoutPlanPage() {
           )}
         </Footer>
       </Layout>
-    </PageAnimation>
+    </div>
   );
 }
 
-type Props = {
+type PageInfoExtraProps = {
+  hasExercises: boolean;
   onClickRecord: () => void;
   onClickEdit: () => void;
   onClickWorkoutTemplate: () => void;
 };
+
 function PageInfoExtra({
+  hasExercises,
   onClickRecord,
   onClickEdit,
   onClickWorkoutTemplate,
-}: Props) {
+}: PageInfoExtraProps) {
   return (
-    <Space className="pb-4">
-      <Button type="dashed" danger onClick={onClickRecord}>
-        Record a workout
+    <div className="flex gap-2 pb-4">
+      <Button
+        type="primary"
+        icon={<PlayCircleFilled />}
+        disabled={!hasExercises}
+        onClick={onClickRecord}
+        className="shrink-0 snap-start"
+      >
+        Start workout
       </Button>
-      <Button type="dashed" className="text-sky-500" onClick={onClickEdit}>
-        Change exercises
+      <Button
+        icon={<SwapOutlined />}
+        onClick={onClickEdit}
+        className="shrink-0 snap-start"
+      >
+        Edit exercises
       </Button>
-      <Button type="dashed" onClick={onClickWorkoutTemplate}>
-        Workout templates
+      <Button
+        icon={<AppstoreOutlined />}
+        onClick={onClickWorkoutTemplate}
+        className="shrink-0 snap-start"
+      >
+        Templates
       </Button>
-    </Space>
+    </div>
   );
 }

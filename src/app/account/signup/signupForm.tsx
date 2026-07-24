@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, message } from "antd";
+import { Alert, App } from "antd";
 import {
   ConfirmPasswordField,
   EmailField,
@@ -24,7 +24,7 @@ interface FieldType {
 }
 
 export default function SignupForm() {
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message: messageApi } = App.useApp();
   const [alert, setAlert] = useState<string>();
   const router = useRouter();
 
@@ -47,22 +47,25 @@ export default function SignupForm() {
 
   return (
     <>
-      {contextHolder}
       <FormWrapper onFinish={onFinish}>
         {alert && (
           <Alert
-            closable
-            onClose={() => setAlert("")}
+            closable={{ onClose: () => setAlert("") }}
             style={{ marginBottom: 12 }}
-            message={alert}
+            title={alert}
             type="error"
           />
         )}
         <EmailField />
         <PasswordField />
         <ConfirmPasswordField />
-        <FormButton text={"Sign Up"} />
-        <Link href="/account/login">Already a user?</Link>
+        <FormButton text={"Create account"} />
+        <p className="mb-0 mt-2 text-center text-sm text-gray-500">
+          Already have an account?{" "}
+          <Link href="/account/login" className="font-medium">
+            Log in
+          </Link>
+        </p>
       </FormWrapper>
     </>
   );

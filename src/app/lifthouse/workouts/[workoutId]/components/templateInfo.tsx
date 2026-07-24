@@ -4,23 +4,23 @@ const { Text } = Typography;
 
 export default function TemplateInfo() {
   const timelineUpperLower = [
-    { label: "Monday", children: "Upper Body (High Intensity)" },
-    { label: "Tuesday", children: "Lower Body (High Volume)" },
-    { label: "Wednesday", children: "Rest" },
-    { label: "Thursday", children: "Upper Body (High Volume)" },
-    { label: "Friday", children: "Lower Body (High Intensity)" },
-    { label: "Saturday", children: "Rest" },
-    { label: "Sunday", children: "Rest" },
+    { title: "Monday", content: "Upper Body (High Intensity)" },
+    { title: "Tuesday", content: "Lower Body (High Volume)" },
+    { title: "Wednesday", content: "Rest" },
+    { title: "Thursday", content: "Upper Body (High Volume)" },
+    { title: "Friday", content: "Lower Body (High Intensity)" },
+    { title: "Saturday", content: "Rest" },
+    { title: "Sunday", content: "Rest" },
   ];
 
   const timelinePushPullLegs = [
-    { label: "Monday", children: "Push" },
-    { label: "Tuesday", children: "Pull" },
-    { label: "Wednesday", children: "Legs" },
-    { label: "Thursday", children: "Rest" },
-    { label: "Friday", children: "Push" },
-    { label: "Saturday", children: "Pull" },
-    { label: "Sunday", children: "Legs" },
+    { title: "Monday", content: "Push" },
+    { title: "Tuesday", content: "Pull" },
+    { title: "Wednesday", content: "Legs" },
+    { title: "Thursday", content: "Rest" },
+    { title: "Friday", content: "Push" },
+    { title: "Saturday", content: "Pull" },
+    { title: "Sunday", content: "Legs" },
   ];
 
   return (
@@ -47,7 +47,7 @@ export default function TemplateInfo() {
         muscle.
       </Text>
       <h4>Weekly Split</h4>
-      <Timeline mode="right" items={timelineUpperLower} />
+      <Timeline mode="end" items={timelineUpperLower} />
       <h3>Push Pull Legs</h3>
       <Text className="text-gray-600">
         These templates are designed to target the pushing, pulling and leg
@@ -55,7 +55,7 @@ export default function TemplateInfo() {
         flexible. You can do P-P-L-P-P or P-L-P-P-L or any other combination.
       </Text>
       <h4>Weekly Split</h4>
-      <Timeline mode="right" items={timelinePushPullLegs} />
+      <Timeline mode="end" items={timelinePushPullLegs} />
       <h3>Custom</h3>
       <Text className="text-gray-600">
         Create your own custom workout with your own chosen exercises and rep

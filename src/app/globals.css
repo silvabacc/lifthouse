@@ -3,8 +3,10 @@
 @tailwind utilities;
 
 :root {
-  /* Colors */
-  --caption-color: #808080;
+  /* Design tokens — keep in sync with src/theme.ts */
+  --color-primary: #4f46e5;
+  --color-bg-layout: #f5f5f4;
+  --color-text-secondary: #78716c;
 }
 
 html,
@@ -14,9 +16,81 @@ body {
   overflow-x: hidden;
   margin: 0px;
   overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+  background: var(--color-bg-layout);
 }
+
+/* Respect users who prefer reduced motion (covers antd CSS transitions) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 .ant-picker-calendar-header .ant-radio-group {
   display: none;
+}
+
+/*
+ * Horizontal scroll-fade for chip/button rows (e.g. the workout page's
+ * action buttons). Wrap the scrollable content in two `.scroll-fade__edge`
+ * divs (first child = left edge, last child = right edge) — the side is
+ * inferred structurally so there's only one class to apply. Zero-footprint
+ * via a width + matching negative margin, `position: sticky` so they stay
+ * pinned to the scrollport edge while remaining real descendants of the
+ * scroller (needed for `scroll()` timelines to find it). Both default to
+ * opacity 0 so they only ever appear where `scroll()` timelines are
+ * supported — the right edge reuses the same fade keyframe in reverse, and
+ * its fill-mode "both" animation kicks its opacity up to 1 as soon as the
+ * timeline is active at all (i.e. there's real overflow to scroll), so no
+ * JS overflow detection is needed.
+ */
+.scroll-fade__edge {
+  position: sticky;
+  align-self: stretch;
+  z-index: 1;
+  width: 24px;
+  flex: 0 0 auto;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.scroll-fade__edge:first-child {
+  left: 0;
+  margin-left: -24px;
+  background: linear-gradient(to right, white, transparent);
+}
+
+.scroll-fade__edge:last-child {
+  right: 0;
+  margin-left: 24px;
+  background: linear-gradient(to left, white, transparent);
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-fade__edge:first-child {
+    animation: scroll-fade 1ms linear both;
+    animation-timeline: scroll(nearest x);
+    animation-range: 0px 24px;
+  }
+
+  .scroll-fade__edge:last-child {
+    animation: scroll-fade 1ms linear both reverse;
+    animation-timeline: scroll(nearest x);
+    animation-range: calc(100% - 24px) 100%;
+  }
+}
+
+@keyframes scroll-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .ant-picker-dropdown {

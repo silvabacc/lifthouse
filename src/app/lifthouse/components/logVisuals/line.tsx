@@ -8,12 +8,13 @@ type LineChartProps = {
 export default function LineChart({ data }: LineChartProps) {
   if (data.length === 0) {
     return (
-      <Alert
-        className="mt-12"
-        description="No logs have been recorded for this exercise 😢"
-        type="info"
-        showIcon
-      />
+      <div className="flex h-full items-center justify-center">
+        <Alert
+          description="No logs have been recorded for this exercise 😢"
+          type="info"
+          showIcon
+        />
+      </div>
     );
   }
 

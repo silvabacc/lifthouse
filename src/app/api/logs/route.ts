@@ -1,8 +1,9 @@
-import DatabaseClient from "@/lib/supabase/db/dbClient";
+import { createDatabaseClient } from "@/lib/supabase/db/dbClient";
 import Joi from "joi";
 import { NextResponse } from "next/server";
+import { apiRoute } from "@/lib/api";
 
-export async function POST(request: Request) {
+export const POST = apiRoute(async (request: Request) => {
   const body = await request.json();
   try {
     const schema = Joi.alternatives().try(
@@ -24,7 +25,7 @@ export async function POST(request: Request) {
 
   const { exerciseIds, rows, startFrom, endOn } = body;
 
-  const dbClient = new DatabaseClient();
+  const dbClient = await createDatabaseClient();
   const data = await dbClient.getLogs(exerciseIds, rows, startFrom, endOn);
   return NextResponse.json(data);
-}
+});

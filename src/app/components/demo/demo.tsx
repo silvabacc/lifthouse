@@ -2,14 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import { createDemoAccount } from "./actions";
-import { message } from "antd";
+import { App, Button } from "antd";
 import { useState } from "react";
 import { redirectToHome } from "@/lib/utils";
 
 export function DemoText() {
   const router = useRouter();
   const [creating, setCreating] = useState(false);
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message: messageApi } = App.useApp();
 
   const onClick = async () => {
     if (creating) {
@@ -32,18 +32,16 @@ export function DemoText() {
   };
 
   return (
-    <div className="text-sm text-gray-600 mt-4">
-      {contextHolder}
-      Want to try out Lifthouse? Use our{" "}
-      <span
-        className="text-blue-500 cursor-pointer"
-        onClick={() => {
-          onClick();
-        }}
+    <div className="mt-4 text-center text-sm text-gray-500">
+      Just looking around?{" "}
+      <Button
+        style={{ padding: 0 }}
+        type="link"
+        disabled={creating}
+        onClick={onClick}
       >
-        demo
-      </span>{" "}
-      to get started!
+        {creating ? "Setting up a demo…" : "Try the demo"}
+      </Button>
     </div>
   );
 }

@@ -1,4 +1,5 @@
-import { Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+
 type AddExerciseButtonProps = {
   title: string;
   onClick?: () => void;
@@ -6,14 +7,13 @@ type AddExerciseButtonProps = {
 
 export default function AddButton({ title, onClick }: AddExerciseButtonProps) {
   return (
-    <div className="border-dotted border-2 border-sky-400 bg-white flex items-center cursor-pointer">
-      <Button
-        onClick={onClick}
-        type="link"
-        className="flex text-sky-400 text-base w-full flex-col items-center justify-center"
-      >
-        {title}
-      </Button>
-    </div>
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-indigo-200 bg-white p-1 text-base font-medium text-indigo-600 transition-colors hover:border-indigo-400 hover:bg-indigo-50/40"
+    >
+      <PlusOutlined />
+      {title.replace(/^\+\s*/, "")}
+    </button>
   );
 }

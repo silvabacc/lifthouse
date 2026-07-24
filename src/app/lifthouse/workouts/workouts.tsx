@@ -1,58 +1,36 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useOptimistic, useTransition } from "react";
 import AddWorkoutCard from "./components/addWorkoutCard";
 import WorkoutCard from "./components/workoutCard";
-import { useWorkout } from "./hooks/useWorkout";
 import { Workout } from "@/lib/supabase/db/types";
-import WorkoutSkeleton from "./workouts.skeleton";
+import { deleteWorkout } from "./actions";
 
-export default function Workouts() {
-  const { fetchWorkouts, deleteWorkoutPlan } = useWorkout();
-  const [workouts, setWorkouts] = useState<Workout[]>([]);
-  const [isLoading, setLoading] = useState<boolean>();
+type Props = {
+  initialWorkouts: Workout[];
+};
 
-  useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
-      const workouts = await fetchWorkouts();
-      setWorkouts(workouts);
-      setLoading(false);
-    };
+export default function Workouts({ initialWorkouts }: Props) {
+  const [, startTransition] = useTransition();
+  const [workouts, optimisticDelete] = useOptimistic(
+    initialWorkouts,
+    (state, deletedId: number) =>
+      state.filter((w) => w.workoutId !== deletedId),
+  );
 
-    fetch();
-  }, []);
-
-  if (isLoading) {
-    return <WorkoutSkeleton />;
-  }
-
-  const onDelete = async (workoutId: number) => {
-    await deleteWorkoutPlan(workoutId);
-    setWorkouts((workouts) =>
-      workouts.filter((w) => w.workoutId !== workoutId)
-    );
-  };
-
-  const onWorkoutUpdate = (workout: Workout) => {
-    setWorkouts((workouts) =>
-      workouts.map((w) => (w.workoutId === workout.workoutId ? workout : w))
-    );
+  const onDelete = (workoutId: number) => {
+    startTransition(async () => {
+      optimisticDelete(workoutId);
+      await deleteWorkout(workoutId);
+    });
   };
 
   return (
-    <div className="grid lg:grid-cols-3 gap-4">
-      {workouts?.map((workout) => {
-        return (
-          <WorkoutCard
-            key={workout.workoutId}
-            {...workout}
-            onDelete={onDelete}
-            onWorkoutUpdate={onWorkoutUpdate}
-          />
-        );
-      })}
-      <AddWorkoutCard setWorkouts={setWorkouts} />
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {workouts.map((workout) => (
+        <WorkoutCard key={workout.workoutId} {...workout} onDelete={onDelete} />
+      ))}
+      <AddWorkoutCard />
     </div>
   );
 }

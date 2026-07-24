@@ -1,17 +1,18 @@
 "use client";
 
-import { useFetch } from "../../../../hooks/useFetch";
+import { useFetch } from "@/hooks/useFetch";
 import { Meal } from "@/lib/supabase/db/types";
-import { Skeleton, TabsProps, Tabs } from "antd";
+import { Skeleton, TabsProps, Tabs, Button } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import DateMover from "./components/dateMover";
 import MealCard from "./components/mealCard";
 import AddMeal from "./components/addMeal";
 import dynamic from "next/dynamic";
-import { PageAnimation } from "@/app/aniamtions/pageAnimation";
 
-const MacroNutrients = dynamic(() => import("./components/macroNutrients"));
+const MacroNutrients = dynamic(() => import("./components/macroNutrients"), {
+  ssr: false,
+});
 
 export default function MealsPage() {
   const [activeTab, setActivetab] = useState("1");
@@ -22,35 +23,58 @@ export default function MealsPage() {
 
   const goToMealTab = () => {
     setActivetab("1");
-    fetchMeals();
+    setRefreshToken((t) => t + 1);
   };
 
   const onDeleteCard = async (id: number) => {
-    const deleteMealResponse = await fetch(`/api/meals/${id}`, {
-      method: "DELETE",
-    });
+    const deleteMealResponse = await fetch<{ success: boolean }>(
+      `/api/meals/${id}`,
+      { method: "DELETE" },
+    );
 
     if (deleteMealResponse.success) {
       setMealData(mealData.filter((meal) => meal.id !== id));
     }
   };
 
-  const fetchMeals = async () => {
-    setLoading(true);
-    const data = await fetch(`/api/meals?day=${selectedDay}`);
-    setMealData(data);
-    setLoading(false);
-  };
+  const [refreshToken, setRefreshToken] = useState(0);
 
   useEffect(() => {
+    // Stale-response guard: without it, switching days quickly lets a slower
+    // older request resolve last and overwrite the newer day's data.
+    let stale = false;
     setMealData([]);
-    fetchMeals();
-  }, [selectedDay]);
+    setLoading(true);
+    fetch<Meal[]>(`/api/meals?day=${selectedDay}`)
+      .then((data) => {
+        if (!stale) setMealData(data);
+      })
+      .finally(() => {
+        if (!stale) setLoading(false);
+      });
+    return () => {
+      stale = true;
+    };
+  }, [selectedDay, refreshToken, fetch]);
 
   const Cards = () => {
     return (
       <>
         <Skeleton loading={isLoading} />
+        {mealData.length === 0 && (
+          <div className="text-center">
+            <span>
+              You had no meals today, add meals{" "}
+              <Button
+                onClick={() => setActivetab("2")}
+                style={{ padding: 0 }}
+                type="link"
+              >
+                here
+              </Button>
+            </span>
+          </div>
+        )}
         {mealData?.map((meal) => (
           <MealCard
             key={meal.id}
@@ -65,13 +89,13 @@ export default function MealsPage() {
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: `Meals`,
+      label: "Meals",
       children: Cards(),
     },
     {
       key: "2",
-      label: `Add Entry`,
-      children: <AddMeal goToMealTab={goToMealTab} />,
+      label: "Add entry",
+      children: <AddMeal goToMealTab={goToMealTab} selectedDay={selectedDay} />,
     },
   ];
 
@@ -81,7 +105,7 @@ export default function MealsPage() {
   const carbs = mealData?.reduce((acc, curr) => acc + curr.carbs, 0) || 0;
 
   return (
-    <PageAnimation className="flex flex-col items-center bg-white h-full overflow-y-auto">
+    <div className="flex flex-col items-center rounded-xl bg-white h-full overflow-y-auto">
       <DateMover selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
       <MacroNutrients
         isLoading={isLoading}
@@ -91,14 +115,12 @@ export default function MealsPage() {
         carbs={carbs}
       />
       <Tabs
-        type="card"
-        className="p-4"
-        style={{ width: "100%" }}
+        className="w-full max-w-2xl px-4"
         activeKey={activeTab}
         onChange={setActivetab}
         centered
         items={items}
       />
-    </PageAnimation>
+    </div>
   );
 }

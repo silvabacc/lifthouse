@@ -1,5 +1,6 @@
+"use client";
+
 import { Button, Drawer, Form, Input, Space } from "antd";
-import { useState } from "react";
 
 const { TextArea } = Input;
 
@@ -16,11 +17,12 @@ type Options = {
 type Props = {
   title: string;
   open: boolean;
-  onClose: (modalOpen: boolean) => void;
-  onFinish: (info: ExerciseFormDrawerField) => Promise<void>;
+  onClose: () => void;
+  onFinish: (info: ExerciseFormDrawerField) => void;
   options?: Options;
   defaultTitleFieldValue?: string;
   defaultDescriptionFieldValue?: string;
+  isLoading?: boolean;
 };
 
 export default function WorkoutFormDrawer({
@@ -31,43 +33,59 @@ export default function WorkoutFormDrawer({
   options = { nameRequired: true, descriptionRequired: false },
   defaultTitleFieldValue,
   defaultDescriptionFieldValue,
+  isLoading,
 }: Props) {
-  const [disable, setDisable] = useState(false);
-
-  const onSubmit = async (info: ExerciseFormDrawerField) => {
-    setDisable(true);
-    await onFinish(info);
-    setDisable(false);
-  };
-
   return (
-    <Drawer open={open} onClose={() => onClose(false)} title={title}>
-      <Form onFinish={onSubmit}>
-        <Form.Item name="name">
-          <Input
-            defaultValue={defaultTitleFieldValue}
-            required={options.nameRequired}
-            size="large"
-            placeholder="Edit plan name"
-          />
+    <Drawer
+      open={open}
+      onClose={onClose}
+      title={title}
+      size="min(420px, 100vw)"
+    >
+      <Form
+        layout="vertical"
+        onFinish={onFinish}
+        initialValues={{
+          name: defaultTitleFieldValue,
+          description: defaultDescriptionFieldValue,
+        }}
+      >
+        <Form.Item
+          name="name"
+          label="Name"
+          rules={[
+            {
+              required: options.nameRequired,
+              message: "Give your workout plan a name",
+            },
+          ]}
+        >
+          <Input size="large" placeholder="e.g. Upper Body A" />
         </Form.Item>
-        <Form.Item name="description">
+        <Form.Item
+          name="description"
+          label="Description"
+          rules={[
+            {
+              required: options.descriptionRequired,
+              message: "Add a short description",
+            },
+          ]}
+        >
           <TextArea
-            defaultValue={defaultDescriptionFieldValue}
             showCount
-            required={options.descriptionRequired}
             maxLength={100}
-            placeholder="Edit description"
+            placeholder="e.g. Heavy pressing day — OHP focus"
             style={{ height: 120, resize: "none" }}
           />
         </Form.Item>
-        <Space className=" w-full justify-end">
+        <Space className="w-full justify-end">
           <Form.Item>
-            <Button onClick={() => onClose(false)}>Cancel</Button>
+            <Button onClick={onClose}>Cancel</Button>
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
-              {disable ? "Saving" : "Ok"}
+            <Button type="primary" htmlType="submit" loading={isLoading}>
+              {isLoading ? "Saving" : "Save"}
             </Button>
           </Form.Item>
         </Space>

@@ -6,29 +6,30 @@ import LifthouseLogo from "@/app/assets/lifthouse_logo_black.png";
 import { usePathname, useRouter } from "next/navigation";
 import { pageConfig } from "./constants";
 import { useEffect, useState } from "react";
-import { useLocalStorage } from "../../../../hooks/useLocalStorage";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { redirectToHome } from "@/lib/utils";
 
 const { Sider } = Layout;
 
-export default function SiderNav() {
+export default function SideNav() {
   const { collapsedStorage } = useLocalStorage();
-  const collapsedStorageValue = collapsedStorage.get();
 
   const router = useRouter();
   const pathName = usePathname();
-  const [collapsed, setCollapsed] = useState<boolean>(collapsedStorageValue);
+  const [collapsed, setCollapsed] = useState<boolean>(false);
 
   useEffect(() => {
-    setCollapsed(collapsedStorageValue);
-  }, [collapsedStorage, collapsedStorageValue]);
+    setCollapsed(collapsedStorage.get());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const items = pageConfig.map((item, index) => ({
-    key: `${index + 1}`,
+  // Key items by their route so the selected state derives directly from the
+  // URL — no remount hack needed when the path changes.
+  const items = pageConfig.map((item) => ({
+    key: item.route,
     icon: <div>{item.icon}</div>,
     label: item.title,
     onClick: () => router.push(item.route),
-    path: item.route,
   }));
 
   const onCollapse = (value: boolean) => {
@@ -36,11 +37,13 @@ export default function SiderNav() {
     collapsedStorage.set(value);
   };
 
-  const activeKey =
-    items.find((item) => pathName.startsWith(item.path))?.key || "1";
+  const selectedKey =
+    pageConfig.find((item) => pathName.startsWith(item.route))?.route ??
+    pageConfig[0].route;
 
   return (
     <Sider
+      className="hidden sm:block"
       collapsed={collapsed}
       collapsible
       collapsedWidth={40}
@@ -50,18 +53,14 @@ export default function SiderNav() {
     >
       {!collapsed && (
         <Image
-          className="hidden sm:block p-2 w-full h-20 cursor-pointer"
+          className="hidden sm:block p-2 w-full h-20 object-contain cursor-pointer"
           src={LifthouseLogo}
-          alt=""
+          alt="Lifthouse"
+          sizes="200px"
           onClick={() => redirectToHome(router)}
         />
       )}
-      <Menu
-        theme="light"
-        key={activeKey}
-        defaultSelectedKeys={[activeKey]}
-        items={items}
-      />
+      <Menu theme="light" selectedKeys={[selectedKey]} items={items} />
     </Sider>
   );
 }
