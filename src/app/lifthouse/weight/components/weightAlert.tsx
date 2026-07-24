@@ -33,6 +33,7 @@ export default function WeightAlert() {
         <Alert
           type="warning"
           closable
+          showIcon
           style={{ width: "100%" }}
           title="No weekly goal set. Weekly goals are set when a weigh in is
 entered on the Sunday of the current week"

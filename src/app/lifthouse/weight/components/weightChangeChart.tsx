@@ -44,7 +44,7 @@ export default function WeightChangeChart() {
   if (isLoading) {
     return (
       <div
-        style={{ height: 350 }}
+        style={{ height: 240 }}
         className="animate-pulse rounded-lg bg-gray-200"
       />
     );
@@ -64,30 +64,7 @@ export default function WeightChangeChart() {
 
   return (
     <div className="flex flex-col">
-      <div className="mb-2 flex flex-wrap items-center gap-4 text-xs text-gray-500">
-        <span className="flex items-center gap-1.5">
-          <span
-            className="inline-block h-2.5 w-2.5 rounded-sm"
-            style={{ backgroundColor: LOSS_COLOR }}
-          />
-          Weight down
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span
-            className="inline-block h-2.5 w-2.5 rounded-sm"
-            style={{ backgroundColor: GAIN_COLOR }}
-          />
-          Weight up
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span
-            className="inline-block h-0.5 w-3"
-            style={{ backgroundColor: TREND_COLOR }}
-          />
-          7-day avg
-        </span>
-      </div>
-      <div className="min-h-0" style={{ height: 350 }}>
+      <div className="min-h-0" style={{ height: 240 }}>
         <Column
           autoFit
           data={data}
@@ -140,6 +117,29 @@ export default function WeightChangeChart() {
             ],
           }}
         />
+      </div>
+      <div className="mt-2 flex flex-wrap items-center justify-center gap-4 text-xs text-gray-500">
+        <span className="flex items-center gap-1.5">
+          <span
+            className="inline-block h-2.5 w-2.5 rounded-sm"
+            style={{ backgroundColor: LOSS_COLOR }}
+          />
+          Weight down
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span
+            className="inline-block h-2.5 w-2.5 rounded-sm"
+            style={{ backgroundColor: GAIN_COLOR }}
+          />
+          Weight up
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span
+            className="inline-block h-0.5 w-3"
+            style={{ backgroundColor: TREND_COLOR }}
+          />
+          7-day avg
+        </span>
       </div>
     </div>
   );
