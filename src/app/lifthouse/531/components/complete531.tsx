@@ -297,7 +297,7 @@ function Row({
   return (
     <div>
       <div
-        className={`flex items-center gap-2 rounded-lg p-2 transition-colors ${
+        className={`flex items-center justify-between gap-2 rounded-lg p-2 transition-colors ${
           state === "active"
             ? "bg-indigo-50/60"
             : state === "completed"
@@ -317,14 +317,10 @@ function Row({
         >
           {state === "completed" ? <CheckOutlined /> : step + 1}
         </span>
-        <span className="w-24 shrink-0 text-sm font-semibold text-gray-900">
-          {weight} kg
-        </span>
-        <span className="w-24 shrink-0 text-xs text-gray-400">
-          {target}+ reps
-        </span>
+        <span className="text-sm font-semibold text-gray-900">{weight} kg</span>
+        <span className="text-xs text-gray-400">{target}+ reps</span>
         <InputNumber
-          className="w-full"
+          className="w-28"
           disabled={disabled}
           inputMode="decimal"
           value={reps}

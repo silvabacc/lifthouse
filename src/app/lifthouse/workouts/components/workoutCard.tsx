@@ -10,7 +10,10 @@ import {
 import WorkoutFormDrawer, {
   ExerciseFormDrawerField,
 } from "./workoutDrawerForm";
-import { ExerciseConfiguration, WorkoutTemplate } from "@/lib/supabase/db/types";
+import {
+  ExerciseConfiguration,
+  WorkoutTemplate,
+} from "@/lib/supabase/db/types";
 import Link from "next/link";
 import { updateWorkoutMeta } from "../actions";
 
@@ -23,7 +26,6 @@ type WorkoutCardProps = {
   exercises?: ExerciseConfiguration[];
   template?: WorkoutTemplate;
   onDelete: (id: number) => void;
-  onWorkoutUpdate: () => void;
 };
 
 function templateLabel(template?: WorkoutTemplate) {
@@ -41,7 +43,6 @@ export default function WorkoutCard({
   exercises,
   template,
   onDelete,
-  onWorkoutUpdate,
 }: WorkoutCardProps) {
   const [drawOpen, setDrawOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -65,7 +66,6 @@ export default function WorkoutCard({
   const onFinish = (info: ExerciseFormDrawerField) => {
     startTransition(async () => {
       await updateWorkoutMeta(workoutId, info.name, info.description);
-      onWorkoutUpdate();
       setDrawOpen(false);
     });
   };

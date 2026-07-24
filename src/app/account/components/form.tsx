@@ -14,7 +14,7 @@ export function FormWrapper({ title, children, ...props }: FormWrapperProps) {
       {title && (
         <h2 className="mt-4 text-center text-xl font-bold">{title}</h2>
       )}
-      <div className="m-4 w-full max-w-sm rounded-xl border border-solid border-gray-100 bg-white p-6">
+      <div className="box-border m-4 w-full max-w-sm rounded-xl border border-solid border-gray-100 bg-white p-6">
         <Form {...props}>{children}</Form>
       </div>
     </>

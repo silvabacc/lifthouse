@@ -69,7 +69,7 @@ export default function Calculator() {
               Calculate
             </Button>
           </div>
-          <div className="grid grid-cols-3 gap-1">
+          <div className="grid grid-cols-3 gap-1 mt-4">
             {result.map(({ percentage, weight }) => (
               <div
                 key={percentage}

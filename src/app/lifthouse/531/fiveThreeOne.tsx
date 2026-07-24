@@ -79,7 +79,7 @@ export default function FiveThreeOne() {
     <div>
       <PageInfoPortal
         extra={
-          <div className="flex flex-wrap gap-2 pb-2">
+          <div className="flex gap-2 pb-2">
             <Button icon={<EditOutlined />} onClick={() => setSetupOpen(true)}>
               Edit personal bests
             </Button>

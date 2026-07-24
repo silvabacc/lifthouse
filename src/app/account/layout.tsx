@@ -5,7 +5,7 @@ export default function AccountLayout({
 }) {
   return (
     <div className="h-full">
-      <section className="flex h-full w-full flex-col items-center justify-center px-4">
+      <section className="box-border flex h-full w-full flex-col items-center justify-center px-4">
         <h1 className="m-0 text-3xl font-bold">LiftHouse 🏋</h1>
         <span className="mt-1 text-sm text-gray-400">
           Enjoy the journey, not the destination
