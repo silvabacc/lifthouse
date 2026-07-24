@@ -317,10 +317,10 @@ function Row({
         >
           {state === "completed" ? <CheckOutlined /> : step + 1}
         </span>
-        <span className="w-20 shrink-0 text-sm font-semibold text-gray-900">
+        <span className="w-24 shrink-0 text-sm font-semibold text-gray-900">
           {weight} kg
         </span>
-        <span className="w-16 shrink-0 text-xs text-gray-400">
+        <span className="w-24 shrink-0 text-xs text-gray-400">
           {target}+ reps
         </span>
         <InputNumber

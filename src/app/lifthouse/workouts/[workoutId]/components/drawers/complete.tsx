@@ -21,7 +21,7 @@ export function Complete({ exercise, latestLogInfo }: Props) {
   useEffect(() => {
     const highestSet = getCachedLogInfo(exercise.exerciseId)?.info.reduce(
       (acc, curr) => (curr.set > acc ? curr.set : acc),
-      0
+      0,
     );
     setCurrentSet(highestSet || 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -45,7 +45,7 @@ export function Complete({ exercise, latestLogInfo }: Props) {
         }
         onReopen={() => setCurrentSet(i)}
         onContinue={() => setCurrentSet(currentSet + 1)}
-      />
+      />,
     );
   }
 
@@ -76,7 +76,7 @@ function SetRow({
 
   useEffect(() => {
     const cachedInfo = getCachedLogInfo(exerciseId)?.info.find(
-      (i) => i.set === step + 1
+      (i) => i.set === step + 1,
     );
     setWeight(cachedInfo?.weight);
     setReps(cachedInfo?.reps);
