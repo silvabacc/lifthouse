@@ -19,9 +19,14 @@ const DateMover: React.FC<DateMoverProps> = ({
   selectedDay,
   setSelectedDay,
 }) => {
+  const [isCalendarOpen, setIsCalendarOpen] = React.useState(false);
+
   const onLeftArrowClick = () => setSelectedDay(selectedDay.subtract(1, "day"));
   const onRightArrowClick = () => setSelectedDay(selectedDay.add(1, "day"));
-  const onSelect = (date: Dayjs) => setSelectedDay(date);
+  const onSelect = (date: Dayjs) => {
+    setSelectedDay(date);
+    setIsCalendarOpen(false);
+  };
   const onGoToToday = () => setSelectedDay(dayjs());
 
   const isToday = DateUtils.isToday(selectedDay);
@@ -45,6 +50,8 @@ const DateMover: React.FC<DateMoverProps> = ({
         />
         <Popover
           trigger="click"
+          open={isCalendarOpen}
+          onOpenChange={setIsCalendarOpen}
           styles={{ container: { width: 300 } }}
           content={
             <Calendar
