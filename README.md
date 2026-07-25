@@ -19,10 +19,9 @@ Most of my training knowledge comes from [Alex Leonidas](https://www.youtube.com
 
 ## Workouts and 531 Program
 
+Create workout plans, log sets against them, and review progress as a stacked chart, line chart or raw table. Enter your one-rep maxes and follow the 531 program across its 4-week block, logging each lift as you go.
+
 <table>
-  <tr>
-    <td colspan="3">Create workout plans, log sets against them, and review progress as a stacked chart, line chart or raw table. Enter your one-rep maxes and follow the 531 program across its 4-week block, logging each lift as you go.</td>
-  </tr>
   <tr>
     <td align="center"><img src="/docs/shows/main.gif" alt="Browsing workout plans" width="250"></td>
     <td width="40"></td>
@@ -32,10 +31,9 @@ Most of my training knowledge comes from [Alex Leonidas](https://www.youtube.com
 
 ## Meals and Weight Tracking
 
+Log meals and track calories, protein, carbs and fat for the day. Log weigh-ins on a calendar and track your trend over time, with a weekly goal based on your Sunday weigh-in.
+
 <table>
-  <tr>
-    <td colspan="3">Log meals and track calories, protein, carbs and fat for the day. Log weigh-ins on a calendar and track your trend over time, with a weekly goal based on your Sunday weigh-in.</td>
-  </tr>
   <tr>
     <td align="center"><img src="/docs/shows/today.gif" alt="Logging meals for the day" width="250"></td>
     <td width="40"></td>
