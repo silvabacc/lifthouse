@@ -30,6 +30,7 @@ const VolumeRepRange = [
   { sets: 5, reps: "10" },
   { sets: 5, reps: "8" },
   { sets: 3, reps: "12-15" },
+  { sets: 3, reps: "6-10RM + 2 back-off sets" },
   { sets: 3, reps: "20" },
   { sets: 5, reps: "20" },
   { sets: 3, reps: "33" },
