@@ -7,7 +7,7 @@ import {
   AppstoreOutlined,
 } from "@ant-design/icons";
 import { PageInfoPortal } from "../../components/pageInfo";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import AddButton from "../components/addButton";
 import AddExerciseDrawer from "./components/drawers/addExerciseDrawer";
 import { WorkoutTemplate } from "@/lib/supabase/db/types";
@@ -26,16 +26,13 @@ export default function WorkoutPlanPage() {
   const [showRecord, setShowRecord] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showTemplate, setShowTemplate] = useState(false);
-  const [, startTransition] = useTransition();
 
   const onAddExercise = (exerciseId: number) => {
     const defaultSetup = { exerciseId, sets: 3, reps: "8-12" };
     const newExercises = [...(workout.exercises || []), defaultSetup];
-    startTransition(async () => {
-      setWorkout({ ...workout, exercises: newExercises });
-      await updateWorkoutExercises(workout.workoutId, newExercises);
-    });
+    setWorkout({ ...workout, exercises: newExercises });
     setDrawOpen(false);
+    updateWorkoutExercises(workout.workoutId, newExercises);
   };
 
   return (
@@ -71,7 +68,7 @@ export default function WorkoutPlanPage() {
           <Record show={showRecord} onCancel={() => setShowRecord(false)} />
           <Charts />
         </Content>
-        <Footer className="mt-4" style={{ padding: 0 }}>
+        <Footer className="my-4" style={{ padding: 0 }}>
           {workout?.template === WorkoutTemplate.custom && (
             <AddButton
               title="+ Add Exercise"
